@@ -1,0 +1,25 @@
+__files_group(${CMAKE_CURRENT_SOURCE_DIR}/qtuser3d/ SRCS)
+
+qt5_add_resources(RCC_SRC 3dresources.qrc)
+list(APPEND SRCS ${RCC_SRC})
+
+set(LIBS Qt5::Core Qt5::Gui Qt5::Widgets Qt5::3DRender Qt5::3DExtras qtuser_core)
+set(DEFS QTUSER_3D_DLL)
+set(INCS ${CMAKE_CURRENT_SOURCE_DIR}/../core/)
+if(USE_FREETYPE)
+	list(APPEND DEFS USE_FREETYPE)
+	list(APPEND LIBS freetype)
+	list(APPEND INCS ${FREETYPE_INCLUDE_DIR})
+endif()
+
+__add_real_target(qtuser_3d dll SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
+
+IF (CMAKE_BUILD_TYPE MATCHES "Release")
+    include(DeployQt)
+    IF(WIN32)
+        windeployqt(qtuser_3d)
+    ENDIF()
+    IF(APPLE)
+        macdeployqt(qtuser_3d)
+    ENDIF()
+ENDIF()

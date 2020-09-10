@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/renderhelper">
+        <file>shaders/manipulate.frag</file>
+        <file>shaders/manipulate.vert</file>
+        <file>shaders/model.frag</file>
+        <file>shaders/model.vert</file>
+        <file>shaders/modelline.frag</file>
+        <file>shaders/modelline.vert</file>
+        <file>shaders/support.frag</file>
+        <file>shaders/support.vert</file>
+        <file>shaders/finephong.frag</file>
+        <file>shaders/finephong.vert</file>
+        <file>shaders/pure.frag</file>
+        <file>shaders/pure.vert</file>
+        <file>shaders/color.frag</file>
+        <file>shaders/color.vert</file>
+        <file>shaders/pickFace.frag</file>
+        <file>shaders/pickFace.vert</file>
+        <file>shaders/pickFaceFlag.frag</file>
+        <file>shaders/pickFaceFlag.vert</file>
+        <file>shaders/slicepreview.vert</file>
+        <file>shaders/slicepreview.frag</file>
+        <file>shaders/printergrid.vert</file>
+        <file>shaders/printergrid.frag</file>
+        <file>shaders/text.vert</file>
+        <file>shaders/text.frag</file>
+        <file>shaders/tex.vert</file>
+        <file>shaders/tex.frag</file>
+        <file>shaders/texshape.vert</file>
+        <file>shaders/texshape.frag</file>
+        <file>shaders/modelSupport.frag</file>
+        <file>shaders/modelSupport.vert</file>
+        <file>shaders/splitplane.frag</file>
+        <file>shaders/splitplane.vert</file>
+        <file>shaders/modelselect.frag</file>
+        <file>shaders/modelselect.vert</file>
+        <file>shaders/modelsimple.frag</file>
+        <file>shaders/modelsimple.vert</file>
+    </qresource>
+    <qresource prefix="/"/>
+</RCC>
