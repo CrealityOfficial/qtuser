@@ -9,3 +9,5 @@ set(INCS ${CMAKE_CURRENT_SOURCE_DIR}/../core/)
 
 __add_real_target(qtuser_3d dll SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
 
+INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/qtuser3d DESTINATION include/ FILES_MATCHING PATTERN "*.h")
+
