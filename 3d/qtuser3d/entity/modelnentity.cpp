@@ -16,9 +16,12 @@ namespace qtuser_3d
 		m_vertexBaseParameter = createParameter("vertexBase", QPoint(0, 0));
 		m_errorParameter = createParameter("error", 0.0f);
 		m_supportCosParameter = createParameter("supportCos", 0.7);
-		m_showStateParameter = createParameter("showState", 0);
+		m_hoverParameter = createParameter("hoverState", 0);
 		m_waterParameter = createParameter("water", QVector3D(0, 0, -10000));
 		m_zchaParameter = createParameter("zcha", 0.01);
+		m_waterShowParameter = createParameter("waterState", 0);
+
+		m_nozzleParameter = createParameter("nozzle", 0);
 	}
 	
 	ModelNEntity::~ModelNEntity()
@@ -43,17 +46,22 @@ namespace qtuser_3d
 
 	void ModelNEntity::enterSupportStatus()
 	{
-		m_showStateParameter->setValue(1);
+		m_hoverParameter->setValue(1);
 	}
 
 	void ModelNEntity::leaveSupportStatus()
 	{
-		m_showStateParameter->setValue(0);
+		m_hoverParameter->setValue(0);
 	}
 
 	void ModelNEntity::setState(float state)
 	{
 		m_stateParameter->setValue(state);
+	}
+
+	void ModelNEntity::setNozzle(float nozzle)
+	{
+		m_nozzleParameter->setValue(nozzle);
 	}
 
 	void ModelNEntity::setVertexBase(QPoint vertexBase)
@@ -73,7 +81,13 @@ namespace qtuser_3d
 
 	void ModelNEntity::setWaterPoint(QVector3D pt, float zcha)
 	{
+		m_waterShowParameter->setValue(1);
 		m_waterParameter->setValue(pt);
 		m_zchaParameter->setValue(zcha);
+	}
+
+	void ModelNEntity::unSetWaterPoint()
+	{
+		m_waterShowParameter->setValue(0);
 	}
 }

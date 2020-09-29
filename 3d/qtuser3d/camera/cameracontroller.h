@@ -3,6 +3,7 @@
 #include "qtuser3d/qtuser3dexport.h"
 #include "qtuser3d/event/eventhandlers.h"
 #include "qtuser3d/math/box3d.h"
+#include <QVector3D>
 
 namespace qtuser_3d
 {
@@ -33,6 +34,8 @@ public:
 	Q_INVOKABLE void viewFromOrthographic();
 	Q_INVOKABLE void viewFromPerspective();
 
+	Q_INVOKABLE void showSelf();
+
 	void uninitialize();
 	void fittingBoundingBox(const qtuser_3d::Box3D& box);
 	void home(const qtuser_3d::Box3D& box);
@@ -58,5 +61,7 @@ signals:
 protected:
 	qtuser_3d::CameraMouseManipulator* m_cameraManipulator;
 	qtuser_3d::ScreenCamera* m_screenCamera;
+	bool m_isOrtho;
+	QVector3D m_cameraPos;
 };
 #endif // _NULLSPACE_CAMERACONTROLLER_1588862127357_H

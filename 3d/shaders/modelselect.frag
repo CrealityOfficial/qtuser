@@ -16,7 +16,23 @@ uniform float bottomVisibleHeight = -10000.0;
 uniform float error;
 
 uniform float state;
+uniform float nozzle;
 uniform vec4 stateColors[4];
+
+vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_color, vec4 diffuse_color, vec4 specular_color)
+{
+	float NdotL 		  = max(dot(fnormal, light_dir), 0.0);
+	ambient_color 	  	  = ambient_color * core_color;
+
+	vec3 freflection      = reflect(-light_dir, fnormal);
+	vec3 fViewDirection   = normalize(viewDirection);
+	float RdotV           = max(0.0, dot(freflection, fViewDirection)); 
+	
+	diffuse_color		  = NdotL * diffuse_color * core_color;
+	specular_color        = specular_color * pow( RdotV, specularPower);
+	
+	return ambient_color + diffuse_color + specular_color;
+}
 
 void main( void )
 {
@@ -26,21 +42,35 @@ void main( void )
 	vec4 color = stateColors[int(state)];	
 	if(error == 1.0)
 		color = stateColors[3];
+		
+	vec4 back_color = color;
+	back_color.rgb = vec3(1.0, 1.0, 1.0) - back_color.rgb;
 	
 	vec3 fnormal 		  =	normalize(normal);
+	vec4 ambient_color 	  = ambient;
+	vec4 diffuse_color    = diffuse;
 	vec4 specular_color   = specular;
 	
-	float NdotL 		  = max(dot(fnormal, lightDirection), 0.0);
-	vec4 ambientColor 	  = ambient * color;
-	vec3 freflection      = reflect(-lightDirection, fnormal);
-	vec3 fViewDirection   = normalize(viewDirection);
-	float RdotV           = max(0.0, dot(freflection, fViewDirection)); 
-	vec4 diffuseColor     = NdotL * diffuse * color;
-	vec4 specularColor    = specular * pow( RdotV, specularPower);
-	vec4 coreColor = ambientColor + diffuseColor + specularColor;
+	vec4 coreColor = directLight(lightDirection, fnormal, color, ambient_color, diffuse_color, specular_color);
+	vec4 coreColor_b = directLight(lightDirection, -fnormal, back_color, ambient_color - vec4(0.2, 0.2, 0.2, 0.0), diffuse_color, specular_color);
 	
 	coreColor.g += 0.4;
 	coreColor.r += 0.4;
 	
-	fragmentColor = vec4(coreColor.rgb, 1.0);
+	coreColor_b.g += 0.2;
+	coreColor_b.r += 0.2;
+	
+	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
+	coreColor_b.rgb = coreColor_b.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
+	
+	if(gl_FrontFacing)
+    {
+        fragmentColor = vec4(coreColor.rgb, 1.0);
+    }
+    else
+    {
+        fragmentColor = vec4(coreColor_b.rgb, 0.4);
+    }
+	
+//	fragmentColor = vec4(coreColor.rgb, 1.0);
 }

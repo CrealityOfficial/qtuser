@@ -11,6 +11,7 @@ CameraController::CameraController(QObject* parent)
 	:QObject(parent)
 	, m_screenCamera(nullptr)
 	, m_cameraManipulator(nullptr)
+	, m_isOrtho(false)
 {
 #ifdef USE_EULAR_MANIPULATOR
 	m_cameraManipulator = new qtuser_3d::EularMouseManipulator(this);
@@ -27,18 +28,20 @@ CameraController::~CameraController()
 void CameraController::setScreenCamera(qtuser_3d::ScreenCamera* camera)
 {
 	m_screenCamera = camera;
+	Qt3DRender::QCamera* pickerCamera = m_screenCamera->camera();
 	m_cameraManipulator->setCamera(m_screenCamera);
 }
 
 void CameraController::viewFromOrthographic()
 {
+	float per = 1;
 	Qt3DRender::QCamera* pickerCamera = m_screenCamera->camera();
-	float fnearPlane = pickerCamera->nearPlane();
+	float fnearPlane = -10;  // pickerCamera->nearPlane();
 	float ffarPlane = pickerCamera->farPlane();
-	float left = pickerCamera->left();
-	float right = pickerCamera->right();
-	float bottom = pickerCamera->bottom();
-	float top = pickerCamera->top();
+	float left = pickerCamera->left() / per;
+	float right = pickerCamera->right() / per;
+	float bottom = pickerCamera->bottom() / per;
+	float top = pickerCamera->top() / per;
 
 	float r = (ffarPlane - fnearPlane) / 2 + fnearPlane;
 	float flen = r * tan(pickerCamera->fieldOfView() *M_PI / 360);
@@ -48,6 +51,15 @@ void CameraController::viewFromOrthographic()
 	float fratio = pickerCamera->aspectRatio();
 	left = -fratio* flen;
 	right = fratio * flen;
+
+	m_cameraPos = pickerCamera->position();
+
+	QVector3D cameraPosition = pickerCamera->position();
+	QVector3D cameraCenter = pickerCamera->viewCenter();
+	QVector3D cameraView = cameraCenter - cameraPosition;
+	cameraView.normalize();
+	QVector3D newPosition = cameraCenter - cameraView * 500;
+	pickerCamera->setPosition(newPosition);
 	
 	pickerCamera->setProjectionType(Qt3DRender::QCameraLens::ProjectionType::OrthographicProjection);
 	//QMatrix4x4
@@ -57,6 +69,7 @@ void CameraController::viewFromOrthographic()
 	0,0,0,1};
 
 	pickerCamera->setProjectionMatrix(M);
+	m_isOrtho = true;
 	emit signalViewChanged(false);
 }
 
@@ -70,13 +83,26 @@ void CameraController::viewFromPerspective()
 	float bottom = pickerCamera->bottom();
 	float top = pickerCamera->top();
 
+	if (m_isOrtho)
+	{
+		pickerCamera->setPosition(m_cameraPos);
+	}
+	m_isOrtho = false;
+	
 	pickerCamera->setProjectionType(Qt3DRender::QCameraLens::ProjectionType::PerspectiveProjection);
 
 	QMatrix4x4 M = { 2 * fnearPlane / (right - left), 0,(right + left) / (right - left),0,
 					0, 2 * fnearPlane / (top - bottom),(top + bottom) / (top - bottom),0,
 					0,0,-(ffarPlane + fnearPlane) / (ffarPlane - fnearPlane),-2 * (ffarPlane * fnearPlane) / (ffarPlane - fnearPlane),
 					0,0,-1,0 };
+	
 	emit signalViewChanged(false);
+}
+
+void CameraController::showSelf()
+{
+	qDebug() << "show CameraController:";
+	m_screenCamera->showSelf();
 }
 
 void CameraController::uninitialize()
@@ -148,7 +174,7 @@ void CameraController::onMidMouseButtonClick(QMouseEvent* event)
 
 void CameraController::onWheelEvent(QWheelEvent* event)
 {
-	if (m_screenCamera && m_screenCamera->zoom(event->delta() > 0 ? 1.0f / 1.1f : 1.1f))
+	if (!m_isOrtho && m_screenCamera && m_screenCamera->zoom(event->delta() > 0 ? 1.0f / 1.1f : 1.1f))
 	{
 		emit signalViewChanged(true);
 	}

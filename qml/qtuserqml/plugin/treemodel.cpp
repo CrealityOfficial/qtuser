@@ -71,7 +71,7 @@ QModelIndex TreeModel::getRoot()
 void TreeModel::addGroup(int index,QObject* group)
 {
     QList<QVariant> columnData;
-    columnData << newCustomType("Group"+index, index)<<"G"<<QVariant::fromValue<QObject*>(group);
+    columnData << newCustomType(tr("Model Group"), index)<<"G"<<QVariant::fromValue<QObject*>(group);
     TreeItem*childItem = new TreeItem(columnData,rootItem);
     addItem(getRoot(),childItem);
 

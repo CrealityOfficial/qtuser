@@ -26,6 +26,9 @@ namespace qtuser_3d
 		void enterSupportStatus();
 		void leaveSupportStatus();
 		void setWaterPoint(QVector3D pt, float zcha);
+		void unSetWaterPoint();
+
+		void setNozzle(float nozzle);
 	protected:
 		qtuser_3d::BoxEntity* m_boxEntity;
 		qtuser_3d::LineEntity* m_convexXYEntity;
@@ -35,9 +38,12 @@ namespace qtuser_3d
 		Qt3DRender::QParameter* m_errorParameter;
 
 		Qt3DRender::QParameter* m_supportCosParameter;
-		Qt3DRender::QParameter* m_showStateParameter;
+		Qt3DRender::QParameter* m_hoverParameter;
+		Qt3DRender::QParameter* m_waterShowParameter;
 		Qt3DRender::QParameter* m_waterParameter;
 		Qt3DRender::QParameter* m_zchaParameter;
+
+		Qt3DRender::QParameter* m_nozzleParameter;
 	};
 }
 #endif // QTUSER_3D_MODELNENTITY_1595161543232_H

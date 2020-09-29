@@ -42,6 +42,8 @@ namespace qtuser_3d
 
 		void home(const qtuser_3d::Box3D& box);
 
+		void showSelf() const;
+
 		bool testCameraValid();
 		QPoint flipY(const QPoint pos);
 

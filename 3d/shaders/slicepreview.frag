@@ -57,7 +57,12 @@ void main( void )
 	vec4 core_color = vec4(0.5, 0.5, 0.5, 1.0);
 	
 	if(showType == 0)
-		core_color = speedcolors[int(drawFlag.x)];
+	{
+		int stype = int(drawFlag.x);
+		if(stype == 0)
+			discard;
+		core_color = speedcolors[stype];
+	}
 	else if(showType == 1)
 		core_color = typecolors[int(drawFlag.y)];
 	else if(showType == 2)

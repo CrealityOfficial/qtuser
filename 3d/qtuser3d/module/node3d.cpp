@@ -1,5 +1,6 @@
 #include "node3d.h"
 #include "qtuser3d/math/space3d.h"
+#include "qtuser3d/math/util.h"
 
 namespace qtuser_3d
 {
@@ -64,6 +65,7 @@ namespace qtuser_3d
 	void Node3D::setLocalScale(const QVector3D& scale, bool update)
 	{
 		m_localScale = scale;
+		checkQVector3D(m_localScale, QVector3D(-100, -100, -100), QVector3D(100, 100, 100));
 		m_localMatrixDirty = true;
 
 		if (update) updateMatrix();

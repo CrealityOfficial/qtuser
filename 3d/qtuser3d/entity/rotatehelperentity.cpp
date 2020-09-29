@@ -122,6 +122,14 @@ namespace qtuser_3d
 		m_center = center;
 		QMatrix4x4 matrix;
 		matrix.translate(center);
+
+		QVector3D sz = box.size();
+		double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
+		maxlen = maxlen > sz.z() ? maxlen : sz.z();
+		if (maxlen > 80)
+		{
+			matrix.scale(maxlen / 80);
+		}
 		m_transform->setMatrix(matrix);
 	}
 

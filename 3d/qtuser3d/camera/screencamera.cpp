@@ -237,6 +237,15 @@ namespace qtuser_3d
 		notifyCameraChanged();
 	}
 
+	void ScreenCamera::showSelf() const
+	{
+		if (m_camera != nullptr)
+		{
+			qDebug() << "show ScreenCamera:";
+			qDebug() << m_camera->position() << " * " << m_camera->viewCenter() << " * " << m_camera->upVector();
+		}
+	}
+
 	void ScreenCamera::viewFrom(const QVector3D& dir, const QVector3D& right)
 	{
 		QVector3D newUp = QVector3D::crossProduct(right, dir);
