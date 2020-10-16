@@ -28,4 +28,15 @@ namespace qtuser_core
 		qtuser_core::getMetaCreator()->registerType(metaObject); \
 	}
 
+#define AUTO_META_TYPE(x) namespace meta_type {\
+						class x##mt \
+						{                    \
+						public:              \
+						    x##mt()    \
+						    {                 \
+						        TYPE_REGISTER(x);   \
+						    };                 \
+						    ~x##mt() {};  \
+						}; }                        \
+						meta_type::x##mt x##metainit; 
 #endif // QTUSER_CORE_METACREATOR_1598969090730_H

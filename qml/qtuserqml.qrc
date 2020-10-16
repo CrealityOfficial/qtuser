@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/qtuserqml">
+		<file>res/demo.qml</file>
+		<file>res/demo1.qml</file>
+    </qresource>
+</RCC>

@@ -50,6 +50,24 @@ namespace qtuser_core
 		}
 	}
 
+	void Profiler::ticks(const QString& name)
+	{
+		auto it = m_writers.find(name);
+		if (it != m_writers.end())
+		{
+			(*it)->tickStart();
+		}
+	}
+
+	void Profiler::ticke(const QString& name)
+	{
+		auto it = m_writers.find(name);
+		if (it != m_writers.end())
+		{
+			(*it)->tickEnd();
+		}
+	}
+
 	void Profiler::delta(const QString& name)
 	{
 		auto it = m_writers.find(name);

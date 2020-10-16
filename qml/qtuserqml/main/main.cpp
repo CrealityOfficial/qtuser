@@ -2,8 +2,8 @@
 #include <QtGui/QGuiApplication>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QDebug>
-
 #include <QtQml/QQmlApplicationEngine>
+#include <QtQml/QQmlContext>
 #include "qtuserqml/interface/qmlapplicationinterface.h"
 
 namespace qtuser_qml
@@ -33,5 +33,42 @@ namespace qtuser_qml
             qDebug() << dll << " is invalid QMLApplicationInterface " << loader.errorString();
         }
         return e;
+	}
+
+	int hookMain(int argc, char* argv[])
+	{
+		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+		QGuiApplication app(argc, argv);
+		app.setOrganizationName("DEMO");
+		app.setOrganizationDomain("DEMO");
+		app.setApplicationName("DEMO");
+
+		QQmlApplicationEngine engine;
+
+		QString entryQml = "demo.qml";
+		QString prefix = "qrc:/qtuserqml/res/";
+		QString qmlFile = prefix + entryQml;
+		engine.load(QUrl(qmlFile));
+
+		return app.exec();
+	}
+
+	int qmlMain(int argc, char* argv[], const QString& qml)
+	{
+		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+		QGuiApplication app(argc, argv);
+		app.setOrganizationName("DEMO");
+		app.setOrganizationDomain("DEMO");
+		app.setApplicationName("DEMO");
+
+		QQmlApplicationEngine engine;
+
+		engine.rootContext()->setContextProperty("invoke", qml);
+		QString entryQml = "demo1.qml";
+		QString prefix = "qrc:/qtuserqml/res/";
+		QString qmlFile = prefix + entryQml;
+		engine.load(QUrl(qmlFile));
+
+		return app.exec();
 	}
 }

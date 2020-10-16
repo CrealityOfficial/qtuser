@@ -1,5 +1,6 @@
 #include "pointcloudentity.h"
 #include "qtuser3d/effect/effectmanager.h"
+#include "qtuser3d/geometry/pointscreatehelper.h"
 #include <Qt3DRender/QRenderPass>
 
 namespace qtuser_3d
@@ -53,5 +54,21 @@ namespace qtuser_3d
 			m_pointSizeState->setValue(m_pointSize);
 			setEffect(m_usedEffect);
 		}
+	}
+
+	void PointCloudEntity::updateGeometry(QVector<QVector3D>& positions)
+	{
+		(positions.size() == 0) ? updateGeometry(nullptr) : updateGeometry((int)positions.size(), (float*)&positions.at(0));
+	}
+
+	void PointCloudEntity::updateGeometry(int pointsNum, float* positions)
+	{
+		updateGeometry(PointsCreateHelper::create(positions, pointsNum));
+	}
+
+	void PointCloudEntity::updateGeometry(Qt3DRender::QGeometry* geometry)
+	{
+		Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Points;
+		setGeometry(geometry, type);
 	}
 }

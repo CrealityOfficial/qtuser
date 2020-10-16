@@ -1,0 +1,12 @@
+#ifndef DEMOQMLREGISTER_1594283396082_H
+#define DEMOQMLREGISTER_1594283396082_H
+#include "qtuserqml/macro.h"
+
+#define CXSW_SCOPE "com.cxsw.demo"
+#define VERSION_MAJOR 1
+#define VERSION_MINOR 0
+#define COMMON_REASON "Created by Cpp"
+
+#define CXSW_REG(x) QML_AUTO_TYPE(x, CXSW_SCOPE, VERSION_MAJOR, VERSION_MINOR)
+
+#endif // DEMOQMLREGISTER_1594283396082_H

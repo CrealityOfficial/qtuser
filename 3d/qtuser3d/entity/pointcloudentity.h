@@ -14,6 +14,10 @@ namespace qtuser_3d
 
 		void setColor(const QVector4D& color);
 		void setPointSize(float size);
+
+		void updateGeometry(QVector<QVector3D>& positions);
+		void updateGeometry(int pointsNum, float* positions);
+		void updateGeometry(Qt3DRender::QGeometry* geometry);
 	protected:
 		void selectEffect();
 	protected:

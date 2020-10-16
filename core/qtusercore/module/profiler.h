@@ -17,6 +17,8 @@ namespace qtuser_core
 		void start(const QString& name, const QStringList& keys);
 		void push(const QString& name, double value);
 		void tick(const QString& name);
+		void ticks(const QString& name);
+		void ticke(const QString& name);
 		void delta(const QString& name);
 		void output(const QString& name, const QString& file);
 	protected:
@@ -32,6 +34,8 @@ namespace qtuser_core
 #define PROFILE_TICK(x) qtuser_core::getProfiler()->tick(x)
 #define PROFILE_DELTA(x) qtuser_core::getProfiler()->delta(x)
 #define PROFILE_OUTPUT(x, y) qtuser_core::getProfiler()->output(x, y)
+#define PROFILE_TICKS(x) qtuser_core::getProfiler()->ticks(x)
+#define PROFILE_TICKE(x) qtuser_core::getProfiler()->ticke(x)
 #else
 #define PROFILE_START(x, y)
 #define PROFILE_PUSH(x, y)

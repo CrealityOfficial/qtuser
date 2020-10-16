@@ -20,6 +20,7 @@ namespace qtuser_3d
 		virtual ~BasicEntity();
 
 		Qt3DRender::QParameter* createParameter(const QString& name, const QVariant& value);
+		void setParameter(const QString& name, const QVariant& value);
 		void destroyParameter(Qt3DRender::QParameter* parameter);
 
 		void setEffect(Qt3DRender::QEffect* effect);
