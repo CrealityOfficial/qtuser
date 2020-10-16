@@ -20,6 +20,7 @@
 #include "qtuser3d/event/eventhandlers.h"
 
 #include "qtuser3d/framegraph/rendergraph.h"
+#include "qtuserqml/gl/rawogl.h"
 class ContextSaver
 {
 public:
@@ -53,6 +54,7 @@ public:
 	{
 		static_cast<Qt3DRender::QRenderAspectPrivate*>(
 			Qt3DRender::QRenderAspectPrivate::get(m_renderAspect))->renderInitialize(QOpenGLContext::currentContext());
+		m_item->setSharedContext(QOpenGLContext::currentContext());
 	}
 
 	virtual ~FrameBufferObjectRenderer()
@@ -112,6 +114,7 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 	, m_shotTimes(0)
 	, m_renderGraph(nullptr)
 	, m_always(false)
+	, m_sharedContext(nullptr)
 {
 	setFlag(ItemHasContents, true);
 	m_aspectEngine->registerAspect(m_renderAspect);
@@ -134,6 +137,8 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 
 	m_rootFrameGraph = new Qt3DRender::QFrameGraphNode(m_renderSettings);
 	m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
+
+	m_rawOGL = new qtuser_qml::RawOGL(this);
 }
 
 GLQuickItem::~GLQuickItem()
@@ -188,6 +193,23 @@ QQuickFramebufferObject::Renderer* GLQuickItem::createRenderer() const
 	QQuickFramebufferObject::Renderer* render = new FrameBufferObjectRenderer((GLQuickItem*)this, m_renderAspect, m_aspectEngine);
 	QMetaObject::invokeMethod((GLQuickItem*)(this), "applyRootEntity", Qt::QueuedConnection);
 	return render;
+}
+
+void GLQuickItem::setSharedContext(QOpenGLContext* context)
+{
+	m_sharedContext = context;
+	m_rawOGL->init(m_sharedContext);
+	assert(m_sharedContext);
+}
+
+QOpenGLContext* GLQuickItem::sharedContext()
+{
+	return m_sharedContext;
+}
+
+qtuser_qml::RawOGL* GLQuickItem::rawOGL()
+{
+	return m_rawOGL;
 }
 
 QSGNode* GLQuickItem::updatePaintNode(QSGNode* node, QQuickItem::UpdatePaintNodeData* nodeData)

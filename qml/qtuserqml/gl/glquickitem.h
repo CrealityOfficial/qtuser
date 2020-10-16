@@ -27,10 +27,16 @@ namespace qtuser_3d
 	class EventSubdivide;
 }
 
+namespace qtuser_qml
+{
+	class RawOGL;
+}
+
 using namespace qtuser_3d;
 
 class QTUSER_QML_API GLQuickItem : public QQuickFramebufferObject
 {
+	friend class FrameBufferObjectRenderer;
 	Q_OBJECT
 public:
 	GLQuickItem(QQuickItem* parent = 0);
@@ -48,6 +54,9 @@ public:
 	void registerRenderGraph(RenderGraph* graph);
 	void unRegisterRenderGraph(RenderGraph* graph);
 	void unRegisterAll();
+
+	QOpenGLContext* sharedContext();
+	qtuser_qml::RawOGL* rawOGL();
 public slots:
 	void handleWindowChanged(QQuickWindow* win);
 	void applyRootEntity();
@@ -65,6 +74,8 @@ protected:
 	void hoverLeaveEvent(QHoverEvent* event) Q_DECL_OVERRIDE;
 	void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 	void keyReleaseEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
+
+	void setSharedContext(QOpenGLContext* context);
 private:
 	Qt3DCore::QAspectEngine* m_aspectEngine;
 	Qt3DRender::QRenderAspect* m_renderAspect;
@@ -86,5 +97,8 @@ private:
 	Qt3DRender::QFrameGraphNode* m_rootFrameGraph;
 
 	bool m_always;
+
+	QOpenGLContext* m_sharedContext;
+	qtuser_qml::RawOGL* m_rawOGL;
 };
 #endif // _QTUSER_QML3D_GLQUICKITEM_1588076188113_H

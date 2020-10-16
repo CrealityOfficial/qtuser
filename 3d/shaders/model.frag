@@ -52,29 +52,23 @@ void main( void )
 	if(error == 1.0)
 		color = stateColors[3];
 	
-	vec4 back_color = color;
-	back_color.rgb = vec3(1.0, 1.0, 1.0) - back_color.rgb;
-	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 ambient_color 	  = ambient;
 	vec4 diffuse_color    = diffuse;
 	vec4 specular_color   = specular;
 	
 	vec4 coreColor = directLight(lightDirection, fnormal, color, ambient_color, diffuse_color, specular_color);
-	vec4 coreColor_b = directLight(lightDirection, -fnormal, back_color, ambient_color - vec4(0.2, 0.2, 0.2, 0.0), diffuse_color, specular_color);
 	
 	vec3 fgnormal 		  =	normalize(gnormal);
 	
 	if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
 	{
 		coreColor.g += 0.4;
-		coreColor_b.g += 0.2;
 	}
 	
 	if( abs(worldPosition.z - bottom) < 0.01 )
 	{
 		coreColor.g += 0.4;
-		coreColor_b.g += 0.2;
 	}
 	
 	if(hoverState > 0)
@@ -82,7 +76,6 @@ void main( void )
 		if(dot(fgnormal, vec3(0.0, 0.0, -1.0)) > supportCos)
 		{
 			coreColor.r += 0.4;
-			coreColor_b.r += 0.2;
 		}
 		
 		if(waterState == 1)
@@ -95,16 +88,11 @@ void main( void )
 	}
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
-	coreColor_b.rgb = coreColor_b.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
 	
-	if(gl_FrontFacing)
+	if(!gl_FrontFacing)
     {
-        fragmentColor = vec4(coreColor.rgb, 1.0);
+		coreColor.rgb = vec3(0.65, 0.75, 0.65) - coreColor.rgb;
     }
-    else
-    {
-        fragmentColor = vec4(coreColor_b.rgb, 0.4);
-    }
-	
-//	fragmentColor = vec4(coreColor.rgb, 1.0);
+   
+	fragmentColor = vec4(coreColor.rgb, 1.0);
 }

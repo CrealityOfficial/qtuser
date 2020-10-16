@@ -44,7 +44,7 @@ void main( void )
 		color = stateColors[3];
 		
 	vec4 back_color = color;
-	back_color.rgb = vec3(1.0, 1.0, 1.0) - back_color.rgb;
+//	back_color.rgb = vec3(1.0, 1.0, 1.0) - back_color.rgb;
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 ambient_color 	  = ambient;
