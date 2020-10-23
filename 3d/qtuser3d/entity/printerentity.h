@@ -28,6 +28,9 @@ namespace qtuser_3d
 
 		void updateFace(Box3D& box,faceType type);
 		void setVisibility(int type, bool visibility);
+
+		void showPrinterEntity(bool isShow);
+
 	protected:
 		BoxEntity* m_boxEntity;
 		PrinterGrid* m_printerGrid;

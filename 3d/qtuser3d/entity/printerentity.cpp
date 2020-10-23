@@ -60,5 +60,14 @@ namespace qtuser_3d
 		m_faceEntity->setVisibility(type, visibility);
 	}
 	
+	void PrinterEntity::showPrinterEntity(bool isShow)
+	{
+		m_boxEntity->setEnabled(isShow);//蓝色边框
+		m_printerSkirt->setEnabled(isShow);//灰色边线
+		m_printerText->setEnabled(isShow);//刻度
+		m_printerGrid->setEnabled(isShow);//网格线
+		m_axisEntity->setEnabled(isShow);//坐标指示
+		m_imageEntity->setEnabled(isShow);//logo
+	}
 	
 }
