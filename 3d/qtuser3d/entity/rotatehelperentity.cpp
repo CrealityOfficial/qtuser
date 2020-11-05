@@ -221,6 +221,10 @@ namespace qtuser_3d
 				angle = angleOfVector3D2(oc0, oc1);
 			}
 		}
+		if (m_rotateCallback)
+		{
+			m_rotateCallback->setRotateAngle(axis, angle);
+		}
 
 		return QQuaternion::fromAxisAndAngle(axis, angle);
 	}
