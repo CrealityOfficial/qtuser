@@ -302,6 +302,11 @@ void GLQuickItem::unRegisterResidentNode(Qt3DCore::QNode* node)
 	}
 }
 
+bool GLQuickItem::isRenderRenderGraph(RenderGraph* graph)
+{
+	return m_renderGraph == graph;
+}
+
 void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 {
 	if (m_renderGraph == graph) return;
