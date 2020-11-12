@@ -77,5 +77,12 @@ void main( void )
 	vec4 light_color1     = directLight(light_direction1, fnormal, diffuse_color, core_color);
 	
 	core_color = ambient_color + light_color1;
-	fragment_color = vec4(core_color.rgb, color.a);
+	core_color.a = color.a;
+	
+	if(flag.x == clipValue.y && (flag.y >= clipValue.z && flag.y <= clipValue.w))
+	{
+		core_color.g += 0.4;
+	}
+	
+	fragment_color = core_color;
 }
