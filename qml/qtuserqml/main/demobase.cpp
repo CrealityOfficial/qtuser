@@ -193,9 +193,9 @@ void DemoBase::deleteEntity(Qt3DCore::QEntity* entity)
 
 	if (iter != m_namedEntities.end())
 	{
-		m_namedEntities.erase(iter);
 		iter.value()->setParent((Qt3DCore::QNode*)nullptr);
 		delete iter.value();
+		m_namedEntities.erase(iter);
 	}
 }
 
