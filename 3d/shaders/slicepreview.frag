@@ -17,6 +17,7 @@ uniform vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
 uniform vec3 light_direction1 = vec3(0.0, 0.0, 1.0);
 
 uniform int showType = 0;
+uniform int animation = 0;
 
 uniform vec4 clipValue;
 uniform vec2 layershow;
@@ -79,9 +80,16 @@ void main( void )
 	core_color = ambient_color + light_color1;
 	core_color.a = color.a;
 	
-	if(flag.x == clipValue.y && (flag.y >= clipValue.z && flag.y <= clipValue.w))
+	if(animation > 0)
 	{
-		core_color.g += 0.4;
+		if(flag.x == clipValue.y)
+		{
+			core_color += vec4(0.3, 0.3, 0.3, 0.0);
+		}
+		else
+		{
+			core_color -= vec4(0.3, 0.3, 0.3, 0.0);
+		}
 	}
 	
 	fragment_color = core_color;
