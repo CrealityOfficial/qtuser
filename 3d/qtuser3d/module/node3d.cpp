@@ -124,6 +124,7 @@ namespace qtuser_3d
 
 		m_local2Parent.setToIdentity();
 		m_local2Parent.translate(m_localPosition + m_localCenter);
+		QMatrix4x4 t = m_local2Parent;
 
 		m_local2Parent *= m_mirrorMatrix;
 
@@ -131,10 +132,16 @@ namespace qtuser_3d
 		m_local2Parent.scale(m_localScale);
 		m_local2Parent.translate(-m_localCenter);
 
+		t.rotate(m_localRotate);
+		t.scale(m_localScale);
+		t.translate(-m_localCenter);
+
 		onLocalMatrixChanged(m_local2Parent);
 
 		m_globalMatrix = m_parent2Global * m_local2Parent;
 		notifyGlobalChanged(m_globalMatrix);
+
+		m_objectMatrix = m_parent2Global * t;
 
 		m_localMatrixDirty = false;
 		m_parentMatrixDirty = false;
@@ -173,6 +180,24 @@ namespace qtuser_3d
 	QMatrix4x4 Node3D::localMatrix()
 	{
 		return m_local2Parent;
+	}
+
+	QMatrix4x4 Node3D::objectMatrix()
+	{
+		return m_objectMatrix;
+	}
+
+	bool Node3D::isFanZhuan()
+	{
+		bool fanzhuan = false;
+		for (int i = 0; i < 3; i++)
+		{
+			if (m_mirrorMatrix(i, i) < -0.9)
+			{
+				fanzhuan = !fanzhuan;
+			}
+		}
+		return fanzhuan;
 	}
 
 	void Node3D::setParent2Global(const QMatrix4x4& matrix)
