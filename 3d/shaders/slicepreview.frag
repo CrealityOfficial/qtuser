@@ -60,8 +60,6 @@ void main( void )
 	if(showType == 0)
 	{
 		int stype = int(drawFlag.x);
-		if(stype == 0)
-			discard;
 		core_color = speedcolors[stype];
 	}
 	else if(showType == 1)
