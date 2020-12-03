@@ -126,11 +126,11 @@ namespace qtuser_3d
 		m_local2Parent.translate(m_localPosition + m_localCenter);
 		QMatrix4x4 t = m_local2Parent;
 
-		m_local2Parent *= m_mirrorMatrix;
-
 		m_local2Parent.rotate(m_localRotate);
 		m_local2Parent.scale(m_localScale);
 		m_local2Parent.translate(-m_localCenter);
+
+		m_local2Parent *= m_mirrorMatrix;
 
 		t.rotate(m_localRotate);
 		t.scale(m_localScale);

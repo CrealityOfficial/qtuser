@@ -11,63 +11,27 @@ namespace qtuser_3d
 	PrinterEntity::PrinterEntity(Qt3DCore::QNode* parent)
 		:Qt3DCore::QEntity(parent)
 	{
-		QVector4D blueColor = QVector4D(0.180f, 0.541f, 0.968f, 1.0f);
-		m_boxEntity = new BoxEntity(this);
-		m_boxEntity->setColor(blueColor);
-		m_printerSkirt = new PrinterSkirtEntity(this);
-		m_printerText = new PrinterText(this);
-		m_printerGrid = new PrinterGrid(this);
-		m_axisEntity = new AxisEntity(this);
-		m_faceEntity = new FaceEntity(this);
-
-		m_imageEntity = new ImageEntity(this);
 	}
 
 	PrinterEntity::~PrinterEntity()
 	{
 	}
 
-	void PrinterEntity::updateBox(const qtuser_3d::Box3D& box)
-	{
-		qDebug() << "scope = " << box.min << box.max;
-		qtuser_3d::Box3D globalBox = box;
-		m_boxEntity->updateGlobal(globalBox);
-		m_printerSkirt->updateBoundingBox(globalBox);
-		m_printerGrid->updateBounding(globalBox);
-		m_printerText->updateLen(globalBox, 10.0f, 4);
-		//m_faceEntity->drawFace(globalBox);
+	//void PrinterEntity::onCameraChanged(qtuser_3d::ScreenCamera* screenCamera)
+	//{
+	//}
 
-		m_imageEntity->updateGlobal(globalBox);
-	}
+	//void PrinterEntity::updateBox(const qtuser_3d::Box3D& box)
+	//{
+	//}
 
-	void PrinterEntity::enableSkirt(bool enable)
-	{
-		//m_printerSkirt->setEnabled(enable);
-	}
+	//void PrinterEntity::onModelChanged(Box3D basebox, bool bleft, bool bright, bool bfront, bool bback, bool bup, bool bdown)
+	//{
+	//}
 
-	void PrinterEntity::visibleSubGrid(bool visible)
-	{
-		m_printerGrid->visibleSubGrid(visible);
-	}
+	//void PrinterEntity::showPrinterEntity(bool isShow)
+	//{
+	//}
 
-	void PrinterEntity::updateFace(Box3D& box,faceType type)
-	{
-		m_faceEntity->updateFace(box,type);
-	}
-
-	void PrinterEntity::setVisibility(int type, bool visibility)
-	{
-		m_faceEntity->setVisibility(type, visibility);
-	}
-	
-	void PrinterEntity::showPrinterEntity(bool isShow)
-	{
-		m_boxEntity->setEnabled(isShow);//蓝色边框
-		m_printerSkirt->setEnabled(isShow);//灰色边线
-		m_printerText->setEnabled(isShow);//刻度
-		m_printerGrid->setEnabled(isShow);//网格线
-		m_axisEntity->setEnabled(isShow);//坐标指示
-		m_imageEntity->setEnabled(isShow);//logo
-	}
 	
 }
