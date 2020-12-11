@@ -17,12 +17,18 @@ void main( void )
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 specular_color   = specular;
 	
+	vec4 _color			  = color;
+	if(!gl_FrontFacing)
+    {
+		_color = vec4(0.65, 0.0, 0.0, 1.0);
+    }
+	
 	float NdotL 		  = max(dot(fnormal, lightDirection), 0.0);
-	vec4 ambientColor 	  = ambient * color;
+	vec4 ambientColor 	  = ambient * _color;
 	vec3 freflection      = reflect(-lightDirection, fnormal);
 	vec3 fViewDirection   = normalize(viewDirection);
 	float RdotV           = max(0.0, dot(freflection, fViewDirection)); 
-	vec4 diffuseColor     = NdotL * diffuse * color;
+	vec4 diffuseColor     = NdotL * diffuse * _color;
 	vec4 specularColor    = specular * pow( RdotV, specularPower);
 	vec4 coreColor = ambientColor + diffuseColor + specularColor;
 	fragmentColor = vec4(coreColor.rgb, 1.0);
