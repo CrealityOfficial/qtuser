@@ -30,12 +30,16 @@ namespace qtuser_3d
 		return (float)angle;
 	}
 
-	QQuaternion quaternionFromVector3D2(const QVector3D& v1, const QVector3D& v2, bool normalized)
+	QQuaternion quaternionFromVector3D2(const QVector3D& v1, const QVector3D& v2, bool normalized, bool needFan)
 	{
 		QVector3D nv1 = normalized ? v1 : v1.normalized();
 		QVector3D nv2 = normalized ? v2 : v2.normalized();
 
 		float angle = qtuser_3d::angleOfVector3D2(nv1, nv2);
+		if (needFan)
+		{
+			angle = -angle;
+		}
 		QVector3D axis = QVector3D(1.0f, 0.0f, 0.0f);
 		if (angle < 180.0f)
 		{

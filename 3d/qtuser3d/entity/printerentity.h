@@ -2,41 +2,26 @@
 #define _RENDERHELPER_PRINTERENTITY_1588651416007_H
 #include "qtuser3d/qtuser3dexport.h"
 #include <Qt3DCore/QEntity>
-
+#include "qtuser3d/camera/screencamera.h"
 #include "qtuser3d/math/box3d.h"
-#include "faceentity.h"
-#include "imageentity.h"
 
 
 namespace qtuser_3d
 {
-	class BoxEntity;
-	class PrinterGrid;
-	class PrinterSkirtEntity;
-	class PrinterText;
-	class AxisEntity;
+	// printer platform
 	class QTUSER_3D_API PrinterEntity: public Qt3DCore::QEntity
 	{
 	public:
 		PrinterEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~PrinterEntity();
 
-		void updateBox(const qtuser_3d::Box3D& box);
+		virtual void onCameraChanged(qtuser_3d::ScreenCamera* screenCamera) = 0;
+		virtual void updateBox(const qtuser_3d::Box3D& box) = 0;
 
-		void enableSkirt(bool enable);
-		void visibleSubGrid(bool visible);
+		virtual void onModelChanged(Box3D basebox, bool bleft, bool bright, bool bfront, bool bback, bool bup, bool bdown) = 0;
 
-		void updateFace(Box3D& box,faceType type);
-		void setVisibility(int type, bool visibility);
-	protected:
-		BoxEntity* m_boxEntity;
-		PrinterGrid* m_printerGrid;
-		PrinterSkirtEntity* m_printerSkirt;
-		PrinterText* m_printerText;
-		AxisEntity* m_axisEntity;
-		FaceEntity* m_faceEntity;
+		virtual void showPrinterEntity(bool isShow) = 0;
 
-		ImageEntity* m_imageEntity;
 	};
 }
 #endif // _RENDERHELPER_PRINTERENTITY_1588651416007_H

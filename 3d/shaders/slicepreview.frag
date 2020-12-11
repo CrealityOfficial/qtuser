@@ -17,6 +17,7 @@ uniform vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
 uniform vec3 light_direction1 = vec3(0.0, 0.0, 1.0);
 
 uniform int showType = 0;
+uniform int animation = 0;
 
 uniform vec4 clipValue;
 uniform vec2 layershow;
@@ -59,8 +60,6 @@ void main( void )
 	if(showType == 0)
 	{
 		int stype = int(drawFlag.x);
-		if(stype == 0)
-			discard;
 		core_color = speedcolors[stype];
 	}
 	else if(showType == 1)
@@ -77,5 +76,19 @@ void main( void )
 	vec4 light_color1     = directLight(light_direction1, fnormal, diffuse_color, core_color);
 	
 	core_color = ambient_color + light_color1;
-	fragment_color = vec4(core_color.rgb, color.a);
+	core_color.a = color.a;
+	
+	if(animation > 0)
+	{
+		if(flag.x == clipValue.y)
+		{
+			core_color += vec4(0.3, 0.3, 0.3, 0.0);
+		}
+		else
+		{
+			core_color -= vec4(0.3, 0.3, 0.3, 0.0);
+		}
+	}
+	
+	fragment_color = core_color;
 }

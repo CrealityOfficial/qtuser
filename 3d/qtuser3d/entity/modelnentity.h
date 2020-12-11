@@ -27,6 +27,7 @@ namespace qtuser_3d
 		void leaveSupportStatus();
 		void setWaterPoint(QVector3D pt, float zcha);
 		void unSetWaterPoint();
+		void setFanZhuan(int fz);
 
 		void setNozzle(float nozzle);
 	protected:
@@ -42,6 +43,7 @@ namespace qtuser_3d
 		Qt3DRender::QParameter* m_waterShowParameter;
 		Qt3DRender::QParameter* m_waterParameter;
 		Qt3DRender::QParameter* m_zchaParameter;
+		Qt3DRender::QParameter* m_fanzhuanParameter;
 
 		Qt3DRender::QParameter* m_nozzleParameter;
 	};

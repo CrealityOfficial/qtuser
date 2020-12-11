@@ -6,6 +6,7 @@
 #include "qtuser3d/geometry/basicshapecreatehelper.h"
 #include "qtuser3d/geometry/gridcreatehelper.h"
 #include "qtuser3d/utils/textureload.h"
+#include "qtusercore/module/systemutil.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -45,9 +46,6 @@ namespace qtuser_3d
 
 	void ImageEntity::updateGlobal(Box3D& box)
 	{
-		qDebug() << "current path application dir = " << QCoreApplication::applicationDirPath();
-		qDebug() << "current path current = " << QDir::currentPath();
-
 		int vertexNum = 4;
 		int triangleNum = 2;
 		QVector<QVector3D> positions;
@@ -77,6 +75,9 @@ namespace qtuser_3d
 
 		//Qt3DRender::QGeometry* geometry = GridCreateHelper::createTextureQuad(boxnew, true);
 		//setGeometry(geometry);
+
+		qDebug() << "update platform";
+		gblSystemUtil.showSysMemory();
 	}
 
 	void ImageEntity::show()
