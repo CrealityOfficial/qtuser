@@ -45,6 +45,9 @@ namespace qtuser_3d
 		QMatrix4x4 parent2Global();
 		QMatrix4x4 globalMatrix();
 		QMatrix4x4 localMatrix();
+		QMatrix4x4 objectMatrix();
+
+		bool isFanZhuan();
 
 		void setParent2Global(const QMatrix4x4& matrix);
 
@@ -58,7 +61,7 @@ namespace qtuser_3d
 		virtual void onGlobalMatrixChanged(const QMatrix4x4& globalMatrix);
 		virtual void onLocalMatrixChanged(const QMatrix4x4& localMatrix);
 
-		void mirror(const QMatrix4x4& matrix, bool apply = true);
+		virtual void mirror(const QMatrix4x4& matrix, bool apply = true);
 	protected:
 		virtual Box3D calculateGlobalSpaceBox();
 		void updateGlobalSpaceBox();
@@ -77,6 +80,7 @@ namespace qtuser_3d
 		bool m_localMatrixDirty;
 		bool m_parentMatrixDirty;
 		QMatrix4x4 m_globalMatrix;
+		QMatrix4x4 m_objectMatrix;
 
 		QMatrix4x4 m_mirrorMatrix;
 	};

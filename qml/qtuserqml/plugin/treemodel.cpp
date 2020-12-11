@@ -103,13 +103,24 @@ void TreeModel::addModel(QObject*group,QObject* model)
 {
     QModelIndex parent = getModelIndex(group);
     if(parent.isValid())
-    {
-     TreeItem* parentItem = getItem(parent);
-    QList<QVariant> columnData;
-    columnData << newCustomType(model->objectName(), parentItem->childCount())<<"M"<< QVariant::fromValue(model);
-    TreeItem*childItem = new TreeItem(columnData,parentItem);
-    addItem(parent,childItem);
+    {//The second level and lower level nodes are deleted
+         TreeItem* parentItem = getItem(parent);
+        QList<QVariant> columnData;
+        columnData << newCustomType(model->objectName(), parentItem->childCount())<<"M"<< QVariant::fromValue(model);
+        TreeItem*childItem = new TreeItem(columnData,parentItem);
+        addItem(parent,childItem);
     }
+    //2020-11-17 lisugui
+    else
+    {
+        //For the first level node (root node)
+       QList<QVariant> columnData;
+       columnData << newCustomType(model->objectName(), rootItem->childCount())<<"M"<< QVariant::fromValue(model);
+       TreeItem*childItem = new TreeItem(columnData,rootItem);
+       addItem(parent,childItem);
+
+    }
+    //end
 }
 
 void TreeModel::delModel(QModelIndex index)
@@ -119,11 +130,22 @@ void TreeModel::delModel(QModelIndex index)
     TreeItem* childItem = getItem(index);
     if(parentItem)
     {
+        //The second level and lower level nodes are deleted
         beginRemoveRows(parentIndex, index.row(), index.row());
             parentItem->removeChild(childItem);
          endRemoveRows();
 
     }
+    //2020-11-17 lisugui
+    else
+    {
+
+        //For the first level node (root node)
+        beginRemoveRows(parentIndex, index.row(), index.row());
+            rootItem->removeChild(childItem);
+         endRemoveRows();
+    }
+    //end
 }
 
 void TreeModel::delModel(QObject* model)

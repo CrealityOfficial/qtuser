@@ -55,6 +55,8 @@ public:
 	void unRegisterRenderGraph(RenderGraph* graph);
 	void unRegisterAll();
 
+	bool isRenderRenderGraph(RenderGraph* graph);
+
 	QOpenGLContext* sharedContext();
 	qtuser_qml::RawOGL* rawOGL();
 public slots:

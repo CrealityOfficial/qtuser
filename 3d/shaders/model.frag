@@ -20,8 +20,11 @@ uniform float topVisibleHeight = 100000.0;
 uniform float bottomVisibleHeight = -10000.0;
 uniform float error;
 uniform float supportCos = 0.7;
+
 uniform int hoverState = 0;
 uniform int waterState = 0;
+uniform int fanzhuan = 0;
+
 uniform float zcha = 0.01;
 
 uniform float state;
@@ -89,10 +92,22 @@ void main( void )
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
 	
-	if(!gl_FrontFacing)
-    {
-		coreColor.rgb = vec3(0.65, 0.75, 0.65) - coreColor.rgb;
-    }
+	int fz = fanzhuan % 2;
+	
+	if(fz == 0)
+	{
+		if(!gl_FrontFacing)
+		{
+			coreColor.rgb = vec3(0.65, 0.75, 0.65) - coreColor.rgb;
+		}
+	}
+	else
+	{
+		if(gl_FrontFacing)
+		{
+			coreColor.rgb = vec3(0.65, 0.75, 0.65) - coreColor.rgb;
+		}
+	}
    
 	fragmentColor = vec4(coreColor.rgb, 1.0);
 }

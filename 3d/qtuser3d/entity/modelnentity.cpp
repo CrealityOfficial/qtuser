@@ -20,6 +20,7 @@ namespace qtuser_3d
 		m_waterParameter = createParameter("water", QVector3D(0, 0, -10000));
 		m_zchaParameter = createParameter("zcha", 0.01);
 		m_waterShowParameter = createParameter("waterState", 0);
+		m_fanzhuanParameter = createParameter("fanzhuan", 0);
 
 		m_nozzleParameter = createParameter("nozzle", 0);
 	}
@@ -89,5 +90,10 @@ namespace qtuser_3d
 	void ModelNEntity::unSetWaterPoint()
 	{
 		m_waterShowParameter->setValue(0);
+	}
+
+	void ModelNEntity::setFanZhuan(int fz)
+	{
+		m_fanzhuanParameter->setValue(fz);
 	}
 }
