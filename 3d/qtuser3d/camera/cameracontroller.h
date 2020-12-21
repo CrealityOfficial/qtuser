@@ -38,6 +38,7 @@ public:
 
 	void uninitialize();
 	void fittingBoundingBox(const qtuser_3d::Box3D& box);
+	void updateNearFar(const qtuser_3d::Box3D& box);
 	void home(const qtuser_3d::Box3D& box);
 protected:
 	void onResize(const QSize& size) override;

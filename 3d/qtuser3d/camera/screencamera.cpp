@@ -73,6 +73,33 @@ namespace qtuser_3d
 		m_camera->setViewCenter(center);
 		//m_camera->setNearPlane(nearPlane);
 		//m_camera->setFarPlane(farPlane);
+
+		m_box = box;
+		_updateNearFar(m_box);
+	}
+
+	void ScreenCamera::updateNearFar(const qtuser_3d::Box3D& box)
+	{
+		m_box = box;
+
+		_updateNearFar(m_box);
+	}
+
+	void ScreenCamera::_updateNearFar(const qtuser_3d::Box3D& box)
+	{
+		QVector3D cameraPosition = m_camera->position();
+		QVector3D cameraCenter = m_camera->viewCenter();
+		QVector3D cameraView = cameraCenter - cameraPosition;
+		cameraView.normalize();
+
+		QVector3D center = box.center();
+		float r = box.size().length() / 2.0f;
+		float d = QVector3D::dotProduct(cameraView, center - cameraPosition);
+		float dmin = d - 1.2f * r;
+		float dmax = d + 1.2f * r;
+
+		m_camera->lens()->setPerspectiveProjection(30.0f, 16.0f / 9.0f, dmin < 0.1f ? 0.1f : dmin,
+			dmax > 0.0f ? dmax : 3000.0f);
 	}
 
 	qtuser_3d::Ray ScreenCamera::screenRay(const QPoint& point)
@@ -153,6 +180,8 @@ namespace qtuser_3d
 			m_camera->setPosition(newPosition);
 
 			notifyCameraChanged();
+
+			_updateNearFar(m_box);
 			return true;
 		}
 		return false;
@@ -167,6 +196,8 @@ namespace qtuser_3d
 
 		m_camera->setPosition(cameraPosition);
 		m_camera->setViewCenter(viewCenter);
+
+		_updateNearFar(m_box);
 		return true;
 	}
 
@@ -194,6 +225,7 @@ namespace qtuser_3d
 		m_camera->setUpVector(newUp);
 		m_camera->setPosition(newPosition);
 
+		_updateNearFar(m_box);
 		return true;
 	}
 

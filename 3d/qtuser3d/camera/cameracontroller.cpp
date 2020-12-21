@@ -115,6 +115,12 @@ void CameraController::fittingBoundingBox(const qtuser_3d::Box3D& box)
 		m_screenCamera->fittingBoundingBox(box);
 }
 
+void CameraController::updateNearFar(const qtuser_3d::Box3D& box)
+{
+	if (m_screenCamera)
+		m_screenCamera->updateNearFar(box);
+}
+
 void CameraController::home(const qtuser_3d::Box3D& box)
 {
 	if(m_screenCamera)

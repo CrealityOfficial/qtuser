@@ -27,6 +27,7 @@ namespace qtuser_3d
 		QSize size();
 
 		void fittingBoundingBox(const qtuser_3d::Box3D& box);
+		void updateNearFar(const qtuser_3d::Box3D& box);
 		qtuser_3d::Ray screenRay(const QPoint& point);
 		qtuser_3d::Ray screenRay(const QPointF& point);
 		float screenSpaceRatio(const QVector3D& position);
@@ -58,11 +59,14 @@ namespace qtuser_3d
 		void clearCameraObservers();
 		void notifyCameraChanged();
 	protected:
+		void _updateNearFar(const qtuser_3d::Box3D& box);
+	protected:
 		Qt3DRender::QCamera* m_camera;
 		QSize m_size;
 
 		float m_minDistance;
 		float m_maxDistance;
+		qtuser_3d::Box3D m_box;
 
 		QList<ScreenCameraObserver*> m_cameraObservers;
 	};
