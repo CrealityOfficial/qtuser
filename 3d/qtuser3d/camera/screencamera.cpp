@@ -85,6 +85,11 @@ namespace qtuser_3d
 		_updateNearFar(m_box);
 	}
 
+	void ScreenCamera::updateNearFar()
+	{
+		_updateNearFar(m_box);
+	}
+
 	void ScreenCamera::_updateNearFar(const qtuser_3d::Box3D& box)
 	{
 		QVector3D cameraPosition = m_camera->position();
@@ -101,7 +106,7 @@ namespace qtuser_3d
 		float fieldofview = m_camera->lens()->fieldOfView();
 		float aspect = m_camera->lens()->aspectRatio();
 
-		float nearpos = dmin < 0.1f ? 0.1f : dmin;
+		float nearpos = dmin < 1.0f ? 1.0f : dmin;
 		float farpos = dmax > 0.0f ? dmax : 3000.0f;
 
 		m_camera->lens()->setPerspectiveProjection(fieldofview, aspect, nearpos, farpos);

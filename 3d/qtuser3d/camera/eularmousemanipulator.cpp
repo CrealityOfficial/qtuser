@@ -101,6 +101,8 @@ namespace qtuser_3d
 		
 		m_camera->setPosition(newPosition);
 		m_camera->setViewCenter(newViewCenter);
+
+		m_screenCamera->updateNearFar();
 	}
 
 	void EularMouseManipulator::performRotate(const QPoint& pos)
@@ -150,5 +152,7 @@ namespace qtuser_3d
 		{
 			qDebug() << "error";
 		}
+
+		m_screenCamera->updateNearFar();
 	}
 }

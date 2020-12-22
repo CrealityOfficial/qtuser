@@ -28,6 +28,8 @@ namespace qtuser_3d
 
 		void fittingBoundingBox(const qtuser_3d::Box3D& box);
 		void updateNearFar(const qtuser_3d::Box3D& box);
+		void updateNearFar();
+
 		qtuser_3d::Ray screenRay(const QPoint& point);
 		qtuser_3d::Ray screenRay(const QPointF& point);
 		float screenSpaceRatio(const QVector3D& position);
