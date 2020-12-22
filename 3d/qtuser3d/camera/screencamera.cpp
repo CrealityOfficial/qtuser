@@ -98,8 +98,13 @@ namespace qtuser_3d
 		float dmin = d - 1.2f * r;
 		float dmax = d + 1.2f * r;
 
-		m_camera->lens()->setPerspectiveProjection(30.0f, 16.0f / 9.0f, dmin < 0.1f ? 0.1f : dmin,
-			dmax > 0.0f ? dmax : 3000.0f);
+		float fieldofview = m_camera->lens()->fieldOfView();
+		float aspect = m_camera->lens()->aspectRatio();
+
+		float nearpos = dmin < 0.1f ? 0.1f : dmin;
+		float farpos = dmax > 0.0f ? dmax : 3000.0f;
+
+		m_camera->lens()->setPerspectiveProjection(fieldofview, aspect, nearpos, farpos);
 	}
 
 	qtuser_3d::Ray ScreenCamera::screenRay(const QPoint& point)
