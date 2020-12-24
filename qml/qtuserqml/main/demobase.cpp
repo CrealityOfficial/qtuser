@@ -38,6 +38,11 @@ DemoBase::DemoBase(Qt3DCore::QNode* parent)
 
 DemoBase::~DemoBase()
 {
+	delete m_camera;
+	m_surface->setCamera(nullptr);
+	delete m_surface;
+	delete m_cameraController;
+	delete m_offRoot;
 }
 
 void DemoBase::initialize()

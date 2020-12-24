@@ -34,6 +34,8 @@ namespace qtuser_3d
 
 	Surface::~Surface()
 	{
+		setSurface(nullptr);
+		m_offSurface->deleteLater();
 	}
 
 	Qt3DRender::QFrameGraphNode* Surface::getCameraViewportFrameGraphNode()
