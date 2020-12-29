@@ -29,7 +29,7 @@ uniform float zcha = 0.01;
 
 uniform float state;
 uniform float nozzle;
-uniform vec4 stateColors[4];
+uniform vec4 stateColors[5];
 
 vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_color, vec4 diffuse_color, vec4 specular_color)
 {

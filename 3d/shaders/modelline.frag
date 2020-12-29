@@ -9,7 +9,7 @@ uniform float bottomVisibleHeight = -10000.0;
 uniform float error;
 
 uniform float state;
-uniform vec4 stateColors[4];
+uniform vec4 stateColors[5];
 
 void main( void )
 {
