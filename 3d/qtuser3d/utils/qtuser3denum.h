@@ -7,7 +7,9 @@ namespace qtuser_3d
 	{
 		none,
 		hover,
-		selected
+		selected,
+		unknow,
+		preView
 	};
 }
 #endif // QTUSER3DENUM_1592204871928_H
