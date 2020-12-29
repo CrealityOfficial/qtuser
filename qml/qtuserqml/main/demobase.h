@@ -39,7 +39,7 @@ public:
 	DemoBase(Qt3DCore::QNode* parent = nullptr);
 	virtual ~DemoBase();
 
-	Q_INVOKABLE void initialize();
+	Q_INVOKABLE void initialize(QObject* uiRoot = nullptr);
 	Q_INVOKABLE void uninitialize();
 
 	Qt3DCore::QEntity* sceneGraph();
@@ -91,6 +91,9 @@ private:
 	CommandCenter m_commandCenter;
 
 	NamedEntities m_namedEntities;
+
+protected:
+	QObject* m_uiRoot;
 };
 
 #endif // _DEMOBASE_1594285008655_H
