@@ -274,6 +274,7 @@ namespace qtuser_3d
 		m_camera->setUpVector(up);
 		m_camera->setPosition(position);
 
+		m_box = box;
 		setMaxLimitDistance(dmax);
 
 		notifyCameraChanged();
