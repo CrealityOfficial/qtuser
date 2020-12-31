@@ -20,6 +20,7 @@ using namespace qtuser_3d;
 CXSW_REG(DemoBase)
 DemoBase::DemoBase(Qt3DCore::QNode* parent)
 	:RenderGraph(parent)
+	, m_uiRoot(nullptr)
 {
 	m_surface = new qtuser_3d::Surface();
 	m_surface->setClearColor(QColor(50, 50, 50));
@@ -38,10 +39,16 @@ DemoBase::DemoBase(Qt3DCore::QNode* parent)
 
 DemoBase::~DemoBase()
 {
+	delete m_camera;
+	m_surface->setCamera(nullptr);
+	delete m_surface;
+	delete m_cameraController;
+	delete m_offRoot;
 }
 
-void DemoBase::initialize()
+void DemoBase::initialize(QObject* uiRoot)
 {
+	m_uiRoot = uiRoot;
 	registerRenderGraph(this);
 	renderRenderGraph(this);	
 
