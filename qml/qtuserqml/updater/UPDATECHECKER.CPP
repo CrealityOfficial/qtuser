@@ -107,7 +107,7 @@ void UpdateChecker::replyFinished(QNetworkReply *reply)
 
     if(reply->error() != QNetworkReply::NoError)
     {
-        qWarning() << "[UpdateChecker]" << reply->errorString();
+        qWarning() << "[UpdateChecker]" << reply->errorString() << "\n";
         Q_EMIT updateError(reply->errorString());
         return;
     }
@@ -115,7 +115,7 @@ void UpdateChecker::replyFinished(QNetworkReply *reply)
     const QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &error);
     if(error.error != QJsonParseError::NoError)
     {
-        qWarning() << "[UpdateChecker]" << error.errorString();
+        qWarning() << "[UpdateChecker]" << error.errorString() << "\n";
         Q_EMIT updateError(error.errorString());
         return;
     }

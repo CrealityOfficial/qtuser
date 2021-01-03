@@ -75,9 +75,6 @@ namespace qtuser_3d
 
 		//Qt3DRender::QGeometry* geometry = GridCreateHelper::createTextureQuad(boxnew, true);
 		//setGeometry(geometry);
-
-		qDebug() << "update platform";
-		gblSystemUtil.showSysMemory();
 	}
 
 	void ImageEntity::show()

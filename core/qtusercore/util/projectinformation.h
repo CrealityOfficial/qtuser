@@ -16,6 +16,8 @@ namespace qtuser_core
 
 		QString name();
 		void setName(const QString& name);
+
+		void print();
 	protected:
 		Version m_version;
 		QString m_projectName;
