@@ -21,6 +21,7 @@ namespace qtuser_3d
 		void drawFace(Box3D& box);
 
 		void setVisibility(int type, bool visibility);
+		void setColor(int type, const QVector4D& color);
 		void updateFace(Box3D& box,faceType type);
 	protected:
 		Faces* m_faceFront;

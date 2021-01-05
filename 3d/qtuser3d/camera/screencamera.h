@@ -43,7 +43,7 @@ namespace qtuser_3d
 		bool rotate(const QVector3D& axis, float angle);
 		bool rotate(const QQuaternion& q);
 
-		void home(const qtuser_3d::Box3D& box);
+		void home(const qtuser_3d::Box3D& box, int type = 0);
 
 		void showSelf() const;
 

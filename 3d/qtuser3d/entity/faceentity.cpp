@@ -216,6 +216,34 @@ namespace qtuser_3d
 		}
 	}
 
+	void FaceEntity::setColor(int type, const QVector4D& color)
+	{
+		if (type == faceType::back)
+		{
+			m_faceBack->setColor(color);
+		}
+		else if (type == faceType::left)
+		{
+			m_faceLeft->setColor(color);
+		}
+		else if (type == faceType::right)
+		{
+			m_faceRight->setColor(color);
+		}
+		else if (type == faceType::front)
+		{
+			m_faceFront->setColor(color);
+		}
+		else if (type == faceType::up)
+		{
+			m_faceTop->setColor(color);
+		}
+		else if (type == faceType::down)
+		{
+			m_faceBottom->setColor(color);
+		}
+	}
+
 	void FaceEntity::setVisibility(int type, bool visibility)
 	{
 		if (type == faceType::back)

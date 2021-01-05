@@ -255,7 +255,7 @@ namespace qtuser_3d
 		return point;
 	}
 
-	void ScreenCamera::home(const qtuser_3d::Box3D& box)
+	void ScreenCamera::home(const qtuser_3d::Box3D& box, int type)
 	{
 		QVector3D size = box.size();
 		QVector3D center = box.center();
@@ -266,6 +266,15 @@ namespace qtuser_3d
 		QVector3D right = QVector3D(1.0f, -1.0f, 0.0f);
 		right.normalize();
 		QVector3D up = QVector3D::crossProduct(right, dir);
+
+		if (type == 1)
+		{
+			dir = QVector3D(0.0f, 1.0f, -1.0f);
+			dir.normalize();
+			right = QVector3D(1.0f, 0.0f, 0.0f);
+			right.normalize();
+			up = QVector3D::crossProduct(right, dir);
+		}
 
 		float len = viewAllLen(size.length() / 2.0f);
 		float dmax = len*1.5;
