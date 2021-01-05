@@ -33,9 +33,9 @@ namespace qtuser_qml
      }
     void ToolCommandCenter::addCommand(ToolCommand* command)
     {
-
         if (command)
         {
+            command->setParent(command);
             m_toolCommands.push_back(command);
             qSort(m_toolCommands.begin(), m_toolCommands.end(), variantLessThan);
             //int index = m_toolCommands.size()-1;
@@ -49,15 +49,19 @@ namespace qtuser_qml
 
     void ToolCommandCenter::removeCommand(ToolCommand* command)
     {
-        int index = m_toolCommands.indexOf(command);
-        if (index >= 0 && index < m_toolCommands.size())
+        if (command)
         {
-            //beginRemoveRows(QModelIndex(), index, index);
-            m_toolCommands.removeAt(index);
-            //endRemoveRows();
+            command->setParent(nullptr);
+            int index = m_toolCommands.indexOf(command);
+            if (index >= 0 && index < m_toolCommands.size())
+            {
+                //beginRemoveRows(QModelIndex(), index, index);
+                m_toolCommands.removeAt(index);
+                //endRemoveRows();
+            }
+            beginResetModel();
+            endResetModel();
         }
-        beginResetModel();
-        endResetModel();
     }
 
     int ToolCommandCenter::rowCount(const QModelIndex& parent) const

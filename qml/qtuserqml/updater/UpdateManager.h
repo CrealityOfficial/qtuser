@@ -30,7 +30,7 @@ class QTUSER_QML_API UpdateManager : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(UpdateManager)
-    Q_PROPERTY(bool autocheck READ autoCheck WRITE setAutoCheck)
+    Q_PROPERTY(bool autocheck READ autoCheck WRITE setAutoCheck NOTIFY autoCheckChanged)
 
 	Q_PROPERTY(QString version READ version CONSTANT)
 	Q_PROPERTY(QUrl url READ url CONSTANT)
@@ -47,6 +47,7 @@ public:
 Q_SIGNALS:
     void updateFound(QString version,QUrl url,QString releaseNote);
 	void updateFound();
+    void autoCheckChanged();
 public Q_SLOTS:
     void checkForUpdates(bool force);
     Q_INVOKABLE void checkForUpdates();

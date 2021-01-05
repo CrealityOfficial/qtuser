@@ -1,4 +1,5 @@
 #include "projectinformation.h"
+#include <QtCore/QDebug>
 
 namespace qtuser_core
 {
@@ -30,5 +31,11 @@ namespace qtuser_core
 	void ProjectInformation::setName(const QString& name)
 	{
 		m_projectName = name;
+	}
+
+	void ProjectInformation::print()
+	{
+		qInfo() << "ProjectName : " << m_projectName;
+		qInfo() << "Version : " << m_version.versionFullName();
 	}
 }

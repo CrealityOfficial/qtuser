@@ -2,37 +2,9 @@
 #define QTUSER_CORE_SYSTEM_UTIL_H
 
 #include "qtusercore/qtusercoreexport.h"
-#include <QString>
 
-class QTUSER_CORE_API SystemUtil
-{
-public:
-	enum SYSTEM_TYPE
-	{
-		WINDOWS = 1,
-		LINUX,
-		MAC,
-
-		UNKNOWN = 100
-	};
-
-protected:
-	SYSTEM_TYPE m_systemType;
-
-public:
-	SystemUtil();
-
-	SYSTEM_TYPE getSystemType();
-
-	void showDetailSystemInfo();
-
-	void showSysMemory();
-
-};
-
-
-QTUSER_CORE_API extern SystemUtil gblSystemUtil;
-
-
+QTUSER_CORE_API void initSystemUtil();
+QTUSER_CORE_API void showDetailSystemInfo();
+QTUSER_CORE_API void showSysMemory();
 
 #endif // creative_kernel_MATRIX_UTIL_H

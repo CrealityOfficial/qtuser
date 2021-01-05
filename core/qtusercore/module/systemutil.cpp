@@ -1,7 +1,7 @@
 #include "systemutil.h"
 
-#include <QSysInfo>
-#include <QDebug>
+#include <QtCore/QOperatingSystemVersion>
+#include <QtCore/QDebug>
 
 
 #ifdef _WINDOWS
@@ -13,26 +13,30 @@
 
 #endif
 
+enum SYSTEM_TYPE
+{
+	WINDOWS = 1,
+	LINUX,
+	MAC,
 
-SystemUtil::SystemUtil()
-	: m_systemType(UNKNOWN)
+	UNKNOWN = 100
+};
+
+SYSTEM_TYPE gSystemType = UNKNOWN;
+
+void initSystemUtil()
 {
 	QString system_type = QSysInfo::productType();
 	system_type = system_type.toLower();
 	if (system_type.indexOf("windows") >= 0)
 	{
-		m_systemType = WINDOWS;
+		gSystemType = WINDOWS;
 	}
 }
 
-
-SystemUtil::SYSTEM_TYPE SystemUtil::getSystemType()
+void showDetailSystemInfo()
 {
-	return m_systemType;
-}
-
-void SystemUtil::showDetailSystemInfo()
-{
+	qDebug() << "--------------------------------";
 	qDebug() << "buildAbi: " << QSysInfo::buildAbi();
 	qDebug() << "buildCpuArchitecture: " << QSysInfo::buildCpuArchitecture();
 	qDebug() << "currentCpuArchitecture: " << QSysInfo::currentCpuArchitecture();
@@ -42,24 +46,15 @@ void SystemUtil::showDetailSystemInfo()
 	qDebug() << "prettyProductName: " << QSysInfo::prettyProductName();
 	qDebug() << "productType: " << QSysInfo::productType();
 	qDebug() << "productVersion: " << QSysInfo::productVersion();
-	if (m_systemType == WINDOWS)
-	{
-		qDebug() << "Windows Version: " << QSysInfo::windowsVersion();
-	}
-	else if (m_systemType == LINUX)
-	{
-		//
-	}
-	else if (m_systemType == MAC)
-	{
-		qDebug() << "Mac Version: " << QSysInfo::macVersion();
-	}
 
+	QOperatingSystemVersion version = QOperatingSystemVersion::current();
+	qDebug() << version.name() << version.majorVersion() << version.minorVersion() << version.microVersion();
+	showSysMemory();
+	qDebug() << "--------------------------------\n";
 }
 
 #ifdef _WINDOWS
-
-void SystemUtil::showSysMemory()
+void showSysMemory()
 {
 	HANDLE handle = GetCurrentProcess();
 	PROCESS_MEMORY_COUNTERS pmc;
@@ -69,17 +64,13 @@ void SystemUtil::showSysMemory()
 
 	qDebug() << "memory use: " << pmc.WorkingSetSize / msize << "M/" << pmc.PeakWorkingSetSize / msize << "M + "
 		<< pmc.PagefileUsage / msize << "M/" << pmc.PeakPagefileUsage / msize << "M";
-
 }
 
 #else
 
-void SystemUtil::showSysMemory()
+void showSysMemory()
 {
 }
 
 #endif
-
-
-QTUSER_CORE_API SystemUtil gblSystemUtil;
 
