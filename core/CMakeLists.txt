@@ -1,4 +1,4 @@
-__files_group(${CMAKE_CURRENT_SOURCE_DIR}/qtusercore/ SRCS)
+__tree_add_current(SRCS)
 set(LIBS Qt5::Core)
 set(DEFS QTUSER_CORE_DLL)
 
