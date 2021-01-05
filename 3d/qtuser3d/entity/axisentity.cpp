@@ -35,4 +35,22 @@ namespace qtuser_3d
 	AxisEntity::~AxisEntity()
 	{
 	}
+
+	void AxisEntity::translate(QVector3D v)
+	{
+		QMatrix4x4 t;
+		t.translate(v.x(), v.y());
+
+		QMatrix4x4 xMatrix = m_xAxis->pose();
+		xMatrix = t * xMatrix;
+		m_xAxis->setPose(xMatrix);
+
+		QMatrix4x4 yMatrix = m_yAxis->pose();
+		yMatrix = t * yMatrix;
+		m_yAxis->setPose(yMatrix);
+
+		QMatrix4x4 zMatrix = m_zAxis->pose();
+		zMatrix = t * zMatrix;
+		m_zAxis->setPose(zMatrix);
+	}
 }

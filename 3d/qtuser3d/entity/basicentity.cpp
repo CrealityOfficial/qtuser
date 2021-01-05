@@ -62,6 +62,11 @@ namespace qtuser_3d
 		m_transform->setMatrix(matrix);
 	}
 
+	QMatrix4x4 BasicEntity::pose() const
+	{
+		return m_transform->matrix();
+	}
+
 	void BasicEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type)
 	{
 		Qt3DRender::QGeometry* oldGeometry = m_geometryRenderer->geometry();

@@ -12,6 +12,8 @@ namespace qtuser_3d
 		AxisEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~AxisEntity();
 
+		void translate(QVector3D v);
+
 	protected:
 		PureColorEntity* m_xAxis;
 		PureColorEntity* m_yAxis;
