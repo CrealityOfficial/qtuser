@@ -153,8 +153,6 @@ namespace qtuser_3d
 			qDebug() << "error";
 		}
 
-//		qDebug() << "up = " << up << " dir = " << dir << " right = " << right;
-
 		m_screenCamera->updateNearFar();
 	}
 }
