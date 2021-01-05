@@ -13,6 +13,8 @@ namespace qtuser_3d
 		virtual ~GridCreateHelper();
 
 		static Qt3DRender::QGeometry* create(Box3D& box, float gap = 10.0f, Qt3DCore::QNode * parent = nullptr);   //lines
+		static Qt3DRender::QGeometry* createMid(Box3D& box, float gap = 10.0f, float offset = 5.0f, Qt3DCore::QNode* parent = nullptr);
+
 		static Qt3DRender::QGeometry* createPlane(float width, float height, bool triangle = true, Qt3DCore::QNode* parent = nullptr);   //triangles
 		static Qt3DRender::QGeometry* createTextureQuad(Box3D& box, bool flatZ, Qt3DCore::QNode* parent = nullptr);
 	};
