@@ -8,6 +8,9 @@
 
 #include <Windows.h>
 #include <psapi.h>
+#include <io.h>
+#include <fcntl.h>
+#include <iostream>
 
 #pragma comment(lib, "psapi.lib")
 
@@ -73,4 +76,20 @@ void showSysMemory()
 }
 
 #endif
+
+void redirectIo()
+{
+#if defined(WIN32) && defined(_DEBUG)
+	HANDLE hStdHandle;
+	int fdConsole;
+	FILE* fp;
+	AllocConsole();
+	hStdHandle = (HANDLE)GetStdHandle(STD_OUTPUT_HANDLE);
+	fdConsole = _open_osfhandle((intptr_t)hStdHandle, _O_TEXT);
+	fp = _fdopen(fdConsole, "w");
+	*stdout = *fp;
+	setvbuf(stdout, NULL, _IONBF, 0);
+	std::ios::sync_with_stdio();
+#endif
+}
 
