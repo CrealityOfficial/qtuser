@@ -75,6 +75,9 @@ namespace qtuser_3d
 		//m_camera->setFarPlane(farPlane);
 
 		m_box = box;
+		float dmax = viewAllLen(m_box.size().length() / 2.0f) * 1.5;
+		setMaxLimitDistance(dmax);
+
 		_updateNearFar(m_box);
 	}
 
