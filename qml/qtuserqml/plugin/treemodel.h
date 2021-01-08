@@ -94,6 +94,7 @@ private:
  signals:
     //void onDelModelTreeItem(QObject *item);
     void addNewItem(QModelIndex index);
+    void rowChanged();//by TCJ
 };
 //! [0]
 }

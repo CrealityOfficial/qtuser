@@ -41,10 +41,11 @@ namespace qtuser_3d
 		virtual void faceBaseChanged(int faceBase);
 		virtual void noPrimitiveChanged(bool noPrimitive);
 	protected:
+
+
 		ControlState m_state;
 		int m_faceBase;
 		bool m_noPrimitive;
-
 		bool m_enableSelect;
 	};
 
