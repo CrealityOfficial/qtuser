@@ -87,10 +87,10 @@ namespace qtuser_3d
 
 		int startX = 0;
 		int endX = qFloor(maxX / gap);
-		if (float(endX) * gap == maxX) endX -= 1;
+//		if (float(endX) * gap == maxX) endX -= 1;
 		int startY = 0;
 		int endY = qFloor(maxY / gap);
-		if (float(endY) * gap == maxY) endY -= 1;
+//		if (float(endY) * gap == maxY) endY -= 1;
 
 		float midX = ((float)startX + (float)endX) / 2.0;
 		float midY = ((float)startY + (float)endY) / 2.0;
