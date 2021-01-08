@@ -120,6 +120,7 @@ void TreeModel::addModel(QObject*group,QObject* model)
        addItem(parent,childItem);
 
     }
+    emit rowChanged();
     //end
 }
 
@@ -152,6 +153,7 @@ void TreeModel::delModel(QObject* model)
 {
     QModelIndex index = getModelIndex(model);
     delModel(index);
+    emit rowChanged();
 }
 
 //! [0]
@@ -266,7 +268,7 @@ int TreeModel::rowCount(const QModelIndex &parent) const
         parentItem = rootItem;
     else
         parentItem = static_cast<TreeItem*>(parent.internalPointer());
-
+   
     return parentItem->childCount();
 }
 //! [8]

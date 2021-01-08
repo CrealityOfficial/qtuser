@@ -18,10 +18,16 @@ namespace qtuser_3d
 
 		static Qt3DRender::QGeometry* createPen(Qt3DCore::QNode* parent = nullptr);
 
-	protected:
+		static Qt3DRender::QGeometry* createBall(QVector3D center, float r, float angleSpan, Qt3DCore::QNode* parent = nullptr);
+
+		static Qt3DRender::QGeometry* createGeometry(Qt3DCore::QNode* parent, std::vector<float> *vertexDatas, std::vector<float>* normalDatas = nullptr, QVector<unsigned>* indices = nullptr);
+
+	public:
 		static int createCylinderData(float r, float h, int seg, std::vector<float> &datas);
 
 		static int createPenData(float r, float headh, float bodyh, int seg, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
+
+		static int createBallData(QVector3D center, float r, float angleSpan, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
 
 	private:
 		static int addFaceDataWithQVector3D(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3, const QVector3D& n, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
