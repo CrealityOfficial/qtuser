@@ -33,8 +33,8 @@
 #include <QFile>
 #include "ReleaseInfo.h"
 #include <QUrlQuery>
-#include "../../buildinfo.h"
 #include <QSettings>
+
 static bool releaseInfoGreater(const ReleaseInfo &lhs, const ReleaseInfo &rhs)
 {
     return lhs.version > rhs.version;
