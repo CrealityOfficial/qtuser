@@ -58,6 +58,7 @@ namespace qtuser_3d
 	void Node3D::setCenter(const QVector3D& center, bool update)
 	{
 		m_localCenter = center;
+		m_localMatrixDirty = true;
 
 		if (update) updateMatrix();
 	}
