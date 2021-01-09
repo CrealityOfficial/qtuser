@@ -211,6 +211,24 @@ namespace qtuser_3d
 				float usehAngle = hAngle * PI / 180.0;
 				float nhAngle = (hAngle + angleSpan) * PI / 180.0;
 
+//				QVector3D v0(cos(usevAngle) * cos(usehAngle), cos(usevAngle) * sin(usehAngle), sin(usevAngle));
+
+				float nx0 = (float)(cos(usevAngle) * cos(usehAngle));
+				float ny0 = (float)(cos(usevAngle) * sin(usehAngle));
+				float nz0 = (float)(sin(usevAngle));
+
+				float nx1 = (float)(cos(usevAngle) * cos(nhAngle));
+				float ny1 = (float)(cos(usevAngle) * sin(nhAngle));
+				float nz1 = (float)(sin(usevAngle));
+
+				float nx2 = (float)(cos(nvAngle) * cos(nhAngle));
+				float ny2 = (float)(cos(nvAngle) * sin(nhAngle));
+				float nz2 = (float)(r * sin(nvAngle));
+
+				float nx3 = (float)(cos(nvAngle) * cos(usehAngle));
+				float ny3 = (float)(cos(nvAngle) * sin(usehAngle));
+				float nz3 = (float)(sin(nvAngle));
+
 				float x0 = (float)(r * cos(usevAngle) * cos(usehAngle)) + center.x();
 				float y0 = (float)(r * cos(usevAngle) * sin(usehAngle)) + center.y();
 				float z0 = (float)(r * sin(usevAngle)) + center.z();
@@ -234,9 +252,18 @@ namespace qtuser_3d
 				vertexDatas.push_back(x1); vertexDatas.push_back(y1); vertexDatas.push_back(z1);
 				vertexDatas.push_back(x2); vertexDatas.push_back(y2); vertexDatas.push_back(z2);
 				vertexDatas.push_back(x3); vertexDatas.push_back(y3); vertexDatas.push_back(z3);
+
+
+				normalDatas.push_back(nx1); normalDatas.push_back(ny1); normalDatas.push_back(nz1);
+				normalDatas.push_back(nx3); normalDatas.push_back(ny3); normalDatas.push_back(nz3);
+				normalDatas.push_back(nx0); normalDatas.push_back(ny0); normalDatas.push_back(nz0);
+
+				normalDatas.push_back(nx1); normalDatas.push_back(ny1); normalDatas.push_back(nz1);
+				normalDatas.push_back(nx2); normalDatas.push_back(ny2); normalDatas.push_back(nz2);
+				normalDatas.push_back(nx3); normalDatas.push_back(ny3); normalDatas.push_back(nz3);
+
 			}
 		}
-		normalDatas = vertexDatas;
 		return 0;
 	}
 

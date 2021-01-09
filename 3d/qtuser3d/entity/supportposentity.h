@@ -13,10 +13,11 @@ namespace qtuser_3d
 	{
 		Q_OBJECT
 	public:
-		SupportPosEntity(QVector3D position, QObject* parent = nullptr);
+		SupportPosEntity(QVector3D position, QVector3D normal, QObject* parent = nullptr);
 		~SupportPosEntity();
 
 		QVector3D position();
+		QVector3D normal();
 
 		int pointNum();
 
@@ -28,6 +29,7 @@ namespace qtuser_3d
 	protected:
 		int m_pointNum;
 		QVector3D m_position;
+		QVector3D m_normal;
 	};
 
 }
