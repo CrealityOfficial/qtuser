@@ -34,6 +34,7 @@ namespace qtuser_3d
 		void mirrorX();
 		void mirrorY();
 		void mirrorZ();
+		int mirrorZ_count;
 		void mirrorSet(const QMatrix4x4& m);
 		QMatrix4x4 mirrorMatrix();
 
