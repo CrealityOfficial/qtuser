@@ -1,4 +1,4 @@
-#version 130
+#version 150 core
 out vec4 fragmentColor;
 
 in vec3 viewDirection;
@@ -78,7 +78,7 @@ void main( void )
 	{
 		if(dot(fgnormal, vec3(0.0, 0.0, -1.0)) > supportCos)
 		{
-			coreColor.r += 0.4;
+			coreColor.r += 0.8;
 		}
 		
 		if(waterState == 1)

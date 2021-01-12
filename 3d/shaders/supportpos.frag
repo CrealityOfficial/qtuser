@@ -1,10 +1,9 @@
-#version 150 core
+#version 130
 out vec4 fragmentColor;
 
 in vec3 viewDirection;
 in vec3 normal;
 in vec3 worldPosition;
-flat in float flag;
 
 uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 1.0);
 uniform vec4 diffuse = vec4(1.0, 1.0, 1.0, 1.0);
@@ -13,7 +12,7 @@ uniform float specularPower = 12.0;
 
 uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
-uniform vec4 stateColors[5];
+uniform vec4 stateColors = vec4(0.8, 0.5, 0.8, 1.0);
 
 uniform vec3 minSpace;
 uniform vec3 maxSpace;
@@ -26,10 +25,7 @@ void main( void )
 	if(worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight)
 		discard;
 		
-	if(flag == 0.0)
-		discard;
-		
-	vec4 color = stateColors[int(flag)];	
+	vec4 color = stateColors;	
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 specular_color   = specular;
@@ -53,5 +49,5 @@ void main( void )
 		coreColor.g += 0.4;
 	}
 	
-	fragmentColor = vec4(coreColor.rgb, 1.0);
+	fragmentColor = vec4(coreColor.rgb, 0.8);
 }

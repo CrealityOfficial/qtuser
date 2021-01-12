@@ -36,6 +36,8 @@
         <file>shaders/modelselect.vert</file>
         <file>shaders/modelsimple.frag</file>
         <file>shaders/modelsimple.vert</file>
+        <file>shaders/supportpos.frag</file>
+        <file>shaders/supportpos.vert</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
