@@ -1,4 +1,4 @@
-#version 130
+#version 150 core
 
 flat in vec4 passColor;
 in vec3 passVert;
