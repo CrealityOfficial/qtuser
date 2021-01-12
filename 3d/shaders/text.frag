@@ -1,4 +1,4 @@
-#version 130
+#version 150 core
 
 out vec4 fragColor;
 uniform vec4 color = vec4(1.0, 0.0, 0.0, 1.0);
