@@ -6,8 +6,7 @@
 #include <QtQml/QQmlContext>
 #include <QtGui/QOpenGLContext>
 #include "qtuserqml/interface/qmlapplicationinterface.h"
-#include <QOpenGLContext>
-#include <QGLFormat>
+
 namespace qtuser_qml
 {
 	int qmlAppMain(int argc, char* argv[], const QString& dll)
@@ -26,10 +25,10 @@ namespace qtuser_qml
         format.setSamples(4);
         QSurfaceFormat::setDefaultFormat(format);
 
-		QSurfaceFormat format;
-		format.setVersion(1, 3);
-		format.setProfile(QSurfaceFormat::CoreProfile);
-		QSurfaceFormat::setDefaultFormat(format);
+		//QSurfaceFormat format;
+		//format.setVersion(1, 3);
+		//format.setProfile(QSurfaceFormat::CoreProfile);
+		//QSurfaceFormat::setDefaultFormat(format);
 
         QMLApplicationInterface* appInterface = nullptr;
         QPluginLoader loader(dll);
