@@ -26,11 +26,6 @@ namespace qtuser_qml
         format.setSamples(4);
         QSurfaceFormat::setDefaultFormat(format);
 
-		QSurfaceFormat format;
-		format.setVersion(1, 3);
-		format.setProfile(QSurfaceFormat::CoreProfile);
-		QSurfaceFormat::setDefaultFormat(format);
-
         QMLApplicationInterface* appInterface = nullptr;
         QPluginLoader loader(dll);
         if (loader.load())
