@@ -55,7 +55,7 @@ namespace qtuser_3d
 		QVector3D bsize = box.size();
         float len = qMax(bsize.x(), qMax(bsize.y(), bsize.z()));
 		QVector3D center = box.center();
-		center.setZ(0);
+		center.setZ(center.z() - box.size().z() * 0.4);
 
 		//float nearPlane = 0.2f * len;
 		//float farPlane = 10.0f * len;
@@ -262,7 +262,7 @@ namespace qtuser_3d
 	{
 		QVector3D size = box.size();
 		QVector3D center = box.center();
-		center.setZ(0);
+		center.setZ(center.z() - box.size().z() * 0.4);
 
 		QVector3D dir = QVector3D(1.0f, 1.0f, -1.0f);
 		dir.normalize();

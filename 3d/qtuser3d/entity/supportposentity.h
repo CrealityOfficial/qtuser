@@ -13,7 +13,7 @@ namespace qtuser_3d
 	{
 		Q_OBJECT
 	public:
-		SupportPosEntity(QVector3D position, QVector3D normal, QObject* parent = nullptr);
+		SupportPosEntity(QVector3D position, QVector3D normal, float r, QObject* parent = nullptr);
 		~SupportPosEntity();
 
 		QVector3D position();

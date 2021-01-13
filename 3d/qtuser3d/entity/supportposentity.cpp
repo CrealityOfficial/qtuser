@@ -6,12 +6,12 @@
 namespace qtuser_3d
 {
 
-	SupportPosEntity::SupportPosEntity(QVector3D position, QVector3D normal, QObject* parent)
+	SupportPosEntity::SupportPosEntity(QVector3D position, QVector3D normal, float r, QObject* parent)
 		: PickableEntity(nullptr)
 		, m_position(position)
 		, m_normal(normal)
 	{
-		setGeometry(BasicShapeCreateHelper::createBall(position, 1, 10));
+		setGeometry(BasicShapeCreateHelper::createBall(position, r, 10));
 		m_pointNum = (180 / 10) * (360 / 10) * 2 * 3;
 	}
 
