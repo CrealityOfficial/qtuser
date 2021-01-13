@@ -1,4 +1,4 @@
-#version 130
+#version 150 core
 out vec4 fragmentColor;
 
 noperspective in vec3 viewDirection;
