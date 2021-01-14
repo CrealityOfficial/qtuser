@@ -15,7 +15,8 @@ namespace qtuser_3d
 	
 	ChunkBufferUser::~ChunkBufferUser()
 	{
-		m_buffer->releaseChunk(m_chunk);
+		if(m_buffer)
+			m_buffer->releaseChunk(m_chunk);
 	}
 
 	void ChunkBufferUser::setState(int state)
@@ -79,6 +80,10 @@ namespace qtuser_3d
 	{
 		QByteArray positionBytes, flagsBytes;
 		createBytes(&positionBytes, &flagsBytes);
+		m_buffer->updateChunk(m_chunk, &positionBytes, &flagsBytes);
+	}
+	void ChunkBufferUser::updateChunkBuffer(QByteArray positionBytes, QByteArray flagsBytes)
+	{
 		m_buffer->updateChunk(m_chunk, &positionBytes, &flagsBytes);
 	}
 
