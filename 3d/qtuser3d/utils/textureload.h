@@ -11,10 +11,10 @@ namespace qtuser_3d
 
 class QTUSER_3D_API LogoImageDataGenerator : public Qt3DRender::QTextureImageDataGenerator
 {
-	QString m_filename;
+	Qt3DRender::QTextureImageData* m_textureData;
 
 public:
-	LogoImageDataGenerator();
+	LogoImageDataGenerator(Qt3DRender::QTextureImageData* textureData);
 
 	virtual ~LogoImageDataGenerator() override;
 
@@ -30,7 +30,6 @@ public:
 
 class QTUSER_3D_API LogoTextureImage : public Qt3DRender::QAbstractTextureImage
 {
-	QString m_filename;
 
 public:
 	LogoTextureImage(Qt3DCore::QNode* p = nullptr);
@@ -40,6 +39,23 @@ public:
 
 
 extern uchar logodata[];
+
+
+class QTUSER_3D_API ImageTexture : public Qt3DRender::QAbstractTextureImage
+{
+	QString m_filename;
+	int m_imageWidth;
+	int m_imageHeight;
+	QImage* m_image;
+
+public:
+	ImageTexture(QString filename, Qt3DCore::QNode* p = nullptr);
+
+	Qt3DRender::QTextureImageDataGeneratorPtr dataGenerator() const;
+
+	int width() const;
+	int height() const;
+};
 
 }
 

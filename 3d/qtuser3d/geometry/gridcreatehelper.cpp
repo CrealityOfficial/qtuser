@@ -80,10 +80,10 @@ namespace qtuser_3d
 		{
 			return nullptr;
 		}
-		minX -= offset;
-		maxX += offset;
-		minY -= offset;
-		maxY += offset;
+		//minX -= offset;
+		//maxX += offset;
+		//minY -= offset;
+		//maxY += offset;
 
 		int startX = 0;
 		int endX = qFloor(maxX / gap);
