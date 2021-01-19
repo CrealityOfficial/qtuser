@@ -38,6 +38,8 @@
         <file>shaders/modelsimple.vert</file>
         <file>shaders/supportpos.frag</file>
         <file>shaders/supportpos.vert</file>
+        <file>shaders/printerbottom.frag</file>
+        <file>shaders/printerbottom.vert</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

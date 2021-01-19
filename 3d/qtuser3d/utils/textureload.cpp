@@ -8,7 +8,8 @@ namespace qtuser_3d
 {
 
 
-LogoImageDataGenerator::LogoImageDataGenerator()
+LogoImageDataGenerator::LogoImageDataGenerator(Qt3DRender::QTextureImageData* textureData)
+	: m_textureData(textureData)
 {
 }
 
@@ -18,15 +19,8 @@ LogoImageDataGenerator::~LogoImageDataGenerator()
 
 Qt3DRender::QTextureImageDataPtr LogoImageDataGenerator::operator()()
 {
-	QImage* image = new QImage();
-	image->loadFromData(logodata, 10011, "png");
-    
-	Qt3DRender::QTextureImageData* textureData = new Qt3DRender::QTextureImageData();
-	textureData->setImage(*image);
-
-    delete image;
-
-	return Qt3DRender::QTextureImageDataPtr(textureData);
+	
+	return Qt3DRender::QTextureImageDataPtr(m_textureData);
 }
 
 bool LogoImageDataGenerator::operator ==(const QTextureImageDataGenerator& other) const
@@ -45,8 +39,56 @@ LogoTextureImage::LogoTextureImage(Qt3DCore::QNode* p)
 
 Qt3DRender::QTextureImageDataGeneratorPtr LogoTextureImage::dataGenerator() const
 {
-	return Qt3DRender::QTextureImageDataGeneratorPtr(new LogoImageDataGenerator());
+	QImage* image = new QImage();
+	image->loadFromData(logodata, 10011, "png");
+
+	Qt3DRender::QTextureImageData* textureData = new Qt3DRender::QTextureImageData();
+	textureData->setImage(*image);
+
+	delete image;
+
+	return Qt3DRender::QTextureImageDataGeneratorPtr(new LogoImageDataGenerator(textureData));
 }
+
+
+
+
+
+
+ImageTexture::ImageTexture(QString filename, Qt3DCore::QNode* p)
+	: QAbstractTextureImage(p)
+	, m_filename(filename)
+	, m_imageWidth(0)
+	, m_imageHeight(0)
+	, m_image(nullptr)
+{
+	m_image = new QImage();
+	m_image->load(m_filename);
+
+	m_imageWidth = m_image->width();
+	m_imageHeight = m_image->height();
+}
+
+Qt3DRender::QTextureImageDataGeneratorPtr ImageTexture::dataGenerator() const
+{
+	Qt3DRender::QTextureImageData* textureData = new Qt3DRender::QTextureImageData();
+	textureData->setImage(*m_image);
+
+	delete m_image;
+
+	return Qt3DRender::QTextureImageDataGeneratorPtr(new LogoImageDataGenerator(textureData));
+}
+
+int ImageTexture::width() const
+{
+	return m_imageWidth;
+}
+
+int ImageTexture::height() const
+{
+	return m_imageHeight;
+}
+
 
 
 

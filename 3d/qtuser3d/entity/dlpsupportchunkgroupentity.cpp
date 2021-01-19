@@ -5,11 +5,12 @@ namespace qtuser_3d
 {
 	ChunkProtoInfo protoInfos[(int)DLPUserType::eDLPNum] =
 	{
-		{476, 100},
+		{400, 100},
 		{476, 100},
 		{36, 100},
 		{76, 100},
-		{76, 100}
+		{76, 100},
+		{400, 100}
 	};
 
 	DLPSupportChunkGroupEntity::DLPSupportChunkGroupEntity(Qt3DCore::QNode* parent)

@@ -6,17 +6,29 @@
 
 namespace qtuser_3d
 {
-	FaceEntity::FaceEntity(Qt3DCore::QNode* parent)
-		:BasicEntity(parent)
+	FaceEntity::FaceEntity(Qt3DCore::QNode* parent, int facetype)
+		: BasicEntity(parent)
+		, m_faceFront(nullptr)
+		, m_faceBack(nullptr)
+		, m_faceLeft(nullptr)
+		, m_faceRight(nullptr)
+		, m_faceTop(nullptr)
+		, m_faceBottom(nullptr)
 	{
-		m_faceFront = new Faces(this);
-		m_faceBack = new Faces(this);
-		m_faceLeft = new Faces(this);
-		m_faceRight = new Faces(this);
-		m_faceTop = new Faces(this);
-		m_faceBottom = new Faces(this);
+		if (facetype & 0x01)
+			m_faceFront = new Faces(this);
+		if (facetype & 0x02)
+			m_faceBack = new Faces(this);
+		if (facetype & 0x04)
+			m_faceLeft = new Faces(this);
+		if (facetype & 0x08)
+			m_faceRight = new Faces(this);
+		if (facetype & 0x10)
+			m_faceTop = new Faces(this);
+		if (facetype & 0x20)
+			m_faceBottom = new Faces(this);
 	}
-	
+
 	FaceEntity::~FaceEntity()
 	{
 	}
@@ -69,9 +81,9 @@ namespace qtuser_3d
 		setGeometry(geometry);
 	}
 
-	void FaceEntity::updateFace(Box3D& box,faceType type)
+	void FaceEntity::updateFace(Box3D& box, faceType type)
 	{
-		if (type == faceType::left)
+		if (type == faceType::left && m_faceLeft)
 		{
 			int vertexNum = 4;
 			int triangleNum = 2;
@@ -92,10 +104,10 @@ namespace qtuser_3d
 			indices.push_back(0); indices.push_back(3); indices.push_back(1);
 			Qt3DRender::QGeometry* geometry = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices.at(0));
 			m_faceLeft->setGeometry(geometry);
-			setVisibility((int)faceType::left,true);
+			setVisibility((int)faceType::left, true);
 		}
 
-		if (type == faceType::front)
+		if (type == faceType::front && m_faceFront)
 		{
 			int vertexNum = 4;
 			int triangleNum = 2;
@@ -119,7 +131,7 @@ namespace qtuser_3d
 			setVisibility((int)faceType::front, true);
 		}
 
-		if (type == faceType::right)
+		if (type == faceType::right && m_faceRight)
 		{
 			int vertexNum = 4;
 			int triangleNum = 2;
@@ -143,7 +155,7 @@ namespace qtuser_3d
 			setVisibility((int)faceType::right, true);
 		}
 
-		if (type == faceType::back)
+		if (type == faceType::back && m_faceBack)
 		{
 			int vertexNum = 4;
 			int triangleNum = 2;
@@ -167,7 +179,7 @@ namespace qtuser_3d
 			setVisibility((int)faceType::back, true);
 		}
 
-		if (type == faceType::up)
+		if (type == faceType::up && m_faceTop)
 		{
 			int vertexNum = 4;
 			int triangleNum = 2;
@@ -191,7 +203,7 @@ namespace qtuser_3d
 			setVisibility((int)faceType::up, true);
 		}
 
-		if (type == faceType::down)
+		if (type == faceType::down && m_faceBottom)
 		{
 			int vertexNum = 4;
 			int triangleNum = 2;
@@ -218,27 +230,27 @@ namespace qtuser_3d
 
 	void FaceEntity::setColor(int type, const QVector4D& color)
 	{
-		if (type == faceType::back)
+		if (type == faceType::back && m_faceBack)
 		{
 			m_faceBack->setColor(color);
 		}
-		else if (type == faceType::left)
+		else if (type == faceType::left && m_faceLeft)
 		{
 			m_faceLeft->setColor(color);
 		}
-		else if (type == faceType::right)
+		else if (type == faceType::right && m_faceRight)
 		{
 			m_faceRight->setColor(color);
 		}
-		else if (type == faceType::front)
+		else if (type == faceType::front && m_faceFront)
 		{
 			m_faceFront->setColor(color);
 		}
-		else if (type == faceType::up)
+		else if (type == faceType::up && m_faceTop)
 		{
 			m_faceTop->setColor(color);
 		}
-		else if (type == faceType::down)
+		else if (type == faceType::down && m_faceBottom)
 		{
 			m_faceBottom->setColor(color);
 		}
@@ -246,27 +258,27 @@ namespace qtuser_3d
 
 	void FaceEntity::setVisibility(int type, bool visibility)
 	{
-		if (type == faceType::back)
+		if (type == faceType::back && m_faceBack)
 		{
 			m_faceBack->setEnabled(visibility ? true : false);
 		}
-		if (type == faceType::left)
+		if (type == faceType::left && m_faceLeft)
 		{
 			m_faceLeft->setEnabled(visibility ? true : false);
 		}
-		if (type == faceType::right)
+		if (type == faceType::right && m_faceRight)
 		{
 			m_faceRight->setEnabled(visibility ? true : false);
 		}
-		if (type == faceType::front)
+		if (type == faceType::front && m_faceFront)
 		{
 			m_faceFront->setEnabled(visibility ? true : false);
 		}
-		if (type == faceType::up)
+		if (type == faceType::up && m_faceTop)
 		{
 			m_faceTop->setEnabled(visibility ? true : false);
 		}
-		if (type == faceType::down)
+		if (type == faceType::down && m_faceBottom)
 		{
 			m_faceBottom->setEnabled(visibility ? true : false);
 		}
