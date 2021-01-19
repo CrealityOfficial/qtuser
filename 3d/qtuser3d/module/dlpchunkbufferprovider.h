@@ -10,6 +10,7 @@ namespace qtuser_3d
 		eDLPPlatformTrunk,
 		eDLPModelTrunk,
 		eDLPLink,
+		eDLPSupportPos,
 		eDLPNum
 	};
 
