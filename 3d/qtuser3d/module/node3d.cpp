@@ -247,6 +247,24 @@ namespace qtuser_3d
 
 	void Node3D::mirrorSet(const QMatrix4x4& m)
 	{
+		if (mirrorZ_count > 0)
+		{
+			QMatrix4x4 m;
+			if (mirrorZ_count % 2 != 0)
+			{
+				liftZUp(-m_globalSpaceBox.max.z());
+				m(2, 2) = -1;
+			}
+
+			else
+			{
+				liftZUp(m_globalSpaceBox.max.z());  //reverse
+				m(2, 2) = -1;
+			}
+			mirror(m, true);
+			mirrorZ_count -= 1;
+			return;
+		}
 		mirror(m, false);
 	}
 
