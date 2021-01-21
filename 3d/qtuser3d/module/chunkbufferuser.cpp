@@ -15,8 +15,10 @@ namespace qtuser_3d
 	
 	ChunkBufferUser::~ChunkBufferUser()
 	{
-		if(m_buffer)
+		if (m_buffer)
+		{
 			m_buffer->releaseChunk(m_chunk);
+		}
 	}
 
 	void ChunkBufferUser::setState(int state)
@@ -51,12 +53,14 @@ namespace qtuser_3d
 
 	bool ChunkBufferUser::check(int faceID)
 	{
-		return m_buffer->checkFace(m_chunk, faceID);
+		if(m_buffer)
+			return m_buffer->checkFace(m_chunk, faceID);
 	}
 
 	int ChunkBufferUser::relativeFaceID(int faceID)
 	{
-		return m_buffer->relativeFaceID(m_chunk, faceID);
+		if (m_buffer)
+			return m_buffer->relativeFaceID(m_chunk, faceID);
 	}
 
 	bool ChunkBufferUser::tracked()
@@ -71,27 +75,40 @@ namespace qtuser_3d
 
 	void ChunkBufferUser::updatePositionOnly()
 	{
-		QByteArray positionBytes;
-		createBytes(&positionBytes, nullptr);
-		m_buffer->updateChunk(m_chunk, &positionBytes, nullptr);
+		if (m_buffer)
+		{
+			QByteArray positionBytes;
+			createBytes(&positionBytes, nullptr);
+			m_buffer->updateChunk(m_chunk, &positionBytes, nullptr);
+		}
+		
 	}
 
 	void ChunkBufferUser::updateAll()
 	{
-		QByteArray positionBytes, flagsBytes;
-		createBytes(&positionBytes, &flagsBytes);
-		m_buffer->updateChunk(m_chunk, &positionBytes, &flagsBytes);
+		if (m_buffer)
+		{
+			QByteArray positionBytes, flagsBytes;
+			createBytes(&positionBytes, &flagsBytes);
+			m_buffer->updateChunk(m_chunk, &positionBytes, &flagsBytes);
+		}
+		
 	}
 	void ChunkBufferUser::updateChunkBuffer(QByteArray positionBytes, QByteArray flagsBytes)
 	{
-		m_buffer->updateChunk(m_chunk, &positionBytes, &flagsBytes);
+		if(m_buffer)
+			m_buffer->updateChunk(m_chunk, &positionBytes, &flagsBytes);
 	}
 
 	void ChunkBufferUser::updateFlag()
 	{
-		QByteArray flagsBytes;
-		createBytes(nullptr, &flagsBytes);
-		m_buffer->updateChunk(m_chunk, nullptr, &flagsBytes);
+		if (m_buffer)
+		{
+			QByteArray flagsBytes;
+			createBytes(nullptr, &flagsBytes);
+			m_buffer->updateChunk(m_chunk, nullptr, &flagsBytes);
+		}
+		
 	}
 
 	void ChunkBufferUser::createBytes(QByteArray* positionBytes, QByteArray* flagBytes)
