@@ -105,6 +105,11 @@ void CameraController::showSelf()
 	m_screenCamera->showSelf();
 }
 
+void CameraController::sendViewUpdateSingle(bool capture)
+{
+	emit signalViewChanged(capture);
+}
+
 void CameraController::uninitialize()
 {
 }
