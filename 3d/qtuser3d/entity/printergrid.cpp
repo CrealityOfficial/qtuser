@@ -2,20 +2,30 @@
 #include "qtuser3d/effect/effectmanager.h"
 #include "qtuser3d/geometry/gridcreatehelper.h"
 #include "qtuser3d/effect/ueffect.h"
+#include <Qt3DRender/QLineWidth>
 
 namespace qtuser_3d
 {
-	PrinterGrid::PrinterGrid(Qt3DCore::QNode* parent)
+	PrinterGrid::PrinterGrid(Qt3DCore::QNode* parent, float lw)
 		: BasicEntity(parent)
 		, m_lineColor(0.8, 0.8, 0.8, 1.0)
 		, m_showColor(1.0, 0.1, 0.1, 1.0)
 		, m_gap(10.0)
 	{
 		UEffect* useEffect = qobject_cast<UEffect*>( EFFECTCREATE("printergrid", m_material));
-		setEffect(useEffect);
 		m_showColorParam = useEffect->createParameter("showcolor", m_showColor);
 		m_lineColorParam = useEffect->createParameter("linecolor", m_lineColor);
 		m_visible = createParameter("visible", 0.0f);
+
+		Qt3DRender::QLineWidth* lineWidth = new Qt3DRender::QLineWidth(this);
+		lineWidth->setSmooth(true);
+		lineWidth->setValue(lw);
+		QList<Qt3DRender::QRenderPass*> passes = useEffect->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
+		for (Qt3DRender::QRenderPass* pass : passes)
+		{
+			pass->addRenderState(lineWidth);
+		}
+		setEffect(useEffect);
 	}
 
 	PrinterGrid::~PrinterGrid()

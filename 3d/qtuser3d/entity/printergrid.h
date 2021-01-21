@@ -12,7 +12,7 @@ namespace qtuser_3d
 	class QTUSER_3D_API PrinterGrid: public BasicEntity
 	{
 	public:
-		PrinterGrid(Qt3DCore::QNode* parent = nullptr);
+		PrinterGrid(Qt3DCore::QNode* parent = nullptr, float lw = 1.0);
 		virtual ~PrinterGrid();
 
 		void updateBounding(Box3D& box, int createtype = 0);
