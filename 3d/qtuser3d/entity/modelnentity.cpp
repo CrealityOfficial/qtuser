@@ -27,6 +27,8 @@ namespace qtuser_3d
 	
 	ModelNEntity::~ModelNEntity()
 	{
+		if (!m_boxEntity->parent())
+			delete m_boxEntity;
 	}
 
 	void ModelNEntity::setBoxVisibility(bool visible)
