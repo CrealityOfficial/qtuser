@@ -27,6 +27,7 @@ namespace qtuser_qml
     ToolCommandCenter::~ToolCommandCenter()
     {
     }
+
     bool variantLessThan(const ToolCommand* v1, const ToolCommand* v2)
      {
          return v1->orderindex < v2->orderindex;
@@ -35,14 +36,13 @@ namespace qtuser_qml
     {
         if (command)
         {
-            command->setParent(command);
             m_toolCommands.push_back(command);
             qSort(m_toolCommands.begin(), m_toolCommands.end(), variantLessThan);
-            //int index = m_toolCommands.size()-1;
             beginResetModel();
             endResetModel();
-            //beginInsertRows(QModelIndex(), index, index);
-            //endInsertRows();
+
+            if(!command->parent())
+                command->setParent(this);
         }
 
     }
