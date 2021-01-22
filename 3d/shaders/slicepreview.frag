@@ -26,6 +26,8 @@ uniform vec4 typecolors[13];
 uniform vec4 speedcolors[13];
 uniform vec4 nozzlecolors[6];
 
+uniform int typecolorsshow[13];
+
 uniform float specularPower = 12.0;
 
 vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 diffuse_color, vec4 core_color)
@@ -53,6 +55,9 @@ void main( void )
 		discard;
 		
 	if(flag.x < layershow.x || flag.x > layershow.y)
+		discard;
+		
+	if(typecolorsshow[int(drawFlag.y)] == 0)
 		discard;
 	
 	vec4 core_color = vec4(0.5, 0.5, 0.5, 1.0);
