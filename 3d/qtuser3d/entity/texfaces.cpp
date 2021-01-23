@@ -86,6 +86,7 @@ namespace qtuser_3d
 		int vertexNum = 4;
 		int triangleNum = 2;
 		QVector<QVector3D> positions;
+		QVector<QVector3D> normals;
 		QVector<unsigned> indices;
 		float minX = box.min.x();
 		float maxX = box.max.x();
@@ -93,11 +94,16 @@ namespace qtuser_3d
 		float maxY = box.max.y();
 		float minZ = box.min.z();
 		float maxZ = box.max.z();
-		minZ -= 0.001;
+//		minZ -= 0.001;
 		positions.push_back(QVector3D(minX, minY, minZ));
 		positions.push_back(QVector3D(maxX, minY, minZ));
 		positions.push_back(QVector3D(minX, maxY, minZ));
 		positions.push_back(QVector3D(maxX, maxY, minZ));
+
+		normals.push_back(QVector3D(0, 0, 1));
+		normals.push_back(QVector3D(0, 0, 1));
+		normals.push_back(QVector3D(0, 0, 1));
+		normals.push_back(QVector3D(0, 0, 1));
 
 		QVector3D sz = box.size();
 		m_platformsizeParameter->setValue(QVector2D(sz.x(), sz.y()));
@@ -106,7 +112,7 @@ namespace qtuser_3d
 		//down
 		indices.push_back(0); indices.push_back(1); indices.push_back(3);
 		indices.push_back(0); indices.push_back(3); indices.push_back(2);
-		Qt3DRender::QGeometry* geometry = qtuser_3d::TrianglesCreateHelper::createWithTex(vertexNum, (float*)&positions.at(0), nullptr, (float*)&texcoords.at(0), triangleNum, (unsigned*)&indices.at(0));
+		Qt3DRender::QGeometry* geometry = qtuser_3d::TrianglesCreateHelper::createWithTex(vertexNum, (float*)&positions.at(0), (float*)&normals.at(0), (float*)&texcoords.at(0), triangleNum, (unsigned*)&indices.at(0));
 		setGeometry(geometry);
 		setEnabled(true);
 	}
