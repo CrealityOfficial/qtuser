@@ -37,14 +37,14 @@ namespace qtuser_3d
 
 		Qt3DRender::QDithering* dither = new Qt3DRender::QDithering(this);
 		Qt3DRender::QMultiSampleAntiAliasing* antiAlias = new Qt3DRender::QMultiSampleAntiAliasing(this);
-//		Qt3DRender::QNoDepthMask* mask = new Qt3DRender::QNoDepthMask(this);
+		Qt3DRender::QNoDepthMask* mask = new Qt3DRender::QNoDepthMask(this);
 		Qt3DRender::QLineWidth* lineWidth = new Qt3DRender::QLineWidth(this);
 		lineWidth->setSmooth(true);
 
 		QList<Qt3DRender::QRenderPass*> passes = effect->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
 		for (Qt3DRender::QRenderPass* pass : passes)
 		{
-//			pass->addRenderState(mask);
+			pass->addRenderState(mask);
 			pass->addRenderState(antiAlias);
 			pass->addRenderState(dither);
 			pass->addRenderState(lineWidth);
