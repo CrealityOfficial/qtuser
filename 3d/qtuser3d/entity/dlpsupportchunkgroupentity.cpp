@@ -5,7 +5,7 @@ namespace qtuser_3d
 {
 	ChunkProtoInfo protoInfos[(int)DLPUserType::eDLPNum] =
 	{
-		{400, 100},
+		{476, 100},
 		{476, 100},
 		{36, 100},
 		{76, 100},
