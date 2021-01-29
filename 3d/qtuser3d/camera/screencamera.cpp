@@ -262,7 +262,7 @@ namespace qtuser_3d
 	{
 		QVector3D size = box.size();
 		QVector3D center = box.center();
-		center.setZ(center.z() - box.size().z() * 0.4);
+		center.setZ(0);
 
 		QVector3D dir = QVector3D(1.0f, 1.0f, -1.0f);
 		dir.normalize();
@@ -288,7 +288,6 @@ namespace qtuser_3d
 
 		m_box = box;
 		setMaxLimitDistance(dmax);
-
 		notifyCameraChanged();
 	}
 
