@@ -288,6 +288,8 @@ namespace qtuser_3d
 
 		m_box = box;
 		setMaxLimitDistance(dmax);
+
+//		_updateNearFar(m_box);
 		notifyCameraChanged();
 	}
 
