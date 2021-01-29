@@ -55,12 +55,14 @@ namespace qtuser_3d
 	{
 		if(m_buffer)
 			return m_buffer->checkFace(m_chunk, faceID);
+		return false;
 	}
 
 	int ChunkBufferUser::relativeFaceID(int faceID)
 	{
 		if (m_buffer)
 			return m_buffer->relativeFaceID(m_chunk, faceID);
+		return -1;
 	}
 
 	bool ChunkBufferUser::tracked()
