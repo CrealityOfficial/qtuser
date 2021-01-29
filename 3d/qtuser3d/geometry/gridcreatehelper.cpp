@@ -41,22 +41,24 @@ namespace qtuser_3d
 		std::vector<QVector3D> positions(vertexCount);
 		std::vector<QVector2D> flags(vertexCount);
 
+		float z = 0.0f;
+
 		int vertexIndex = 0;
 		for (int i = startX; i <= endX; ++i)
 		{
-			positions.at(vertexIndex) = QVector3D(float(i) * gap, minY, -0.1f);
+			positions.at(vertexIndex) = QVector3D(float(i) * gap, minY, z);
 			flags.at(vertexIndex) = QVector2D(-1.0f, float(i) * gap);
 			vertexIndex++;
-			positions.at(vertexIndex) = QVector3D(float(i) * gap, maxY, -0.1f);
+			positions.at(vertexIndex) = QVector3D(float(i) * gap, maxY, z);
 			flags.at(vertexIndex) = QVector2D(-1.0f, float(i) * gap);
 			vertexIndex++;
 		}
 		for (int i = startY; i <= endY; ++i)
 		{
-			positions.at(vertexIndex) = QVector3D(minX, float(i) * gap, -0.1f);
+			positions.at(vertexIndex) = QVector3D(minX, float(i) * gap, z);
 			flags.at(vertexIndex) = QVector2D(1.0f, float(i) * gap);
 			vertexIndex++;
-			positions.at(vertexIndex) = QVector3D(maxX, float(i) * gap, -0.1f);
+			positions.at(vertexIndex) = QVector3D(maxX, float(i) * gap, z);
 			flags.at(vertexIndex) = QVector2D(1.0f, float(i) * gap);
 			vertexIndex++;
 		}

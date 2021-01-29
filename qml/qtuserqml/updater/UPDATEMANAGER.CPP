@@ -24,6 +24,7 @@
 #include <QTimer>
 
 #include <QSettings>
+#include <QtCore/QCoreApplication>
 
 #include "SettingsKeys.h"
 #include "UpdateChecker.h"
@@ -183,4 +184,9 @@ QUrl UpdateManager::url()
 QString UpdateManager::releaseNote()
 {
 	return m_releaseNote;
+}
+
+QString UpdateManager::getProjectName()
+{
+    return qApp->applicationName();
 }

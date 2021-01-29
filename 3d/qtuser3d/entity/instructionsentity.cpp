@@ -14,19 +14,19 @@ namespace qtuser_3d
 		if (type & 0x1)
 		{
 			m_xAxis = new qtuser_3d::PureColorEntity(this);
-			m_xAxis->setColor(QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
+			m_xAxis->setColor(QVector4D(0.5f, 0.0f, 0.0f, 1.0f));
 //			m_xAxis->setGeometry(PRIMITIVESHAPE("arrow"));
 		}
 		if (type & 0x2)
 		{
 			m_yAxis = new qtuser_3d::PureColorEntity(this);
-			m_yAxis->setColor(QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
+			m_yAxis->setColor(QVector4D(0.0f, 0.5f, 0.0f, 1.0f));
 //			m_yAxis->setGeometry(PRIMITIVESHAPE("arrow"));
 		}
 		if (type & 0x4)
 		{
 			m_zAxis = new qtuser_3d::PureColorEntity(this);
-			m_zAxis->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
+			m_zAxis->setColor(QVector4D(0.0f, 0.0f, 0.5f, 1.0f));
 //			m_zAxis->setGeometry(PRIMITIVESHAPE("arrow"));
 		}
 	}

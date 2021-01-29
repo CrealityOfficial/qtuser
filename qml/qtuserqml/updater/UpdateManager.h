@@ -52,6 +52,7 @@ public Q_SLOTS:
     void checkForUpdates(bool force);
     Q_INVOKABLE void checkForUpdates();
     Q_INVOKABLE void forceCheckForUpdates();
+    Q_INVOKABLE QString getProjectName();
     bool autoCheck();
 private Q_SLOTS:
     void onUpdateNotFound(const ReleaseInfo &currentRelease);

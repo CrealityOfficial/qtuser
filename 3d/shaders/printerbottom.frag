@@ -3,6 +3,7 @@
 out vec4 fragColor;
 
 in vec2 texcoord;
+in vec3 normal;
 
 uniform vec2 imageshape;
 uniform vec2 imagebili;
@@ -15,6 +16,7 @@ uniform int visible;
 void main() 
 {
 	vec4 coloruse = color;
+	vec4 finalcolor = color;
 	fragColor = color;
 
 	if(visible == 1)
@@ -37,6 +39,15 @@ void main()
 			}
 		}
 	}
+	
 	if(coloruse.a > 0.0)
-		fragColor = coloruse;
+		finalcolor = coloruse;
+		
+	vec3 fgnormal 		  =	normalize(normal);
+	if(dot(fgnormal, vec3(0.0, 0.0, -1.0)) > 0)
+	{
+		finalcolor.a = 0.0;
+	}
+	fragColor = finalcolor;
+	
 }
