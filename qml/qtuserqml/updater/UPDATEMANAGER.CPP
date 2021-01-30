@@ -133,11 +133,11 @@ void UpdateManager::onUpdateNotFound(const ReleaseInfo &currentRelease)
 void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList<ReleaseInfo> &newReleases)
 {
     const Version skippedVersion = Version(m_impl->updaterSettings.value(KEY_SKIPPED_VERSION).toString());
-    if(m_impl->silent)
-    {
-        onUpdateNotFound(currentRelease);
-        return;
-    }
+    //if(m_impl->silent)
+    //{
+    //    onUpdateNotFound(currentRelease);
+    //    return;
+    //}
     if(skippedVersion == newReleases.first().version)
     {
         onUpdateNotFound(currentRelease);
@@ -154,7 +154,8 @@ void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList
 		m_releaseVersion = newReleases[0].tagName;
 		m_releaseUrl = newReleases[0].htmlUrl;
 		m_releaseNote = newReleases[0].body;
-		emit updateFound();
+        //qDebug() << m_releaseNote;
+		//emit updateFound();
         emit updateFound(newReleases[0].tagName, newReleases[0].htmlUrl, newReleases[0].body);
     }
 
