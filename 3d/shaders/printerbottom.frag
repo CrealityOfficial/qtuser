@@ -35,7 +35,7 @@ void main()
 			coloruse = texture(shapeTexture, texuse);
 			if(coloruse.a > 0.0)
 			{
-				coloruse.a = 0.5;
+				coloruse.a = 0.005;
 			}
 		}
 	}

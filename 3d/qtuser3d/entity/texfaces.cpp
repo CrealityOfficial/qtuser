@@ -32,7 +32,7 @@ namespace qtuser_3d
 		if (blend)
 		{
 			blend->setSourceRgba(Qt3DRender::QBlendEquationArguments::SourceAlpha);
-			blend->setDestinationRgba(Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);
+			blend->setDestinationRgba(Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);    // OneMinusSourceAlpha
 		}
 
 		Qt3DRender::QDithering* dither = new Qt3DRender::QDithering(this);
@@ -78,7 +78,7 @@ namespace qtuser_3d
 		createParameter("imageshape", imageshape);
 
 		createParameter("shapeTexture", QVariant::fromValue(imageTexture));
-		createParameter("imagebili", QVector2D(2.0f, 2.0f));
+		createParameter("imagebili", QVector2D(1.1f, 1.1f));
 	}
 
 	void TexFaces::updateBox(const Box3D& box)
