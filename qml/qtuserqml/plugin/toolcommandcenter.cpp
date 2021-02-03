@@ -36,10 +36,13 @@ namespace qtuser_qml
     {
         if (command)
         {
+            const QModelIndex& index = QModelIndex();
+            beginInsertRows(index, 0, 0);
             m_toolCommands.push_back(command);
-            qSort(m_toolCommands.begin(), m_toolCommands.end(), variantLessThan);
-            beginResetModel();
-            endResetModel();
+            endInsertRows();
+            //qSort(m_toolCommands.begin(), m_toolCommands.end(), variantLessThan);
+            //beginResetModel();
+            //endResetModel();
 
             if(!command->parent())
                 command->setParent(this);

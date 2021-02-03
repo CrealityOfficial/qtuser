@@ -40,6 +40,8 @@
         <file>shaders/supportpos.vert</file>
         <file>shaders/printerbottom.frag</file>
         <file>shaders/printerbottom.vert</file>
+		<file>shaders/slicepreviewpath.vert</file>
+		<file>shaders/slicepreviewpath.frag</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

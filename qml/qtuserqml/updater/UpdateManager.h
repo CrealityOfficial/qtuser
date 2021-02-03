@@ -46,7 +46,7 @@ public:
 	QString releaseNote();
 Q_SIGNALS:
     void updateFound(QString version,QUrl url,QString releaseNote);
-	void updateFound();
+	//void updateFound();
     void autoCheckChanged();
 public Q_SLOTS:
     void checkForUpdates(bool force);
