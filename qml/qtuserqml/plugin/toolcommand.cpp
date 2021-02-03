@@ -84,4 +84,7 @@ bool ToolCommand::checkSelect()
 {
     return true;
 }
-
+bool ToolCommand::outofPlatform()
+{
+	return false;
+}
