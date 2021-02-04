@@ -81,6 +81,7 @@ void UpdateChecker::checkForUpdates()
         connect(m_impl->networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
     }
     QString suffix = m_impl->currentVersion.extra();
+    qDebug() << suffix;
 #ifndef QT_NO_DEBUG
     suffix = "Beta";
 #endif
@@ -145,6 +146,7 @@ void UpdateChecker::replyFinished(QNetworkReply *reply)
         QString lang = setting.value("language_type").toString();
         setting.endGroup();
         lang = lang.mid(0,lang.indexOf(".")).toLower();
+        qDebug() << lang;
         if(lang!="zh_cn")
         {
             lang="en";
