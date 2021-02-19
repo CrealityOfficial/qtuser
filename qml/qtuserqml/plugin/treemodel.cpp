@@ -146,6 +146,7 @@ void TreeModel::delModel(QModelIndex index)
             rootItem->removeChild(childItem);
          endRemoveRows();
     }
+
     //end
 }
 
@@ -153,6 +154,8 @@ void TreeModel::delModel(QObject* model)
 {
     QModelIndex index = getModelIndex(model);
     delModel(index);
+    beginResetModel();
+    endResetModel();
     emit rowChanged();
 }
 
