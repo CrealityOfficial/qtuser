@@ -88,3 +88,7 @@ bool ToolCommand::outofPlatform()
 {
 	return false;
 }
+bool ToolCommand::isSelectModel()
+{
+    return true;
+}

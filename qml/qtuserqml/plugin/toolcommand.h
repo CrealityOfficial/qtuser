@@ -28,6 +28,8 @@ public:
 
 	Q_INVOKABLE void execute();
 	virtual void onExecute();
+
+    Q_INVOKABLE virtual bool isSelectModel();
 signals:
 	void enabledChanged();
 	void executed();
