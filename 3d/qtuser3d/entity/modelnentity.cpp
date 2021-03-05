@@ -22,6 +22,8 @@ namespace qtuser_3d
 		m_waterShowParameter = createParameter("waterState", 0);
 		m_fanzhuanParameter = createParameter("fanzhuan", 0);
 
+		m_checkScopeParameter = createParameter("checkscope", 1);
+
 		m_nozzleParameter = createParameter("nozzle", 0);
 	}
 	
@@ -97,5 +99,10 @@ namespace qtuser_3d
 	void ModelNEntity::setFanZhuan(int fz)
 	{
 		m_fanzhuanParameter->setValue(fz);
+	}
+
+	void ModelNEntity::setNeedCheckScope(int checkscope)
+	{
+		m_checkScopeParameter->setValue(checkscope);
 	}
 }
