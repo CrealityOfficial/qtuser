@@ -44,6 +44,8 @@
         <file>shaders/printerbottom.vert</file>
 		<file>shaders/slicepreviewpath.vert</file>
 		<file>shaders/slicepreviewpath.frag</file>
+		<file>shaders/admodel.vert</file>
+		<file>shaders/admodel.frag</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
