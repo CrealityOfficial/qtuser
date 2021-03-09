@@ -22,7 +22,7 @@ uniform int animation = 0;
 uniform vec4 clipValue;
 uniform vec2 layershow;
 
-uniform vec4 typecolors[15];
+uniform vec4 typecolors[16];
 uniform vec4 speedcolors[13];
 uniform vec4 nozzlecolors[6];
 
