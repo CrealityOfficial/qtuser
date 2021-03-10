@@ -22,11 +22,11 @@ uniform int animation = 0;
 uniform vec4 clipValue;
 uniform vec2 layershow;
 
-uniform vec4 typecolors[13];
+uniform vec4 typecolors[18];
 uniform vec4 speedcolors[13];
 uniform vec4 nozzlecolors[6];
 
-uniform int typecolorsshow[13];
+uniform int typecolorsshow[18];
 
 uniform float specularPower = 12.0;
 
