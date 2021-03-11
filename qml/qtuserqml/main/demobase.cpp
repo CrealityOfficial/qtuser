@@ -23,7 +23,7 @@ DemoBase::DemoBase(Qt3DCore::QNode* parent)
 	, m_uiRoot(nullptr)
 {
 	m_surface = new qtuser_3d::Surface();
-	m_surface->setClearColor(QColor(50, 50, 50));
+	m_surface->setClearColor(QColor(255, 255, 255));
 	m_root = new Qt3DCore::QEntity();
 	m_offRoot = new Qt3DCore::QEntity();
 
