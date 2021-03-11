@@ -23,6 +23,9 @@ namespace qtuser_3d
 #ifdef WIN32
 		if (!_finite(angle) || angle > M_PI)
 			angle = 0.0;
+#elif __APPLE__
+	if (finite(angle) || angle > M_PI)
+			angle = 0.0;
 #else
 		if (!__finite(angle) || angle > M_PI)
 			angle = 0.0;

@@ -22,11 +22,15 @@ namespace qtuser_3d
 		m_waterShowParameter = createParameter("waterState", 0);
 		m_fanzhuanParameter = createParameter("fanzhuan", 0);
 
+		m_checkScopeParameter = createParameter("checkscope", 1);
+
 		m_nozzleParameter = createParameter("nozzle", 0);
 	}
 	
 	ModelNEntity::~ModelNEntity()
 	{
+		if (!m_boxEntity->parent())
+			delete m_boxEntity;
 	}
 
 	void ModelNEntity::setBoxVisibility(bool visible)
@@ -57,6 +61,7 @@ namespace qtuser_3d
 
 	void ModelNEntity::setState(float state)
 	{
+		qDebug() << "model setState " << state;
 		m_stateParameter->setValue(state);
 	}
 
@@ -95,5 +100,10 @@ namespace qtuser_3d
 	void ModelNEntity::setFanZhuan(int fz)
 	{
 		m_fanzhuanParameter->setValue(fz);
+	}
+
+	void ModelNEntity::setNeedCheckScope(int checkscope)
+	{
+		m_checkScopeParameter->setValue(checkscope);
 	}
 }

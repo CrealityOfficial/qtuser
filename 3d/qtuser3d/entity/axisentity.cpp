@@ -4,21 +4,34 @@
 #include "qtuser3d/utils/primitiveshapecache.h"
 namespace qtuser_3d
 {
-	AxisEntity::AxisEntity(Qt3DCore::QNode* parent)
+	AxisEntity::AxisEntity(Qt3DCore::QNode* parent, int axistype)
 		:QEntity(parent)
 	{
 		m_xAxis = new qtuser_3d::PureColorEntity(this);
 		m_yAxis = new qtuser_3d::PureColorEntity(this);
 		m_zAxis = new qtuser_3d::PureColorEntity(this);
 
+		Qt3DRender::QGeometry* geometry = nullptr;
+		QVector3D s(50, 50, 50);
+		if (axistype == 0)
+		{
+			s = QVector3D(50, 50, 50);
+			geometry = PRIMITIVESHAPE("arrow");
+		}
+		else if (axistype == 1)
+		{
+			s = QVector3D(2, 5, 2);
+			geometry = PRIMITIVESHAPE("cylinder");
+		}
+
 		QMatrix4x4 xMatrix;
 		xMatrix.rotate(-90.0f, 0.0f, 0.0f, 1.0f);
-		xMatrix.scale(50.0f, 50.0f, 50.0f);
+		xMatrix.scale(s);
 		QMatrix4x4 yMatrix;
-		yMatrix.scale(50.0f, 50.0f, 50.0f);
+		yMatrix.scale(s);
 		QMatrix4x4 zMatrix;
 		zMatrix.rotate(90.0f, 1.0f, 0.0f, 0.0f);
-		zMatrix.scale(50.0f, 50.0f, 50.0f);
+		zMatrix.scale(s);
 		m_xAxis->setPose(xMatrix);
 		m_yAxis->setPose(yMatrix);
 		m_zAxis->setPose(zMatrix);
@@ -27,12 +40,30 @@ namespace qtuser_3d
 		m_yAxis->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
 		m_zAxis->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
 
-		m_xAxis->setGeometry(PRIMITIVESHAPE("arrow"));
-		m_yAxis->setGeometry(PRIMITIVESHAPE("arrow"));
-		m_zAxis->setGeometry(PRIMITIVESHAPE("arrow"));
+		m_xAxis->setGeometry(geometry);
+		m_yAxis->setGeometry(geometry);
+		m_zAxis->setGeometry(geometry);
 	}
 	
 	AxisEntity::~AxisEntity()
 	{
+	}
+
+	void AxisEntity::translate(QVector3D v)
+	{
+		QMatrix4x4 t;
+		t.translate(v.x(), v.y());
+
+		QMatrix4x4 xMatrix = m_xAxis->pose();
+		xMatrix = t * xMatrix;
+		m_xAxis->setPose(xMatrix);
+
+		QMatrix4x4 yMatrix = m_yAxis->pose();
+		yMatrix = t * yMatrix;
+		m_yAxis->setPose(yMatrix);
+
+		QMatrix4x4 zMatrix = m_zAxis->pose();
+		zMatrix = t * zMatrix;
+		m_zAxis->setPose(zMatrix);
 	}
 }

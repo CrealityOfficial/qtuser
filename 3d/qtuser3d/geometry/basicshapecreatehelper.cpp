@@ -20,14 +20,27 @@ namespace qtuser_3d
 	{
 	}
 
+	Qt3DRender::QGeometry* BasicShapeCreateHelper::createGeometry(Qt3DCore::QNode* parent, std::vector<float>* vertexDatas, std::vector<float>* normalDatas, QVector<unsigned>* indices)
+	{
+		Qt3DRender::QAttribute* positionAttribute = BufferHelper::CreateVertexAttribute((const char*)&(*vertexDatas)[0], AttribueSlot::Position, vertexDatas->size() / 3);
+		Qt3DRender::QAttribute* normalAttribute = nullptr;
+		if (normalDatas != nullptr)
+		{
+			normalAttribute = BufferHelper::CreateVertexAttribute((const char*)&(*normalDatas)[0], AttribueSlot::Normal, normalDatas->size() / 3);
+		}
+		Qt3DRender::QAttribute* indicesAttribute = nullptr;
+		if (indices != nullptr)
+		{
+			indicesAttribute = BufferHelper::CreateIndexAttribute((const char*)&(*indices)[0], indices->size() / 3);
+		}
+		return GeometryCreateHelper::create(parent, positionAttribute, normalAttribute, indicesAttribute, nullptr);
+	}
+
 	Qt3DRender::QGeometry* BasicShapeCreateHelper::createCylinder(Qt3DCore::QNode* parent)
 	{
 		std::vector<float> datas;
 		createCylinderData(0.3, 6, 36, datas);
-		Qt3DRender::QAttribute* positionAttribute = nullptr;
-		positionAttribute = BufferHelper::CreateVertexAttribute((const char*)&datas[0], AttribueSlot::Position, datas.size() / 3);
-
-		return GeometryCreateHelper::create(parent, positionAttribute, nullptr, nullptr, nullptr);
+		return createGeometry(parent, &datas);
 	}
 
 	Qt3DRender::QGeometry* BasicShapeCreateHelper::createRectangle(float w, float h, Qt3DCore::QNode* parent)
@@ -38,29 +51,33 @@ namespace qtuser_3d
 			w, h, 0, 
 			0, h, 0 };
 
-		Qt3DRender::QAttribute* positionAttribute = nullptr;
-		positionAttribute = BufferHelper::CreateVertexAttribute((const char*)&datas[0], AttribueSlot::Position, datas.size() / 3);
-
 		QVector<unsigned> indices = {
 			0, 1, 2,
 			0, 2, 3 };
 
-		Qt3DRender::QAttribute* indicesAttribute = nullptr;
-		indicesAttribute = BufferHelper::CreateIndexAttribute((const char*)&indices[0], indices.size() / 3);
-
-		return GeometryCreateHelper::create(parent, positionAttribute, indicesAttribute, nullptr, nullptr);
+		return createGeometry(parent, &datas, nullptr, &indices);
 	}
 
 	Qt3DRender::QGeometry* BasicShapeCreateHelper::createPen(Qt3DCore::QNode* parent)
 	{
 		std::vector<float> vertexDatas, normalDatas;
 		createPenData(1.8, 3, 14, 36, vertexDatas, normalDatas);
-		Qt3DRender::QAttribute* positionAttribute = nullptr;
-		Qt3DRender::QAttribute* normalAttribute = nullptr;
-		positionAttribute = BufferHelper::CreateVertexAttribute((const char*)&vertexDatas[0], AttribueSlot::Position, vertexDatas.size() / 3);
-		normalAttribute = BufferHelper::CreateVertexAttribute((const char*)&normalDatas[0], AttribueSlot::Normal, normalDatas.size() / 3);
+		return createGeometry(parent, &vertexDatas, &normalDatas);
 
-		return GeometryCreateHelper::create(parent, positionAttribute, normalAttribute, nullptr, nullptr);
+	}
+
+	Qt3DRender::QGeometry* BasicShapeCreateHelper::createBall(QVector3D center, float r, float angleSpan, Qt3DCore::QNode* parent)
+	{
+		std::vector<float> vertexDatas, normalDatas;
+		createBallData(center, r, angleSpan, vertexDatas, normalDatas);
+		return createGeometry(parent, &vertexDatas, &normalDatas);
+	}
+
+	Qt3DRender::QGeometry* BasicShapeCreateHelper::createInstructions(float cylinderR, float cylinderLen, float axisR, float axisLen, Qt3DCore::QNode* parent)
+	{
+		std::vector<float> vertexDatas;
+		createInstructionsData(cylinderR, cylinderLen, axisR, axisLen, 36, vertexDatas);
+		return createGeometry(parent, &vertexDatas);
 	}
 
 	int BasicShapeCreateHelper::createCylinderData(float r, float h, int seg, std::vector<float> &datas)
@@ -188,6 +205,139 @@ namespace qtuser_3d
 		return 0;
 	}
 
+	int BasicShapeCreateHelper::createBallData(QVector3D center, float r, float angleSpan, std::vector<float>& vertexDatas, std::vector<float>& normalDatas)
+	{
+		const float PI = 3.1415926535897932384;
+		for (float vAngle = -90; vAngle < 90; vAngle = vAngle + angleSpan)
+		{
+			float usevAngle = vAngle * PI / 180.0;
+			float nvAngle = (vAngle + angleSpan) * PI / 180.0;
+
+			for (float hAngle = 0; hAngle < 360; hAngle = hAngle + angleSpan)
+			{
+				float usehAngle = hAngle * PI / 180.0;
+				float nhAngle = (hAngle + angleSpan) * PI / 180.0;
+
+//				QVector3D v0(cos(usevAngle) * cos(usehAngle), cos(usevAngle) * sin(usehAngle), sin(usevAngle));
+
+				float nx0 = (float)(cos(usevAngle) * cos(usehAngle));
+				float ny0 = (float)(cos(usevAngle) * sin(usehAngle));
+				float nz0 = (float)(sin(usevAngle));
+
+				float nx1 = (float)(cos(usevAngle) * cos(nhAngle));
+				float ny1 = (float)(cos(usevAngle) * sin(nhAngle));
+				float nz1 = (float)(sin(usevAngle));
+
+				float nx2 = (float)(cos(nvAngle) * cos(nhAngle));
+				float ny2 = (float)(cos(nvAngle) * sin(nhAngle));
+				float nz2 = (float)(r * sin(nvAngle));
+
+				float nx3 = (float)(cos(nvAngle) * cos(usehAngle));
+				float ny3 = (float)(cos(nvAngle) * sin(usehAngle));
+				float nz3 = (float)(sin(nvAngle));
+
+				float x0 = (float)(r * cos(usevAngle) * cos(usehAngle)) + center.x();
+				float y0 = (float)(r * cos(usevAngle) * sin(usehAngle)) + center.y();
+				float z0 = (float)(r * sin(usevAngle)) + center.z();
+
+				float x1 = (float)(r * cos(usevAngle) * cos(nhAngle)) + center.x();
+				float y1 = (float)(r * cos(usevAngle) * sin(nhAngle)) + center.y();
+				float z1 = (float)(r * sin(usevAngle)) + center.z();
+
+				float x2 = (float)(r * cos(nvAngle) * cos(nhAngle)) + center.x();
+				float y2 = (float)(r * cos(nvAngle) * sin(nhAngle)) + center.y();
+				float z2 = (float)(r * sin(nvAngle)) + center.z();
+
+				float x3 = (float)(r * cos(nvAngle) * cos(usehAngle)) + center.x();
+				float y3 = (float)(r * cos(nvAngle) * sin(usehAngle)) + center.y();
+				float z3 = (float)(r * sin(nvAngle)) + center.z();
+
+				vertexDatas.push_back(x1); vertexDatas.push_back(y1); vertexDatas.push_back(z1);
+				vertexDatas.push_back(x3); vertexDatas.push_back(y3); vertexDatas.push_back(z3);
+				vertexDatas.push_back(x0); vertexDatas.push_back(y0); vertexDatas.push_back(z0);
+
+				vertexDatas.push_back(x1); vertexDatas.push_back(y1); vertexDatas.push_back(z1);
+				vertexDatas.push_back(x2); vertexDatas.push_back(y2); vertexDatas.push_back(z2);
+				vertexDatas.push_back(x3); vertexDatas.push_back(y3); vertexDatas.push_back(z3);
+
+
+				normalDatas.push_back(nx1); normalDatas.push_back(ny1); normalDatas.push_back(nz1);
+				normalDatas.push_back(nx3); normalDatas.push_back(ny3); normalDatas.push_back(nz3);
+				normalDatas.push_back(nx0); normalDatas.push_back(ny0); normalDatas.push_back(nz0);
+
+				normalDatas.push_back(nx1); normalDatas.push_back(ny1); normalDatas.push_back(nz1);
+				normalDatas.push_back(nx2); normalDatas.push_back(ny2); normalDatas.push_back(nz2);
+				normalDatas.push_back(nx3); normalDatas.push_back(ny3); normalDatas.push_back(nz3);
+
+			}
+		}
+		return 0;
+	}
+
+	int BasicShapeCreateHelper::createInstructionsData(float cylinderR, float cylinderLen, float axisR, float axisLen, int seg, std::vector<float>& vertexDatas)
+	{
+		const float PI = 3.1415926535897932384;
+		float angdesSpan = 360.0 / seg;
+
+		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
+		{
+			float angrad = angdeg * PI / 180.0;
+			float angradNext = (angdeg + angdesSpan) * PI / 180.0;
+
+			QVector3D v1(0, 0, 0);
+			QVector3D v2(-cylinderR * sin(angrad), -cylinderR * cos(angrad), 0);
+			QVector3D v3(-cylinderR * sin(angradNext), -cylinderR * cos(angradNext), 0);
+
+			QVector3D n = QVector3D::normal(v1, v2, v3);
+			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas);
+		}
+		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
+		{
+			float angrad = angdeg * PI / 180.0;
+			float angradNext = (angdeg + angdesSpan) * PI / 180.0;
+
+			QVector3D v1(-cylinderR * sin(angrad), -cylinderR * cos(angrad), 0);
+			QVector3D v2(-cylinderR * sin(angradNext), -cylinderR * cos(angradNext), cylinderLen);
+			QVector3D v3(-cylinderR * sin(angrad), -cylinderR * cos(angrad), cylinderLen);
+
+			QVector3D n = QVector3D::normal(v1, v2, v3);
+			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas);
+
+			QVector3D v4(-cylinderR * sin(angrad), -cylinderR * cos(angrad), 0);
+			QVector3D v5(-cylinderR * sin(angradNext), -cylinderR * cos(angradNext), 0);
+			QVector3D v6(-cylinderR * sin(angradNext), -cylinderR * cos(angradNext), cylinderLen);
+
+			QVector3D n2 = QVector3D::normal(v4, v5, v6);
+			addFaceDataWithQVector3D(v4, v5, v6, n2, vertexDatas);
+		}
+		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
+		{
+			float angrad = angdeg * PI / 180.0;
+			float angradNext = (angdeg + angdesSpan) * PI / 180.0;
+
+			QVector3D v1(0, 0, cylinderLen);
+			QVector3D v2(-axisR * sin(angrad), -axisR * cos(angrad), cylinderLen);
+			QVector3D v3(-axisR * sin(angradNext), -axisR * cos(angradNext), cylinderLen);
+
+			QVector3D n = QVector3D::normal(v1, v2, v3);
+			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas);
+		}
+		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
+		{
+			float angrad = angdeg * PI / 180.0;
+			float angradNext = (angdeg + angdesSpan) * PI / 180.0;
+
+			QVector3D v1(0, 0, cylinderLen + axisLen);
+			QVector3D v2(-axisR * sin(angradNext), -axisR * cos(angradNext), cylinderLen);
+			QVector3D v3(-axisR * sin(angrad), -axisR * cos(angrad), cylinderLen);
+
+			QVector3D n = QVector3D::normal(v1, v2, v3);
+			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas);
+		}
+
+		return 0;
+	}
+
 	int BasicShapeCreateHelper::addFaceDataWithQVector3D(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3, const QVector3D& n, std::vector<float>& vertexDatas, std::vector<float>& normalDatas)
 	{
 		vertexDatas.push_back(v1.x());
@@ -208,6 +358,23 @@ namespace qtuser_3d
 			normalDatas.push_back(n.y());
 			normalDatas.push_back(n.z());
 		}
+
+		return 0;
+	}
+
+	int BasicShapeCreateHelper::addFaceDataWithQVector3D(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3, const QVector3D& n, std::vector<float>& vertexDatas)
+	{
+		vertexDatas.push_back(v1.x());
+		vertexDatas.push_back(v1.y());
+		vertexDatas.push_back(v1.z());
+
+		vertexDatas.push_back(v2.x());
+		vertexDatas.push_back(v2.y());
+		vertexDatas.push_back(v2.z());
+
+		vertexDatas.push_back(v3.x());
+		vertexDatas.push_back(v3.y());
+		vertexDatas.push_back(v3.z());
 
 		return 0;
 	}

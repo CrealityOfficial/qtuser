@@ -8,6 +8,7 @@ namespace qtuser_3d
 		:Pickable(parent)
 		, m_localMatrixDirty(true)
 		, m_parentMatrixDirty(true)
+		, mirrorZ_count(0)
 	{
 		m_localScale = QVector3D(1.0f, 1.0f, 1.0f);
 	}
@@ -58,6 +59,7 @@ namespace qtuser_3d
 	void Node3D::setCenter(const QVector3D& center, bool update)
 	{
 		m_localCenter = center;
+		m_localMatrixDirty = true;
 
 		if (update) updateMatrix();
 	}
@@ -126,8 +128,8 @@ namespace qtuser_3d
 		m_local2Parent.translate(m_localPosition + m_localCenter);
 		QMatrix4x4 t = m_local2Parent;
 
-		m_local2Parent.rotate(m_localRotate);
 		m_local2Parent.scale(m_localScale);
+		m_local2Parent.rotate(m_localRotate);
 		m_local2Parent.translate(-m_localCenter);
 
 		m_local2Parent *= m_mirrorMatrix;
@@ -225,15 +227,44 @@ namespace qtuser_3d
 		mirror(m, true);
 	}
 
-	void Node3D::mirrorZ()
+	void Node3D::mirrorZ()  /////ZZ
 	{
 		QMatrix4x4 m;
-		m(2, 2) = -1;
+		if (mirrorZ_count % 2 == 0)
+		{
+			liftZUp(m_globalSpaceBox.max.z());
+			m(2, 2) = -1;
+		}
+
+		else
+		{
+			liftZUp(-m_globalSpaceBox.max.z());  //reverse
+			m(2, 2) = -1;
+		}
 		mirror(m, true);
+		mirrorZ_count += 1;
 	}
 
 	void Node3D::mirrorSet(const QMatrix4x4& m)
 	{
+		if (mirrorZ_count > 0)
+		{
+			QMatrix4x4 m;
+			if (mirrorZ_count % 2 != 0)
+			{
+				liftZUp(-m_globalSpaceBox.max.z());
+				m(2, 2) = -1;
+			}
+
+			else
+			{
+				liftZUp(m_globalSpaceBox.max.z());  //reverse
+				m(2, 2) = -1;
+			}
+			mirror(m, true);
+			mirrorZ_count -= 1;
+			return;
+		}
 		mirror(m, false);
 	}
 

@@ -29,7 +29,7 @@ namespace qtuser_3d
 
 	void BasicEntity::setParameter(const QString& name, const QVariant& value)
 	{
-		QVector<Qt3DRender::QParameter*>& parameters = m_material->parameters();
+		QVector<Qt3DRender::QParameter*> parameters = m_material->parameters();
 		for (Qt3DRender::QParameter* parameter : parameters)
 		{
 			if (name == parameter->name())
@@ -60,6 +60,11 @@ namespace qtuser_3d
 	void BasicEntity::setPose(const QMatrix4x4& matrix)
 	{
 		m_transform->setMatrix(matrix);
+	}
+
+	QMatrix4x4 BasicEntity::pose() const
+	{
+		return m_transform->matrix();
 	}
 
 	void BasicEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type)

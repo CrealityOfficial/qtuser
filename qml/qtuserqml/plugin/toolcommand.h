@@ -23,10 +23,13 @@ public:
 	void setName(const QString& name);
     void setSource(const QString& source);
     Q_INVOKABLE virtual bool checkSelect();
+	Q_INVOKABLE virtual bool outofPlatform();
 	void setEnabled(bool enabled);
 
 	Q_INVOKABLE void execute();
 	virtual void onExecute();
+
+    Q_INVOKABLE virtual bool isSelectModel();
 signals:
 	void enabledChanged();
 	void executed();

@@ -22,6 +22,17 @@ namespace qtuser_core
 		return m_running;
 	}
 
+	void JobExecutor::addJobTracer(JobTracer* tracer)
+	{
+		if (tracer && !m_tracers.contains(tracer))
+			m_tracers.append(tracer);
+	}
+
+	void JobExecutor::removeJobTracer(JobTracer* tracer)
+	{
+		m_tracers.removeOne(tracer);
+	}
+
 	bool JobExecutor::execute(QList<JobPtr> jobs)
 	{
 		if (m_running || (jobs.size() == 0) || m_runThread->isRunning())
@@ -30,6 +41,8 @@ namespace qtuser_core
 		m_running = true;
 
 		emit jobsStart();
+		for (JobTracer* tracer : m_tracers)
+			tracer->jobExecutorStart();
 
 		m_exsitJobs = jobs;
 		startJob();
@@ -59,6 +72,9 @@ namespace qtuser_core
 			m_exsitJobs.clear();
 			m_runThread->setJob(nullptr);
 			m_running = false;
+
+			for (JobTracer* tracer : m_tracers)
+				tracer->jobExecutorStop();
 		}
 	}
 

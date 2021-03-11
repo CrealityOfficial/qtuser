@@ -29,6 +29,8 @@ namespace qtuser_3d
 		void unSetWaterPoint();
 		void setFanZhuan(int fz);
 
+		void setNeedCheckScope(int checkscope);
+
 		void setNozzle(float nozzle);
 	protected:
 		qtuser_3d::BoxEntity* m_boxEntity;
@@ -44,6 +46,7 @@ namespace qtuser_3d
 		Qt3DRender::QParameter* m_waterParameter;
 		Qt3DRender::QParameter* m_zchaParameter;
 		Qt3DRender::QParameter* m_fanzhuanParameter;
+		Qt3DRender::QParameter* m_checkScopeParameter;
 
 		Qt3DRender::QParameter* m_nozzleParameter;
 	};

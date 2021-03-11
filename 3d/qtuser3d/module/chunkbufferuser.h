@@ -28,6 +28,7 @@ namespace qtuser_3d
 		void updatePositionOnly();
 		void updateAll();
 		void updateFlag();
+		void updateChunkBuffer(QByteArray positionBytes, QByteArray flagsBytes);
 
 		int validSize();
 		void fillBuffer(float* buffer);

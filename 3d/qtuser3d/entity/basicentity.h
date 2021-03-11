@@ -25,6 +25,7 @@ namespace qtuser_3d
 
 		void setEffect(Qt3DRender::QEffect* effect);
 		void setPose(const QMatrix4x4& matrix);
+		QMatrix4x4 pose() const;
 		void setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles);
 		Qt3DRender::QGeometry* geometry();
 		void replaceGeometryRenderer(Qt3DRender::QGeometryRenderer* geometryRenderer);

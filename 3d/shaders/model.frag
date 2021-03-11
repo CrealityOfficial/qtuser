@@ -1,4 +1,4 @@
-#version 130
+#version 150 core
 out vec4 fragmentColor;
 
 in vec3 viewDirection;
@@ -24,6 +24,7 @@ uniform float supportCos = 0.7;
 uniform int hoverState = 0;
 uniform int waterState = 0;
 uniform int fanzhuan = 0;
+uniform int checkscope = 1;
 
 uniform float zcha = 0.01;
 
@@ -48,7 +49,7 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_col
 
 void main( void )
 {
-	if(worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight)
+	if(checkscope > 0 && (worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight))
 		discard;
 
 	vec4 color = stateColors[int(state)];	
@@ -64,21 +65,24 @@ void main( void )
 	
 	vec3 fgnormal 		  =	normalize(gnormal);
 	
-	if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
+	if(checkscope > 0)
 	{
-		coreColor.g += 0.4;
+		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
+		{
+			coreColor.g += 0.4;
+		}
+		if( abs(worldPosition.z - bottom) < 0.01 )
+		{
+			coreColor.g += 0.4;
+		}
 	}
 	
-	if( abs(worldPosition.z - bottom) < 0.01 )
-	{
-		coreColor.g += 0.4;
-	}
 	
 	if(hoverState > 0)
 	{
 		if(dot(fgnormal, vec3(0.0, 0.0, -1.0)) > supportCos)
 		{
-			coreColor.r += 0.4;
+			coreColor.r += 0.8;
 		}
 		
 		if(waterState == 1)

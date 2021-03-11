@@ -15,12 +15,13 @@ namespace qtuser_3d
 	{
 		Q_OBJECT
 	public:
-		FaceEntity(Qt3DCore::QNode* parent = nullptr);
+		FaceEntity(Qt3DCore::QNode* parent = nullptr, int facetype = 0x3f);
 		virtual ~FaceEntity();
 
 		void drawFace(Box3D& box);
 
 		void setVisibility(int type, bool visibility);
+		void setColor(int type, const QVector4D& color);
 		void updateFace(Box3D& box,faceType type);
 	protected:
 		Faces* m_faceFront;

@@ -28,6 +28,7 @@ public:
 		: m_context(context)
 		, m_surface(context ? static_cast<QOffscreenSurface*>(context->surface()) : nullptr)
 	{
+		//qDebug() << m_context->format();
 	}
 
 	~ContextSaver()

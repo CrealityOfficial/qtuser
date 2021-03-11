@@ -1,0 +1,180 @@
+/*
+   Copyright (C) 2019 Peter S. Zhigalov <peter.zhigalov@gmail.com>
+
+   This file is part of the `QtUtils' library.
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "UpdateChecker.h"
+
+#include <algorithm>
+#include <cassert>
+
+#include <QApplication>
+#include <QDebug>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QFile>
+#include "ReleaseInfo.h"
+#include <QUrlQuery>
+
+#include <QSettings>
+
+static bool releaseInfoGreater(const ReleaseInfo &lhs, const ReleaseInfo &rhs)
+{
+    return lhs.version > rhs.version;
+}
+
+static bool isPrerelase(const ReleaseInfo &info)
+{
+    return info.prerelease;
+}
+
+struct UpdateChecker::Impl
+{
+    const QString owner;
+    const QString repo;
+    const Version currentVersion;
+    QNetworkAccessManager *networkManager;
+    QNetworkReply *activeReply;
+
+    Impl(const QString &owner, const QString &repo, const QString &currentVersion)
+        : owner(owner)
+        , repo(repo)
+        , currentVersion(currentVersion)
+        , networkManager(Q_NULLPTR)
+        , activeReply(Q_NULLPTR)
+    {}
+};
+
+UpdateChecker::UpdateChecker(RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, QObject *parent)
+    : QObject(parent)
+    , m_impl(new Impl(owner, repo, currentVersion))
+{
+
+}
+
+UpdateChecker::~UpdateChecker()
+{}
+
+void UpdateChecker::checkForUpdates()
+{
+    if(!m_impl->networkManager)
+    {
+        m_impl->networkManager = new QNetworkAccessManager(this);
+        connect(m_impl->networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+    }
+    QString suffix = m_impl->currentVersion.extra();
+    qDebug() << suffix;
+#ifndef QT_NO_DEBUG
+    suffix = "Beta";
+#endif
+    QNetworkRequest request;
+    QString projectName = QString(m_impl->owner).toLower();
+    QUrl requestUrl = QUrl(QString::fromLatin1("https://file-cdn.creality.com/") + projectName + QString::fromLatin1("/latest-") + suffix.toLower() + ".json");
+    requestUrl.setQuery(QUrlQuery("time=" + QDateTime::currentDateTime().toString("ddMMyyyyhh")));
+    request.setUrl(requestUrl);
+    request.setRawHeader("User-Agent", QString::fromLatin1("%1/%2").arg(qApp->applicationName()).arg(qApp->applicationVersion()).toLatin1());
+    m_impl->activeReply = m_impl->networkManager->get(request);
+}
+
+void UpdateChecker::cancel()
+{
+    if(!m_impl->activeReply)
+        return;
+     m_impl->activeReply->abort();
+     m_impl->activeReply = Q_NULLPTR;
+}
+
+void UpdateChecker::replyFinished(QNetworkReply *reply)
+{
+    QSettings setting;
+    m_impl->activeReply = Q_NULLPTR;
+
+    if(reply->error() != QNetworkReply::NoError)
+    {
+        qWarning() << "[UpdateChecker]" << reply->errorString() << "\n";
+        Q_EMIT updateError(reply->errorString());
+        return;
+    }
+    QJsonParseError error;
+    const QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &error);
+    if(error.error != QJsonParseError::NoError)
+    {
+        qWarning() << "[UpdateChecker]" << error.errorString() << "\n";
+        Q_EMIT updateError(error.errorString());
+        return;
+    }
+
+    ReleaseInfo currentRelease;
+    QList<ReleaseInfo> newReleases;
+
+    //const QJsonArray array = document.array();
+    //for(QJsonArray::ConstIterator it = array.constBegin(), itEnd = array.constEnd(); it != itEnd; ++it)
+    //{
+     //   const QJsonObject object = (*it).toObject();
+      //  if(object.value(QString::fromLatin1("draft")).toBool())
+        //    continue;
+        QJsonObject object = document.object();
+        ReleaseInfo info;
+        info.htmlUrl = QUrl(object.value(QString::fromLatin1("html_url")).toString());
+        info.tagName = object.value(QString::fromLatin1("tag_name")).toString();
+        info.name = object.value(QString::fromLatin1("name")).toString();
+        info.body = object.value(QString::fromLatin1("body")).toString();
+        info.prerelease = object.value(QString::fromLatin1("prerelease")).toBool();
+        info.createdAt = QDateTime::fromString(object.value(QString::fromLatin1("created_at")).toString(), Qt::ISODate);
+        info.publishedAt = QDateTime::fromString(object.value(QString::fromLatin1("published_at")).toString(), Qt::ISODate);
+        info.version = Version(info.tagName);
+        const QJsonObject htmls = object.value(QString::fromLatin1("html")).toObject();
+        setting.beginGroup("language_perfer_config");
+        QString lang = setting.value("language_type").toString();
+        setting.endGroup();
+        lang = lang.mid(0,lang.indexOf(".")).toLower();
+        qDebug() << lang;
+        if(lang!="zh_cn")
+        {
+            lang="en";
+        }
+        QString html = htmls.value(lang.toLower()).toString();
+        if(html!="")
+        {
+            info.body = html;
+        }
+        if(info.version == m_impl->currentVersion)
+            currentRelease = info;
+        else if(info.version > m_impl->currentVersion)
+            newReleases.append(info);
+    //}
+
+    if(currentRelease.version.isValid() && !currentRelease.prerelease)
+        newReleases.erase(std::remove_if(newReleases.begin(), newReleases.end(), isPrerelase), newReleases.end());
+
+    if(!currentRelease.version.isValid())
+        currentRelease.version = m_impl->currentVersion;
+
+    if(newReleases.empty())
+    {
+        Q_EMIT updateNotFound(currentRelease);
+        return;
+    }
+
+    std::sort(newReleases.begin(), newReleases.end(), releaseInfoGreater);
+    Q_EMIT updateFound(currentRelease, newReleases);
+}
+

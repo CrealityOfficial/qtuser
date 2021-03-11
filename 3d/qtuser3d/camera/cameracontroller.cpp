@@ -105,6 +105,11 @@ void CameraController::showSelf()
 	m_screenCamera->showSelf();
 }
 
+void CameraController::sendViewUpdateSingle(bool capture)
+{
+	emit signalViewChanged(capture);
+}
+
 void CameraController::uninitialize()
 {
 }
@@ -121,10 +126,10 @@ void CameraController::updateNearFar(const qtuser_3d::Box3D& box)
 		m_screenCamera->updateNearFar(box);
 }
 
-void CameraController::home(const qtuser_3d::Box3D& box)
+void CameraController::home(const qtuser_3d::Box3D& box, int type)
 {
 	if(m_screenCamera)
-		m_screenCamera->home(box);
+		m_screenCamera->home(box, type);
 }
 
 void CameraController::onResize(const QSize& size)

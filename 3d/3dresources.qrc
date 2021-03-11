@@ -20,6 +20,8 @@
         <file>shaders/pickFaceFlag.vert</file>
         <file>shaders/slicepreview.vert</file>
         <file>shaders/slicepreview.frag</file>
+        <file>shaders/slicepreviewAD.vert</file>
+        <file>shaders/slicepreviewAD.frag</file>
         <file>shaders/printergrid.vert</file>
         <file>shaders/printergrid.frag</file>
         <file>shaders/text.vert</file>
@@ -36,6 +38,14 @@
         <file>shaders/modelselect.vert</file>
         <file>shaders/modelsimple.frag</file>
         <file>shaders/modelsimple.vert</file>
+        <file>shaders/supportpos.frag</file>
+        <file>shaders/supportpos.vert</file>
+        <file>shaders/printerbottom.frag</file>
+        <file>shaders/printerbottom.vert</file>
+		<file>shaders/slicepreviewpath.vert</file>
+		<file>shaders/slicepreviewpath.frag</file>
+		<file>shaders/admodel.vert</file>
+		<file>shaders/admodel.frag</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

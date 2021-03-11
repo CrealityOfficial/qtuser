@@ -4,6 +4,7 @@
 #include <QtCore/QDebug>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
+#include <QtGui/QOpenGLContext>
 #include "qtuserqml/interface/qmlapplicationinterface.h"
 
 namespace qtuser_qml
@@ -14,6 +15,20 @@ namespace qtuser_qml
         QGuiApplication app(argc, argv);
 
         QQmlApplicationEngine engine;
+        QSurfaceFormat format;
+        if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL) {
+            format.setVersion(3, 2);
+            format.setProfile(QSurfaceFormat::CoreProfile);
+        }
+        format.setDepthBufferSize(24);
+        format.setStencilBufferSize(8);
+        format.setSamples(4);
+        QSurfaceFormat::setDefaultFormat(format);
+
+		//QSurfaceFormat format;
+		//format.setVersion(1, 3);
+		//format.setProfile(QSurfaceFormat::CoreProfile);
+		//QSurfaceFormat::setDefaultFormat(format);
 
         QMLApplicationInterface* appInterface = nullptr;
         QPluginLoader loader(dll);

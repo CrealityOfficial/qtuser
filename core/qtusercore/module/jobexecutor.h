@@ -6,6 +6,14 @@
 
 namespace qtuser_core
 {
+	class JobTracer
+	{
+	public:
+		virtual ~JobTracer() {}
+		virtual void jobExecutorStart() = 0;
+		virtual void jobExecutorStop() = 0;
+	};
+
 	class QTUSER_CORE_API JobExecutor: public QObject
 	{
 		Q_OBJECT
@@ -17,6 +25,8 @@ namespace qtuser_core
 		bool isRunning();
 		bool execute(QList<JobPtr> jobs);
 		bool execute(JobPtr job);
+		void addJobTracer(JobTracer* tracer);
+		void removeJobTracer(JobTracer* tracer);
 	public slots:
 		void onJobFinished();
 	signals:
@@ -33,6 +43,7 @@ namespace qtuser_core
 		JobThread* m_runThread;
 
 		bool m_running;
+		QList<JobTracer*> m_tracers;
 	};
 }
 #endif // _CREATIVE_KERNEL_JOBEXECUTOR_1590379536512_H

@@ -41,28 +41,100 @@ namespace qtuser_3d
 		std::vector<QVector3D> positions(vertexCount);
 		std::vector<QVector2D> flags(vertexCount);
 
+		float z = 0.0f;
+
 		int vertexIndex = 0;
 		for (int i = startX; i <= endX; ++i)
 		{
-			positions.at(vertexIndex) = QVector3D(float(i) * gap, minY, -0.1f);
-			flags.at(vertexIndex) = QVector2D(0.0f, float(i) * gap);
+			positions.at(vertexIndex) = QVector3D(float(i) * gap, minY, z);
+			flags.at(vertexIndex) = QVector2D(-1.0f, float(i) * gap);
 			vertexIndex++;
-			positions.at(vertexIndex) = QVector3D(float(i) * gap, maxY, -0.1f);
-			flags.at(vertexIndex) = QVector2D(0.0f, float(i) * gap);
+			positions.at(vertexIndex) = QVector3D(float(i) * gap, maxY, z);
+			flags.at(vertexIndex) = QVector2D(-1.0f, float(i) * gap);
 			vertexIndex++;
 		}
 		for (int i = startY; i <= endY; ++i)
 		{
-			positions.at(vertexIndex) = QVector3D(minX, float(i) * gap, -0.1f);
+			positions.at(vertexIndex) = QVector3D(minX, float(i) * gap, z);
 			flags.at(vertexIndex) = QVector2D(1.0f, float(i) * gap);
 			vertexIndex++;
-			positions.at(vertexIndex) = QVector3D(maxX, float(i) * gap, -0.1f);
+			positions.at(vertexIndex) = QVector3D(maxX, float(i) * gap, z);
 			flags.at(vertexIndex) = QVector2D(1.0f, float(i) * gap);
 			vertexIndex++;
 		}
 
 		Qt3DRender::QAttribute* positionAttribute = BufferHelper::CreateVertexAttribute((const char*)& positions.at(0), AttribueSlot::Position, vertexCount);
 		Qt3DRender::QAttribute* flagAttribute = BufferHelper::CreateVertexAttribute("vertexFlag", (const char*)& flags.at(0), 2, vertexCount);
+		return GeometryCreateHelper::create(parent, positionAttribute, flagAttribute);
+	}
+
+	Qt3DRender::QGeometry* GridCreateHelper::createMid(Box3D& box, float gap, float offset, Qt3DCore::QNode* parent)
+	{
+		QVector3D size = box.size();
+		if (size.x() == 0 || size.y() == 0) return nullptr;
+
+		float minX = box.min.x();
+		float maxX = box.max.x();
+		float minY = box.min.y();
+		float maxY = box.max.y();
+
+		if (maxX - minX <= 0 || maxY - minY <= 0)
+		{
+			return nullptr;
+		}
+		std::vector<QVector3D> positions;
+		std::vector<QVector2D> flags;
+
+		float zcoord = 0.00f;
+		float midX = (minX + maxX) / 2.0;
+		float midY = (minY + maxY) / 2.0;
+
+		int vertexCount = 0;
+
+		for (float i = midX; i <= maxX; i += gap)
+		{
+			positions.push_back(QVector3D(i, minY, zcoord));
+			positions.push_back(QVector3D(i, maxY, zcoord));
+
+			flags.push_back(QVector2D(i - midX, 1.0));
+			flags.push_back(QVector2D(i - midX, 1.0));
+
+			vertexCount += 2;
+		}
+		for (float i = midX - gap; i >= minX; i -= gap)
+		{
+			positions.push_back(QVector3D(i, minY, zcoord));
+			positions.push_back(QVector3D(i, maxY, zcoord));
+
+			flags.push_back(QVector2D(i - midX, 1.0));
+			flags.push_back(QVector2D(i - midX, 1.0));
+
+			vertexCount += 2;
+		}
+
+		for (int i = midY; i <= maxY; i += gap)
+		{
+			positions.push_back(QVector3D(minX, i, zcoord));
+			positions.push_back(QVector3D(maxX, i, zcoord));
+
+			flags.push_back(QVector2D(1.0f, i - midY));
+			flags.push_back(QVector2D(1.0f, i - midY));
+
+			vertexCount += 2;
+		}
+		for (int i = midY - gap; i >= minY; i -= gap)
+		{
+			positions.push_back(QVector3D(minX, i, zcoord));
+			positions.push_back(QVector3D(maxX, i, zcoord));
+
+			flags.push_back(QVector2D(1.0f, i - midY));
+			flags.push_back(QVector2D(1.0f, i - midY));
+
+			vertexCount += 2;
+		}
+
+		Qt3DRender::QAttribute* positionAttribute = BufferHelper::CreateVertexAttribute((const char*)&positions.at(0), AttribueSlot::Position, vertexCount);
+		Qt3DRender::QAttribute* flagAttribute = BufferHelper::CreateVertexAttribute("vertexFlag", (const char*)&flags.at(0), 2, vertexCount);
 		return GeometryCreateHelper::create(parent, positionAttribute, flagAttribute);
 	}
 

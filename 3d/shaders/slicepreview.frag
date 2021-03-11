@@ -1,4 +1,4 @@
-#version 130
+#version 150 core
 out vec4 fragment_color;
 
 in vec3 normal;
@@ -22,9 +22,11 @@ uniform int animation = 0;
 uniform vec4 clipValue;
 uniform vec2 layershow;
 
-uniform vec4 typecolors[13];
+uniform vec4 typecolors[18];
 uniform vec4 speedcolors[13];
 uniform vec4 nozzlecolors[6];
+
+uniform int typecolorsshow[18];
 
 uniform float specularPower = 12.0;
 
@@ -53,6 +55,9 @@ void main( void )
 		discard;
 		
 	if(flag.x < layershow.x || flag.x > layershow.y)
+		discard;
+		
+	if(typecolorsshow[int(drawFlag.y)] == 0)
 		discard;
 	
 	vec4 core_color = vec4(0.5, 0.5, 0.5, 1.0);
