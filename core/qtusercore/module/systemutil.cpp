@@ -3,6 +3,8 @@
 #include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QCoreApplication>
+#include <QStandardPaths>
 
 #ifdef _WINDOWS
 
@@ -56,9 +58,10 @@ void showDetailSystemInfo()
 	qDebug() << "--------------------------------\n";
 }
 
-#ifdef _WINDOWS
+
 void showSysMemory()
 {
+#ifdef _WINDOWS
 	HANDLE handle = GetCurrentProcess();
 	PROCESS_MEMORY_COUNTERS pmc;
 	GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
@@ -67,15 +70,18 @@ void showSysMemory()
 
 	qDebug() << "memory use: " << pmc.WorkingSetSize / msize << "M/" << pmc.PeakWorkingSetSize / msize << "M + "
 		<< pmc.PagefileUsage / msize << "M/" << pmc.PeakPagefileUsage / msize << "M";
-}
 
 #else
 
-void showSysMemory()
-{
+#endif
 }
 
-#endif
+QString getCanWriteFolder()
+{
+	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+}
+
+
 
 void redirectIo()
 {
