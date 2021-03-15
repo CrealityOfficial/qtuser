@@ -51,6 +51,41 @@ static unsigned static_box_indices[24] = {
 	7, 4
 };
 
+static unsigned static_part_indices[48] = {
+	0, 1,
+	0, 2,
+	0, 3,
+
+	4, 5,
+	4, 6,
+	4, 7,
+
+	8, 9,
+	8, 10,
+	8, 11,
+
+	12, 13,
+	12, 14,
+	12, 15,
+
+	16, 17,
+	16, 18,
+	16, 19,
+
+	20, 21, 
+	20, 22,
+	20, 23,
+
+	24, 25,
+	24, 26,
+	24, 27,
+
+	28, 29,
+	28, 30,
+	28, 31
+
+};
+
 static unsigned static_box_triangles_indices[36] = {
 	2, 3, 0,
 	2, 0, 1,
