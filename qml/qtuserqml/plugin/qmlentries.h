@@ -12,7 +12,9 @@ public:
 	virtual ~QmlEntries();
 
 	void add(QmlEntry* entry);
+	void append(QmlEntry* entry);
 	void remove(QmlEntry* entry);
+	void clearButFirst();
 protected:
 	int rowCount(const QModelIndex& parent) const override;
 	int columnCount(const QModelIndex& parent) const override;
