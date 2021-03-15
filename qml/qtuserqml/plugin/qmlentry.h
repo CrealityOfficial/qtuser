@@ -16,11 +16,13 @@ class QTUSER_QML_API QmlEntry: public QObject
 	Q_PROPERTY(QString pressedIcon READ pressedIcon NOTIFY pressedIconChanged)
 	Q_PROPERTY(QString source READ source NOTIFY sourceChanged)
 	Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+	Q_PROPERTY(bool shot READ shot CONSTANT)
 public:
 	QmlEntry(QObject* parent = nullptr);
 	virtual ~QmlEntry();
 public:
 	bool enabled();
+	bool shot();
 	QString enabledIcon() const;
 	QString disableIcon() const;
 	QString pressedIcon() const;
@@ -42,6 +44,7 @@ protected:
 	virtual bool checkEnabled();
 	virtual void onExecute();
 	virtual QString nameImpl();
+	virtual bool isShot();
 
 	void updateState() override;
 	void updateTrans() override;

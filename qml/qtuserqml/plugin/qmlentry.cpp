@@ -19,6 +19,11 @@ bool QmlEntry::enabled()
 	return checkEnabled();
 }
 
+bool QmlEntry::shot()
+{
+	return isShot();
+}
+
 bool QmlEntry::checkEnabled()
 {
 	return true;
@@ -106,6 +111,11 @@ void QmlEntry::onExecute()
 QString QmlEntry::nameImpl()
 {
 	return m_name;
+}
+
+bool QmlEntry::isShot()
+{
+	return false;
 }
 
 void QmlEntry::updateState()
