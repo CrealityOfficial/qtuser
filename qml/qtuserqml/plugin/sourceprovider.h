@@ -1,10 +1,14 @@
 #ifndef QTUSER_QML_SOURCEPROVIDER_1615883776969_H
 #define QTUSER_QML_SOURCEPROVIDER_1615883776969_H
 #include "qtuserqml/qtuserqmlexport.h"
+#include "qtusercore/module/statenotifier.h"
+#include "qtusercore/module/translatenotifier.h"
 
 namespace qtuser_qml
 {
 	class QTUSER_QML_API SourceProvider : public QObject
+		, public StateReceiver
+		, public TranslatorReceiver
 	{
 		Q_OBJECT
 	public:
@@ -12,6 +16,8 @@ namespace qtuser_qml
 		virtual ~SourceProvider();
 
 		virtual QString source() = 0;
+		virtual void onStartFlow() = 0;
+		virtual void onEndFlow() = 0;
 	};
 }
 
