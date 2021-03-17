@@ -20,6 +20,7 @@ namespace qtuser_qml
         QGenericArgument val8 = QGenericArgument());
 
     QTUSER_QML_API void writeObjectNestProperty(QObject* object, const QString& childNest, const QString& name, QObject* value);
+    QTUSER_QML_API void writeObjectNestProperty(QObject* object, const QString& childNest, const QString& name, const QVariant& value);
 }
 
 #endif // QTUSER_QML_QMLPROPERTYSETTER_1596678501815_H
