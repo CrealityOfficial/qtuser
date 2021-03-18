@@ -4,6 +4,7 @@
 #include <QtCore/QVector>
 #include <QtGui/QColor>
 #include <QtGui/QVector3D>
+#include <Qt3DRender/QLineWidth>
 
 namespace qtuser_3d
 {
@@ -14,6 +15,7 @@ namespace qtuser_3d
 		LineEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~LineEntity();
 
+		void setLineWidth(float width);
 		void updateGeometry(QVector<QVector3D>& positions, QVector<QVector4D>& colors, bool loop = false);
 		void updateGeometry(QVector<QVector3D>& positions, bool loop = false);
 		void updateGeometry(int pointsNum, float* positions, float* color = nullptr, bool loop = false);
@@ -22,6 +24,8 @@ namespace qtuser_3d
 	protected:
 		Qt3DRender::QParameter* m_colorParameter;
 		bool m_usePure;
+
+		Qt3DRender::QLineWidth* m_lineWidth;
 	};
 }
 #endif // QTUSER_3D_LINEENTITY_1594892276547_H
