@@ -140,6 +140,8 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 	m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
 
 	m_rawOGL = new qtuser_qml::RawOGL(this);
+
+	setFocus(Qt::ClickFocus, Qt::ActiveWindowFocusReason);
 }
 
 GLQuickItem::~GLQuickItem()

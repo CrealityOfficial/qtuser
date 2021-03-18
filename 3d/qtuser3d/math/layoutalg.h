@@ -176,7 +176,7 @@ namespace qtuser_3d
 		author:Gavin
 		date:june/sixteenth day/2020
 		******************************************************************/
-		int InsertOnePolygon(const S3DPrtRectI& ptPlatform, const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointI& ptInsert, int iModelGap, qtuser_core::Progressor* progressor);
+		int InsertOnePolygon(const S3DPrtRectF& ptPlatform, const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptInsert, int iModelGap, qtuser_core::Progressor* progressor);
 
 		/*******************************************************************
 	describe:
@@ -238,7 +238,7 @@ namespace qtuser_3d
 	author:Gavin
 	date:june/sixteenth day/2020
 	******************************************************************/
-		int GetDstPointInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointI& ptDst);
+		int GetDstPointInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptDst);
 
 
 
@@ -265,8 +265,8 @@ return:
 author:Gavin
 date:june/twenty-ninth day/2020
 ******************************************************************/
-		int GetDstPointOutPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointI& ptDst);
-		bool IsDstPointValidOutPlatform(S3DPrtPointI ptIDst, const QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert);
+		int GetDstPointOutPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptDst);
+		bool IsDstPointValidOutPlatform(S3DPrtPointF ptIDst, const QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert);
 
 		/*******************************************************************
 describe:
@@ -282,7 +282,7 @@ false, this destination position is not in the group rectangle
 author:Gavin
 date:june/twenty-ninth day/2020
 ******************************************************************/
-		bool IsInsidePoligonGroupByBox(const QVector<SModelPolygon>& plgGroup, S3DPrtPointI ptDst);
+		bool IsInsidePoligonGroupByBox(const QVector<SModelPolygon>& plgGroup, S3DPrtPointF ptDst);
 
 
 		//these functions are used to improve the speed of calculating the destination postion inside of platform
@@ -303,7 +303,7 @@ return:
 author:Gavin
 date:june/sixteenth day/2020
 ******************************************************************/
-		int InsertModelInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointI& ptDst);
+		int InsertModelInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptDst);
 
 		/*******************************************************************
 describe:
@@ -375,7 +375,7 @@ true: get all the segment of the model convex polygon successfully
 author:Gavin
 date:june/sixteenth day/2020
 ******************************************************************/
-		bool IsDstPointValidNewWay(S3DPrtPointI ptIDst, QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert);
+		bool IsDstPointValidNewWay(S3DPrtPointF ptIDst, QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert);
 
 
 		/*******************************************************************
@@ -432,7 +432,7 @@ date:june/sixteenth day/2020
 		author:Gavin
 		date:june/ninteenth day/2020
 		******************************************************************/
-		int IsInsidePoligonGroup(const QVector<SModelPolygon>& plgGroup, S3DPrtPointI ptDst);
+		int IsInsidePoligonGroup(const QVector<SModelPolygon>& plgGroup, S3DPrtPointF ptDst);
 
 
 		/*******************************************************************
@@ -453,7 +453,7 @@ date:june/sixteenth day/2020
 		author:Gavin
 		date:june/eighteenth day/2020
 		******************************************************************/
-		bool IsInsidePoligon(const SModelPolygon& vtPolygon, S3DPrtPointI ptDst);
+		bool IsInsidePoligon(const SModelPolygon& vtPolygon, S3DPrtPointF ptDst);
 
 		/*******************************************************************
 		describe:
@@ -480,7 +480,7 @@ date:june/sixteenth day/2020
 
 	private:
 
-		bool IsDstPointValid(S3DPrtPointI ptIDst, const QVector<SModelPolygon>& plgGroup, const SModelPolygon& srcPolygon);
+		bool IsDstPointValid(S3DPrtPointF ptIDst, const QVector<SModelPolygon>& plgGroup, const SModelPolygon& srcPolygon);
 
 
 		/*******************************************************************
@@ -507,7 +507,7 @@ date:june/sixteenth day/2020
 	author:yaoyaping
 	date:june/seventeen day/2020
 	******************************************************************/
-		S3DPrtRectI GetPlatform();
+		S3DPrtRectF GetPlatform();
 
 
 		//-----------------------------------------------collect all the polygon vetexes--------------------------------------------------------------------------------------------
@@ -595,8 +595,8 @@ date:june/eighteenth day/2020
 
 
 	private:
-		S3DPrtRectI  m_rcPlatform;
-		S3DPrtPointI m_ptPlatformCenter;
+		S3DPrtRectF  m_rcPlatform;
+		S3DPrtPointF m_ptPlatformCenter;
 		int m_iUnit;
 
 		bool m_bOutTop;
