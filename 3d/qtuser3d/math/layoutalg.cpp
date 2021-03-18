@@ -32,11 +32,11 @@ namespace qtuser_3d
 	//    m_rcPlatform.iWidth = iXLeftTop - iXLeftTop;
 	//    m_rcPlatform.iHeight = iYRightBottom - iYLeftTop;
 	//
-	//    m_ptPlatformCenter.iX = ((iXLeftTop + iXRightBottom) / 2);
-	//    m_ptPlatformCenter.iY = ((iYLeftTop + iYRightBottom) / 2);        
+	//    m_ptPlatformCenter.fX = ((iXLeftTop + iXRightBottom) / 2);
+	//    m_ptPlatformCenter.fY = ((iYLeftTop + iYRightBottom) / 2);        
 	//}
 
-	int CLayoutAlg::GetDstPointInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointI& ptDst)
+	int CLayoutAlg::GetDstPointInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptDst)
 	{
 		//these four temporary variable will help reduce the searching time
 		m_bOutTop = false;//check this polygon is out of the top line when you move this polygon as this track
@@ -46,8 +46,8 @@ namespace qtuser_3d
 
 		if (plgGroup.count() == 0)
 		{
-			ptDst.iX = (m_rcPlatform.iXMax + m_rcPlatform.iXMin) / 2;
-			ptDst.iY = (m_rcPlatform.iYMax + m_rcPlatform.iYMin) / 2;
+			ptDst.fX = (m_rcPlatform.fXMax + m_rcPlatform.fXMin) / 2;
+			ptDst.fY = (m_rcPlatform.fYMax + m_rcPlatform.fYMin) / 2;
 
 			return 0;
 		}
@@ -57,7 +57,7 @@ namespace qtuser_3d
 
 			for (SModelPolygon itQVect : plgGroup)
 			{
-				if (itQVect.rcGrobalDst.fXMax < m_rcPlatform.iXMin || itQVect.rcGrobalDst.fYMax < m_rcPlatform.iYMin || itQVect.rcGrobalDst.fXMin > m_rcPlatform.iXMax || itQVect.rcGrobalDst.fYMin > m_rcPlatform.iYMax)
+				if (itQVect.rcGrobalDst.fXMax < m_rcPlatform.fXMin || itQVect.rcGrobalDst.fYMax < m_rcPlatform.fYMin || itQVect.rcGrobalDst.fXMin > m_rcPlatform.fXMax || itQVect.rcGrobalDst.fYMin > m_rcPlatform.fYMax)
 				{
 					continue;
 				}
@@ -69,9 +69,9 @@ namespace qtuser_3d
 
 			CollectVetex(plgInsert);
 
-			m_ptPlatformCenter.iX = (m_rcPlatform.iXMax + m_rcPlatform.iXMin) / 2;
-			m_ptPlatformCenter.iY = (m_rcPlatform.iYMax - m_rcPlatform.iYMin) / 2;
-			int iPlatFormWidth = (m_rcPlatform.iXMax - m_rcPlatform.iXMin) / 2;
+			m_ptPlatformCenter.fX = (m_rcPlatform.fXMax + m_rcPlatform.fXMin) / 2;
+			m_ptPlatformCenter.fY = (m_rcPlatform.fYMax - m_rcPlatform.fYMin) / 2;
+			int iPlatFormWidth = (m_rcPlatform.fXMax - m_rcPlatform.fXMin) / 2;
 			float fPro = 0;
 			for (int i = 0; i < iPlatFormWidth; i++)
 			{
@@ -82,13 +82,13 @@ namespace qtuser_3d
 					{
 						int iX = i;
 						int iY = j;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
 
 
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -106,11 +106,11 @@ namespace qtuser_3d
 					{
 						int iX = j;
 						int iY = i;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -127,11 +127,11 @@ namespace qtuser_3d
 					{
 						int iX = -i;
 						int iY = j;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -148,12 +148,12 @@ namespace qtuser_3d
 					{
 						int iY = -i;
 						int iX = j;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
 
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -170,12 +170,12 @@ namespace qtuser_3d
 					{
 						int iX = i;
 						int iY = j;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
 
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -197,8 +197,8 @@ namespace qtuser_3d
 			}
 		}
 
-		ptDst.iX = m_rcPlatform.iXMax + plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin;
-		ptDst.iY = m_rcPlatform.iYMin;
+		ptDst.fX = m_rcPlatform.fXMax + plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin;
+		ptDst.fY = m_rcPlatform.fYMin;
 
 		return 1;
 	}
@@ -263,7 +263,7 @@ namespace qtuser_3d
 	}
 
 
-	int CLayoutAlg::InsertModelInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointI& ptDst)
+	int CLayoutAlg::InsertModelInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptDst)
 	{
 		//these four temporary variable will help reduce the searching time
 		m_bOutTop = false;//check this polygon is out of the top line when you move this polygon as this track
@@ -273,8 +273,8 @@ namespace qtuser_3d
 
 		if (plgGroup.count() == 0)
 		{
-			ptDst.iX = (m_rcPlatform.iXMax + m_rcPlatform.iXMin) / 2;
-			ptDst.iY = (m_rcPlatform.iYMax + m_rcPlatform.iYMin) / 2;
+			ptDst.fX = (m_rcPlatform.fXMax + m_rcPlatform.fXMin) / 2;
+			ptDst.fY = (m_rcPlatform.fYMax + m_rcPlatform.fYMin) / 2;
 
 			return 0;
 		}
@@ -284,7 +284,7 @@ namespace qtuser_3d
 
 			for (SModelPolygon itQVect : plgGroup)
 			{
-				if (itQVect.rcGrobalDst.fXMax < m_rcPlatform.iXMin || itQVect.rcGrobalDst.fYMax < m_rcPlatform.iYMin || itQVect.rcGrobalDst.fXMin > m_rcPlatform.iXMax || itQVect.rcGrobalDst.fYMin > m_rcPlatform.iYMax)
+				if (itQVect.rcGrobalDst.fXMax < m_rcPlatform.fXMin || itQVect.rcGrobalDst.fYMax < m_rcPlatform.fYMin || itQVect.rcGrobalDst.fXMin > m_rcPlatform.fXMax || itQVect.rcGrobalDst.fYMin > m_rcPlatform.fYMax)
 				{
 					continue;
 				}
@@ -298,9 +298,9 @@ namespace qtuser_3d
 
 			InitializeAllProjectSegment(plgSimpleGroup, plgInsert);
 
-			m_ptPlatformCenter.iX = (m_rcPlatform.iXMax + m_rcPlatform.iXMin) / 2;
-			m_ptPlatformCenter.iY = (m_rcPlatform.iYMax - m_rcPlatform.iYMin) / 2;
-			int iPlatFormWidth = (m_rcPlatform.iXMax - m_rcPlatform.iXMin) / 2;
+			m_ptPlatformCenter.fX = (m_rcPlatform.fXMax + m_rcPlatform.fXMin) / 2;
+			m_ptPlatformCenter.fY = (m_rcPlatform.fYMax - m_rcPlatform.fYMin) / 2;
+			int iPlatFormWidth = (m_rcPlatform.fXMax - m_rcPlatform.fXMin) / 2;
 			float fPro = 0;
 			for (int i = 0; i < iPlatFormWidth; i++)
 			{
@@ -311,13 +311,13 @@ namespace qtuser_3d
 					{
 						int iX = i;
 						int iY = j;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
 
 
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -335,11 +335,11 @@ namespace qtuser_3d
 					{
 						int iX = j;
 						int iY = i;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -356,11 +356,11 @@ namespace qtuser_3d
 					{
 						int iX = -i;
 						int iY = j;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -377,12 +377,12 @@ namespace qtuser_3d
 					{
 						int iY = -i;
 						int iX = j;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
 
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -399,12 +399,12 @@ namespace qtuser_3d
 					{
 						int iX = i;
 						int iY = j;
-						iX += m_ptPlatformCenter.iX;
-						iY += m_ptPlatformCenter.iY;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
 
-						S3DPrtPointI ptIDst;
-						ptIDst.iX = iX;
-						ptIDst.iY = iY;
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
 
 						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
 						{
@@ -426,19 +426,19 @@ namespace qtuser_3d
 			}
 		}
 
-		ptDst.iX = m_rcPlatform.iXMax + plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin;
-		ptDst.iY = m_rcPlatform.iYMin;
+		ptDst.fX = m_rcPlatform.fXMax + plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin;
+		ptDst.fY = m_rcPlatform.fYMin;
 
 		return 1;
 	}
 
 
-	int CLayoutAlg::GetDstPointOutPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointI& ptDst)
+	int CLayoutAlg::GetDstPointOutPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptDst)
 	{
 		if (plgGroup.count() == 0)
 		{
-			ptDst.iX = m_rcPlatform.iXMax + plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin;
-			ptDst.iY = m_rcPlatform.iYMin;
+			ptDst.fX = m_rcPlatform.fXMax + plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin;
+			ptDst.fY = m_rcPlatform.fYMin;
 
 			return 0;
 		}
@@ -449,29 +449,29 @@ namespace qtuser_3d
 			//if this model all the part or a part is outside of the platform, we need to add this model polygon into the polygon group
 			for (SModelPolygon itQVect : plgGroup)
 			{
-				if (itQVect.rcGrobalDst.fXMax > m_rcPlatform.iXMax || itQVect.rcGrobalDst.fYMax > m_rcPlatform.iYMax || itQVect.rcGrobalDst.fXMin < m_rcPlatform.iXMin || itQVect.rcGrobalDst.fYMin < m_rcPlatform.iYMin)
+				if (itQVect.rcGrobalDst.fXMax > m_rcPlatform.fXMax || itQVect.rcGrobalDst.fYMax > m_rcPlatform.fYMax || itQVect.rcGrobalDst.fXMin < m_rcPlatform.fXMin || itQVect.rcGrobalDst.fYMin < m_rcPlatform.fYMin)
 				{
 					plgSimpleGroup.push_back(itQVect);
 				}
 			}
 
-			m_ptPlatformCenter.iX = (m_rcPlatform.iXMax + m_rcPlatform.iXMin) / 2;
-			m_ptPlatformCenter.iY = (m_rcPlatform.iYMax - m_rcPlatform.iYMin) / 2;
+			m_ptPlatformCenter.fX = (m_rcPlatform.fXMax + m_rcPlatform.fXMin) / 2;
+			m_ptPlatformCenter.fY = (m_rcPlatform.fYMax - m_rcPlatform.fYMin) / 2;
 			int iModelWidthHalf = (plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin) / 2;
 			int iModelHeightHalf = (plgInsert.rcGrobalDst.fYMax - plgInsert.rcGrobalDst.fYMin) / 2;
 
-			int iXMax = m_rcPlatform.iXMax + iModelWidthHalf + m_iModelGap;
-			int iYMax = m_rcPlatform.iYMax + iModelHeightHalf + m_iModelGap;
-			int iXMin = m_rcPlatform.iXMin - iModelWidthHalf - m_iModelGap;
-			int iYMin = m_rcPlatform.iYMin - iModelHeightHalf - m_iModelGap;
+			float iXMax = m_rcPlatform.fXMax + iModelWidthHalf + m_iModelGap;
+			float iYMax = m_rcPlatform.fYMax + iModelHeightHalf + m_iModelGap;
+			float iXMin = m_rcPlatform.fXMin - iModelWidthHalf - m_iModelGap;
+			float iYMin = m_rcPlatform.fYMin - iModelHeightHalf - m_iModelGap;
 			for (int i = 0; ; i++)
 			{
 				//right part
-				for (int j = iYMin - i; j <= iYMax + i; j += m_iUnit)
+				for (float j = iYMin - i; j <= iYMax + i; j += m_iUnit)
 				{
-					S3DPrtPointI ptIDst;
-					ptIDst.iX = iXMax + i;
-					ptIDst.iY = j;
+					S3DPrtPointF ptIDst;
+					ptIDst.fX = iXMax + i;
+					ptIDst.fY = j;
 
 					if (IsDstPointValidOutPlatform(ptIDst, plgSimpleGroup, plgInsert))
 					{
@@ -483,9 +483,9 @@ namespace qtuser_3d
 				//top side
 				for (int j = iXMax + i; j >= iXMin - i; j -= m_iUnit)
 				{
-					S3DPrtPointI ptIDst;
-					ptIDst.iX = j;
-					ptIDst.iY = iYMax + i;
+					S3DPrtPointF ptIDst;
+					ptIDst.fX = j;
+					ptIDst.fY = iYMax + i;
 
 					if (IsDstPointValidOutPlatform(ptIDst, plgSimpleGroup, plgInsert))
 					{
@@ -495,11 +495,11 @@ namespace qtuser_3d
 				}
 
 				//left side
-				for (int j = iYMax + i; j >= iYMin - i; j -= m_iUnit)
+				for (float j = iYMax + i; j >= iYMin - i; j -= m_iUnit)
 				{
-					S3DPrtPointI ptIDst;
-					ptIDst.iX = iXMin - i;
-					ptIDst.iY = j;
+					S3DPrtPointF ptIDst;
+					ptIDst.fX = iXMin - i;
+					ptIDst.fY = j;
 
 					if (IsDstPointValidOutPlatform(ptIDst, plgSimpleGroup, plgInsert))
 					{
@@ -509,11 +509,11 @@ namespace qtuser_3d
 				}
 
 				//bottom side
-				for (int j = iXMin - i; j <= iXMax + i; j += m_iUnit)
+				for (float j = iXMin - i; j <= iXMax + i; j += m_iUnit)
 				{
-					S3DPrtPointI ptIDst;
-					ptIDst.iX = j;
-					ptIDst.iY = iYMin - i;
+					S3DPrtPointF ptIDst;
+					ptIDst.fX = j;
+					ptIDst.fY = iYMin - i;
 
 					if (IsDstPointValidOutPlatform(ptIDst, plgSimpleGroup, plgInsert))
 					{
@@ -527,14 +527,14 @@ namespace qtuser_3d
 	}
 
 
-	int CLayoutAlg::InsertOnePolygon(const S3DPrtRectI& ptPlatform, const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointI& ptInsert, int iModelGap, qtuser_core::Progressor* progressor)
+	int CLayoutAlg::InsertOnePolygon(const S3DPrtRectF& ptPlatform, const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptInsert, int iModelGap, qtuser_core::Progressor* progressor)
 	{
 		m_pProgress = progressor;
 		m_iModelGap = iModelGap;
 		m_rcPlatform = ptPlatform;
 		int iRes = 0;
-		if (plgInsert.rcGrobalDst.fYMax - plgInsert.rcGrobalDst.fYMin > m_rcPlatform.iYMax - m_rcPlatform.iYMin ||
-			plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin > m_rcPlatform.iXMax - m_rcPlatform.iXMin)
+		if (plgInsert.rcGrobalDst.fYMax - plgInsert.rcGrobalDst.fYMin > m_rcPlatform.fYMax - m_rcPlatform.fYMin ||
+			plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin > m_rcPlatform.fXMax - m_rcPlatform.fXMin)
 		{
 			GetDstPointOutPlatform(plgGroup, plgInsert, ptInsert);
 
@@ -567,13 +567,13 @@ namespace qtuser_3d
 	}
 
 
-	bool CLayoutAlg::IsDstPointValidOutPlatform(S3DPrtPointI ptIDst, const QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert)
+	bool CLayoutAlg::IsDstPointValidOutPlatform(S3DPrtPointF ptIDst, const QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert)
 	{
 		if (!IsInsidePoligonGroupByBox(plgGroup, ptIDst))
 		{
 			QVector3D ptDst;
-			ptDst.setX(ptIDst.iX);
-			ptDst.setY(ptIDst.iY);
+			ptDst.setX(ptIDst.fX);
+			ptDst.setY(ptIDst.fY);
 
 
 			S3DPrtRectF rcGrobalDst;
@@ -600,35 +600,35 @@ namespace qtuser_3d
 	}
 
 
-	bool CLayoutAlg::IsDstPointValid(S3DPrtPointI ptIDst, const QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert)
+	bool CLayoutAlg::IsDstPointValid(S3DPrtPointF ptIDst, const QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert)
 	{
 		if (IsInsidePoligonGroup(plgGroup, ptIDst) < 0)
 		{
 			QVector3D ptDst;
-			ptDst.setX(ptIDst.iX);
-			ptDst.setY(ptIDst.iY);
+			ptDst.setX(ptIDst.fX);
+			ptDst.setY(ptIDst.fY);
 
 			SModelPolygon plgInsertCurPos;
 
 			CalculateNewPoint(ptDst, plgInsertCurPos, plgInsert);
 
 			bool bOutPlatform = false;
-			if (plgInsertCurPos.rcGrobalDst.fXMax > m_rcPlatform.iXMax)
+			if (plgInsertCurPos.rcGrobalDst.fXMax > m_rcPlatform.fXMax)
 			{
 				bOutPlatform = true;
 				m_bOutRight = true;
 			}
-			if (plgInsertCurPos.rcGrobalDst.fYMax > m_rcPlatform.iXMax)
+			if (plgInsertCurPos.rcGrobalDst.fYMax > m_rcPlatform.fXMax)
 			{
 				bOutPlatform = true;
 				m_bOutTop = true;
 			}
-			if (plgInsertCurPos.rcGrobalDst.fXMin < m_rcPlatform.iXMin)
+			if (plgInsertCurPos.rcGrobalDst.fXMin < m_rcPlatform.fXMin)
 			{
 				bOutPlatform = true;
 				m_bOutLeft = true;
 			}
-			if (plgInsertCurPos.rcGrobalDst.fYMin < m_rcPlatform.iYMin)
+			if (plgInsertCurPos.rcGrobalDst.fYMin < m_rcPlatform.fYMin)
 			{
 				bOutPlatform = true;
 				m_bOutBottom = true;
@@ -685,13 +685,13 @@ namespace qtuser_3d
 		}
 	}
 
-	S3DPrtRectI CLayoutAlg::GetPlatform()
+	S3DPrtRectF CLayoutAlg::GetPlatform()
 	{
 		return m_rcPlatform;
 	}
 
 
-	int CLayoutAlg::IsInsidePoligonGroup(const QVector<SModelPolygon>& plgGroup, S3DPrtPointI ptDst)
+	int CLayoutAlg::IsInsidePoligonGroup(const QVector<SModelPolygon>& plgGroup, S3DPrtPointF ptDst)
 	{
 		for (int i = 0; i < plgGroup.size(); i++)
 		{
@@ -704,14 +704,14 @@ namespace qtuser_3d
 		return -1;
 	}
 
-	bool CLayoutAlg::IsInsidePoligonGroupByBox(const QVector<SModelPolygon>& plgGroup, S3DPrtPointI ptDst)
+	bool CLayoutAlg::IsInsidePoligonGroupByBox(const QVector<SModelPolygon>& plgGroup, S3DPrtPointF ptDst)
 	{
 		for (int i = 0; i < plgGroup.size(); i++)
 		{
-			if (plgGroup[i].rcGrobalDst.fXMax > ptDst.iX &&
-				plgGroup[i].rcGrobalDst.fXMin < ptDst.iX &&
-				plgGroup[i].rcGrobalDst.fYMax > ptDst.iY &&
-				plgGroup[i].rcGrobalDst.fYMin < ptDst.iY)
+			if (plgGroup[i].rcGrobalDst.fXMax > ptDst.fX &&
+				plgGroup[i].rcGrobalDst.fXMin < ptDst.fX &&
+				plgGroup[i].rcGrobalDst.fYMax > ptDst.fY &&
+				plgGroup[i].rcGrobalDst.fYMin < ptDst.fY)
 			{
 				return true;
 			}
@@ -720,7 +720,7 @@ namespace qtuser_3d
 		return false;
 	}
 
-	bool CLayoutAlg::IsInsidePoligon(const SModelPolygon& vtPolygon, S3DPrtPointI ptDst)
+	bool CLayoutAlg::IsInsidePoligon(const SModelPolygon& vtPolygon, S3DPrtPointF ptDst)
 	{
 		int iPointCount = vtPolygon.ptPolygon.size();
 
@@ -732,7 +732,7 @@ namespace qtuser_3d
 				if (i == iPointCount - 1)
 				{
 					int iXPoint;
-					if (GetCrossY(vtPolygon.ptPolygon[i], vtPolygon.ptPolygon[0], ptDst.iY, iXPoint))
+					if (GetCrossY(vtPolygon.ptPolygon[i], vtPolygon.ptPolygon[0], ptDst.fY, iXPoint))
 					{
 						vtPoint.push_back(iXPoint);
 					}
@@ -741,7 +741,7 @@ namespace qtuser_3d
 				else
 				{
 					int iXPoint;
-					if (GetCrossY(vtPolygon.ptPolygon[i], vtPolygon.ptPolygon[i + 1], ptDst.iY, iXPoint))
+					if (GetCrossY(vtPolygon.ptPolygon[i], vtPolygon.ptPolygon[i + 1], ptDst.fY, iXPoint))
 					{
 						vtPoint.push_back(iXPoint);
 					}
@@ -750,11 +750,11 @@ namespace qtuser_3d
 
 			if (vtPoint.size() >= 2)
 			{
-				if (vtPoint[0] >= ptDst.iX && vtPoint[1] <= ptDst.iX)
+				if (vtPoint[0] >= ptDst.fX && vtPoint[1] <= ptDst.fX)
 				{
 					return true;
 				}
-				else if (vtPoint[0] <= ptDst.iX && vtPoint[1] >= ptDst.iX)
+				else if (vtPoint[0] <= ptDst.fX && vtPoint[1] >= ptDst.fX)
 				{
 					return true;
 				}
@@ -1759,35 +1759,35 @@ namespace qtuser_3d
 
 
 
-	bool CLayoutAlg::IsDstPointValidNewWay(S3DPrtPointI ptIDst, QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert)
+	bool CLayoutAlg::IsDstPointValidNewWay(S3DPrtPointF ptIDst, QVector<SModelPolygon>& plgGroup, const SModelPolygon& plgInsert)
 	{
 		if (IsInsidePoligonGroup(plgGroup, ptIDst) < 0)
 		{
 			QVector3D ptDst;
-			ptDst.setX(ptIDst.iX);
-			ptDst.setY(ptIDst.iY);
+			ptDst.setX(ptIDst.fX);
+			ptDst.setY(ptIDst.fY);
 
 			SModelPolygon plgInsertCurPos;
 
 			QVector3D vtTranslate = CalculateNewPointNewWay(ptDst, plgInsertCurPos, plgInsert);
 
 			bool bOutPlatform = false;
-			if (plgInsertCurPos.rcGrobalDst.fXMax > m_rcPlatform.iXMax)
+			if (plgInsertCurPos.rcGrobalDst.fXMax > m_rcPlatform.fXMax)
 			{
 				bOutPlatform = true;
 				m_bOutRight = true;
 			}
-			if (plgInsertCurPos.rcGrobalDst.fYMax > m_rcPlatform.iXMax)
+			if (plgInsertCurPos.rcGrobalDst.fYMax > m_rcPlatform.fXMax)
 			{
 				bOutPlatform = true;
 				m_bOutTop = true;
 			}
-			if (plgInsertCurPos.rcGrobalDst.fXMin < m_rcPlatform.iXMin)
+			if (plgInsertCurPos.rcGrobalDst.fXMin < m_rcPlatform.fXMin)
 			{
 				bOutPlatform = true;
 				m_bOutLeft = true;
 			}
-			if (plgInsertCurPos.rcGrobalDst.fYMin < m_rcPlatform.iYMin)
+			if (plgInsertCurPos.rcGrobalDst.fYMin < m_rcPlatform.fYMin)
 			{
 				bOutPlatform = true;
 				m_bOutBottom = true;
