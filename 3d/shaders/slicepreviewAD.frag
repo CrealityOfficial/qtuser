@@ -64,13 +64,15 @@ void main( void )
 	
 	if(showType == 0)
 	{
+		core_color = typecolors[int(drawFlag.y)];
+	}
+	else if(showType == 1)
+		core_color = nozzlecolors[int(drawFlag.z)];
+	else if(showType == 2)
+	{
 		int stype = int(drawFlag.x);
 		core_color = speedcolors[stype];
 	}
-	else if(showType == 1)
-		core_color = typecolors[int(drawFlag.y)];
-	else if(showType == 2)
-		core_color = nozzlecolors[int(drawFlag.z)];
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 ambient_color 	  = front_ambient;
