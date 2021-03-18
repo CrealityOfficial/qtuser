@@ -32,6 +32,12 @@ namespace qtuser_qml
 
     void writeObjectNestProperty(QObject* object, const QString& childNest, const QString& name, QObject* value)
     {
+        QVariant objectV = QVariant::fromValue<QObject*>(value);
+        writeObjectNestProperty(object, childNest, name, objectV);
+    }
+
+    void writeObjectNestProperty(QObject* object, const QString& childNest, const QString& name, const QVariant& value)
+    {
         if (!object)
             return;
 
@@ -47,7 +53,7 @@ namespace qtuser_qml
             if (!target)
                 break;
         }
-        if(target)
-            QQmlProperty::write(target, name, QVariant::fromValue<QObject*>(value));
+        if (target)
+            QQmlProperty::write(target, name, value);
     }
 }
