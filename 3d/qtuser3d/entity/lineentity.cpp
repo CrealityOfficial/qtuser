@@ -1,6 +1,8 @@
 #include "lineentity.h"
 #include "qtuser3d/effect/effectmanager.h"
 #include "qtuser3d/geometry/linecreatehelper.h"
+#include <Qt3DRender/QRenderPass>
+
 namespace qtuser_3d
 {
 	LineEntity::LineEntity(Qt3DCore::QNode* parent)
@@ -9,11 +11,22 @@ namespace qtuser_3d
 	{
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
 
-		setEffect(EFFECT("pure"));
+		setEffect(EFFECTCREATE("pure", m_material));
+
+		QList<Qt3DRender::QRenderPass*> renderPasses = m_material->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
+		m_lineWidth = new Qt3DRender::QLineWidth(m_material);
+		//m_lineWidth->setSmooth(true);
+		if (renderPasses.size() > 0)
+			renderPasses.at(0)->addRenderState(m_lineWidth);
 	}
 	
 	LineEntity::~LineEntity()
 	{
+	}
+
+	void LineEntity::setLineWidth(float width)
+	{
+		m_lineWidth->setValue(width);
 	}
 
 	void LineEntity::updateGeometry(QVector<QVector3D>& positions, QVector<QVector4D>& colors, bool loop)
