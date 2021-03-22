@@ -102,14 +102,14 @@ void main( void )
 	{
 		if(!gl_FrontFacing)
 		{
-			coreColor.rgb = vec3(0.65, 0.75, 0.65) - coreColor.rgb;
+			coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
 		}
 	}
 	else
 	{
 		if(gl_FrontFacing)
 		{
-			coreColor.rgb = vec3(0.65, 0.75, 0.65) - coreColor.rgb;
+			coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
 		}
 	}
    
