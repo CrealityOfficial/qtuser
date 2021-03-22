@@ -11,7 +11,7 @@ public:
 	void setMask(unsigned mask);
 	unsigned mask();
 
-	virtual void updateState();
+	virtual void updateState(unsigned mask);
 protected:
 	unsigned m_mask;
 };

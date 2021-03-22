@@ -22,7 +22,7 @@ unsigned StateReceiver::mask()
 	return m_mask;
 }
 
-void StateReceiver::updateState()
+void StateReceiver::updateState(unsigned mask)
 {
 
 }
@@ -44,7 +44,7 @@ void StateNotifier::notifyMask(unsigned mask)
 	{
 		unsigned m = receiver->mask();
 		if (mask & m)
-			receiver->updateState();
+			receiver->updateState(mask);
 	}
 }
 
