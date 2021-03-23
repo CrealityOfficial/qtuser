@@ -79,7 +79,7 @@ protected:
 	void hideEntity(const QString& name);
 public slots:
 	void viewChanged(bool requestUpdate);
-private:
+protected:
 	qtuser_3d::Surface* m_surface;
 
 	Qt3DCore::QEntity* m_root;
