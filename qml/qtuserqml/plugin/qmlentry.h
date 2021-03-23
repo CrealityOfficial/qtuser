@@ -46,7 +46,7 @@ protected:
 	virtual QString nameImpl();
 	virtual bool isShot();
 
-	void updateState() override;
+	void updateState(unsigned mask) override;
 	void updateTrans() override;
 signals:
 	void enabledChanged();

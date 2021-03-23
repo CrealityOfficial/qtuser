@@ -118,7 +118,7 @@ bool QmlEntry::isShot()
 	return false;
 }
 
-void QmlEntry::updateState()
+void QmlEntry::updateState(unsigned mask)
 {
 	emit enabledChanged();
 }
