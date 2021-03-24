@@ -87,7 +87,8 @@ void UpdateChecker::checkForUpdates()
 #endif
     QNetworkRequest request;
     QString projectName = QString(m_impl->owner).toLower();
-    QUrl requestUrl = QUrl(QString::fromLatin1("https://file-cdn.creality.com/") + projectName + QString::fromLatin1("/latest-") + suffix.toLower() + ".json");
+    QString urlstr = QString::fromLatin1("https://file-cdn.creality.com/") + projectName + "/" + m_impl->currentVersion.os() + QString::fromLatin1("/latest-") + suffix.toLower() + ".json";
+    QUrl requestUrl = QUrl(urlstr);
     requestUrl.setQuery(QUrlQuery("time=" + QDateTime::currentDateTime().toString("ddMMyyyyhh")));
     request.setUrl(requestUrl);
     request.setRawHeader("User-Agent", QString::fromLatin1("%1/%2").arg(qApp->applicationName()).arg(qApp->applicationVersion()).toLatin1());

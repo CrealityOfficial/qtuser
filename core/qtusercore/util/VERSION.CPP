@@ -93,6 +93,10 @@ Version::Version(const QString &version, const QString &delimeter)
     {
         m_extra = list2[1];
     }
+    if (list2.size() == 3)
+    {
+        m_os = list2[2];
+    }
     
 }
 
@@ -216,7 +220,14 @@ QString Version::extra() const
 {
     return m_extra;
 }
-
+QString Version::os() const
+{
+    return m_os;
+}
+void Version::setOs(QString os)
+{
+    m_os = os;
+}
 void Version::setMajor(int major)
 {
     m_major = major;

@@ -128,6 +128,7 @@ void UpdateManager::forceCheckForUpdates()
 void UpdateManager::onUpdateNotFound(const ReleaseInfo &currentRelease)
 {
     m_impl->inProgress = false;
+    emit updateNotFound();
 }
 
 void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList<ReleaseInfo> &newReleases)
