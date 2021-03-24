@@ -62,12 +62,12 @@ public:
     int patch() const;
     int build() const;
     QString extra() const;
-
+    QString os() const;
     void setMajor(int major);
     void setMinor(int minor);
     void setPatch(int patch);
     void setBuild(int build);
-
+    void setOs(QString os);
     Version shrinked(int detail) const;
     QString versionFullName() const;
     QString versionName() const;
@@ -79,6 +79,7 @@ private:
     int m_patch;
     int m_build;
     QString m_extra;
+    QString m_os;
 };
 
 QTUSER_CORE_API QDebug operator << (QDebug debug, const Version &version);
