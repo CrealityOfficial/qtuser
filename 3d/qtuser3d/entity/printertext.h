@@ -14,6 +14,7 @@ namespace qtuser_3d
 		virtual ~PrinterText();
 
 		void updateLen(Box3D& box, float gap, int major);
+		void updateScaleMark(Box3D& box, float gap, float fontSize);
 	protected:
 		QList<TextMeshEntity*> m_majors;
 		QList<TextMeshEntity*> m_minors;
