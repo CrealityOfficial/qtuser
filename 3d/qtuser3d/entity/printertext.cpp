@@ -92,9 +92,9 @@ namespace qtuser_3d
 		QMatrix4x4 Matrix2;
 		TextMeshEntity* TextMiddle = new TextMeshEntity(this);
 		TextMiddle->setColor(color);
-		QString textmiddle = QString::number(maxX / 2) + Qstrunit;
+		QString textmiddle = QString::number(maxX/2.0) + Qstrunit;
 		TextMiddle->setText(textmiddle);
-		Matrix2.translate(QVector3D(maxX / 2- text.length()/2*fontSize, gap, 0.0f));
+		Matrix2.translate(QVector3D(maxX/2.0- text.length()/2.0*fontSize, gap, 0.0f));
 		Matrix2.scale(10);
 		TextMiddle->setPose(Matrix2);
 		m_majors.push_back(TextMiddle);
