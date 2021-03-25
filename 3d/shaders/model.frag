@@ -95,23 +95,6 @@ void main( void )
 	}
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
-	
-	int fz = fanzhuan % 2;
-	
-	if(fz == 0)
-	{
-		if(!gl_FrontFacing)
-		{
-			coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-		}
-	}
-	else
-	{
-		if(gl_FrontFacing)
-		{
-			coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-		}
-	}
-   
+
 	fragmentColor = vec4(coreColor.rgb, 1.0);
 }
