@@ -6,6 +6,7 @@
 #include <Qt3DRender/QMultiSampleAntiAliasing>
 #include <Qt3DRender/QBlendEquationArguments>
 #include <Qt3DRender/QDithering>
+#include <Qt3DRender/QFrontFace>
 
 namespace qtuser_3d
 {
@@ -69,6 +70,10 @@ namespace qtuser_3d
 
 		//Qt3DRender::QDithering* dithering = new Qt3DRender::QDithering(pass);
 		//pass->addRenderState(dithering);
+
+		Qt3DRender::QFrontFace* frontface = new Qt3DRender::QFrontFace(pass);
+		frontface->setDirection(Qt3DRender::QFrontFace::CounterClockWise);
+		pass->addRenderState(frontface);
 
 		Qt3DRender::QDepthTest* depthTest = new Qt3DRender::QDepthTest(pass);
 		depthTest->setDepthFunction(Qt3DRender::QDepthTest::Less);
