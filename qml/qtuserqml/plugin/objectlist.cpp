@@ -19,7 +19,19 @@ namespace qtuser_qml
 
     void ObjectList::setItems(QList<QObject*> items)
     {
-        m_items = items;
+        if (m_items.size() > 0)
+        {
+            beginRemoveRows(QModelIndex(), 0, m_items.size() - 1);
+            m_items.clear();
+            endRemoveRows();
+        }
+
+        if (items.size() > 0)
+        {
+            beginInsertRows(QModelIndex(), 0, items.size() - 1);
+            m_items = items;
+            endInsertRows();
+        }
     }
 
     int ObjectList::rowCount(const QModelIndex& parent) const
