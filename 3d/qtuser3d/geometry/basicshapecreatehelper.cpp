@@ -76,7 +76,7 @@ namespace qtuser_3d
 	Qt3DRender::QGeometry* BasicShapeCreateHelper::createInstructions(float cylinderR, float cylinderLen, float axisR, float axisLen, Qt3DCore::QNode* parent)
 	{
 		std::vector<float> vertexDatas;
-		createInstructionsData(cylinderR, cylinderLen, axisR, axisLen, 36, vertexDatas);
+		createInstructionsData(cylinderR, cylinderLen, axisR, axisLen, 18, vertexDatas);
 		return createGeometry(parent, &vertexDatas);
 	}
 
