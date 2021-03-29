@@ -11,6 +11,7 @@ class QTUSER_QML_API QmlEntry: public QObject
 {
 	Q_OBJECT
 	Q_PROPERTY(bool enabled READ enabled NOTIFY enabledChanged)
+	Q_PROPERTY(bool operateEnabled READ operateEnabled NOTIFY operateEnabledChanged)
 	Q_PROPERTY(QString enabledIcon READ enabledIcon NOTIFY enabledIconChanged)
 	Q_PROPERTY(QString disableIcon READ disableIcon NOTIFY disableIconChanged)
 	Q_PROPERTY(QString pressedIcon READ pressedIcon NOTIFY pressedIconChanged)
@@ -22,6 +23,7 @@ public:
 	virtual ~QmlEntry();
 public:
 	bool enabled();
+	bool operateEnabled();
 	bool shot();
 	QString enabledIcon() const;
 	QString disableIcon() const;
@@ -42,6 +44,7 @@ public:
 	int order();
 protected:
 	virtual bool checkEnabled();
+	virtual bool checkOperateEnabled();
 	virtual void onExecute();
 	virtual QString nameImpl();
 	virtual bool isShot();
@@ -55,6 +58,7 @@ signals:
 	void pressedIconChanged();
 	void sourceChanged();
 	void nameChanged();
+	void operateEnabledChanged();
 protected:
 	bool m_enabled;
 	QString m_enabledIcon;

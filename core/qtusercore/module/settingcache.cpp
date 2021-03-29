@@ -4,19 +4,27 @@
 
 namespace qtuser_core
 {
-	void cacheString(const QString& groupName, const QString& key, const QString& value)
+	bool checkKey(const QString& groupName, const QString& key)
 	{
 		if (groupName.isEmpty())
 		{
 			qDebug() << "Try Cache In Empty Group.";
-			return;
+			return false;
 		}
 
 		if (key.isEmpty())
 		{
 			qDebug() << "Try Cache Empty Key.";
-			return;
+			return false;
 		}
+
+		return true;
+	}
+
+	void cacheString(const QString& groupName, const QString& key, const QString& value)
+	{
+		if (!checkKey(groupName, key))
+			return;
 
 		QSettings setting;
 		setting.beginGroup(groupName);
@@ -34,5 +42,65 @@ namespace qtuser_core
 		setting.endGroup();
 
 		return str;
+	}
+
+	void cacheStrings(const QString& key, const QStringList& values)
+	{
+		if (key.isEmpty())
+		{
+			qDebug() << "Try Cache Empty Key.";
+			return;
+		}
+
+		QSettings settings;
+		settings.remove(key);
+		settings.beginWriteArray(key);
+		for (int i = 0; i < values.size(); ++i)
+		{
+			settings.setArrayIndex(i);
+			settings.setValue("name", values[i]);
+		}
+		settings.endArray();
+	}
+
+	QStringList traitString(const QString& key)
+	{
+		QStringList values;
+
+		QSettings settings;
+		int size = settings.beginReadArray(key);
+		for (int i = 0; i < size; ++i)
+		{
+			settings.setArrayIndex(i);
+			QString machine = settings.value("name").toString();
+			if (!machine.isEmpty())
+				values.append(machine);
+		}
+		settings.endArray();
+
+		return values;
+	}
+
+	void cacheInt(const QString& groupName, const QString& key, int value)
+	{
+		if (!checkKey(groupName, key))
+			return;
+
+		QSettings setting;
+		setting.beginGroup(groupName);
+		setting.setValue(key, value);
+		setting.endGroup();
+	}
+
+	int traitInt(const QString& groupName, const QString& key, int defaultValue)
+	{
+		int value;
+
+		QSettings setting;
+		setting.beginGroup(groupName);
+		value = setting.value(key, defaultValue).toInt();
+		setting.endGroup();
+		
+		return value;
 	}
 }
