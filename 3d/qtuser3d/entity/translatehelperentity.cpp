@@ -64,7 +64,12 @@ namespace qtuser_3d
 
 	TranslateHelperEntity::~TranslateHelperEntity()
 	{
-
+		if (m_xArrowEntity->parent())
+			delete m_xArrowEntity;
+		if (m_yArrowEntity->parent())
+			delete m_yArrowEntity;
+		if (m_zArrowEntity->parent())
+			delete m_zArrowEntity;
 	}
 
 	Pickable* TranslateHelperEntity::xPickable()
@@ -80,6 +85,21 @@ namespace qtuser_3d
 	Pickable* TranslateHelperEntity::zPickable()
 	{
 		return m_zPickable;
+	}
+
+	void TranslateHelperEntity::setXVisibility(bool visibility)
+	{
+		visibility ? m_xArrowEntity->setParent(this) : m_xArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
+	void TranslateHelperEntity::setYVisibility(bool visibility)
+	{
+		visibility ? m_yArrowEntity->setParent(this) : m_yArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
+	void TranslateHelperEntity::setZVisibility(bool visibility)
+	{
+		visibility ? m_zArrowEntity->setParent(this) : m_zArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void TranslateHelperEntity::updateBox(const Box3D& box)

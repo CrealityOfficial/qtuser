@@ -21,6 +21,10 @@ namespace qtuser_3d
 		Pickable* yPickable();
 		Pickable* zPickable();
 
+		void setXVisibility(bool visibility);
+		void setYVisibility(bool visibility);
+		void setZVisibility(bool visibility);
+
 		void updateBox(const Box3D& box);
 	protected:
 		Qt3DCore::QTransform* m_transform;
