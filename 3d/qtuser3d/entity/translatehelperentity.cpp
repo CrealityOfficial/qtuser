@@ -13,6 +13,7 @@ namespace qtuser_3d
 		, m_xPickable(nullptr)
 		, m_yPickable(nullptr)
 		, m_zPickable(nullptr)
+		, m_fixSize(false)
 	{
 		m_transform = new Qt3DCore::QTransform(this);
 		addComponent(m_transform);
@@ -107,14 +108,31 @@ namespace qtuser_3d
 		QVector3D center = box.center();
 		QMatrix4x4 matrix;
 		matrix.translate(center);
+		m_center = center;
 
-		QVector3D sz = box.size();
-		double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
-		maxlen = maxlen > sz.z() ? maxlen : sz.z();
-		if (maxlen > 80)
+		float len = 1.0f;
+		if (!m_fixSize)
 		{
-			matrix.scale(maxlen / 80);
+			QVector3D sz = box.size();
+			double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
+			maxlen = maxlen > sz.z() ? maxlen : sz.z();
+			if (maxlen > 80)
+			{
+				len = maxlen / 80;
+			}
 		}
+
+		matrix.scale(len);
 		m_transform->setMatrix(matrix);
+	}
+
+	void TranslateHelperEntity::setFixSize(bool fixSize)
+	{
+		m_fixSize = fixSize;
+	}
+
+	QVector3D TranslateHelperEntity::center()
+	{
+		return m_center;
 	}
 }
