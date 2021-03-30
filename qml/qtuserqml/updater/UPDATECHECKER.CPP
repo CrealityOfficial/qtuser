@@ -82,12 +82,12 @@ void UpdateChecker::checkForUpdates()
     }
     QString suffix = m_impl->currentVersion.extra();
     qDebug() << suffix;
-#ifndef QT_NO_DEBUG
-    suffix = "Beta";
-#endif
+//#ifndef QT_NO_DEBUG
+//    suffix = "Beta";
+//#endif
     QNetworkRequest request;
     QString projectName = QString(m_impl->owner).toLower();
-    QString urlstr = QString::fromLatin1("https://file-cdn.creality.com/") + projectName + "/" + m_impl->currentVersion.os() + QString::fromLatin1("/latest-") + suffix.toLower() + ".json";
+    QString urlstr = QString::fromLatin1("https://file-cdn.creality.com/ota-sz/") + projectName + "/" + suffix.toLower()+"/"+m_impl->currentVersion.os() + QString::fromLatin1("/latest.json");
     QUrl requestUrl = QUrl(urlstr);
     requestUrl.setQuery(QUrlQuery("time=" + QDateTime::currentDateTime().toString("ddMMyyyyhh")));
     request.setUrl(requestUrl);
@@ -134,15 +134,16 @@ void UpdateChecker::replyFinished(QNetworkReply *reply)
         //    continue;
         QJsonObject object = document.object();
         ReleaseInfo info;
-        info.htmlUrl = QUrl(object.value(QString::fromLatin1("html_url")).toString());
+        info.url = QUrl(object.value(QString::fromLatin1("url")).toString());
         info.tagName = object.value(QString::fromLatin1("tag_name")).toString();
-        info.name = object.value(QString::fromLatin1("name")).toString();
-        info.body = object.value(QString::fromLatin1("body")).toString();
-        info.prerelease = object.value(QString::fromLatin1("prerelease")).toBool();
+        info.md5 = object.value(QString::fromLatin1("md5sum")).toString();
+        //info.name = object.value(QString::fromLatin1("name")).toString();
+        //info.body = object.value(QString::fromLatin1("body")).toString();
+        //info.prerelease = object.value(QString::fromLatin1("prerelease")).toBool();
         info.createdAt = QDateTime::fromString(object.value(QString::fromLatin1("created_at")).toString(), Qt::ISODate);
         info.publishedAt = QDateTime::fromString(object.value(QString::fromLatin1("published_at")).toString(), Qt::ISODate);
         info.version = Version(info.tagName);
-        const QJsonObject htmls = object.value(QString::fromLatin1("html")).toObject();
+        const QJsonObject htmls = object.value(QString::fromLatin1("release_notes")).toObject();
         setting.beginGroup("language_perfer_config");
         QString lang = setting.value("language_type").toString();
         setting.endGroup();

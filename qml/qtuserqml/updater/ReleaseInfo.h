@@ -28,10 +28,11 @@
 
 struct ReleaseInfo
 {
-    QUrl htmlUrl;
+    QUrl url;
     QString tagName;
     QString name;
     QString body;
+    QString md5;
     bool prerelease;
     QDateTime createdAt;
     QDateTime publishedAt;
