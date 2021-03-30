@@ -65,11 +65,11 @@ namespace qtuser_3d
 
 	TranslateHelperEntity::~TranslateHelperEntity()
 	{
-		if (m_xArrowEntity->parent())
+		if (m_xArrowEntity && m_xArrowEntity->parent())
 			delete m_xArrowEntity;
-		if (m_yArrowEntity->parent())
+		if (m_yArrowEntity && m_yArrowEntity->parent())
 			delete m_yArrowEntity;
-		if (m_zArrowEntity->parent())
+		if (m_zArrowEntity && m_zArrowEntity->parent())
 			delete m_zArrowEntity;
 	}
 
@@ -90,17 +90,20 @@ namespace qtuser_3d
 
 	void TranslateHelperEntity::setXVisibility(bool visibility)
 	{
-		visibility ? m_xArrowEntity->setParent(this) : m_xArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
+		if(m_xArrowEntity)
+			visibility ? m_xArrowEntity->setParent(this) : m_xArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void TranslateHelperEntity::setYVisibility(bool visibility)
 	{
-		visibility ? m_yArrowEntity->setParent(this) : m_yArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
+		if(m_yArrowEntity)
+			visibility ? m_yArrowEntity->setParent(this) : m_yArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void TranslateHelperEntity::setZVisibility(bool visibility)
 	{
-		visibility ? m_zArrowEntity->setParent(this) : m_zArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
+		if(m_zArrowEntity)
+			visibility ? m_zArrowEntity->setParent(this) : m_zArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void TranslateHelperEntity::updateBox(const Box3D& box)
