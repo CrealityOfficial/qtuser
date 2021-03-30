@@ -153,11 +153,11 @@ void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList
     if(newReleases.length() > 0)
     {
 		m_releaseVersion = newReleases[0].tagName;
-		m_releaseUrl = newReleases[0].htmlUrl;
+		m_releaseUrl = newReleases[0].url;
 		m_releaseNote = newReleases[0].body;
         //qDebug() << m_releaseNote;
 		//emit updateFound();
-        emit updateFound(newReleases[0].tagName, newReleases[0].htmlUrl, newReleases[0].body);
+        emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
     }
 
     m_impl->inProgress = false;
