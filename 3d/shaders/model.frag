@@ -32,6 +32,13 @@ uniform float state;
 uniform float nozzle;
 uniform vec4 stateColors[5];
 
+bool frontFacing()
+{
+        vec3 fdx = dFdx(worldPosition);
+        vec3 fdy = dFdy(worldPosition);
+        return dot(gnormal, cross(fdx, fdy)) > 0.0;
+} 
+
 vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_color, vec4 diffuse_color, vec4 specular_color)
 {
 	float NdotL 		  = max(dot(fnormal, light_dir), 0.0);
@@ -95,6 +102,24 @@ void main( void )
 	}
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
+
+        int fz = fanzhuan % 2;
+       
+        if(fz == 0)
+        {
+               if(! frontFacing())
+               {
+                      coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+               }
+        }
+        else
+        {
+               if(frontFacing())
+               {
+                      coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+               }
+        }
+   
 
 	fragmentColor = vec4(coreColor.rgb, 1.0);
 }
