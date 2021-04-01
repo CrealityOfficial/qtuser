@@ -6,12 +6,12 @@ namespace qtuser_3d
 	ChunkProtoInfo protoInfos[(int)DLPUserType::eDLPNum] =
 	{
 #ifdef DLP_ONLY
-		{400, 100},
-		{476, 100},
-		{36, 100},
-		{76, 100},
-		{76, 100},
-		{400, 100}
+		{36, 400},
+		{136, 400},
+		{36, 400},
+		{36, 400},
+		{36, 400},
+		{100, 400}
 #else
 		{476, 100},
 		{476, 100},
