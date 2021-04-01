@@ -154,23 +154,21 @@ namespace qtuser_3d
 		QMatrix4x4 matrix;
 		matrix.translate(center);
 
-		double len = 1.0;
-		if (m_fixSize)
-		{
-			len = 1.0;
-		}
-		else
-		{
-			QVector3D sz = box.size();
-			double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
-			maxlen = maxlen > sz.z() ? maxlen : sz.z();
-			if (maxlen > 80)
-				maxlen = maxlen / 80;
-			
-			len = maxlen;
-		}
+		//double len = 1.0;
+		//if (m_fixSize)
+		//{
+		//	len = 1.0;
+		//}
+		//else
+		//{
+		//	QVector3D sz = box.size();
+		//	double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
+		//	maxlen = maxlen > sz.z() ? maxlen : sz.z();
+		//	if (maxlen > 80)
+		//		len = maxlen / 80;
+		//}
 
-		matrix.scale(len);
+		//matrix.scale(len);
 		m_transform->setMatrix(matrix);
 	}
 
