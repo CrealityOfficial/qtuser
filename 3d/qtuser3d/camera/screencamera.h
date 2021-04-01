@@ -7,6 +7,14 @@
 
 namespace qtuser_3d
 {
+	enum class CameraViewTypes
+	{
+		OrthographicView,
+		PerspectiveView,
+		FrustumView,
+		CustomView
+	};
+
 	class ScreenCamera;
 	class ScreenCameraObserver
 	{
@@ -26,12 +34,16 @@ namespace qtuser_3d
 		void setScreenSize(const QSize& size);
 		QSize size();
 
+		void setCameraViewTypes(CameraViewTypes _cameraViewTypes);
+		CameraViewTypes getCameraViewTypes();
+
 		void fittingBoundingBox(const qtuser_3d::Box3D& box);
 		void updateNearFar(const qtuser_3d::Box3D& box);
 		void updateNearFar();
 
 		qtuser_3d::Ray screenRay(const QPoint& point);
 		qtuser_3d::Ray screenRay(const QPointF& point);
+		qtuser_3d::Ray screenRayOrthographic(const QPointF& point);
 		float screenSpaceRatio(const QVector3D& position);
 		float viewAllLen(float r);
 
@@ -50,7 +62,7 @@ namespace qtuser_3d
 		bool testCameraValid();
 		QPoint flipY(const QPoint pos);
 
-		void viewFrom(const QVector3D& dir, const QVector3D& right);
+		void viewFrom(const QVector3D& dir, const QVector3D& right, QVector3D* specificCenter);
 
 		QVector3D horizontal();
 		QVector3D vertical();
@@ -69,6 +81,8 @@ namespace qtuser_3d
 		float m_minDistance;
 		float m_maxDistance;
 		qtuser_3d::Box3D m_box;
+
+		CameraViewTypes m_cameraViewTypes;
 
 		QList<ScreenCameraObserver*> m_cameraObservers;
 	};

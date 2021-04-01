@@ -24,9 +24,13 @@ void QmlEntries::add(QmlEntry* entry)
 		int insertIndex = 0;
 		for (QmlEntry* e : m_entries)
 		{
+            int index = m_entries.indexOf(entry);
+            if (index >= 0 && index < m_entries.size())
+                return;
+
 			if (e->order() >= entry->order())
 				break;
-			
+		
 			++insertIndex;
 		}
 
@@ -84,6 +88,12 @@ void QmlEntries::clearButFirst()
         endRemoveRows();
     }
 }
+
+QObject* QmlEntries::rawData(int index)
+{
+    if (m_entries.size() > 0)
+        return m_entries.at(0);
+ }
 
 int QmlEntries::rowCount(const QModelIndex& parent) const
 {

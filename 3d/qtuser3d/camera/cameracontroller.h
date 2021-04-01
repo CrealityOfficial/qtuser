@@ -24,12 +24,12 @@ public:
 
 	void setScreenCamera(qtuser_3d::ScreenCamera* camera);
 
-	Q_INVOKABLE void viewFromBottom();
-	Q_INVOKABLE void viewFromTop();
-	Q_INVOKABLE void viewFromLeft();
-	Q_INVOKABLE void viewFromRight();
-	Q_INVOKABLE void viewFromFront();
-	Q_INVOKABLE void viewFromBack();
+	Q_INVOKABLE void viewFromBottom(QVector3D* specificCenter=nullptr);
+	Q_INVOKABLE void viewFromTop(QVector3D* specificCenter = nullptr);
+	Q_INVOKABLE void viewFromLeft(QVector3D* specificCenter = nullptr);
+	Q_INVOKABLE void viewFromRight(QVector3D* specificCenter = nullptr);
+	Q_INVOKABLE void viewFromFront(QVector3D* specificCenter = nullptr);
+	Q_INVOKABLE void viewFromBack(QVector3D* specificCenter = nullptr);
 
 	Q_INVOKABLE void viewFromOrthographic();
 	Q_INVOKABLE void viewFromPerspective();
@@ -42,6 +42,14 @@ public:
 	void fittingBoundingBox(const qtuser_3d::Box3D& box);
 	void updateNearFar(const qtuser_3d::Box3D& box);
 	void home(const qtuser_3d::Box3D& box, int type = 0);
+
+	QVector3D getViewPosition() const;
+	QVector3D getViewupVector() const;
+	QVector3D getviewCenter() const;
+
+	void setViewPosition(const QVector3D position);
+	void setViewupVector(const QVector3D upVector);
+	void setviewCenter(const QVector3D viewCenter);
 protected:
 	void onResize(const QSize& size) override;
 
@@ -58,13 +66,12 @@ protected:
 	void onWheelEvent(QWheelEvent* event) override;
 
 protected:
-	void view(const QVector3D& dir, const QVector3D& right);
+	void view(const QVector3D& dir, const QVector3D& right, QVector3D* specificCenter = nullptr);
 signals:
 	void signalViewChanged(bool capture);
 protected:
 	qtuser_3d::CameraMouseManipulator* m_cameraManipulator;
 	qtuser_3d::ScreenCamera* m_screenCamera;
-	bool m_isOrtho;
 	QVector3D m_cameraPos;
 };
 #endif // _NULLSPACE_CAMERACONTROLLER_1588862127357_H
