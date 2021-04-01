@@ -15,6 +15,8 @@ public:
 	void append(QmlEntry* entry);
 	void remove(QmlEntry* entry);
 	void clearButFirst();
+
+	Q_INVOKABLE QObject* rawData(int index);
 protected:
 	int rowCount(const QModelIndex& parent) const override;
 	int columnCount(const QModelIndex& parent) const override;
