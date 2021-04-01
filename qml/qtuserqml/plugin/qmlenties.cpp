@@ -24,8 +24,8 @@ void QmlEntries::add(QmlEntry* entry)
 		int insertIndex = 0;
 		for (QmlEntry* e : m_entries)
 		{
-            int index = m_entries.indexOf(entry);
-            if (index >= 0 && index < m_entries.size())
+            int _index = m_entries.indexOf(entry);
+            if (_index >= 0 && _index < m_entries.size())
                 return;
 
 			if (e->order() >= entry->order())
@@ -91,8 +91,9 @@ void QmlEntries::clearButFirst()
 
 QObject* QmlEntries::rawData(int index)
 {
-    if (m_entries.size() > 0)
-        return m_entries.at(0);
+    if (m_entries.size() > index && index >= 0)
+        return m_entries.at(index);
+    return nullptr;
  }
 
 int QmlEntries::rowCount(const QModelIndex& parent) const

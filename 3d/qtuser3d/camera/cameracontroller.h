@@ -50,6 +50,10 @@ public:
 	void setViewPosition(const QVector3D position);
 	void setViewupVector(const QVector3D upVector);
 	void setviewCenter(const QVector3D viewCenter);
+
+	void enableRotate(bool enabled);
+	void enableScale(bool enabled);
+	void enableTranslate(bool enabled);
 protected:
 	void onResize(const QSize& size) override;
 
@@ -73,5 +77,7 @@ protected:
 	qtuser_3d::CameraMouseManipulator* m_cameraManipulator;
 	qtuser_3d::ScreenCamera* m_screenCamera;
 	QVector3D m_cameraPos;
+
+	unsigned m_mask;
 };
 #endif // _NULLSPACE_CAMERACONTROLLER_1588862127357_H
