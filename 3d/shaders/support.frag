@@ -43,15 +43,15 @@ void main( void )
 	vec4 specularColor    = specular * pow( RdotV, specularPower);
 	vec4 coreColor = ambientColor + diffuseColor + specularColor;
 	
-		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
-	{
-		coreColor.g += 0.4;
-	}
+//        if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
+//	{
+//		coreColor.g += 0.4;
+//	}
 	
-	if( abs(worldPosition.z - bottom) < 0.01 )
-	{
-		coreColor.g += 0.4;
-	}
+//        if( abs(worldPosition.z - bottom) < 0.01 )
+//        {
+//                coreColor.g += 0.4;
+//        }
 	
 	fragmentColor = vec4(coreColor.rgb, 1.0);
 }
