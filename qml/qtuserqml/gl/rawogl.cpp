@@ -1,5 +1,6 @@
 #include "qtuserqml/gl/rawogl.h"
 #include <QtGui/QOffscreenSurface>
+#include <QtCore/QDebug>
 
 namespace qtuser_qml
 {
@@ -15,7 +16,7 @@ namespace qtuser_qml
 
 	RawOGL::~RawOGL()
 	{
-
+		qDebug() << "Raw OGL ~~ ";
 	}
 
 	void RawOGL::init(QOpenGLContext* context)

@@ -3,6 +3,8 @@
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLFramebufferObjectFormat>
 #include <QtGui/QOffscreenSurface>
+#include <QtCore/QDebug>
+#include <QtCore/QThread>
 
 #include <QSGSimpleTextureNode>
 #include <Qt3DRender/private/qrenderaspect_p.h>
@@ -60,7 +62,7 @@ public:
 
 	virtual ~FrameBufferObjectRenderer()
 	{
-
+		qDebug() << "FrameBufferObjectRenderer ~~";
 	}
 
 	void render() Q_DECL_OVERRIDE
@@ -87,6 +89,10 @@ public:
 				m_item->decShotTimes();
 			}
 		}
+
+#if _DEBUG
+		qDebug() << "FrameBufferObjectRenderer Render ";
+#endif
 	}
 
 	QOpenGLFramebufferObject* createFramebufferObject(const QSize& size) Q_DECL_OVERRIDE
@@ -150,6 +156,9 @@ GLQuickItem::~GLQuickItem()
 	m_renderGraph = nullptr;
 	
 	delete m_aspectEngine;
+	delete m_rawOGL;
+
+	qDebug() << "GLQuickItem ~~ ";
 }
 
 void GLQuickItem::requestUpdate()
