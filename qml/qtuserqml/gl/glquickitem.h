@@ -42,6 +42,11 @@ public:
 	GLQuickItem(QQuickItem* parent = 0);
 	~GLQuickItem();
 
+	void setupGL();
+	void clearScene();
+	void paintGL();
+	void releaseGL();
+
 	int shotTimes();
 	void decShotTimes();
 	void setAlways(bool always);
@@ -61,7 +66,7 @@ public:
 	qtuser_qml::RawOGL* rawOGL();
 public slots:
 	void handleWindowChanged(QQuickWindow* win);
-	void applyRootEntity();
+	void applyRootEntity(Qt3DCore::QAspectEngine* engine);
 	void requestUpdate();
 protected:
 	Renderer* createRenderer() const Q_DECL_OVERRIDE;
