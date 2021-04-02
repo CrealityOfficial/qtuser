@@ -156,6 +156,7 @@ GLQuickItem::~GLQuickItem()
 	m_renderGraph = nullptr;
 	
 	delete m_aspectEngine;
+
 	delete m_rawOGL;
 
 	qDebug() << "GLQuickItem ~~ ";
