@@ -34,6 +34,8 @@ namespace qtuser_3d
 		ChunkBufferUser* chunkUser(int chunk) override;
 		bool faceIDIn(int faceID);
 		ChunkBufferUser* chunkUserFromFaceID(int faceID);
+
+		int chunkIndex(int chunkID);
 	protected:
 		Qt3DRender::QGeometry* m_geometry;
 

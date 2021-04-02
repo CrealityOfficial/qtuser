@@ -18,6 +18,9 @@ namespace qtuser_3d
 	{
 		m_faceBase = faceBase;
 		m_currentBase = m_faceBase;
+
+		for (PickableChunkEntity* entity : m_entities)
+			updateChunkEntityFaceBase(entity);
 	}
 
 	void ChunkGroupEntity::setUsedEffect(Qt3DRender::QEffect* effect)

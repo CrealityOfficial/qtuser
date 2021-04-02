@@ -220,6 +220,12 @@ namespace qtuser_3d
 		return nullptr;
 	}
 
+	int PickableChunkEntity::chunkIndex(int chunkID)
+	{
+		int index = -1;
+		return index;
+	}
+
 	void PickableChunkEntity::getPositionNormal(int chunk, QVector3D* position, QVector3D* normal)
 	{
 

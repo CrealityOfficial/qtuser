@@ -142,6 +142,8 @@ namespace qtuser_3d
 					int faceBase = pickable->faceBase();
 					_primitiveID = faceID - faceBase;
 				}
+				else
+					_primitiveID = faceID;
 			}
 
 			if (primitiveID)
