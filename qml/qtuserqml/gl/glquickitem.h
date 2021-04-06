@@ -66,7 +66,7 @@ public:
 	qtuser_qml::RawOGL* rawOGL();
 public slots:
 	void handleWindowChanged(QQuickWindow* win);
-	void applyRootEntity(Qt3DCore::QAspectEngine* engine);
+	void applyRootEntity();
 	void requestUpdate();
 protected:
 	Renderer* createRenderer() const Q_DECL_OVERRIDE;
