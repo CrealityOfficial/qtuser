@@ -227,7 +227,7 @@ QQuickFramebufferObject::Renderer* GLQuickItem::createRenderer() const
 void GLQuickItem::setSharedContext(QOpenGLContext* context)
 {
 	m_sharedContext = context;
-	m_rawOGL = new qtuser_qml::RawOGL(this);
+    m_rawOGL = new qtuser_qml::RawOGL();
 	m_rawOGL->init(m_sharedContext);
 
 	QObject::connect(m_sharedContext, &QOpenGLContext::aboutToBeDestroyed,
