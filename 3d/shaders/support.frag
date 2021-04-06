@@ -23,11 +23,11 @@ uniform float bottomVisibleHeight = -10000.0;
 
 void main( void )
 {
-	if(worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight)
-		discard;
+    vec4 color = stateColors[int(flag)];
+    color.a = flag;
 
-        vec4 color = stateColors[int(flag)];
-        color.a = flag;
+	if(worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight)
+		color.a = 0.0;
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 specular_color   = specular;
