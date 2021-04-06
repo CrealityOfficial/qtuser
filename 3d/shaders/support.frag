@@ -25,11 +25,9 @@ void main( void )
 {
 	if(worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight)
 		discard;
-		
-	if(flag == 0.0)
-		discard;
-		
-	vec4 color = stateColors[int(flag)];	
+
+        vec4 color = stateColors[int(flag)];
+        color.a = flag;
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 specular_color   = specular;
@@ -53,5 +51,5 @@ void main( void )
 //                coreColor.g += 0.4;
 //        }
 	
-	fragmentColor = vec4(coreColor.rgb, 1.0);
+        fragmentColor = vec4(coreColor.rgb, color.a);
 }

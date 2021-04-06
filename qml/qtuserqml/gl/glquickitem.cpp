@@ -135,6 +135,8 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 	m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
 
 	setFocus(Qt::ClickFocus, Qt::ActiveWindowFocusReason);
+
+    qDebug() << "mac GLQuickItem";
 }
 
 GLQuickItem::~GLQuickItem()
@@ -229,7 +231,7 @@ QQuickFramebufferObject::Renderer* GLQuickItem::createRenderer() const
 void GLQuickItem::setSharedContext(QOpenGLContext* context)
 {
 	m_sharedContext = context;
-	m_rawOGL = new qtuser_qml::RawOGL(this);
+    m_rawOGL = new qtuser_qml::RawOGL();
 	m_rawOGL->init(m_sharedContext);
 
 	QObject::connect(m_sharedContext, &QOpenGLContext::aboutToBeDestroyed,
@@ -357,6 +359,8 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 	m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
 
 	m_rawOGL = new qtuser_qml::RawOGL(this);
+
+    qDebug() << "windows GLQuickItem";
 }
 
 GLQuickItem::~GLQuickItem()
