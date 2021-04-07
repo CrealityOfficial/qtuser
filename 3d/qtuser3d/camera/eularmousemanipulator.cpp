@@ -98,11 +98,9 @@ namespace qtuser_3d
 		QVector3D delta = c0 - c;
 		QVector3D newPosition = position + delta;
 		QVector3D newViewCenter = viewCenter + delta;
-		
+
 		m_camera->setPosition(newPosition);
 		m_camera->setViewCenter(newViewCenter);
-
-		qDebug() << "newPosition = " << newPosition << "  newViewCenter = " << newViewCenter;
 
 		m_screenCamera->updateNearFar();
 	}
@@ -112,16 +110,6 @@ namespace qtuser_3d
 		QVector3D viewCenter = m_camera->viewCenter();
 		QVector3D position = m_camera->position();
 		QVector3D horizontal = m_screenCamera->horizontal();
-
-		QVector3D orign_center = m_screenCamera->orignCenter();
-
-		QVector3D move_delta = orign_center - viewCenter;
-		m_camera->setViewCenter(viewCenter + move_delta);
-		m_camera->setPosition(position + move_delta);
-
-		viewCenter = m_camera->viewCenter();
-		position = m_camera->position();
-		horizontal = m_screenCamera->horizontal();
 
 		QPoint delta = pos - m_savePoint;
 
@@ -158,12 +146,7 @@ namespace qtuser_3d
 		QVector3D newPosition = viewCenter - dir * distance;
 		QVector3D up = QVector3D::crossProduct(right, dir);
 		m_camera->setUpVector(up);
-
-		m_camera->setViewCenter(viewCenter - move_delta);
-
-		m_camera->setPosition(newPosition - move_delta);
-
-		qDebug() << "newPosition = " << newPosition << "  up = " << up << "   viewCenter = " << viewCenter;
+		m_camera->setPosition(newPosition);
 
 		if (up.x() == 0.0f && up.y() == 0.0f && up.z() == 0.0f)
 		{
