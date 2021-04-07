@@ -51,6 +51,8 @@ namespace qtuser_3d
 		bool testCameraValid();
 		QPoint flipY(const QPoint pos);
 
+		QVector3D orignCenter() const;
+
 		void viewFrom(const QVector3D& dir, const QVector3D& right, QVector3D* specificCenter);
 
 		QVector3D horizontal();
@@ -70,6 +72,8 @@ namespace qtuser_3d
 		float m_minDistance;
 		float m_maxDistance;
 		qtuser_3d::Box3D m_box;
+
+		QVector3D m_orignCenter;
 
 		QList<ScreenCameraObserver*> m_cameraObservers;
 	};
