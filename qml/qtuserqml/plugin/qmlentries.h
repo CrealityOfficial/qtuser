@@ -15,6 +15,7 @@ public:
 	void append(QmlEntry* entry);
 	void remove(QmlEntry* entry);
 	void clearButFirst();
+	void removeFirstOne();
 
 	Q_INVOKABLE QObject* rawData(int index);
 protected:
