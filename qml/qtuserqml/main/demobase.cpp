@@ -267,3 +267,34 @@ void DemoBase::hideEntity(const QString& name)
 
 	entity->setParent((Qt3DCore::QNode*)nullptr);
 }
+
+qtuser_3d::TriangleEntity* DemoBase::addTriangleEntity(const QString& name)
+{
+	qtuser_3d::TriangleEntity* entity = new qtuser_3d::TriangleEntity();
+	entity->setEffect(EFFECTCREATE("finephong", nullptr));
+	addEntity(name, entity);
+	return entity;
+}
+
+qtuser_3d::LineEntity* DemoBase::addLineEntity(const QString& name)
+{
+	qtuser_3d::LineEntity* entity = new qtuser_3d::LineEntity();
+	entity->setEffect(EFFECTCREATE("pure", nullptr));
+	addEntity(name, entity);
+	return entity;
+}
+
+qtuser_3d::PointCloudEntity* DemoBase::createPoint(const QString& name, const QVector4D& color)
+{
+	qtuser_3d::PointCloudEntity* entity = new qtuser_3d::PointCloudEntity();
+	entity->setEffect(EFFECTCREATE("pure", nullptr));
+	entity->setColor(color);
+	entity->setPointSize(10.0f);
+	addEntity(name, entity);
+	return entity;
+}
+
+void DemoBase::setBackColor(const QColor& color)
+{
+	m_surface->setClearColor(color);
+}
