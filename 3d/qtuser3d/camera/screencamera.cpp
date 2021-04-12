@@ -55,7 +55,8 @@ namespace qtuser_3d
 		QVector3D bsize = box.size();
         float len = qMax(bsize.x(), qMax(bsize.y(), bsize.z()));
 		QVector3D center = box.center();
-		center.setZ(center.z() - box.size().z() * 0.4);
+//		center.setZ(center.z() - box.size().z() * 0.4);
+		center.setZ(0);
 
 		//float nearPlane = 0.2f * len;
 		//float farPlane = 10.0f * len;
@@ -73,6 +74,8 @@ namespace qtuser_3d
 		m_camera->setViewCenter(center);
 		//m_camera->setNearPlane(nearPlane);
 		//m_camera->setFarPlane(farPlane);
+
+		m_orignCenter = center;
 
 		m_box = box;
 		float dmax = viewAllLen(m_box.size().length() / 2.0f) * 1.5;
@@ -315,6 +318,11 @@ namespace qtuser_3d
 		return point;
 	}
 
+	QVector3D ScreenCamera::orignCenter() const
+	{
+		return m_orignCenter;
+	}
+
 	void ScreenCamera::home(const qtuser_3d::Box3D& box, int type)
 	{
 		QVector3D size = box.size();
@@ -342,6 +350,8 @@ namespace qtuser_3d
 		m_camera->setViewCenter(center);
 		m_camera->setUpVector(up);
 		m_camera->setPosition(position);
+
+		m_orignCenter = center;
 
 		m_box = box;
 		setMaxLimitDistance(dmax);

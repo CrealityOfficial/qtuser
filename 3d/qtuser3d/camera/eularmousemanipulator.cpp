@@ -98,7 +98,7 @@ namespace qtuser_3d
 		QVector3D delta = c0 - c;
 		QVector3D newPosition = position + delta;
 		QVector3D newViewCenter = viewCenter + delta;
-		
+
 		m_camera->setPosition(newPosition);
 		m_camera->setViewCenter(newViewCenter);
 

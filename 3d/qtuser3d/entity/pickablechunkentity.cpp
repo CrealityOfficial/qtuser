@@ -151,10 +151,12 @@ namespace qtuser_3d
 		if (chunk < 0 || chunk >= m_chunks)
 			return;
 
-		QByteArray bytes;
+		QByteArray bytes, positonbytes;
 		bytes.resize(m_chunkBytes);
 		bytes.fill(0);
-		updateChunk(chunk, nullptr, &bytes);
+		positonbytes.resize(m_chunkBytes * 3);
+		positonbytes.fill(0);
+		updateChunk(chunk, &positonbytes, &bytes);
 
 		m_freeList << chunk;
 		m_users[chunk] = nullptr;

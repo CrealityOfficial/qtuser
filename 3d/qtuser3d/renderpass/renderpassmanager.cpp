@@ -54,6 +54,7 @@ namespace qtuser_3d
 				pass->addFilterKey(filterKey);
 			}
 		}
+		pass->setObjectName(shaderName);
 
 		//add render state
 		Qt3DRender::QCullFace* cullFace = new Qt3DRender::QCullFace(pass);

@@ -27,7 +27,7 @@ void main( void )
     color.a = flag;
 
 	if(worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight)
-		color.a = 0.0;
+		discard;
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 specular_color   = specular;
