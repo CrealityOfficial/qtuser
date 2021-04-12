@@ -51,6 +51,11 @@ void ToolCommand::setPressedIcon(const QString& icon)
 	m_pressedIcon = icon;
 }
 
+void ToolCommand::setDisabledIcon(const QString& icon)
+{
+	m_disableIcon = icon;
+}
+
 void ToolCommand::setName(const QString& name)
 {
 	m_name = name;

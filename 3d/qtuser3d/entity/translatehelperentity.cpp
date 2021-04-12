@@ -13,6 +13,7 @@ namespace qtuser_3d
 		, m_xPickable(nullptr)
 		, m_yPickable(nullptr)
 		, m_zPickable(nullptr)
+		, m_fixSize(false)
 	{
 		m_transform = new Qt3DCore::QTransform(this);
 		addComponent(m_transform);
@@ -64,7 +65,12 @@ namespace qtuser_3d
 
 	TranslateHelperEntity::~TranslateHelperEntity()
 	{
-
+		if (m_xArrowEntity && m_xArrowEntity->parent())
+			delete m_xArrowEntity;
+		if (m_yArrowEntity && m_yArrowEntity->parent())
+			delete m_yArrowEntity;
+		if (m_zArrowEntity && m_zArrowEntity->parent())
+			delete m_zArrowEntity;
 	}
 
 	Pickable* TranslateHelperEntity::xPickable()
@@ -82,19 +88,54 @@ namespace qtuser_3d
 		return m_zPickable;
 	}
 
+	void TranslateHelperEntity::setXVisibility(bool visibility)
+	{
+		if(m_xArrowEntity)
+			visibility ? m_xArrowEntity->setParent(this) : m_xArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
+	void TranslateHelperEntity::setYVisibility(bool visibility)
+	{
+		if(m_yArrowEntity)
+			visibility ? m_yArrowEntity->setParent(this) : m_yArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
+	void TranslateHelperEntity::setZVisibility(bool visibility)
+	{
+		if(m_zArrowEntity)
+			visibility ? m_zArrowEntity->setParent(this) : m_zArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
 	void TranslateHelperEntity::updateBox(const Box3D& box)
 	{
 		QVector3D center = box.center();
 		QMatrix4x4 matrix;
 		matrix.translate(center);
+		m_center = center;
 
-		QVector3D sz = box.size();
-		double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
-		maxlen = maxlen > sz.z() ? maxlen : sz.z();
-		if (maxlen > 80)
+		float len = 1.0f;
+		if (!m_fixSize)
 		{
-			matrix.scale(maxlen / 80);
+			QVector3D sz = box.size();
+			double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
+			maxlen = maxlen > sz.z() ? maxlen : sz.z();
+			if (maxlen > 80)
+			{
+				len = maxlen / 80;
+			}
 		}
+
+		matrix.scale(len);
 		m_transform->setMatrix(matrix);
+	}
+
+	void TranslateHelperEntity::setFixSize(bool fixSize)
+	{
+		m_fixSize = fixSize;
+	}
+
+	QVector3D TranslateHelperEntity::center()
+	{
+		return m_center;
 	}
 }

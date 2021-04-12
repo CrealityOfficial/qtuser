@@ -20,6 +20,7 @@ namespace qtuser_3d
 		, m_screenCamera(nullptr)
 		, m_rotateMode(RotateMode::null)
 		, m_rotateCallback(nullptr)
+		, m_fixSize(false)
 	{
 		m_transform = new Qt3DCore::QTransform(this);
 		addComponent(m_transform);
@@ -76,7 +77,37 @@ namespace qtuser_3d
 
 	RotateHelperEntity::~RotateHelperEntity()
 	{
+		if (m_xRingEntity->parent())
+			delete m_xRingEntity;
+		if (m_yRingEntity->parent())
+			delete m_yRingEntity;
+		if (m_zRingEntity->parent())
+			delete m_zRingEntity;
+	}
 
+	void RotateHelperEntity::setXVisibility(bool visibility)
+	{
+		visibility ? m_xRingEntity->setParent(this) : m_xRingEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
+	void RotateHelperEntity::setYVisibility(bool visibility)
+	{
+		visibility ? m_yRingEntity->setParent(this) : m_yRingEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
+	void RotateHelperEntity::setZVisibility(bool visibility)
+	{
+		visibility ? m_zRingEntity->setParent(this) : m_zRingEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
+	QVector3D RotateHelperEntity::center()
+	{
+		return m_center;
+	}
+
+	void RotateHelperEntity::setFixSize(bool fixSize)
+	{
+		m_fixSize = fixSize;
 	}
 
 	Pickable* RotateHelperEntity::xPickable()
@@ -123,13 +154,21 @@ namespace qtuser_3d
 		QMatrix4x4 matrix;
 		matrix.translate(center);
 
-		QVector3D sz = box.size();
-		double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
-		maxlen = maxlen > sz.z() ? maxlen : sz.z();
-		if (maxlen > 80)
-		{
-			matrix.scale(maxlen / 80);
-		}
+		//double len = 1.0;
+		//if (m_fixSize)
+		//{
+		//	len = 1.0;
+		//}
+		//else
+		//{
+		//	QVector3D sz = box.size();
+		//	double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
+		//	maxlen = maxlen > sz.z() ? maxlen : sz.z();
+		//	if (maxlen > 80)
+		//		len = maxlen / 80;
+		//}
+
+		//matrix.scale(len);
 		m_transform->setMatrix(matrix);
 	}
 

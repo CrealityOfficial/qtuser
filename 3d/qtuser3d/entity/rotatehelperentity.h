@@ -38,6 +38,12 @@ namespace qtuser_3d
 		void setPickSource(FacePicker* pickSource);
 		void setScreenCamera(ScreenCamera* camera);
 		void setRotateCallback(RotateCallback* callback);
+
+		void setXVisibility(bool visibility);
+		void setYVisibility(bool visibility);
+		void setZVisibility(bool visibility);
+		QVector3D center();
+		void setFixSize(bool fixSize);
 	public slots:
 		void onBoxChanged(Box3D box);
 
@@ -70,6 +76,8 @@ namespace qtuser_3d
 
 		RotateMode m_rotateMode;
 		QVector3D m_spacePoint;
+
+		bool m_fixSize;
 	};
 }
 

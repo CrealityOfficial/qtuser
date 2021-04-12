@@ -32,6 +32,7 @@ namespace qtuser_3d
 
 		qtuser_3d::Ray screenRay(const QPoint& point);
 		qtuser_3d::Ray screenRay(const QPointF& point);
+		qtuser_3d::Ray screenRayOrthographic(const QPointF& point);
 		float screenSpaceRatio(const QVector3D& position);
 		float viewAllLen(float r);
 
@@ -50,7 +51,9 @@ namespace qtuser_3d
 		bool testCameraValid();
 		QPoint flipY(const QPoint pos);
 
-		void viewFrom(const QVector3D& dir, const QVector3D& right);
+		QVector3D orignCenter() const;
+
+		void viewFrom(const QVector3D& dir, const QVector3D& right, QVector3D* specificCenter);
 
 		QVector3D horizontal();
 		QVector3D vertical();
@@ -69,6 +72,8 @@ namespace qtuser_3d
 		float m_minDistance;
 		float m_maxDistance;
 		qtuser_3d::Box3D m_box;
+
+		QVector3D m_orignCenter;
 
 		QList<ScreenCameraObserver*> m_cameraObservers;
 	};

@@ -68,4 +68,46 @@ namespace qtuser_3d
 			}
 		}
 	}
+
+	void PrinterText::updateScaleMark(Box3D& box, float gap, float fontSize)
+	{
+		qDeleteAll(m_majors);
+		m_majors.clear();
+		QString Qstrunit = "mm";
+		float minX = box.min.x();
+		float maxX = box.max.x();
+		int maxLen = box.size().x();
+		QVector4D color = QVector4D(0.5f, 0.5f, 0.5f, 1.0f);
+
+		QMatrix4x4 Matrix;
+		TextMeshEntity* textEntity = new TextMeshEntity(this);
+		textEntity->setColor(color);
+		QString text = QString::number(minX) + Qstrunit;
+		textEntity->setText(text);
+		Matrix.translate(QVector3D(0, gap, 0.0f));
+		Matrix.scale(10);
+		textEntity->setPose(Matrix);
+		m_majors.push_back(textEntity);
+
+		QMatrix4x4 Matrix2;
+		TextMeshEntity* TextMiddle = new TextMeshEntity(this);
+		TextMiddle->setColor(color);
+		QString textmiddle = QString::number(maxX/2.0) + Qstrunit;
+		TextMiddle->setText(textmiddle);
+		Matrix2.translate(QVector3D(maxX/2.0- text.length()/2.0*fontSize, gap, 0.0f));
+		Matrix2.scale(10);
+		TextMiddle->setPose(Matrix2);
+		m_majors.push_back(TextMiddle);
+
+		QMatrix4x4 Matrix3;
+		TextMeshEntity* textEnd = new TextMeshEntity(this);
+		textEnd->setColor(color);
+		QString textend = QString::number(maxX) + Qstrunit;
+		textEnd->setText(textend);
+		Matrix3.translate(QVector3D(maxX - text.length()*fontSize, gap, 0.0f));
+		Matrix3.scale(10);
+		textEnd->setPose(Matrix3);
+		m_majors.push_back(textEnd);
+	}
+
 }

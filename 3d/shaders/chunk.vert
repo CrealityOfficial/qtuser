@@ -2,14 +2,13 @@
 
 in vec3 vertexPosition;
 in vec3 vertexNormal;
+in float vertexFlag;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 viewDirection;
-out vec3 normal;
-out vec3 worldPosition;
+flat out float flag;
 
 void main( void )
 {
@@ -17,9 +16,5 @@ void main( void )
 	vec4 tworldPosition = modelViewMatrix * vec4(vertexPosition, 1.0);
     gl_Position = projectionMatrix *  tworldPosition;
 	
-	viewDirection  = normalize(vec3(-tworldPosition));
-	mat3 normalMatrix = mat3(modelViewMatrix);
-	
-    normal          = normalMatrix * vertexNormal;
-	worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));
+	flag			= vertexFlag;
 }

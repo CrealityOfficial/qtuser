@@ -18,6 +18,8 @@
         <file>shaders/pickFace.vert</file>
         <file>shaders/pickFaceFlag.frag</file>
         <file>shaders/pickFaceFlag.vert</file>
+		<file>shaders/pickFaceChunk.frag</file>
+        <file>shaders/pickFaceChunk.vert</file>
         <file>shaders/slicepreview.vert</file>
         <file>shaders/slicepreview.frag</file>
         <file>shaders/slicepreviewAD.vert</file>
@@ -48,6 +50,8 @@
 		<file>shaders/admodel.frag</file>
 		<file>shaders/bottomface.vert</file>
 		<file>shaders/bottomface.frag</file>
+		<file>shaders/chunk.vert</file>
+		<file>shaders/chunk.frag</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

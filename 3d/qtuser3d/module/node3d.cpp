@@ -128,11 +128,11 @@ namespace qtuser_3d
 		m_local2Parent.translate(m_localPosition + m_localCenter);
 		QMatrix4x4 t = m_local2Parent;
 
-		m_local2Parent.scale(m_localScale);
-		m_local2Parent.rotate(m_localRotate);
-		m_local2Parent.translate(-m_localCenter);
-
 		m_local2Parent *= m_mirrorMatrix;
+		
+		m_local2Parent.rotate(m_localRotate);
+		m_local2Parent.scale(m_localScale);
+		m_local2Parent.translate(-m_localCenter);
 
 		t.rotate(m_localRotate);
 		t.scale(m_localScale);
@@ -225,6 +225,18 @@ namespace qtuser_3d
 		QMatrix4x4 m;
 		m(1, 1) = -1;
 		mirror(m, true);
+	}
+
+	void Node3D::_mirrorZ()
+	{
+		QMatrix4x4 m;
+		m(2, 2) = -1;
+		mirror(m, true);
+	}
+
+	void Node3D::_mirrorSet(const QMatrix4x4& m)
+	{
+		mirror(m, false);
 	}
 
 	void Node3D::mirrorZ()  /////ZZ

@@ -42,6 +42,11 @@ public:
 	GLQuickItem(QQuickItem* parent = 0);
 	~GLQuickItem();
 
+	void setupGL();
+	void clearScene();
+	void paintGL();
+	void releaseGL();
+
 	int shotTimes();
 	void decShotTimes();
 	void setAlways(bool always);

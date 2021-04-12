@@ -56,6 +56,9 @@ void showDetailSystemInfo()
 	qDebug() << version.name() << version.majorVersion() << version.minorVersion() << version.microVersion();
 	showSysMemory();
 	qDebug() << "--------------------------------\n";
+
+	QString write_folder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	qDebug() << "write_folder = " << write_folder;
 }
 
 

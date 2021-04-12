@@ -55,7 +55,8 @@ namespace qtuser_3d
 		QVector3D bsize = box.size();
         float len = qMax(bsize.x(), qMax(bsize.y(), bsize.z()));
 		QVector3D center = box.center();
-		center.setZ(center.z() - box.size().z() * 0.4);
+//		center.setZ(center.z() - box.size().z() * 0.4);
+		center.setZ(0);
 
 		//float nearPlane = 0.2f * len;
 		//float farPlane = 10.0f * len;
@@ -73,6 +74,8 @@ namespace qtuser_3d
 		m_camera->setViewCenter(center);
 		//m_camera->setNearPlane(nearPlane);
 		//m_camera->setFarPlane(farPlane);
+
+		m_orignCenter = center;
 
 		m_box = box;
 		float dmax = viewAllLen(m_box.size().length() / 2.0f) * 1.5;
@@ -106,19 +109,27 @@ namespace qtuser_3d
 		float dmin = d - 1.2f * r;
 		float dmax = d + 1.2f * r;
 
-		float fieldofview = m_camera->lens()->fieldOfView();
-		float aspect = m_camera->lens()->aspectRatio();
+		//float fieldofview = m_camera->lens()->fieldOfView();
+		//float aspect = m_camera->lens()->aspectRatio();
 
 		float nearpos = dmin < 1.0f ? 1.0f : dmin;
 		float farpos = dmax > 0.0f ? dmax : 3000.0f;
 
-		m_camera->lens()->setPerspectiveProjection(fieldofview, aspect, nearpos, farpos);
+		m_camera->lens()->setNearPlane(nearpos);
+		m_camera->lens()->setFarPlane(farpos);
 	}
 
 	qtuser_3d::Ray ScreenCamera::screenRay(const QPoint& point)
 	{
-		QPointF p = qtuser_3d::viewportRatio(point, m_size);
-		return screenRay(p);
+		QPointF p(0.0,0.0);
+		p = qtuser_3d::viewportRatio(point, m_size);
+
+		if (m_camera->projectionType() == Qt3DRender::QCameraLens::PerspectiveProjection)
+			return screenRay(p);
+		else if(m_camera->projectionType() == Qt3DRender::QCameraLens::OrthographicProjection)
+			return screenRayOrthographic(p);
+		else
+			return screenRay(p);
 	}
 
 	qtuser_3d::Ray ScreenCamera::screenRay(const QPointF& point)
@@ -137,6 +148,25 @@ namespace qtuser_3d
 		ray.start = m_camera->position();
 		ray.dir = nearPoint - ray.start;
 		ray.dir.normalize();
+		return ray;
+	}
+
+	qtuser_3d::Ray ScreenCamera::screenRayOrthographic(const QPointF& point)
+	{
+		QVector3D position = m_camera->position();
+		QVector3D center = m_camera->viewCenter();
+		QVector3D dir = (center - position).normalized();
+		QVector3D nearCenter = position + dir * m_camera->nearPlane();
+
+		float near_width = qAbs(m_camera->right() - m_camera->left()) * point.x();
+		float near_height = qAbs(m_camera->top() - m_camera->bottom()) * point.y();
+		QVector3D right = QVector3D::crossProduct(dir, m_camera->upVector());
+		right.normalize();
+		QVector3D nearPoint = nearCenter + m_camera->upVector() * near_height + right * near_width;
+
+		qtuser_3d::Ray ray;
+		ray.dir = dir;// direction vector
+		ray.start = nearPoint - dir * m_camera->nearPlane();//start vector
 		return ray;
 	}
 
@@ -180,24 +210,54 @@ namespace qtuser_3d
 	{
 		float factor = scale;
 
-		QVector3D cameraPosition = m_camera->position();
-		QVector3D cameraCenter = m_camera->viewCenter();
-		QVector3D cameraView = cameraCenter - cameraPosition;
-		float distance = cameraView.length();
-		float newDistance = factor * distance;
-
-		cameraView.normalize();
-		if ((newDistance > m_minDistance) && (newDistance < m_maxDistance))
+		float maxFovy = 50.0f;
+		float minFovy = 2.0f;
+		float fovy = m_camera->fieldOfView();
+		fovy *= factor;
+		if (fovy >= minFovy && fovy <= maxFovy)
 		{
-			QVector3D newPosition = cameraCenter - cameraView * newDistance;
-			m_camera->setPosition(newPosition);
+			m_camera->setFieldOfView(fovy);
+			if (m_camera->projectionType() == Qt3DRender::QCameraLens::OrthographicProjection)
+			{
+				float fnearPlane = m_camera->nearPlane();
+				float ffarPlane = m_camera->farPlane();
 
+				float r = (ffarPlane - fnearPlane) / 2 + fnearPlane;
+				float flen = r * tan(m_camera->fieldOfView() * M_PI / 360);
+				float top = flen;
+				float bottom = -flen;
+
+				float fratio = m_camera->aspectRatio();
+				float left = -fratio * flen;
+				float right = fratio * flen;
+
+				m_camera->setTop(top);
+				m_camera->setBottom(bottom);
+				m_camera->setLeft(left);
+				m_camera->setRight(right);
+			}
 			notifyCameraChanged();
-
-			_updateNearFar(m_box);
 			return true;
 		}
 		return false;
+		//QVector3D cameraPosition = m_camera->position();
+		//QVector3D cameraCenter = m_camera->viewCenter();
+		//QVector3D cameraView = cameraCenter - cameraPosition;
+		//float distance = cameraView.length();
+		//float newDistance = factor * distance;
+		//
+		//cameraView.normalize();
+		//if ((newDistance > m_minDistance) && (newDistance < m_maxDistance))
+		//{
+		//	QVector3D newPosition = cameraCenter - cameraView * newDistance;
+		//	m_camera->setPosition(newPosition);
+		//
+		//	notifyCameraChanged();
+		//
+		//	_updateNearFar(m_box);
+		//	return true;
+		//}
+		//return false;
 	}
 
 	bool ScreenCamera::translate(const QVector3D& trans)
@@ -258,6 +318,11 @@ namespace qtuser_3d
 		return point;
 	}
 
+	QVector3D ScreenCamera::orignCenter() const
+	{
+		return m_orignCenter;
+	}
+
 	void ScreenCamera::home(const qtuser_3d::Box3D& box, int type)
 	{
 		QVector3D size = box.size();
@@ -286,6 +351,8 @@ namespace qtuser_3d
 		m_camera->setUpVector(up);
 		m_camera->setPosition(position);
 
+		m_orignCenter = center;
+
 		m_box = box;
 		setMaxLimitDistance(dmax);
 
@@ -302,16 +369,21 @@ namespace qtuser_3d
 		}
 	}
 
-	void ScreenCamera::viewFrom(const QVector3D& dir, const QVector3D& right)
+	void ScreenCamera::viewFrom(const QVector3D& dir, const QVector3D& right, QVector3D* specificCenter)
 	{
 		QVector3D newUp = QVector3D::crossProduct(right, dir);
 		newUp.normalize();
 
 		QVector3D viewCenter = m_camera->viewCenter();
+		if (specificCenter != NULL)
+		{
+			viewCenter = *specificCenter;
+		}
 		QVector3D position = m_camera->position();
-		float d = (viewCenter - position).length();
+		float d = (m_camera->viewCenter() - position).length();
 		QVector3D newPosition = viewCenter - dir.normalized() * d;
 
+		m_camera->setViewCenter(viewCenter);
 		m_camera->setUpVector(newUp);
 		m_camera->setPosition(newPosition);
 	}

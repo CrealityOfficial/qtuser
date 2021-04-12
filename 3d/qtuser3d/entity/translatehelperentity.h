@@ -21,7 +21,13 @@ namespace qtuser_3d
 		Pickable* yPickable();
 		Pickable* zPickable();
 
+		void setXVisibility(bool visibility);
+		void setYVisibility(bool visibility);
+		void setZVisibility(bool visibility);
+
 		void updateBox(const Box3D& box);
+		void setFixSize(bool fixSize);
+		QVector3D center();
 	protected:
 		Qt3DCore::QTransform* m_transform;
 
@@ -31,6 +37,9 @@ namespace qtuser_3d
 		SimplePickable* m_xPickable;
 		SimplePickable* m_yPickable;
 		SimplePickable* m_zPickable;
+
+		bool m_fixSize;
+		QVector3D m_center;
 	};
 }
 

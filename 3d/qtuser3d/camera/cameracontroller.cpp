@@ -11,7 +11,7 @@ CameraController::CameraController(QObject* parent)
 	:QObject(parent)
 	, m_screenCamera(nullptr)
 	, m_cameraManipulator(nullptr)
-	, m_isOrtho(false)
+	, m_mask(7)
 {
 #ifdef USE_EULAR_MANIPULATOR
 	m_cameraManipulator = new qtuser_3d::EularMouseManipulator(this);
@@ -28,74 +28,47 @@ CameraController::~CameraController()
 void CameraController::setScreenCamera(qtuser_3d::ScreenCamera* camera)
 {
 	m_screenCamera = camera;
-	Qt3DRender::QCamera* pickerCamera = m_screenCamera->camera();
+	//Qt3DRender::QCamera* pickerCamera = m_screenCamera->camera();
 	m_cameraManipulator->setCamera(m_screenCamera);
 }
 
 void CameraController::viewFromOrthographic()
 {
-	float per = 1;
 	Qt3DRender::QCamera* pickerCamera = m_screenCamera->camera();
-	float fnearPlane = -10;  // pickerCamera->nearPlane();
+	if (pickerCamera->projectionType() == Qt3DRender::QCameraLens::OrthographicProjection)
+		return;
+
+	m_cameraPos = pickerCamera->position();
+	QMatrix4x4 m_viewMatrix = pickerCamera->projectionMatrix();
+
+	float fnearPlane = pickerCamera->nearPlane();
 	float ffarPlane = pickerCamera->farPlane();
-	float left = pickerCamera->left() / per;
-	float right = pickerCamera->right() / per;
-	float bottom = pickerCamera->bottom() / per;
-	float top = pickerCamera->top() / per;
 
 	float r = (ffarPlane - fnearPlane) / 2 + fnearPlane;
 	float flen = r * tan(pickerCamera->fieldOfView() *M_PI / 360);
-	top = flen;
-	bottom = -flen;
+	float top = flen;
+	float bottom = -flen;
 
 	float fratio = pickerCamera->aspectRatio();
-	left = -fratio* flen;
-	right = fratio * flen;
+	float left = -fratio* flen;
+	float right = fratio * flen;
 
-	m_cameraPos = pickerCamera->position();
+	pickerCamera->setTop(top);
+	pickerCamera->setBottom(bottom);
+	pickerCamera->setLeft(left);
+	pickerCamera->setRight(right);
 
-	QVector3D cameraPosition = pickerCamera->position();
-	QVector3D cameraCenter = pickerCamera->viewCenter();
-	QVector3D cameraView = cameraCenter - cameraPosition;
-	cameraView.normalize();
-	QVector3D newPosition = cameraCenter - cameraView * 500;
-	pickerCamera->setPosition(newPosition);
-	
 	pickerCamera->setProjectionType(Qt3DRender::QCameraLens::ProjectionType::OrthographicProjection);
-	//QMatrix4x4
-	QMatrix4x4 M = {2/(right- left),0,0,-(right+left)/(right-left),
-	0,2/(top- bottom),0,-(top+bottom)/(top-bottom),
-	0,0,-2/(ffarPlane- fnearPlane),-(ffarPlane+fnearPlane)/(ffarPlane-fnearPlane),
-	0,0,0,1};
-
-	pickerCamera->setProjectionMatrix(M);
-	m_isOrtho = true;
 	emit signalViewChanged(false);
 }
 
 void CameraController::viewFromPerspective()
 {
 	Qt3DRender::QCamera* pickerCamera = m_screenCamera->camera();
-	float fnearPlane = pickerCamera->nearPlane();
-	float ffarPlane = pickerCamera->farPlane();
-	float left = pickerCamera->left();
-	float right = pickerCamera->right();
-	float bottom = pickerCamera->bottom();
-	float top = pickerCamera->top();
+	if (pickerCamera->projectionType() == Qt3DRender::QCameraLens::PerspectiveProjection)
+		return;
 
-	if (m_isOrtho)
-	{
-		pickerCamera->setPosition(m_cameraPos);
-	}
-	m_isOrtho = false;
-	
 	pickerCamera->setProjectionType(Qt3DRender::QCameraLens::ProjectionType::PerspectiveProjection);
-
-	QMatrix4x4 M = { 2 * fnearPlane / (right - left), 0,(right + left) / (right - left),0,
-					0, 2 * fnearPlane / (top - bottom),(top + bottom) / (top - bottom),0,
-					0,0,-(ffarPlane + fnearPlane) / (ffarPlane - fnearPlane),-2 * (ffarPlane * fnearPlane) / (ffarPlane - fnearPlane),
-					0,0,-1,0 };
-	
 	emit signalViewChanged(false);
 }
 
@@ -138,20 +111,54 @@ void CameraController::onResize(const QSize& size)
 		m_screenCamera->setScreenSize(size);
 }
 
+QVector3D CameraController::getViewPosition() const
+{
+	return m_screenCamera->camera()->position();
+}
+QVector3D CameraController::getViewupVector() const
+{
+	return m_screenCamera->camera()->upVector();
+}
+QVector3D CameraController::getviewCenter() const
+{
+	return m_screenCamera->camera()->viewCenter();
+}
+
+void CameraController::setViewPosition(const QVector3D position)
+{
+	m_screenCamera->camera()->setPosition(position);
+}
+void CameraController::setViewupVector(const QVector3D upVector)
+{
+	m_screenCamera->camera()->setUpVector(upVector);
+}
+void CameraController::setviewCenter(const QVector3D viewCenter)
+{
+	m_screenCamera->camera()->setViewCenter(viewCenter);
+}
 
 void CameraController::onRightMouseButtonPress(QMouseEvent* event)
 {
+	if (!(m_mask & 1))
+		return;
+
 	m_cameraManipulator->onRightMouseButtonPress(event);
 }
 
 void CameraController::onRightMouseButtonMove(QMouseEvent* event)
 {
+	if (!(m_mask & 1))
+		return;
+
 	m_cameraManipulator->onRightMouseButtonMove(event);
 	emit signalViewChanged(false);
 }
 
 void CameraController::onRightMouseButtonRelease(QMouseEvent* event)
 {
+	if (!(m_mask & 1))
+		return;
+
 	emit signalViewChanged(true);
 }
 
@@ -163,17 +170,26 @@ void CameraController::onRightMouseButtonClick(QMouseEvent* event)
 
 void CameraController::onMidMouseButtonPress(QMouseEvent* event)
 {
+	if (!(m_mask & 4))
+		return;
+
 	m_cameraManipulator->onMidMouseButtonPress(event);
 }
 
 void CameraController::onMidMouseButtonMove(QMouseEvent* event)
 {
+	if (!(m_mask & 4))
+		return;
+
 	m_cameraManipulator->onMidMouseButtonMove(event);
 	emit signalViewChanged(false);
 }
 
 void CameraController::onMidMouseButtonRelease(QMouseEvent* event)
 {
+	if (!(m_mask & 4))
+		return;
+
 	emit signalViewChanged(true);
 }
 
@@ -182,62 +198,88 @@ void CameraController::onMidMouseButtonClick(QMouseEvent* event)
 	(void)(event);
 }
 
+void CameraController::enableRotate(bool enabled)
+{
+	if (enabled)
+		m_mask |= 1;
+	else
+		m_mask &= ~1;
+}
+
+void CameraController::enableScale(bool enabled)
+{
+	if (enabled)
+		m_mask |= 2;
+	else
+		m_mask &= ~2;
+}
+
+void CameraController::enableTranslate(bool enabled)
+{
+	if (enabled)
+		m_mask |= 4;
+	else
+		m_mask &= ~4;
+}
 
 void CameraController::onWheelEvent(QWheelEvent* event)
 {
-	if (!m_isOrtho && m_screenCamera && m_screenCamera->zoom(event->delta() > 0 ? 1.0f / 1.1f : 1.1f))
+	if (!(m_mask & 2))
+		return;
+
+	if (m_screenCamera && m_screenCamera->zoom(event->delta() > 0 ? 1.0f / 1.1f : 1.1f))
 	{
 		emit signalViewChanged(true);
 	}
 }
 
-void CameraController::viewFromBottom()
+void CameraController::viewFromBottom(QVector3D* specificCenter)
 {
 	QVector3D dir(0.0f, 0.0f, 1.0f);
 	QVector3D right(1.0f, 0.0f, 0.0f);
-	view(dir, right);
+	view(dir, right, specificCenter);
 }
 
-void CameraController::viewFromTop()
+void CameraController::viewFromTop(QVector3D* specificCenter)
 {
 	QVector3D dir(0.0f, 0.0f, -1.0f);
 	QVector3D right(1.0f, 0.0f, 0.0f);
-	view(dir, right);
+	view(dir, right, specificCenter);
 }
 
-void CameraController::viewFromLeft()
+void CameraController::viewFromLeft(QVector3D* specificCenter)
 {
 	QVector3D dir(1.0f, 0.0f, 0.0f);
 	QVector3D right(0.0f, -1.0f, 0.0f);
-	view(dir, right);
+	view(dir, right, specificCenter);
 }
 
-void CameraController::viewFromRight()
+void CameraController::viewFromRight(QVector3D* specificCenter)
 {
 	QVector3D dir(-1.0f, 0.0f, 0.0f);
 	QVector3D right(0.0f, 1.0f, 0.0f);
-	view(dir, right);
+	view(dir, right, specificCenter);
 }
 
-void CameraController::viewFromFront()
+void CameraController::viewFromFront(QVector3D* specificCenter)
 {
 	QVector3D dir(0.0f, 1.0f, 0.0f);
 	QVector3D right(1.0f, 0.0f, 0.0f);
-	view(dir, right);
+	view(dir, right, specificCenter);
 }
 
-void CameraController::viewFromBack()
+void CameraController::viewFromBack(QVector3D* specificCenter)
 {
 	QVector3D dir(0.0f, -1.0f, 0.0f);
 	QVector3D right(-1.0f, 0.0f, 0.0f);
-	view(dir, right);
+	view(dir, right, specificCenter);
 }
 
-void CameraController::view(const QVector3D& dir, const QVector3D& right)
+void CameraController::view(const QVector3D& dir, const QVector3D& right, QVector3D* specificCenter)
 {
 	if (m_screenCamera)
 	{
-		m_screenCamera->viewFrom(dir, right);
+		m_screenCamera->viewFrom(dir, right, specificCenter);
 		emit signalViewChanged(true);
 	}
 }

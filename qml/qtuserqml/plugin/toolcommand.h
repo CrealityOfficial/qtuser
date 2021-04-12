@@ -20,6 +20,7 @@ public:
 	QString name() const;
 	void setEnabledIcon(const QString& icon);
 	void setPressedIcon(const QString& icon);
+	void setDisabledIcon(const QString& icon);
 	void setName(const QString& name);
     void setSource(const QString& source);
     Q_INVOKABLE virtual bool checkSelect();

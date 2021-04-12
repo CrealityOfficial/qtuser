@@ -1,5 +1,6 @@
 #include "space3d.h"
 #include <QtCore/QtMath>
+#include <QtCore/QDebug>
 
 namespace qtuser_3d
 {
@@ -94,6 +95,7 @@ namespace qtuser_3d
 
 		float t = QVector3D::dotProduct(planeDir, (planeCenter - ray.start)) / l;
 		collide = ray.start + ray.dir * t;
+
 		return true;
 	}
 }

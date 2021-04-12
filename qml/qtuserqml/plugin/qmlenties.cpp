@@ -24,9 +24,13 @@ void QmlEntries::add(QmlEntry* entry)
 		int insertIndex = 0;
 		for (QmlEntry* e : m_entries)
 		{
+            int _index = m_entries.indexOf(entry);
+            if (_index >= 0 && _index < m_entries.size())
+                return;
+
 			if (e->order() >= entry->order())
 				break;
-			
+		
 			++insertIndex;
 		}
 
@@ -69,6 +73,20 @@ void QmlEntries::remove(QmlEntry* entry)
     }
 }
 
+void QmlEntries::removeFirstOne()
+{
+    int size = m_entries.size();
+    if (size > 1)
+    {
+        QmlEntry* first = m_entries.front();
+        beginRemoveRows(QModelIndex(), 1, 1);
+        if (m_entries.at(1)->parent() == this)
+            delete m_entries.at(1);      
+        m_entries.removeAt(1);
+        endRemoveRows();
+    }
+}
+
 void QmlEntries::clearButFirst()
 {
     int size = m_entries.size();
@@ -84,6 +102,13 @@ void QmlEntries::clearButFirst()
         endRemoveRows();
     }
 }
+
+QObject* QmlEntries::rawData(int index)
+{
+    if (m_entries.size() > index && index >= 0)
+        return m_entries.at(index);
+    return nullptr;
+ }
 
 int QmlEntries::rowCount(const QModelIndex& parent) const
 {

@@ -3,6 +3,8 @@
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLFramebufferObjectFormat>
 #include <QtGui/QOffscreenSurface>
+#include <QtCore/QDebug>
+#include <QtCore/QThread>
 
 #include <QSGSimpleTextureNode>
 #include <Qt3DRender/private/qrenderaspect_p.h>
@@ -21,6 +23,223 @@
 
 #include "qtuser3d/framegraph/rendergraph.h"
 #include "qtuserqml/gl/rawogl.h"
+
+#ifdef __APPLE__
+class ContextSaver
+{
+public:
+	explicit ContextSaver(QOpenGLContext* context = QOpenGLContext::currentContext())
+		: m_context(context)
+		, m_surface(context ? static_cast<QOffscreenSurface*>(context->surface()) : nullptr)
+	{
+		//qDebug() << m_context->format();
+	}
+
+	~ContextSaver()
+	{
+		if (m_context)
+			m_context->makeCurrent(m_surface);
+	}
+
+	QOpenGLContext* context() const { return m_context; }
+	QOffscreenSurface* surface() const { return m_surface; }
+
+private:
+	QOpenGLContext* const m_context;
+	QOffscreenSurface* const m_surface;
+};
+
+class FrameBufferObjectRenderer : public QQuickFramebufferObject::Renderer
+{
+public:
+	FrameBufferObjectRenderer(GLQuickItem* item)
+		: m_item(item)
+	{
+		m_item->setupGL();
+	}
+
+	virtual ~FrameBufferObjectRenderer()
+	{
+		m_item->clearScene();
+		qDebug() << "FrameBufferObjectRenderer ~~";
+	}
+
+	void render() Q_DECL_OVERRIDE
+	{
+		ContextSaver saver;
+
+		m_item->paintGL();
+
+		// We may have called doneCurrent() so restore the context.
+		saver.context()->makeCurrent(saver.surface());
+
+		m_item->window()->resetOpenGLState();
+
+		if (m_item->always())
+		{
+			update();
+		}
+		else
+		{
+			if (m_item->shotTimes() > 0)
+			{
+				update();
+				m_item->decShotTimes();
+			}
+		}
+
+#if _DEBUG
+		//qDebug() << "FrameBufferObjectRenderer Render ";
+#endif
+	}
+
+	QOpenGLFramebufferObject* createFramebufferObject(const QSize& size) Q_DECL_OVERRIDE
+	{
+		QOpenGLFramebufferObjectFormat format;
+		format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+		format.setSamples(4);
+		return new QOpenGLFramebufferObject(size, format);
+	}
+
+protected:
+	GLQuickItem* m_item;
+};
+
+GLQuickItem::GLQuickItem(QQuickItem* parent)
+	: QQuickFramebufferObject(parent)
+	, m_rootEntity(nullptr)
+	, m_renderSettings(nullptr)
+	, m_inputSettings(nullptr)
+	, m_shotTimes(0)
+	, m_renderGraph(nullptr)
+	, m_always(false)
+	, m_sharedContext(nullptr)
+{
+	setFlag(ItemHasContents, true);
+
+	setAcceptHoverEvents(true);
+	setAcceptedMouseButtons(Qt::AllButtons);
+	forceActiveFocus(Qt::MouseFocusReason);
+
+	connect(this, &QQuickItem::windowChanged, this, &GLQuickItem::handleWindowChanged);
+
+	m_rootEntity = new Qt3DCore::QEntity();
+	m_renderSettings = new Qt3DRender::QRenderSettings(m_rootEntity);
+	m_inputSettings = new Qt3DInput::QInputSettings(m_rootEntity);
+	m_rootEntity->addComponent(m_renderSettings);
+	m_rootEntity->addComponent(m_inputSettings);
+
+	m_eventSubdivide = new qtuser_3d::EventSubdivide(this);
+
+	m_rootFrameGraph = new Qt3DRender::QFrameGraphNode(m_renderSettings);
+	m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
+
+	setFocus(Qt::ClickFocus, Qt::ActiveWindowFocusReason);
+
+    qDebug() << "mac GLQuickItem";
+}
+
+GLQuickItem::~GLQuickItem()
+{
+	m_eventSubdivide->closeHandlers();
+	m_renderGraph = nullptr;
+	
+	qDebug() << "GLQuickItem ~~ ";
+}
+
+void GLQuickItem::setupGL()
+{
+	m_aspectEngine = new Qt3DCore::QAspectEngine();
+	m_renderAspect = new Qt3DRender::QRenderAspect(Qt3DRender::QRenderAspect::Synchronous);
+	m_inputAspect = new Qt3DInput::QInputAspect;
+	m_logicAspect = new Qt3DLogic::QLogicAspect;
+
+	m_aspectEngine->registerAspect(m_renderAspect);
+	m_aspectEngine->registerAspect(m_inputAspect);
+	m_aspectEngine->registerAspect(m_logicAspect);
+
+	static_cast<Qt3DRender::QRenderAspectPrivate*>(
+		Qt3DRender::QRenderAspectPrivate::get(m_renderAspect))->renderInitialize(QOpenGLContext::currentContext());
+
+	applyRootEntity();
+	setSharedContext(QOpenGLContext::currentContext());
+}
+
+void GLQuickItem::paintGL()
+{
+	static_cast<Qt3DRender::QRenderAspectPrivate*>(
+		Qt3DRender::QRenderAspectPrivate::get(m_renderAspect))->renderSynchronous();
+}
+
+void GLQuickItem::clearScene()
+{
+	m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr());
+}
+
+void GLQuickItem::releaseGL()
+{
+	delete m_aspectEngine;
+	delete m_rawOGL;
+	m_rawOGL = nullptr;
+}
+
+void GLQuickItem::requestUpdate()
+{
+	m_shotTimes = 20;
+	update();
+}
+
+int GLQuickItem::shotTimes()
+{
+	return m_shotTimes;
+}
+
+void GLQuickItem::decShotTimes()
+{
+	--m_shotTimes;
+}
+
+void GLQuickItem::setAlways(bool always)
+{
+	m_always = always;
+	update();
+}
+
+bool GLQuickItem::always()
+{
+	return m_always;
+}
+
+void GLQuickItem::handleWindowChanged(QQuickWindow* win)
+{
+	update();
+}
+
+void GLQuickItem::applyRootEntity()
+{
+	m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr(m_rootEntity));
+
+	update();
+}
+
+QQuickFramebufferObject::Renderer* GLQuickItem::createRenderer() const
+{
+	QQuickFramebufferObject::Renderer* render = new FrameBufferObjectRenderer((GLQuickItem*)this);
+	return render;
+}
+
+void GLQuickItem::setSharedContext(QOpenGLContext* context)
+{
+	m_sharedContext = context;
+    m_rawOGL = new qtuser_qml::RawOGL();
+	m_rawOGL->init(m_sharedContext);
+
+	QObject::connect(m_sharedContext, &QOpenGLContext::aboutToBeDestroyed,
+		[this] { releaseGL(); });
+
+	assert(m_sharedContext);
+}
+#else
 class ContextSaver
 {
 public:
@@ -141,14 +360,14 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 
 	m_rawOGL = new qtuser_qml::RawOGL(this);
 
-	setFocus(Qt::ClickFocus, Qt::ActiveWindowFocusReason);
+    qDebug() << "windows GLQuickItem";
 }
 
 GLQuickItem::~GLQuickItem()
 {
 	m_eventSubdivide->closeHandlers();
 	m_renderGraph = nullptr;
-	
+
 	delete m_aspectEngine;
 }
 
@@ -204,6 +423,8 @@ void GLQuickItem::setSharedContext(QOpenGLContext* context)
 	m_rawOGL->init(m_sharedContext);
 	assert(m_sharedContext);
 }
+#endif
+
 
 QOpenGLContext* GLQuickItem::sharedContext()
 {

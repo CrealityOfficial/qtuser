@@ -19,12 +19,22 @@ bool QmlEntry::enabled()
 	return checkEnabled();
 }
 
+bool QmlEntry::operateEnabled()
+{
+	return checkOperateEnabled();
+}
+
 bool QmlEntry::shot()
 {
 	return isShot();
 }
 
 bool QmlEntry::checkEnabled()
+{
+	return true;
+}
+
+bool QmlEntry::checkOperateEnabled()
 {
 	return true;
 }
@@ -121,6 +131,7 @@ bool QmlEntry::isShot()
 void QmlEntry::updateState(unsigned mask)
 {
 	emit enabledChanged();
+	emit operateEnabledChanged();
 }
 
 void QmlEntry::updateTrans()

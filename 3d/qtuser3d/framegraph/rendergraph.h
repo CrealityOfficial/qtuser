@@ -17,6 +17,7 @@ namespace qtuser_3d
 		virtual ~RenderGraph();
 
 		void setOperateMode(SceneOperateMode* operateMode);
+		void reinOperationMode();
 
 		void onMachineSelectChange();
 

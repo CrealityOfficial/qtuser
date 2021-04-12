@@ -66,6 +66,15 @@ namespace qtuser_3d
 		}
 	}
 
+	void RenderGraph::reinOperationMode()
+	{
+		if (m_operateMode)
+		{
+			m_operateMode->onDettach();
+			m_operateMode->onAttach();
+		}
+	}
+
 
 	void RenderGraph::onMachineSelectChange()
 	{
