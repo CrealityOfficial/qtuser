@@ -54,12 +54,13 @@ static int versionComponentFromString(const QString &component)
     return string.toInt();
 }
 
-Version::Version(int major, int minor, int patch, int build, const QString& extra)
+Version::Version(int major, int minor, int patch, int build, const QString& extra, const QString& os)
     : m_major(major)
     , m_minor(minor)
     , m_patch(patch)
     , m_build(build)
     , m_extra(extra)
+    , m_os(os)
 {}
 
 Version::Version(const QString &version, const QString &delimeter)
@@ -285,8 +286,8 @@ Version Version::shrinked(int detail) const
 
 QString Version::versionFullName() const
 {
-    QString version = QString("V%1.%2.%3.%4 %5").arg(m_major)
-        .arg(m_minor).arg(m_patch).arg(m_build).arg(m_extra);
+    QString version = QString("V%1.%2.%3.%4 %5 %6").arg(m_major)
+        .arg(m_minor).arg(m_patch).arg(m_build).arg(m_extra).arg(m_os);
     return version;
 }
 
