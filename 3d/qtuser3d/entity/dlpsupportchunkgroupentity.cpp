@@ -3,6 +3,11 @@
 
 namespace qtuser_3d
 {
+	static bool entityEqualPredicate(SupportChunkEntity *i, SupportChunkEntity *j)
+	{
+		return i==j;
+	};
+
 	ChunkProtoInfo protoInfos[(int)DLPUserType::eDLPNum] =
 	{
 #ifdef DLP_ONLY
@@ -112,7 +117,24 @@ namespace qtuser_3d
 		}
 		return buffer;
 	}
-
+	SupportChunkEntity* DLPSupportChunkGroupEntity::traitChunkEntity(int faceID)
+	{
+		SupportChunkEntity* buffer = nullptr;
+		int num = (int)DLPUserType::eDLPNum;
+		for (int i = 0; i < num; ++i)
+		{
+			QVector<SupportChunkEntity*>& entities = m_typeEntities[i];
+			for (SupportChunkEntity* entity : entities)
+			{
+				if (entity->faceIDIn(faceID))
+				{
+					buffer = entity;
+					break;
+				}
+			}
+		}
+		return buffer;
+	}
 	ChunkBufferUser* DLPSupportChunkGroupEntity::traitChunkBufferUser(int faceID)
 	{
 		ChunkBufferUser* bufferUser = nullptr;
@@ -134,4 +156,72 @@ namespace qtuser_3d
 		}
 		return bufferUser;
 	}
+	void DLPSupportChunkGroupEntity::CreateChunkEntityBaseMesh(std::vector<trimesh::TriMesh*>& meshes, qtuser_3d::DLPUserType type)
+	{
+
+		//QVector<SupportChunkEntity*> &typeEntities =(QVector<SupportChunkEntity*>) m_typeEntities.at((int)type);
+		QVector<SupportChunkEntity*>& typeEntities = m_typeEntities[(int)type];
+		for (trimesh::TriMesh* mesh : meshes)
+		{
+			int facesN = mesh->faces.size();
+			int vertexsN = mesh->vertices.size();
+			ChunkProtoInfo info = { facesN,1 };
+			SupportChunkEntity* entity = freeChunkEntity(typeEntities, info);
+			int chunk = entity->freeChunk();
+			assert(chunk >= 0);
+			QByteArray positionBytes;
+			QByteArray flagBytes;
+			positionBytes.resize(facesN * 3 * 3 * sizeof(float));
+			trimesh::vec3* position = (trimesh::vec3*)positionBytes.data();
+			for (trimesh::TriMesh::Face face : mesh->faces)
+			{
+				*position++ = mesh->vertices.at(face[0]);
+				*position++ = mesh->vertices.at(face[1]);
+				*position++ = mesh->vertices.at(face[2]);
+			}
+			{
+				flagBytes.resize(facesN * 3 * sizeof(float));
+				float* fdata = (float*)flagBytes.data();
+				for (int i = 0; i < facesN * 3; ++i)
+				{
+					*fdata++ = (float)1;
+				}
+			}
+
+			entity->updateChunk(chunk, &positionBytes, &flagBytes);
+			//std::cout << __FILE__ << __FUNCTION__ << std::endl;
+		}
+
+	}
+	void DLPSupportChunkGroupEntity::deleteChunkEntity(qtuser_3d::DLPUserType type)
+	{
+
+		//QVector<SupportChunkEntity*> &typeEntities =(QVector<SupportChunkEntity*>) m_typeEntities.at((int)type);
+		QVector<SupportChunkEntity*>& typeEntities = m_typeEntities[(int)type];
+		for (SupportChunkEntity* entity : typeEntities)
+		{
+			entity->releaseAllChunks();
+			delete entity;
+		}
+		typeEntities.clear();
+	}
+	void DLPSupportChunkGroupEntity::deleteChunkEntity(SupportChunkEntity* entityPtr)
+	{
+		int num = (int)DLPUserType::eDLPNum;
+		std::vector< SupportChunkEntity* >entityTarge;
+		entityTarge.emplace_back(entityPtr);
+		for (int i = 0; i < num; ++i)
+		{
+			QVector<SupportChunkEntity*>& entities = m_typeEntities[i];
+			auto item=std::search(entities.begin(), entities.end(), entityTarge.begin(), entityTarge.end(), entityEqualPredicate);
+			if (item != entities.end())
+			{
+				delete *item;
+				entities.erase(item);
+			}
+
+		}
+	}
+
+
 }

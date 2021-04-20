@@ -299,7 +299,7 @@ namespace qtuser_3d
 			InitializeAllProjectSegment(plgSimpleGroup, plgInsert);
 
 			m_ptPlatformCenter.fX = (m_rcPlatform.fXMax + m_rcPlatform.fXMin) / 2;
-			m_ptPlatformCenter.fY = (m_rcPlatform.fYMax - m_rcPlatform.fYMin) / 2;
+			m_ptPlatformCenter.fY = (m_rcPlatform.fYMax + m_rcPlatform.fYMin) / 2;
 			int iPlatFormWidth = (m_rcPlatform.fXMax - m_rcPlatform.fXMin) / 2;
 			float fPro = 0;
 			for (int i = 0; i < iPlatFormWidth; i++)

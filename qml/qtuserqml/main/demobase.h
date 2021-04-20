@@ -11,6 +11,11 @@
 #include <QtCore/QUrl>
 #include <QtCore/QHash>
 
+#include "qtuser3d/effect/effectmanager.h"
+#include "qtuser3d/entity/triangleentity.h"
+#include "qtuser3d/entity/lineentity.h"
+#include "qtuser3d/entity/pointcloudentity.h"
+
 namespace qtuser_3d
 {
 	class Surface;
@@ -77,6 +82,12 @@ protected:
 
 	void showEntity(const QString& name);
 	void hideEntity(const QString& name);
+
+	qtuser_3d::TriangleEntity* addTriangleEntity(const QString& name);
+	qtuser_3d::LineEntity* addLineEntity(const QString& name);
+	qtuser_3d::PointCloudEntity* createPoint(const QString& name, const QVector4D& color);
+
+	void setBackColor(const QColor& color);
 public slots:
 	void viewChanged(bool requestUpdate);
 protected:
