@@ -3,6 +3,7 @@
 #include "qtuser3d/entity/basicentity.h"
 #include "qtuser3d/module/dlpchunkbufferprovider.h"
 #include <QtCore/QMap>
+#include "trimesh2/TriMesh.h"
 
 namespace qtuser_3d
 {
@@ -23,6 +24,10 @@ namespace qtuser_3d
 		void setUsedEffect(Qt3DRender::QEffect* effect);
 		ChunkBuffer* traitChunkBuffer(int faceID);
 		ChunkBufferUser* traitChunkBufferUser(int faceID);
+		SupportChunkEntity* traitChunkEntity(int faceID);
+		void CreateChunkEntityBaseMesh(std::vector<trimesh::TriMesh*>& meshes, qtuser_3d::DLPUserType type);
+		void deleteChunkEntity(qtuser_3d::DLPUserType type);
+		void deleteChunkEntity(SupportChunkEntity* entityPtr);
 	protected:
 		SupportChunkEntity* freeChunkEntity(QVector<SupportChunkEntity*>& chunkEntities, ChunkProtoInfo& info);
 
