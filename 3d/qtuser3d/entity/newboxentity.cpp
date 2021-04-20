@@ -79,14 +79,14 @@ namespace qtuser_3d
 		m_colors[14] = QVector4D(0.6f, 0.6f, 0.6f, 1.0);
 		m_colors[15] = QVector4D(0.6f, 0.6f, 0.6f, 1.0);
 		//top
-		m_colors[16] = QVector4D(0.23f, 0.76f, 0.84f, 1.0);
-		m_colors[17] = QVector4D(0.23f, 0.76f, 0.84f, 1.0);
-		m_colors[18] = QVector4D(0.23f, 0.76f, 0.84f, 1.0);
-		m_colors[19] = QVector4D(0.23f, 0.76f, 0.84f, 1.0);
-		m_colors[20] = QVector4D(0.23f, 0.76f, 0.84f, 1.0);
-		m_colors[21] = QVector4D(0.23f, 0.76f, 0.84f, 1.0);
-		m_colors[22] = QVector4D(0.23f, 0.76f, 0.84f, 1.0);
-		m_colors[23] = QVector4D(0.23f, 0.76f, 0.84f, 1.0);
+		m_colors[16] = QVector4D(0.0f, 0.63f, 0.90f, 1.0);
+		m_colors[17] = QVector4D(0.0f, 0.63f, 0.90f, 1.0);
+		m_colors[18] = QVector4D(0.0f, 0.63f, 0.90f, 1.0);
+		m_colors[19] = QVector4D(0.0f, 0.63f, 0.90f, 1.0);
+		m_colors[20] = QVector4D(0.0f, 0.63f, 0.90f, 1.0);
+		m_colors[21] = QVector4D(0.0f, 0.63f, 0.90f, 1.0);
+		m_colors[22] = QVector4D(0.0f, 0.63f, 0.90f, 1.0);
+		m_colors[23] = QVector4D(0.0f, 0.63f, 0.90f, 1.0);
 		updateGeometry(m_positions, m_colors);
 	}
 
