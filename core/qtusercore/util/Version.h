@@ -37,7 +37,7 @@ public:
         DetailBuild = 4
     };
 
-    explicit Version(int major = -1, int minor = -1, int patch = -1, int build = -1, const QString& extra = QString("alpha"), const QString& os = QString("win32"));
+    explicit Version(int major = -1, int minor = -1, int patch = -1, int build = -1, const QString& extra = QString("alpha"), const QString& os = QString("win64"));
     explicit Version(const QString &version, const QString &delimeter = QString::fromLatin1("."));
     Version(const Version &version);
     ~Version();
