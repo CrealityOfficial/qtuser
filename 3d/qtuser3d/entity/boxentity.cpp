@@ -18,14 +18,21 @@ namespace qtuser_3d
 
 	}
 
-	void BoxEntity::updateGlobal(Box3D& box)
+	void BoxEntity::updateGlobal(Box3D& box, bool need_bottom)
 	{
 		QMatrix4x4 m;
 
 		m.translate(box.min);
 		m.scale(box.size());
 
-		setGeometry(PRIMITIVESHAPE("box"), Qt3DRender::QGeometryRenderer::Lines);
+		if (need_bottom)
+		{
+			setGeometry(PRIMITIVESHAPE("box"), Qt3DRender::QGeometryRenderer::Lines);
+		}
+		else
+		{
+			setGeometry(PRIMITIVESHAPE("box_nobottom"), Qt3DRender::QGeometryRenderer::Lines);
+		}
 		setPose(m);
 	}
 

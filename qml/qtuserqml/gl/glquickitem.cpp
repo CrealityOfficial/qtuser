@@ -136,7 +136,7 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 
 	setFocus(Qt::ClickFocus, Qt::ActiveWindowFocusReason);
 
-    qDebug() << "mac GLQuickItem";
+	qDebug() << "mac GLQuickItem -->" << QThread::currentThread();
 }
 
 GLQuickItem::~GLQuickItem()
@@ -144,7 +144,7 @@ GLQuickItem::~GLQuickItem()
 	m_eventSubdivide->closeHandlers();
 	m_renderGraph = nullptr;
 	
-	qDebug() << "GLQuickItem ~~ ";
+	qDebug() << "mac GLQuickItem ~~ -->" << QThread::currentThread();
 }
 
 void GLQuickItem::setupGL()
@@ -163,6 +163,8 @@ void GLQuickItem::setupGL()
 
 	applyRootEntity();
 	setSharedContext(QOpenGLContext::currentContext());
+
+	qDebug() << "mac setupGL -->" << QThread::currentThread();
 }
 
 void GLQuickItem::paintGL()
@@ -178,9 +180,13 @@ void GLQuickItem::clearScene()
 
 void GLQuickItem::releaseGL()
 {
+
+	qDebug() << "mac releaseGL -->" << QThread::currentThread();
+
     qDebug() << "releaseGL Start ~~ ";
     delete m_aspectEngine;
     qDebug() << "releaseGL End ~~ ";
+
 	delete m_rawOGL;
 	m_rawOGL = nullptr;
 }
@@ -277,11 +283,13 @@ public:
 		static_cast<Qt3DRender::QRenderAspectPrivate*>(
 			Qt3DRender::QRenderAspectPrivate::get(m_renderAspect))->renderInitialize(QOpenGLContext::currentContext());
 		m_item->setSharedContext(QOpenGLContext::currentContext());
+
+		qDebug() << "windows FrameBufferObjectRenderer  -->" << QThread::currentThread();
 	}
 
 	virtual ~FrameBufferObjectRenderer()
 	{
-
+		qDebug() << "windows FrameBufferObjectRenderer ~~ -->" << QThread::currentThread();
 	}
 
 	void render() Q_DECL_OVERRIDE
@@ -362,11 +370,13 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 
 	m_rawOGL = new qtuser_qml::RawOGL(this);
 
-    qDebug() << "windows GLQuickItem";
+    qDebug() << "windows GLQuickItem  -->" << QThread::currentThread();
 }
 
 GLQuickItem::~GLQuickItem()
 {
+	qDebug() << "windows GLQuickItem destruction -->" << QThread::currentThread();
+
 	m_eventSubdivide->closeHandlers();
 	m_renderGraph = nullptr;
 

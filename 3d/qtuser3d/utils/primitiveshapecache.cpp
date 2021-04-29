@@ -18,6 +18,8 @@ namespace qtuser_3d
 
 		Qt3DRender::QGeometry* boxGeometry = BoxCreateHelper::create();
 		PRIMITIVE_ADD("box", boxGeometry)
+		Qt3DRender::QGeometry* box_no_bottom = BoxCreateHelper::createNoBottom();
+		PRIMITIVE_ADD("box_nobottom", box_no_bottom)
 		Qt3DRender::QGeometry* pointGeometry = PointsCreateHelper::create();
 		PRIMITIVE_ADD("point", pointGeometry)
 		Qt3DRender::QGeometry* arrowGeometry = ArrowCreateHelper::create();

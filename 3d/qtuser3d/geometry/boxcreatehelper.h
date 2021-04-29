@@ -13,6 +13,7 @@ namespace qtuser_3d
 		virtual ~BoxCreateHelper();
 
 		static Qt3DRender::QGeometry* create(Qt3DCore::QNode* parent = nullptr);
+		static Qt3DRender::QGeometry* createNoBottom(Qt3DCore::QNode* parent = nullptr);
 		static Qt3DRender::QGeometry* create(const Box3D& box, Qt3DCore::QNode* parent = nullptr);
 		static Qt3DRender::QGeometry* createPartBox(const Box3D& box, float percent, Qt3DCore::QNode* parent = nullptr);
 

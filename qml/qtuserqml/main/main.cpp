@@ -71,20 +71,25 @@ namespace qtuser_qml
 
 	int qmlMain(int argc, char* argv[], const QString& qml)
 	{
-		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-		QGuiApplication app(argc, argv);
-		app.setOrganizationName("DEMO");
-		app.setOrganizationDomain("DEMO");
-		app.setApplicationName("DEMO");
+		int result = 0;
+		{
+			QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+			QGuiApplication app(argc, argv);
+			app.setOrganizationName("DEMO");
+			app.setOrganizationDomain("DEMO");
+			app.setApplicationName("DEMO");
 
-		QQmlApplicationEngine engine;
+			QQmlApplicationEngine engine;
 
-		engine.rootContext()->setContextProperty("invoke", qml);
-		QString entryQml = "demo1.qml";
-		QString prefix = "qrc:/qtuserqml/res/";
-		QString qmlFile = prefix + entryQml;
-		engine.load(QUrl(qmlFile));
+			engine.rootContext()->setContextProperty("invoke", qml);
+			QString entryQml = "demo1.qml";
+			QString prefix = "qrc:/qtuserqml/res/";
+			QString qmlFile = prefix + entryQml;
+			engine.load(QUrl(qmlFile));
 
-		return app.exec();
+			result = app.exec();
+		}
+
+		return result;
 	}
 }
