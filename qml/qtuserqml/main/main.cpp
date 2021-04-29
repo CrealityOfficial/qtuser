@@ -6,7 +6,7 @@
 #include <QtQml/QQmlContext>
 #include <QtGui/QOpenGLContext>
 #include "qtuserqml/interface/qmlapplicationinterface.h"
-
+#include  <QThread>
 namespace qtuser_qml
 {
 	int qmlAppMain(int argc, char* argv[], const QString& dll)
@@ -14,7 +14,7 @@ namespace qtuser_qml
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
         QGuiApplication app(argc, argv);
 
-        QQmlApplicationEngine engine;
+        QQmlApplicationEngine *engine=new QQmlApplicationEngine();
         QSurfaceFormat format;
         if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL) {
             format.setVersion(3, 2);
@@ -38,7 +38,7 @@ namespace qtuser_qml
         int e = -1;
         if (appInterface)
         {
-            appInterface->startEngine(engine);
+            appInterface->startEngine(*engine);
 
             e = app.exec();
             delete appInterface;
@@ -47,6 +47,7 @@ namespace qtuser_qml
         {
             qDebug() << dll << " is invalid QMLApplicationInterface " << loader.errorString();
         }
+
         return e;
 	}
 
