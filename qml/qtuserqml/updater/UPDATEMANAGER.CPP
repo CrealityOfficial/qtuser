@@ -166,6 +166,7 @@ void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList
 void UpdateManager::onUpdateError(const QString &errorString)
 {
     m_impl->inProgress = false;
+    emit updateNotFound();
 }
 
 QString UpdateManager::getCurrentVersion()
