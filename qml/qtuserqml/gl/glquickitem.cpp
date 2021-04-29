@@ -60,8 +60,8 @@ public:
 
 	virtual ~FrameBufferObjectRenderer()
 	{
-		m_item->clearScene();
-		qDebug() << "FrameBufferObjectRenderer ~~";
+        m_item->clearScene();
+        qDebug() << "APPLE FrameBufferObjectRenderer ~~";
 	}
 
 	void render() Q_DECL_OVERRIDE
@@ -150,7 +150,7 @@ GLQuickItem::~GLQuickItem()
 void GLQuickItem::setupGL()
 {
 	m_aspectEngine = new Qt3DCore::QAspectEngine();
-	m_renderAspect = new Qt3DRender::QRenderAspect(Qt3DRender::QRenderAspect::Synchronous);
+    m_renderAspect = new Qt3DRender::QRenderAspect(Qt3DRender::QRenderAspect::Synchronous);
 	m_inputAspect = new Qt3DInput::QInputAspect;
 	m_logicAspect = new Qt3DLogic::QLogicAspect;
 
@@ -178,7 +178,9 @@ void GLQuickItem::clearScene()
 
 void GLQuickItem::releaseGL()
 {
-	delete m_aspectEngine;
+    qDebug() << "releaseGL Start ~~ ";
+    delete m_aspectEngine;
+    qDebug() << "releaseGL End ~~ ";
 	delete m_rawOGL;
 	m_rawOGL = nullptr;
 }
