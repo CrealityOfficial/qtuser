@@ -40,7 +40,7 @@ class QTUSER_QML_API GLQuickItem : public QQuickFramebufferObject
 	Q_OBJECT
 public:
 	GLQuickItem(QQuickItem* parent = 0);
-	~GLQuickItem();
+    virtual ~GLQuickItem();
 
 	void setupGL();
 	void clearScene();
