@@ -8,7 +8,7 @@ namespace qtuser_3d
 		:BasicEntity(parent)
 	{
 		m_boxEntity = new qtuser_3d::BoxEntity();
-		m_boxEntity->setColor(QVector4D(0.180f, 0.541f, 0.968f, 1.0f));
+		m_boxEntity->setColor(QVector4D(0.306f, 0.702f, 0.769f, 1.0f));
 
 		m_convexXYEntity = new qtuser_3d::LineEntity(this);
 

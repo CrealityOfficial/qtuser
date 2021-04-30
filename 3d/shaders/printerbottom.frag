@@ -11,6 +11,7 @@ uniform vec2 platformsize;
 
 uniform sampler2D shapeTexture;
 uniform vec4 color;
+uniform vec4 logcolor;
 uniform int visible;
 
 void main() 
@@ -35,7 +36,7 @@ void main()
 			coloruse = texture(shapeTexture, texuse);
 			if(coloruse.a > 0.0)
 			{
-				coloruse.a = 0.005;
+				coloruse = logcolor;
 			}
 		}
 	}

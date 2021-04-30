@@ -12,11 +12,13 @@ namespace qtuser_3d
 		TexFaces(Qt3DCore::QNode* parent = nullptr);
 		virtual ~TexFaces();
 		void setColor(const QVector4D& color);
+		void setLogColor(const QVector4D& color);
 		void loadImage();
 		void updateBox(const Box3D& box);
 		void setImageVisible(bool visible);
 	protected:
 		Qt3DRender::QParameter* m_colorParameter;
+		Qt3DRender::QParameter* m_logcolorParameter;
 		Qt3DRender::QParameter* m_visibleParameter;
 		Qt3DRender::QParameter* m_platformsizeParameter;
 	};

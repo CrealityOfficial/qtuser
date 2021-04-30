@@ -22,6 +22,14 @@ namespace qtuser_3d
 		return GeometryCreateHelper::create(parent, positionAttribute, indexAttribute);
 	}
 
+	Qt3DRender::QGeometry* BoxCreateHelper::createNoBottom(Qt3DCore::QNode* parent)
+	{
+		Qt3DRender::QAttribute* positionAttribute = BufferHelper::CreateVertexAttribute((const char*)static_box_position, AttribueSlot::Position, static_box_vertex_count);
+		Qt3DRender::QAttribute* indexAttribute = BufferHelper::CreateIndexAttribute((const char*)static_box_indices_nobottom, 16);
+
+		return GeometryCreateHelper::create(parent, positionAttribute, indexAttribute);
+	}
+
 	void BoxCreateHelper::genDatasFromCorner(QVector<QVector3D>& positions, int pos, QVector3D boxsz, QVector3D dir)
 	{
 		positions[pos + 1 + 0] = positions[pos] + QVector3D(boxsz.x() * dir.x(), 0, 0);

@@ -24,6 +24,7 @@ namespace qtuser_3d
 		loadImage();
 
 		m_colorParameter = createParameter("color", QVector4D(0.90f, 0.90f, 0.90f, 0.3f));
+		m_logcolorParameter = createParameter("logcolor", QVector4D(0.66f, 0.66f, 0.66f, 0.5f));
 		//Qt3DRender::QEffect* effect = EFFECTCREATE("pure", m_material);
 		m_visibleParameter = createParameter("visible", 1);
 		m_platformsizeParameter = createParameter("platformsize", QVector2D(1.0f, 1.0f));
@@ -59,6 +60,11 @@ namespace qtuser_3d
 	void TexFaces::setColor(const QVector4D& color)
 	{
 		m_colorParameter->setValue(color);
+	}
+
+	void TexFaces::setLogColor(const QVector4D& color)
+	{
+		m_logcolorParameter->setValue(color);
 	}
 
 	void TexFaces::loadImage()
