@@ -1,6 +1,6 @@
 #include "qtuser3d/framegraph/surface.h"
 #include "Qt3DRender/QFilterKey"
-
+#include <QtCore/QDebug>
 namespace qtuser_3d
 {
 	Surface::Surface(Qt3DCore::QNode* parent)
@@ -11,7 +11,7 @@ namespace qtuser_3d
 		setSurface(m_offSurface);
 
 		m_viewPort = new Qt3DRender::QViewport(this);
-		m_viewPort->setNormalizedRect(QRectF(0.0f, 0.0f, 1.0f, 1.0f));
+        m_viewPort->setNormalizedRect(QRectF(0.0f, 0.0f, 1.0f, 1.0f));
 		
 		m_cameraSelector = new Qt3DRender::QCameraSelector(m_viewPort);
 
@@ -50,6 +50,7 @@ namespace qtuser_3d
 
 	void Surface::setViewport(const QRectF& rect)
 	{
+        qDebug() << "Surface viewport " << rect;
 		m_viewPort->setNormalizedRect(rect);
 	}
 
@@ -60,6 +61,7 @@ namespace qtuser_3d
 
 	void Surface::updateSurfaceSize(const QSize& size)
 	{
+        qDebug() << "Surface Set External Target Size : " << size;
 		setExternalRenderTargetSize(size);
 	}
 }
