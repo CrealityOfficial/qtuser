@@ -305,7 +305,7 @@ namespace qtuser_3d
 		qtuser_3d::Box3D box = globalSpaceBox();
 		QVector3D size = box.size();
 		QVector3D center = box.center();
-		center.setZ(center.z() - size.z() / 2.0f);
+		//center.setZ(center.z() - size.z() / 2.0f);
 
 		QVector3D offset = position - center;
 		QVector3D localPos = localPosition();
