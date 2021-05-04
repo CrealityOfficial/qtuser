@@ -8,7 +8,7 @@ namespace qtuser_3d
 {
 	PrinterGrid::PrinterGrid(Qt3DCore::QNode* parent, float lw)
 		: BasicEntity(parent)
-		, m_lineColor(0.6, 0.6, 0.6, 1.0)
+		, m_lineColor(0.32f, 0.32f, 0.32f, 1.0)
 		, m_showColor(0.65, 0.23, 0.23, 1.0)
 		, m_gap(10.0)
 	{
