@@ -211,7 +211,7 @@ namespace qtuser_3d
 		float factor = scale;
 
 		float maxFovy = 50.0f;
-		float minFovy = 2.0f;
+		float minFovy = 0.1f;
 		float fovy = m_camera->fieldOfView();
 		fovy *= factor;
 		if (fovy >= minFovy && fovy <= maxFovy)
