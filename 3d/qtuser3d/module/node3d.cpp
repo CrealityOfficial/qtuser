@@ -312,6 +312,18 @@ namespace qtuser_3d
 		return localPos + offset;
 	}
 
+	QVector3D Node3D::mapGlobal2LocalAD(QVector3D position)
+	{
+		qtuser_3d::Box3D box = globalSpaceBox();
+		QVector3D size = box.size();
+		QVector3D center = box.center();
+		//center.setZ(center.z() - size.z() / 2.0f);
+
+		QVector3D offset = position - center;
+		QVector3D localPos = localPosition();
+		return localPos + offset;
+	}
+
 	void Node3D::liftZUp(float z)
 	{
 		qtuser_3d::Box3D box = globalSpaceBox();
