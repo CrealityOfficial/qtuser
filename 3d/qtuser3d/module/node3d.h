@@ -58,6 +58,7 @@ namespace qtuser_3d
 		void setParent2Global(const QMatrix4x4& matrix);
 
 		QVector3D mapGlobal2Local(QVector3D position);  // map global bottom center to position
+		QVector3D mapGlobal2LocalAD(QVector3D position);  // map global bottom center to position
 
 		void liftZUp(float z);  // z is global value
 	protected:
