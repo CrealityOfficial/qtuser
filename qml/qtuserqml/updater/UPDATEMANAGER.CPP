@@ -55,6 +55,7 @@ UpdateManager::UpdateManager(RemoteType remoteType, const QString &owner, const 
     : QObject(parent)
     , m_impl(new Impl(this, remoteType, owner, repo, currentVersion, autoCheck))
 {
+    m_initAutoCheckFlag = false;
     m_currentVersion=currentVersion;
     connect(m_impl->checker, SIGNAL(updateNotFound(const ReleaseInfo&)), this, SLOT(onUpdateNotFound(const ReleaseInfo&)));
     connect(m_impl->checker, SIGNAL(updateFound(const ReleaseInfo&, const QList<ReleaseInfo>&)), this, SLOT(onUpdateFound(const ReleaseInfo&, const QList<ReleaseInfo>&)));
@@ -128,7 +129,12 @@ void UpdateManager::forceCheckForUpdates()
 void UpdateManager::onUpdateNotFound(const ReleaseInfo &currentRelease)
 {
     m_impl->inProgress = false;
-    emit updateNotFound();
+    if (!m_initAutoCheckFlag) {
+        emit updateNotFound();
+    }
+    else {
+        m_initAutoCheckFlag = false;
+    }
 }
 
 void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList<ReleaseInfo> &newReleases)
@@ -166,12 +172,22 @@ void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList
 void UpdateManager::onUpdateError(const QString &errorString)
 {
     m_impl->inProgress = false;
-    emit updateNotFound();
+    if (!m_initAutoCheckFlag) {
+        emit updateNotFound();
+    }
+    else {
+        m_initAutoCheckFlag = false;
+    }
 }
 
 QString UpdateManager::getCurrentVersion()
 {
     return m_currentVersion;
+}
+
+void UpdateManager::initAutoCheckVersionFlag()
+{
+    m_initAutoCheckFlag = true;
 }
 
 QString UpdateManager::version()

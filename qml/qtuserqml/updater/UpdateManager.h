@@ -41,6 +41,7 @@ public:
     Q_INVOKABLE void setAutoCheck(bool autoCheck);
     Q_INVOKABLE void skipVersion(QString version);
     Q_INVOKABLE QString getCurrentVersion();    //add by lisugui，use to aboutus menu
+    Q_INVOKABLE void initAutoCheckVersionFlag();
 	QString version();
 	QUrl url();
 	QString releaseNote();
@@ -67,6 +68,7 @@ private:
 	QString m_releaseVersion;
 	QUrl m_releaseUrl;
 	QString m_releaseNote;
+    bool m_initAutoCheckFlag;
 };
 
 #endif // UPDATER_UPDATE_MANAGER_H_INCLUDED
