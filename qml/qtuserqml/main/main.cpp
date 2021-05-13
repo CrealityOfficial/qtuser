@@ -134,4 +134,24 @@ namespace qtuser_qml
 
 		return result;
 	}
+
+    int qmlSimulation(int argc, char* argv[])
+    {
+        int result = 0;
+        {
+            QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+            QGuiApplication app(argc, argv);
+            app.setOrganizationName("Simulation");
+            app.setOrganizationDomain("Simulation");
+            app.setApplicationName("Simulation");
+
+            QQmlApplicationEngine engine;
+            QString entryQml = "qrc:/qtuserqml/res/simulation.qml";
+            engine.load(QUrl(entryQml));
+
+            result = app.exec();
+        }
+
+        return result;
+    }
 }

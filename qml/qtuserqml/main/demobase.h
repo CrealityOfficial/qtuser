@@ -35,6 +35,7 @@ typedef NamedEntities::Iterator NamedEntitiesIter;
 #define COMMON_REASON "Created by Cpp"
 
 #define CXSW_REG(x) QML_AUTO_TYPE(x, CXSW_SCOPE, VERSION_MAJOR, VERSION_MINOR)
+#define CXSW_REG2(x) QML_INTERFACE(x, CXSW_SCOPE, VERSION_MAJOR, VERSION_MINOR)
 
 class QTUSER_QML_API DemoBase : public qtuser_3d::RenderGraph
 	,public qtuser_3d::KeyEventHandler
