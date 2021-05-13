@@ -52,6 +52,8 @@
 		<file>shaders/bottomface.frag</file>
 		<file>shaders/chunk.vert</file>
 		<file>shaders/chunk.frag</file>
+		<file>shaders/finephongtex.vert</file>
+		<file>shaders/finephongtex.frag</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

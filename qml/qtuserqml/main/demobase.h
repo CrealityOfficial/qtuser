@@ -73,6 +73,14 @@ protected:
 protected:
 	Qt3DCore::QEntity* findWithName(const QString& name);
 	qtuser_3d::BasicEntity* bEntity(const QString& name);
+
+	template <class T>
+	T* tEntity(const QString& name)
+	{
+		Qt3DCore::QEntity* e = findWithName(name);
+		return qobject_cast<T*>(e);
+	}
+
 	void setNamedGeometry(const QString& name, Qt3DRender::QGeometry* geometry, 
 		Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles);
 
@@ -86,7 +94,7 @@ protected:
 
 	qtuser_3d::TriangleEntity* addTriangleEntity(const QString& name);
 	qtuser_3d::LineEntity* addLineEntity(const QString& name);
-	qtuser_3d::PointCloudEntity* createPoint(const QString& name, const QVector4D& color);
+	qtuser_3d::PointCloudEntity* createPoint(const QString& name, const QVector4D& color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 
 	void setBackColor(const QColor& color);
 public slots:
