@@ -21,7 +21,7 @@ void main( void )
 
 	mat4 usematrix = modelMatrix;
 
-	if(int(drawFlag.z) == 1)
+	if(int(drawFlag.z) == 1 && int(drawFlag.w) == 1)
 	{
 		mat4 translate = mat4(
 			1.0, 0.0, 0.0, 0.0,
