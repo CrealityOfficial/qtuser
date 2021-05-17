@@ -84,6 +84,7 @@ protected:
 	void setNamedGeometry(const QString& name, Qt3DRender::QGeometry* geometry, 
 		Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles);
 
+	void clearEntities();
 	void deleteEntity(Qt3DCore::QEntity* entity);
 	void deleteEntity(const QString& name);
 	bool addEntity(const QString& name, Qt3DCore::QEntity* entity);

@@ -181,6 +181,17 @@ void DemoBase::setNamedGeometry(const QString& name, Qt3DRender::QGeometry* geom
 	entity->setGeometry(geometry, type);
 }
 
+void DemoBase::clearEntities()
+{
+	for (NamedEntitiesIter iter = m_namedEntities.begin(); iter != m_namedEntities.end(); ++iter)
+	{
+		iter.value()->setParent((Qt3DCore::QNode*)nullptr);
+		delete iter.value();
+	}
+
+	m_namedEntities.clear();
+}
+
 void DemoBase::deleteEntity(Qt3DCore::QEntity* entity)
 {
 	if (!entity)
