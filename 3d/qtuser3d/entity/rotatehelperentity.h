@@ -10,7 +10,7 @@ namespace qtuser_3d
 {
 	class ManipulateEntity;
 	class Pickable;
-	class SimplePickable;
+	class ManipulatePickable;
 	class FacePicker;
 	class ScreenCamera;
 	class RotateCallback;
@@ -27,7 +27,7 @@ namespace qtuser_3d
 
 		Q_OBJECT
 	public:
-		RotateHelperEntity(Qt3DCore::QNode* parent = nullptr);
+		RotateHelperEntity(Qt3DCore::QNode* parent = nullptr, int type = 0);
 		virtual ~RotateHelperEntity();
 
 		Pickable* xPickable();
@@ -64,9 +64,9 @@ namespace qtuser_3d
 		ManipulateEntity* m_yRingEntity;
 		ManipulateEntity* m_zRingEntity;
 
-		SimplePickable* m_xPickable;
-		SimplePickable* m_yPickable;
-		SimplePickable* m_zPickable;
+		ManipulatePickable* m_xPickable;
+		ManipulatePickable* m_yPickable;
+		ManipulatePickable* m_zPickable;
 		Qt3DCore::QTransform* m_transform;
 
 		FacePicker* m_pickSource;

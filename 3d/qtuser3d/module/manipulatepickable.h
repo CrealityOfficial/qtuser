@@ -11,9 +11,14 @@ namespace qtuser_3d
 		ManipulatePickable(QObject* parent = nullptr);
 		virtual ~ManipulatePickable();
 
+		void setStateFactor(float sf[3]);
+
 	protected:
 		void onStateChanged(ControlState state) override;
 		void pickableEntityChanged();
+
+	protected:
+		float m_stateFactor[3] = { 1.0, 0.6, 0.6 };
 	};
 }
 #endif // QTUSER_3D_MANIPULATEPICKABLE_1595553785446_H
