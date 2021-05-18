@@ -14,7 +14,7 @@
 
 namespace qtuser_3d
 {
-	RotateHelperEntity::RotateHelperEntity(Qt3DCore::QNode* parent)
+	RotateHelperEntity::RotateHelperEntity(Qt3DCore::QNode* parent, int type)
 		:Qt3DCore::QEntity(parent)
 		, m_pickSource(nullptr)
 		, m_screenCamera(nullptr)
@@ -45,6 +45,18 @@ namespace qtuser_3d
 		m_yRingEntity->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
 		m_zRingEntity->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
 
+		if (type == 1)
+		{
+			m_xRingEntity->setChangeColor(QVector4D(-0.2f, 0.3f, 0.2f, 0.0f));
+			m_yRingEntity->setChangeColor(QVector4D(0.2f, -0.2f, 0.2f, 0.0f));
+			m_zRingEntity->setChangeColor(QVector4D(0.2f, 0.2f, -0.2f, 0.0f));
+
+			m_xRingEntity->setMethod(1);
+			m_yRingEntity->setMethod(1);
+			m_zRingEntity->setMethod(1);
+		}
+		
+
 		{
 			Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
 			torusMesh->setRadius(2);
@@ -70,6 +82,15 @@ namespace qtuser_3d
 		m_xPickable = new ManipulatePickable(this);
 		m_yPickable = new ManipulatePickable(this);
 		m_zPickable = new ManipulatePickable(this);
+
+		if (type == 1)
+		{
+			float sf[3] = { 0, 1, 2 };
+			m_xPickable->setStateFactor(sf);
+			m_yPickable->setStateFactor(sf);
+			m_zPickable->setStateFactor(sf);
+		}
+
 		m_xPickable->setPickableEntity(m_xRingEntity);
 		m_yPickable->setPickableEntity(m_yRingEntity);
 		m_zPickable->setPickableEntity(m_zRingEntity);

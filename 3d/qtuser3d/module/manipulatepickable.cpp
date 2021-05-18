@@ -15,12 +15,19 @@ namespace qtuser_3d
 
 	void ManipulatePickable::onStateChanged(ControlState state)
 	{
-		float stateFactor[3] = {1.0, 0.6, 0.6};
 		int index = (int)state;
 		if (index < 0) index = 0;
 		if (index > 2) index = 2;
 		if (m_pickableEntity)
-			m_pickableEntity->setState(stateFactor[index]);
+			m_pickableEntity->setState(m_stateFactor[index]);
+	}
+
+	void ManipulatePickable::setStateFactor(float sf[3])
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			m_stateFactor[i] = sf[i];
+		}
 	}
 
 	void ManipulatePickable::pickableEntityChanged()

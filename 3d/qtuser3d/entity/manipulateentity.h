@@ -12,8 +12,12 @@ namespace qtuser_3d
 		virtual ~ManipulateEntity();
 
 		void setColor(const QVector4D& color);
+		void setChangeColor(const QVector4D& color);
+		void setMethod(int mt);
 	protected:
 		Qt3DRender::QParameter* m_colorParameter;
+		Qt3DRender::QParameter* m_changeColorParameter;
+		Qt3DRender::QParameter* m_methodParameter;
 	};
 }
 #endif // _QTUSER_3D_MANIPULATEENTITY_1590036879870_H

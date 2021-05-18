@@ -247,4 +247,10 @@ namespace qtuser_3d
 		//	*normal++ = n;
 		//}
 	}
+
+	void PickableChunkEntity::setChunkEntiyType(qtuser_3d::DLPUserType type, long externID)
+	{
+		m_DLPUserType = type;
+		m_externID = externID;
+	}
 }
