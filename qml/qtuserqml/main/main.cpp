@@ -9,27 +9,27 @@
 #include  <QThread>
 namespace qtuser_qml
 {
+    void specifyOpenGL()
+    {
+        QSurfaceFormat format;
+#if __APPLE__
+        format.setVersion(3, 2);
+        format.setProfile(QSurfaceFormat::CoreProfile);
+#endif
+        format.setDepthBufferSize(24);
+        format.setStencilBufferSize(8);
+        format.setSamples(4);
+        QSurfaceFormat::setDefaultFormat(format);
+    }
+
 	int qmlAppMain(int argc, char* argv[], const QString& dll)
 	{
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
         QGuiApplication app(argc, argv);
 
         QQmlApplicationEngine *engine=new QQmlApplicationEngine();
-        QSurfaceFormat format;
-        if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL) {
-            format.setVersion(3, 2);
-            format.setProfile(QSurfaceFormat::CoreProfile);
-        }
-        format.setDepthBufferSize(24);
-        format.setStencilBufferSize(8);
-        format.setSamples(4);
-        QSurfaceFormat::setDefaultFormat(format);
-
-		//QSurfaceFormat format;
-		//format.setVersion(1, 3);
-		//format.setProfile(QSurfaceFormat::CoreProfile);
-		//QSurfaceFormat::setDefaultFormat(format);
-
+        
+        specifyOpenGL();
         QMLApplicationInterface* appInterface = nullptr;
         QPluginLoader loader(dll);
         if (loader.load())
@@ -57,20 +57,7 @@ namespace qtuser_qml
         QGuiApplication app(argc, argv);
 
         QQmlApplicationEngine engine;
-        QSurfaceFormat format;
-        if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL) {
-            format.setVersion(3, 2);
-            format.setProfile(QSurfaceFormat::CoreProfile);
-        }
-        format.setDepthBufferSize(24);
-        format.setStencilBufferSize(8);
-        format.setSamples(4);
-        QSurfaceFormat::setDefaultFormat(format);
-
-        //QSurfaceFormat format;
-        //format.setVersion(1, 3);
-        //format.setProfile(QSurfaceFormat::CoreProfile);
-        //QSurfaceFormat::setDefaultFormat(format);
+        specifyOpenGL();
 
         QMLApplicationInterface* appInterface = nullptr;
         QPluginLoader loader(dll);
