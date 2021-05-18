@@ -9,6 +9,8 @@ namespace qtuser_qml
 	QTUSER_QML_API int qmlAppMain(int argc, char* argv[], const QString& dll);
 
     QTUSER_QML_API int qmlAppMainNoPointer(int argc, char* argv[], const QString& dll);
+
+	QTUSER_QML_API int qmlSimulation(int argc, char* argv[]);
 }
 
 #endif // QTUSER_QML_MAIN_1601388211209_H

@@ -35,6 +35,7 @@ typedef NamedEntities::Iterator NamedEntitiesIter;
 #define COMMON_REASON "Created by Cpp"
 
 #define CXSW_REG(x) QML_AUTO_TYPE(x, CXSW_SCOPE, VERSION_MAJOR, VERSION_MINOR)
+#define CXSW_REG2(x) QML_INTERFACE(x, CXSW_SCOPE, VERSION_MAJOR, VERSION_MINOR)
 
 class QTUSER_QML_API DemoBase : public qtuser_3d::RenderGraph
 	,public qtuser_3d::KeyEventHandler
@@ -72,9 +73,18 @@ protected:
 protected:
 	Qt3DCore::QEntity* findWithName(const QString& name);
 	qtuser_3d::BasicEntity* bEntity(const QString& name);
+
+	template <class T>
+	T* tEntity(const QString& name)
+	{
+		Qt3DCore::QEntity* e = findWithName(name);
+		return qobject_cast<T*>(e);
+	}
+
 	void setNamedGeometry(const QString& name, Qt3DRender::QGeometry* geometry, 
 		Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles);
 
+	void clearEntities();
 	void deleteEntity(Qt3DCore::QEntity* entity);
 	void deleteEntity(const QString& name);
 	bool addEntity(const QString& name, Qt3DCore::QEntity* entity);
@@ -85,7 +95,7 @@ protected:
 
 	qtuser_3d::TriangleEntity* addTriangleEntity(const QString& name);
 	qtuser_3d::LineEntity* addLineEntity(const QString& name);
-	qtuser_3d::PointCloudEntity* createPoint(const QString& name, const QVector4D& color);
+	qtuser_3d::PointCloudEntity* createPoint(const QString& name, const QVector4D& color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 
 	void setBackColor(const QColor& color);
 public slots:

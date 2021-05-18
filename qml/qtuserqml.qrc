@@ -2,5 +2,7 @@
     <qresource prefix="/qtuserqml">
 		<file>res/demo.qml</file>
 		<file>res/demo1.qml</file>
+		<file>res/simulation.qml</file>
+		<file>res/PythonConsole.qml</file>
     </qresource>
 </RCC>

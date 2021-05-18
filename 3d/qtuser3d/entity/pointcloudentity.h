@@ -8,6 +8,7 @@ namespace qtuser_3d
 {
 	class QTUSER_3D_API PointCloudEntity: public BasicEntity
 	{
+		Q_OBJECT
 	public:
 		PointCloudEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~PointCloudEntity();
