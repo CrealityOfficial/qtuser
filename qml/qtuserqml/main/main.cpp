@@ -1,5 +1,6 @@
 #include "qtuserqml/main/main.h"
 #include <QtGui/QGuiApplication>
+#include <QtWidgets/QApplication>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QDebug>
 #include <QtQml/QQmlApplicationEngine>
@@ -116,7 +117,7 @@ namespace qtuser_qml
 		int result = 0;
 		{
 			QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-			QGuiApplication app(argc, argv);
+			QApplication app(argc, argv);
 			app.setOrganizationName("DEMO");
 			app.setOrganizationDomain("DEMO");
 			app.setApplicationName("DEMO");

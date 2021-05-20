@@ -30,14 +30,20 @@ namespace qtuser_3d
 	void BasicEntity::setParameter(const QString& name, const QVariant& value)
 	{
 		QVector<Qt3DRender::QParameter*> parameters = m_material->parameters();
+
+		bool have = false;
 		for (Qt3DRender::QParameter* parameter : parameters)
 		{
 			if (name == parameter->name())
 			{
 				parameter->setValue(value);
+				have = true;
 				break;
 			}
 		}
+
+		if (!have)
+			createParameter(name, value);
 	}
 
 	void BasicEntity::destroyParameter(Qt3DRender::QParameter* parameter)
