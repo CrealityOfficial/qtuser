@@ -11,15 +11,15 @@ namespace qtuser_qml
 {
     void specifyOpenGL()
     {
-        QSurfaceFormat format;
 #if __APPLE__
+        QSurfaceFormat format;
         format.setVersion(3, 2);
         format.setProfile(QSurfaceFormat::CoreProfile);
-#endif
         format.setDepthBufferSize(24);
         format.setStencilBufferSize(8);
         format.setSamples(4);
         QSurfaceFormat::setDefaultFormat(format);
+#endif
     }
 
 	int qmlAppMain(int argc, char* argv[], const QString& dll)
