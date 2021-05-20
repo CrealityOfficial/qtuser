@@ -5,7 +5,7 @@
 #include "qtuser3d/utils/primitiveshapecache.h"
 namespace qtuser_3d
 {
-	TranslateHelperEntity::TranslateHelperEntity(Qt3DCore::QNode* parent, int type)
+	TranslateHelperEntity::TranslateHelperEntity(Qt3DCore::QNode* parent, int type, int shapetype)
 		:Qt3DCore::QEntity(parent)
 		, m_xArrowEntity(nullptr)
 		, m_yArrowEntity(nullptr)
@@ -18,7 +18,15 @@ namespace qtuser_3d
 		m_transform = new Qt3DCore::QTransform(this);
 		addComponent(m_transform);
 
-		Qt3DRender::QGeometry* geometry = PRIMITIVESHAPE("arrow");
+		Qt3DRender::QGeometry* geometry = nullptr;
+		if (shapetype == 0)
+		{
+			geometry = PRIMITIVESHAPE("arrow");
+		}
+		else
+		{
+			geometry = PRIMITIVESHAPE("scaleindicator");
+		}
 
 		if (type & 1)
 		{
