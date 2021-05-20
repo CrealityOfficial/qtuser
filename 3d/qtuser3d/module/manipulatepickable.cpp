@@ -5,6 +5,7 @@ namespace qtuser_3d
 {
 	ManipulatePickable::ManipulatePickable(QObject* parent)
 		:SimplePickable(parent)
+		, m_showEntity(nullptr)
 	{
 		setNoPrimitive(true);
 	}
@@ -18,7 +19,9 @@ namespace qtuser_3d
 		int index = (int)state;
 		if (index < 0) index = 0;
 		if (index > 2) index = 2;
-		if (m_pickableEntity)
+		if (m_showEntity)
+			m_showEntity->setState(m_stateFactor[index]);
+		else if (m_pickableEntity)
 			m_pickableEntity->setState(m_stateFactor[index]);
 	}
 
@@ -28,6 +31,11 @@ namespace qtuser_3d
 		{
 			m_stateFactor[i] = sf[i];
 		}
+	}
+
+	void ManipulatePickable::setShowEntity(PickableEntity* entity)
+	{
+		m_showEntity = entity;
 	}
 
 	void ManipulatePickable::pickableEntityChanged()

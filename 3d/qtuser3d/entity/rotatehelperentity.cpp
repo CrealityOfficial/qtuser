@@ -25,9 +25,21 @@ namespace qtuser_3d
 		m_transform = new Qt3DCore::QTransform(this);
 		addComponent(m_transform);
 
-		m_xRingEntity = new ManipulateEntity(this);
-		m_yRingEntity = new ManipulateEntity(this);
-		m_zRingEntity = new ManipulateEntity(this);
+		m_xRingEntity = new ManipulateEntity(this, 1);
+		m_yRingEntity = new ManipulateEntity(this, 1);
+		m_zRingEntity = new ManipulateEntity(this, 1);
+
+		m_xPickable = new ManipulatePickable(this);
+		m_yPickable = new ManipulatePickable(this);
+		m_zPickable = new ManipulatePickable(this);
+
+		m_select_xRingEntity = new ManipulateEntity(this, 2);
+		m_select_yRingEntity = new ManipulateEntity(this, 2);
+		m_select_zRingEntity = new ManipulateEntity(this, 2);
+
+		m_select_xPickable = new ManipulatePickable(this);
+		m_select_yPickable = new ManipulatePickable(this);
+		m_select_zPickable = new ManipulatePickable(this);
 
 		QMatrix4x4 xMatrix;
 		xMatrix.rotate(-90.0f, 0.0f, 1.0f, 0.0f);
@@ -37,63 +49,30 @@ namespace qtuser_3d
         yMatrix.scale(25.0f, 25.0f, 25.0f);
 		QMatrix4x4 zMatrix;
         zMatrix.scale(25.0f, 25.0f, 25.0f);
-		m_xRingEntity->setPose(xMatrix);
-		m_yRingEntity->setPose(yMatrix);
-		m_zRingEntity->setPose(zMatrix);
 
-		m_xRingEntity->setColor(QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
-		m_yRingEntity->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
-		m_zRingEntity->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
+		QVector4D xclr(1.0f, 0.0f, 0.0f, 1.0f);
+		QVector4D xchangeClr(-0.2f, 0.3f, 0.2f, 0.0f);
 
-		if (type == 1)
-		{
-			m_xRingEntity->setChangeColor(QVector4D(-0.2f, 0.3f, 0.2f, 0.0f));
-			m_yRingEntity->setChangeColor(QVector4D(0.2f, -0.2f, 0.2f, 0.0f));
-			m_zRingEntity->setChangeColor(QVector4D(0.2f, 0.2f, -0.2f, 0.0f));
+		QVector4D yclr(0.0f, 1.0f, 0.0f, 1.0f);
+		QVector4D ychangeClr(0.2f, -0.2f, 0.2f, 0.0f);
 
-			m_xRingEntity->setMethod(1);
-			m_yRingEntity->setMethod(1);
-			m_zRingEntity->setMethod(1);
-		}
-		
+		QVector4D zclr(0.0f, 0.0f, 1.0f, 1.0f);
+		QVector4D zchangeClr(0.2f, 0.2f, -0.2f, 0.0f);
 
-		{
-			Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
-			torusMesh->setRadius(2);
-			torusMesh->setMinorRadius(0.02f);
-			torusMesh->setRings(100);
-			m_xRingEntity->replaceGeometryRenderer(torusMesh);
-		}
-		{
-			Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
-			torusMesh->setRadius(2);
-			torusMesh->setMinorRadius(0.02f);
-			torusMesh->setRings(100);
-			m_yRingEntity->replaceGeometryRenderer(torusMesh);
-		}
-		{
-			Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
-			torusMesh->setRadius(2);
-			torusMesh->setMinorRadius(0.02f);
-			torusMesh->setRings(100);
-			m_zRingEntity->replaceGeometryRenderer(torusMesh);
-		}
+		float out_r = 2;
+		float inner_r = 0.02;
 
-		m_xPickable = new ManipulatePickable(this);
-		m_yPickable = new ManipulatePickable(this);
-		m_zPickable = new ManipulatePickable(this);
+		initAxis(m_xRingEntity, m_xPickable, nullptr, xMatrix, xclr, xchangeClr, out_r, inner_r, type);
+		initAxis(m_yRingEntity, m_yPickable, nullptr, yMatrix, yclr, ychangeClr, out_r, inner_r, type);
+		initAxis(m_zRingEntity, m_zPickable, nullptr, zMatrix, zclr, zchangeClr, out_r, inner_r, type);
 
-		if (type == 1)
-		{
-			float sf[3] = { 0, 1, 2 };
-			m_xPickable->setStateFactor(sf);
-			m_yPickable->setStateFactor(sf);
-			m_zPickable->setStateFactor(sf);
-		}
+		float select_out_r = 2;
+		float select_inner_r = 0.2;
 
-		m_xPickable->setPickableEntity(m_xRingEntity);
-		m_yPickable->setPickableEntity(m_yRingEntity);
-		m_zPickable->setPickableEntity(m_zRingEntity);
+		initAxis(m_select_xRingEntity, m_select_xPickable, m_xRingEntity, xMatrix, xclr, xchangeClr, select_out_r, select_inner_r, type);
+		initAxis(m_select_yRingEntity, m_select_yPickable, m_yRingEntity, yMatrix, yclr, ychangeClr, select_out_r, select_inner_r, type);
+		initAxis(m_select_zRingEntity, m_select_zPickable, m_zRingEntity, zMatrix, zclr, zchangeClr, select_out_r, select_inner_r, type);
+
 	}
 
 	RotateHelperEntity::~RotateHelperEntity()
@@ -104,21 +83,61 @@ namespace qtuser_3d
 			delete m_yRingEntity;
 		if (m_zRingEntity->parent())
 			delete m_zRingEntity;
+
+		if (m_select_xRingEntity->parent())
+			delete m_select_xRingEntity;
+		if (m_select_yRingEntity->parent())
+			delete m_select_yRingEntity;
+		if (m_select_zRingEntity->parent())
+			delete m_select_zRingEntity;
+	}
+
+	void RotateHelperEntity::initAxis(ManipulateEntity* ringEntity, ManipulatePickable* pickable, ManipulateEntity* show_entity,
+		QMatrix4x4& m, QVector4D& clr, QVector4D& changeClr, float out_r, float inner_r, int type)
+	{
+		ringEntity->setPose(m);
+		ringEntity->setColor(clr);
+		if (type == 1)
+		{
+			ringEntity->setChangeColor(changeClr);
+			ringEntity->setMethod(1);
+		}
+
+		Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
+		torusMesh->setRadius(out_r);
+		torusMesh->setMinorRadius(inner_r);
+		torusMesh->setRings(100);
+		ringEntity->replaceGeometryRenderer(torusMesh);
+
+		if (type == 1)
+		{
+			float sf[3] = { 0, 1, 2 };
+			pickable->setStateFactor(sf);
+		}
+
+		pickable->setPickableEntity(ringEntity);
+		if (show_entity)
+		{
+			pickable->setShowEntity(show_entity);
+		}
 	}
 
 	void RotateHelperEntity::setXVisibility(bool visibility)
 	{
 		visibility ? m_xRingEntity->setParent(this) : m_xRingEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_select_xRingEntity->setParent(this) : m_select_xRingEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void RotateHelperEntity::setYVisibility(bool visibility)
 	{
 		visibility ? m_yRingEntity->setParent(this) : m_yRingEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_select_yRingEntity->setParent(this) : m_select_yRingEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void RotateHelperEntity::setZVisibility(bool visibility)
 	{
 		visibility ? m_zRingEntity->setParent(this) : m_zRingEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_select_zRingEntity->setParent(this) : m_select_zRingEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	QVector3D RotateHelperEntity::center()
@@ -133,23 +152,23 @@ namespace qtuser_3d
 
 	Pickable* RotateHelperEntity::xPickable()
 	{
-		return m_xPickable;
+		return m_select_xPickable;
 	}
 
 	Pickable* RotateHelperEntity::yPickable()
 	{
-		return m_yPickable;
+		return m_select_yPickable;
 	}
 
 	Pickable* RotateHelperEntity::zPickable()
 	{
-		return m_zPickable;
+		return m_select_zPickable;
 	}
 
 	QList<Pickable*> RotateHelperEntity::pickables()
 	{
 		QList<Pickable*> results;
-		results << m_xPickable << m_yPickable << m_zPickable;
+		results << m_select_xPickable << m_select_yPickable << m_select_zPickable;
 		return results;
 	}
 

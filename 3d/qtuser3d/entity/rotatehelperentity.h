@@ -47,6 +47,10 @@ namespace qtuser_3d
 	public slots:
 		void onBoxChanged(Box3D box);
 
+	private:
+		void initAxis(ManipulateEntity* ringEntity, ManipulatePickable* pickable, ManipulateEntity* show_entity,
+			QMatrix4x4& m, QVector4D& clr, QVector4D& changeClr, float out_r, float inner_r, int type);
+
 	protected:
 		void onLeftMouseButtonClick(QMouseEvent* event) override {}
 		void onLeftMouseButtonPress(QMouseEvent* event) override;
@@ -67,6 +71,15 @@ namespace qtuser_3d
 		ManipulatePickable* m_xPickable;
 		ManipulatePickable* m_yPickable;
 		ManipulatePickable* m_zPickable;
+
+		ManipulateEntity* m_select_xRingEntity;
+		ManipulateEntity* m_select_yRingEntity;
+		ManipulateEntity* m_select_zRingEntity;
+
+		ManipulatePickable* m_select_xPickable;
+		ManipulatePickable* m_select_yPickable;
+		ManipulatePickable* m_select_zPickable;
+
 		Qt3DCore::QTransform* m_transform;
 
 		FacePicker* m_pickSource;

@@ -5,10 +5,19 @@
 
 namespace qtuser_3d
 {
-	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent)
+	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, int type)
 		:PickableEntity(parent)
 	{
-		setEffect(EFFECTCREATE("manipulate_pickFace.pick", m_material));
+		QString shader_type = "manipulate.view_pickFace.pick";
+		if (type == 1)
+		{
+			shader_type = "manipulate.view";
+		}
+		else if (type == 2)
+		{
+			shader_type = "pickFace.pick";
+		}
+		setEffect(EFFECTCREATE(shader_type, m_material));
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 		m_changeColorParameter = createParameter("changecolor", QVector4D(0.0f, 0.0f, 0.0f, 0.0f));
 		m_methodParameter = createParameter("mt", 0);
