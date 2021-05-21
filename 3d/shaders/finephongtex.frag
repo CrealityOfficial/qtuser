@@ -16,12 +16,37 @@ uniform float specularPower = 128.0;
 
 uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
+uniform float useAzi = 0.0;
+
+vec2 azi_to_equ(vec2 tc)
+{
+	vec2 zaiTC = tc;
+	if(useAzi == 1.0)
+	{
+		float PI = 3.1415926;
+		vec2 t = vec2(tc.x - 0.5, tc.y - 0.5);
+		float alpha = atan(t.y, t.x);
+		float r = length(t);
+		if(r > 0.5)
+			zaiTC = vec2(-1.0, -1.0);
+		else
+		{
+			float beta = 2 * PI * r;
+			float x_ = 0.5 + 0.5 * alpha / PI;
+			float y_= 1 - beta / PI;
+			zaiTC = vec2(x_, y_);
+		}
+	}
+	
+	return zaiTC;
+}
+
 void main( void )
 {
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 specular_color   = specular;
 	
-	vec4 _color			  = color * texture(shapeTexture, texcoord);
+	vec4 _color			  = color * texture(shapeTexture, azi_to_equ(texcoord));
 	if(!gl_FrontFacing)
     {
 		_color = vec4(0.65, 0.0, 0.0, 1.0);
