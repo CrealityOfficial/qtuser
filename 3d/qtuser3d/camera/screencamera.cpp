@@ -112,7 +112,7 @@ namespace qtuser_3d
 		//float fieldofview = m_camera->lens()->fieldOfView();
 		//float aspect = m_camera->lens()->aspectRatio();
 
-		float nearpos = dmin < 1.0f ? 1.0f : dmin;
+		float nearpos = dmin < 1.0f ? (box.size().length() > 1.0f ? 1.0f : dmin) : dmin;
 		float farpos = dmax > 0.0f ? dmax : 3000.0f;
 
 		m_camera->lens()->setNearPlane(nearpos);
