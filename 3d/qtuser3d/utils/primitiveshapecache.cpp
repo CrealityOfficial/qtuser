@@ -28,6 +28,8 @@ namespace qtuser_3d
 		PRIMITIVE_ADD("cylinder", cylinderGeometry)
 		Qt3DRender::QGeometry* penGeometry = BasicShapeCreateHelper::createPen();
 		PRIMITIVE_ADD("pen", penGeometry)
+		Qt3DRender::QGeometry* scaleIndicatorGeometry = BasicShapeCreateHelper::createScaleIndicator(0.01, 0.8, 18, 0.2);
+		PRIMITIVE_ADD("scaleindicator", scaleIndicatorGeometry)
 	}
 	
 	PrimitiveShapeCache::~PrimitiveShapeCache()

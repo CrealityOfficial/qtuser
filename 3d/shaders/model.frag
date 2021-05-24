@@ -78,7 +78,7 @@ void main( void )
 		{
 			coreColor.g += 0.4;
 		}
-		if( abs(worldPosition.z - bottom) < 0.01 )
+		if( abs(worldPosition.z - bottom) < 0.05 )
 		{
 			coreColor.g += 0.4;
 		}

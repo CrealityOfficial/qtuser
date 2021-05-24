@@ -1,5 +1,6 @@
 #include "qtuserqml/main/main.h"
 #include <QtGui/QGuiApplication>
+#include <QtWidgets/QApplication>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QDebug>
 #include <QtQml/QQmlApplicationEngine>
@@ -9,27 +10,27 @@
 #include  <QThread>
 namespace qtuser_qml
 {
+    void specifyOpenGL()
+    {
+#if __APPLE__
+        QSurfaceFormat format;
+        format.setVersion(3, 2);
+        format.setProfile(QSurfaceFormat::CoreProfile);
+        format.setDepthBufferSize(24);
+        format.setStencilBufferSize(8);
+        format.setSamples(4);
+        QSurfaceFormat::setDefaultFormat(format);
+#endif
+    }
+
 	int qmlAppMain(int argc, char* argv[], const QString& dll)
 	{
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
         QGuiApplication app(argc, argv);
 
         QQmlApplicationEngine *engine=new QQmlApplicationEngine();
-        QSurfaceFormat format;
-        if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL) {
-            format.setVersion(3, 2);
-            format.setProfile(QSurfaceFormat::CoreProfile);
-        }
-        format.setDepthBufferSize(24);
-        format.setStencilBufferSize(8);
-        format.setSamples(4);
-        QSurfaceFormat::setDefaultFormat(format);
-
-		//QSurfaceFormat format;
-		//format.setVersion(1, 3);
-		//format.setProfile(QSurfaceFormat::CoreProfile);
-		//QSurfaceFormat::setDefaultFormat(format);
-
+        
+        specifyOpenGL();
         QMLApplicationInterface* appInterface = nullptr;
         QPluginLoader loader(dll);
         if (loader.load())
@@ -57,20 +58,7 @@ namespace qtuser_qml
         QGuiApplication app(argc, argv);
 
         QQmlApplicationEngine engine;
-        QSurfaceFormat format;
-        if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL) {
-            format.setVersion(3, 2);
-            format.setProfile(QSurfaceFormat::CoreProfile);
-        }
-        format.setDepthBufferSize(24);
-        format.setStencilBufferSize(8);
-        format.setSamples(4);
-        QSurfaceFormat::setDefaultFormat(format);
-
-        //QSurfaceFormat format;
-        //format.setVersion(1, 3);
-        //format.setProfile(QSurfaceFormat::CoreProfile);
-        //QSurfaceFormat::setDefaultFormat(format);
+        specifyOpenGL();
 
         QMLApplicationInterface* appInterface = nullptr;
         QPluginLoader loader(dll);
@@ -116,7 +104,7 @@ namespace qtuser_qml
 		int result = 0;
 		{
 			QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-			QGuiApplication app(argc, argv);
+			QApplication app(argc, argv);
 			app.setOrganizationName("DEMO");
 			app.setOrganizationDomain("DEMO");
 			app.setApplicationName("DEMO");

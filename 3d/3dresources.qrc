@@ -54,6 +54,8 @@
 		<file>shaders/chunk.frag</file>
 		<file>shaders/finephongtex.vert</file>
 		<file>shaders/finephongtex.frag</file>
+		<file>shaders/moon.vert</file>
+		<file>shaders/moon.frag</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
