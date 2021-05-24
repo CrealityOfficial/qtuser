@@ -1,5 +1,5 @@
 #include "jobexecutor.h"
-
+#include<QDebug>
 namespace qtuser_core
 {
 	JobExecutor::JobExecutor(QObject* parent)
@@ -16,7 +16,10 @@ namespace qtuser_core
 	JobExecutor::~JobExecutor()
 	{
 	}
-
+    QString JobExecutor::getDescription()
+    {
+        return m_jobDescription;
+    }
 	bool JobExecutor::isRunning()
 	{
 		return m_running;
@@ -40,13 +43,13 @@ namespace qtuser_core
 
 		m_running = true;
 
-		emit jobsStart();
+		
 		for (JobTracer* tracer : m_tracers)
 			tracer->jobExecutorStart();
 
 		m_exsitJobs = jobs;
 		startJob();
-
+		emit jobsStart();
 		return true;
 	}
 
@@ -81,6 +84,8 @@ namespace qtuser_core
 	void JobExecutor::startJob()
 	{
 		JobPtr job = m_exsitJobs.front();
+        m_jobDescription = job->description();
+        qDebug()<<"m_jobDescription =" <<m_jobDescription;
 		m_exsitJobs.pop_front();
 
 		m_runThread->setJob(job);

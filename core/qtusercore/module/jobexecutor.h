@@ -22,6 +22,8 @@ namespace qtuser_core
 		virtual ~JobExecutor();
 
 		Q_INVOKABLE void stop();
+
+        Q_INVOKABLE QString getDescription();
 		bool isRunning();
 		bool execute(QList<JobPtr> jobs);
 		bool execute(JobPtr job);
@@ -44,6 +46,8 @@ namespace qtuser_core
 
 		bool m_running;
 		QList<JobTracer*> m_tracers;
+
+        QString m_jobDescription = "";
 	};
 }
 #endif // _CREATIVE_KERNEL_JOBEXECUTOR_1590379536512_H
