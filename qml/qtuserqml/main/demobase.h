@@ -15,6 +15,8 @@
 #include "qtuser3d/entity/triangleentity.h"
 #include "qtuser3d/entity/lineentity.h"
 #include "qtuser3d/entity/pointcloudentity.h"
+#include <QtQml/QQmlContext>
+#include <QtQml/QQmlEngine>
 
 namespace qtuser_3d
 {
@@ -115,6 +117,9 @@ protected:
 
 protected:
 	QObject* m_uiRoot;
+
+	QQmlContext* m_context;
+	QQmlEngine* m_engine;
 };
 
 #endif // _DEMOBASE_1594285008655_H
