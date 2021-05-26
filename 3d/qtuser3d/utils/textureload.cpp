@@ -26,7 +26,7 @@ Qt3DRender::QTextureImageDataPtr LogoImageDataGenerator::operator()()
 bool LogoImageDataGenerator::operator ==(const QTextureImageDataGenerator& other) const
 {
 	const LogoImageDataGenerator* otherFunctor = Qt3DRender::functor_cast<LogoImageDataGenerator>(&other);
-	return (otherFunctor != nullptr);
+	return (otherFunctor == this);
 }
 
 

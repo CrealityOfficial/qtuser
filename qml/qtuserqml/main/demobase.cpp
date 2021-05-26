@@ -21,6 +21,8 @@ CXSW_REG(DemoBase)
 DemoBase::DemoBase(Qt3DCore::QNode* parent)
 	:RenderGraph(parent)
 	, m_uiRoot(nullptr)
+	, m_context(nullptr)
+	, m_engine(nullptr)
 {
 	m_surface = new qtuser_3d::Surface();
 	m_surface->setClearColor(QColor(255, 255, 255));
@@ -49,6 +51,9 @@ DemoBase::~DemoBase()
 void DemoBase::initialize(QObject* uiRoot)
 {
 	m_uiRoot = uiRoot;
+	m_context = qmlContext(m_uiRoot);
+	m_engine = qmlEngine(m_uiRoot);
+
 	registerRenderGraph(this);
 	renderRenderGraph(this);	
 

@@ -145,7 +145,7 @@ void UpdateChecker::replyFinished(QNetworkReply *reply)
         info.version = Version(info.tagName);
         const QJsonObject htmls = object.value(QString::fromLatin1("release_notes")).toObject();
         setting.beginGroup("language_perfer_config");
-        QString lang = setting.value("language_type").toString();
+        QString lang = setting.value("language_type","zh_cn").toString();
         setting.endGroup();
         lang = lang.mid(0,lang.indexOf(".")).toLower();
         qDebug() << lang;
