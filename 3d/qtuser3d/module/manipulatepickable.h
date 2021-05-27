@@ -19,7 +19,7 @@ namespace qtuser_3d
 		void pickableEntityChanged();
 
 	protected:
-		float m_stateFactor[3] = { 1.0, 0.6, 0.6 };
+		float m_stateFactor[3] = { 1.0f, 0.6f, 0.6f };
 		PickableEntity* m_showEntity;
 	};
 }

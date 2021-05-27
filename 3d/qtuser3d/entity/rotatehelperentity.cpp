@@ -217,9 +217,9 @@ namespace qtuser_3d
 		m_rotateMode = RotateMode::null;
 		QList<Pickable*> list = pickables();
 		Pickable* pickable = checkPickableFromList(m_pickSource, event->pos(), list, nullptr);
-		if (pickable == m_xPickable) m_rotateMode = RotateMode::x;
-		if (pickable == m_yPickable) m_rotateMode = RotateMode::y;
-		if (pickable == m_zPickable) m_rotateMode = RotateMode::z;
+		if (pickable == xPickable()) m_rotateMode = RotateMode::x;
+		if (pickable == yPickable()) m_rotateMode = RotateMode::y;
+		if (pickable == zPickable()) m_rotateMode = RotateMode::z;
 
 		m_spacePoint = calculateSpacePoint(event->pos());
 
