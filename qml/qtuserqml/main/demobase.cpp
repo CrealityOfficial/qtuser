@@ -51,8 +51,11 @@ DemoBase::~DemoBase()
 void DemoBase::initialize(QObject* uiRoot)
 {
 	m_uiRoot = uiRoot;
-	m_context = qmlContext(m_uiRoot);
-	m_engine = qmlEngine(m_uiRoot);
+	if (m_uiRoot)
+	{
+		m_context = qmlContext(m_uiRoot);
+		m_engine = qmlEngine(m_uiRoot);
+	}
 
 	registerRenderGraph(this);
 	renderRenderGraph(this);	
