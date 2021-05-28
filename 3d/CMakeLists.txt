@@ -2,8 +2,8 @@ __files_group(${CMAKE_CURRENT_SOURCE_DIR}/qtuser3d/ SRCS)
 
 qt5_add_resources(RCC_SRC 3dresources.qrc)
 list(APPEND SRCS ${RCC_SRC})
-
-set(LIBS Qt5::Core Qt5::Gui Qt5::Widgets Qt5::3DRender Qt5::3DExtras qtuser_core)
+find_package(Qt5 COMPONENTS SerialPort  REQUIRED)
+set(LIBS Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL Qt5::Xml Qt5::SerialPort Qt5::3DRender Qt5::3DExtras qtuser_core)
 set(DEFS QTUSER_3D_DLL)
 set(INCS ${CMAKE_CURRENT_SOURCE_DIR}/../core/)
 
