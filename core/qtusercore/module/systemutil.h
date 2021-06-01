@@ -7,6 +7,8 @@ QTUSER_CORE_API void initSystemUtil();
 QTUSER_CORE_API void showDetailSystemInfo();
 QTUSER_CORE_API void showSysMemory();
 
+QTUSER_CORE_API void printCallStack();
+
 QTUSER_CORE_API QString getCanWriteFolder();
 
 QTUSER_CORE_API void redirectIo();
