@@ -72,6 +72,7 @@ namespace qtuser_3d
 		ManipulatePickable* m_yPickable;
 		ManipulatePickable* m_zPickable;
 
+
 		ManipulateEntity* m_select_xRingEntity;
 		ManipulateEntity* m_select_yRingEntity;
 		ManipulateEntity* m_select_zRingEntity;
