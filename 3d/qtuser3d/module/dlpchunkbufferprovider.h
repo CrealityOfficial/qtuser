@@ -5,7 +5,6 @@ namespace qtuser_3d
 {
 	enum class DLPUserType
 	{
-		eDLPBase,
 		eDLPTop,
 		eDLPMiddle,
 		eDLPPlatformTrunk,
@@ -14,15 +13,6 @@ namespace qtuser_3d
 #ifdef DLP_ONLY
 		eDLPSupportPos,
 #endif
-		eHead,//7
-		ePillar,
-		eJunction,
-		eBridge,
-		eCrossBridge,
-		eDiffBridge,
-		ePedestal,
-		eAnchor,
-		ePad,
 		eDLPNum
 	};
 

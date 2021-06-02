@@ -5,12 +5,11 @@
 #include <Qt3DRender/QGeometry>
 #include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QAttribute>
-#include "qtuser3d/module/dlpchunkbufferprovider.h"
 
 namespace qtuser_3d
 {
 	class QTUSER_3D_API PickableChunkEntity : public PickableEntity
-		,public ChunkBuffer
+		, public ChunkBuffer
 	{
 		Q_OBJECT
 	public:
@@ -21,7 +20,6 @@ namespace qtuser_3d
 		void getPositionNormal(int chunk, QVector3D* position, QVector3D* normal);
 
 		void setFaceBase(QPoint faceBase);
-		void setChunkEntiyType(qtuser_3d::DLPUserType type,long externID);
 
 		int freeChunk() override;
 		bool full() override;
@@ -61,10 +59,6 @@ namespace qtuser_3d
 		QPoint m_faceRange;
 
 		QVector<ChunkBufferUser*> m_users;
-	public:
-		qtuser_3d::DLPUserType m_DLPUserType;
-		long m_externID;
-
 	};
 }
 #endif // QTUSER_3D_PICKABLECHUNKENTITY_1595378430410_H

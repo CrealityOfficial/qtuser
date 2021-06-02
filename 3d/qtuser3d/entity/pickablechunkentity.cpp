@@ -26,7 +26,7 @@ namespace qtuser_3d
 
 		setGeometry(m_geometry);
 	}
-	
+
 	PickableChunkEntity::~PickableChunkEntity()
 	{
 	}
@@ -177,7 +177,7 @@ namespace qtuser_3d
 	{
 		int index = faceID - m_faceRange.x();
 
-		if(index >= 0 && index < m_chunkFaces * m_chunks)
+		if (index >= 0 && index < m_chunkFaces * m_chunks)
 		{
 			QVector3D* positionBuffer = (QVector3D*)m_positionBuffer->data().constData();
 			QVector3D* normalBuffer = (QVector3D*)m_normalBuffer->data().constData();
@@ -246,11 +246,5 @@ namespace qtuser_3d
 		//	*normal++ = n;
 		//	*normal++ = n;
 		//}
-	}
-
-	void PickableChunkEntity::setChunkEntiyType(qtuser_3d::DLPUserType type, long externID)
-	{
-		m_DLPUserType = type;
-		m_externID = externID;
 	}
 }
