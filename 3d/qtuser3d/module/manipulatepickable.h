@@ -12,13 +12,16 @@ namespace qtuser_3d
 		virtual ~ManipulatePickable();
 
 		void setStateFactor(float sf[3]);
+
 		void setShowEntity(PickableEntity* entity);
+
 
 	protected:
 		void onStateChanged(ControlState state) override;
 		void pickableEntityChanged();
 
 	protected:
+
 		float m_stateFactor[3] = { 1.0f, 0.6f, 0.6f };
 		PickableEntity* m_showEntity;
 	};

@@ -9,7 +9,7 @@
 namespace qtuser_3d
 {
 	class QTUSER_3D_API PickableChunkEntity : public PickableEntity
-		,public ChunkBuffer
+		, public ChunkBuffer
 	{
 		Q_OBJECT
 	public:
