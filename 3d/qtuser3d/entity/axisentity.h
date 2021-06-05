@@ -9,7 +9,7 @@ namespace qtuser_3d
 	{
 		Q_OBJECT
 	public:
-		AxisEntity(Qt3DCore::QNode* parent = nullptr, int axistype = 0);
+		AxisEntity(Qt3DCore::QNode* parent = nullptr, int axistype = 0, QVector3D* s_use = nullptr);
 		virtual ~AxisEntity();
 
 		void translate(QVector3D v);

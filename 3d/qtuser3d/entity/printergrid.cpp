@@ -9,11 +9,13 @@ namespace qtuser_3d
 	PrinterGrid::PrinterGrid(Qt3DCore::QNode* parent, float lw)
 		: BasicEntity(parent)
 		, m_lineColor(0.32f, 0.32f, 0.32f, 1.0)
-		, m_showColor(0.65, 0.23, 0.23, 1.0)
+		, m_xshowColor(0.65, 0.23, 0.23, 1.0)
+		, m_yshowColor(0.65, 0.23, 0.23, 1.0)
 		, m_gap(10.0)
 	{
 		UEffect* useEffect = qobject_cast<UEffect*>( EFFECTCREATE("printergrid", m_material));
-		m_showColorParam = useEffect->createParameter("showcolor", m_showColor);
+		m_xshowColorParam = useEffect->createParameter("xshowcolor", m_xshowColor);
+		m_yshowColorParam = useEffect->createParameter("yshowcolor", m_yshowColor);
 		m_lineColorParam = useEffect->createParameter("linecolor", m_lineColor);
 		m_visible = createParameter("visible", 0.0f);
 
@@ -54,10 +56,18 @@ namespace qtuser_3d
 		m_gap = gap;
 	}
 
-	void PrinterGrid::setShowColor(QVector4D clr)
+	void PrinterGrid::setShowColor(QVector4D clr, int xy)
 	{
-		m_showColor = clr;
-		m_showColorParam->setValue(clr);
+		if (xy == 0)
+		{
+			m_xshowColor = clr;
+			m_xshowColorParam->setValue(clr);
+		}
+		else if (xy == 1)
+		{
+			m_yshowColor = clr;
+			m_yshowColorParam->setValue(clr);
+		}
 	}
 
 	void PrinterGrid::setLineColor(QVector4D clr)
