@@ -14,7 +14,7 @@ namespace qtuser_3d
 	{
 		Q_OBJECT
 	public:
-		TranslateHelperEntity(Qt3DCore::QNode* parent = nullptr, int type = 7, int shapetype = 0);
+		TranslateHelperEntity(Qt3DCore::QNode* parent = nullptr, int type = 7, int shapetype = 0, QVector3D dir = QVector3D(1, 1, 1));
 		virtual ~TranslateHelperEntity();
 
 		Pickable* xPickable();
