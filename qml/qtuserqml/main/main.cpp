@@ -104,6 +104,7 @@ namespace qtuser_qml
 		int result = 0;
 		{
 			QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+			QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
 			QApplication app(argc, argv);
 			app.setOrganizationName("DEMO");
 			app.setOrganizationDomain("DEMO");
@@ -128,7 +129,8 @@ namespace qtuser_qml
         int result = 0;
         {
             QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-            QGuiApplication app(argc, argv);
+			QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+            QApplication app(argc, argv);
             app.setOrganizationName("Simulation");
             app.setOrganizationDomain("Simulation");
             app.setApplicationName("Simulation");
