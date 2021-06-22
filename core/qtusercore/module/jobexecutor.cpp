@@ -49,7 +49,7 @@ namespace qtuser_core
 
 		m_exsitJobs = jobs;
 		startJob();
-		emit jobsStart();
+		emit jobStart(m_runThread->details());
 		return true;
 	}
 
