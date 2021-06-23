@@ -6,7 +6,7 @@ namespace qtuser_3d
 	Pickable::Pickable(QObject* parent)
 		:QObject(parent)
 		, m_state(ControlState::none)
-		, m_enableSelect(false)
+		, m_enableSelect(true)
 		, m_faceBase(0)
 		, m_noPrimitive(false)
 	{
@@ -64,6 +64,7 @@ namespace qtuser_3d
 
 	void Pickable::setEnableSelect(bool enable)
 	{
+		m_enableSelect = enable;
 	}
 
 	void Pickable::faceBaseChanged(int faceBase)
