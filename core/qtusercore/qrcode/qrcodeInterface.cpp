@@ -13,6 +13,26 @@
 
 namespace qtuser_core
 {
+	loginUserInfo m_userInfo;
+
+	QString getMacAddress()
+	{
+		QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();// 获取所有网络接口列表
+		int nCnt = nets.count();
+		QString strMacAddr = "";
+		for (int i = 0; i < nCnt; i++)
+		{
+			// 如果此网络接口被激活并且正在运行并且不是回环地址，则就是我们需要找的Mac地址
+			if (nets[i].flags().testFlag(QNetworkInterface::IsUp) && nets[i].flags().testFlag(QNetworkInterface::IsRunning) && !nets[i].flags().testFlag(QNetworkInterface::IsLoopBack))
+			{
+				strMacAddr = nets[i].hardwareAddress();
+				break;
+			}
+		}
+		return strMacAddr;
+	}
+
+
 	QPixmap Url2QrCodeImage(QString urlStr, int imageWidth, int imageHeight)
 	{
 		QRcode* qrcode; //二维码数据
@@ -56,21 +76,7 @@ namespace qtuser_core
 		auto body = strContent.toLatin1();
 		int body_len = strContent.length();
 
-
-		QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();// 获取所有网络接口列表
-		int nCnt = nets.count();
-		QString strMacAddr = "";
-		for (int i = 0; i < nCnt; i++)
-		{
-			// 如果此网络接口被激活并且正在运行并且不是回环地址，则就是我们需要找的Mac地址
-			if (nets[i].flags().testFlag(QNetworkInterface::IsUp) && nets[i].flags().testFlag(QNetworkInterface::IsRunning) && !nets[i].flags().testFlag(QNetworkInterface::IsLoopBack))
-			{
-				strMacAddr = nets[i].hardwareAddress();
-				break;
-			}
-		}
-		QString duid = strMacAddr;
-
+		QString duid = getMacAddress();
 		QString os_version = "Win";
 #ifdef __APPLE__
 		os_version = "Mac";
@@ -130,20 +136,7 @@ namespace qtuser_core
 		auto body = strContent.toLatin1();
 		int body_len = strContent.length();
 
-
-		QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();// 获取所有网络接口列表
-		int nCnt = nets.count();
-		QString strMacAddr = "";
-		for (int i = 0; i < nCnt; i++)
-		{
-			// 如果此网络接口被激活并且正在运行并且不是回环地址，则就是我们需要找的Mac地址
-			if (nets[i].flags().testFlag(QNetworkInterface::IsUp) && nets[i].flags().testFlag(QNetworkInterface::IsRunning) && !nets[i].flags().testFlag(QNetworkInterface::IsLoopBack))
-			{
-				strMacAddr = nets[i].hardwareAddress();
-				break;
-			}
-		}
-		QString duid = strMacAddr;
+		QString duid = getMacAddress();
 
 		QString os_version = "Win";
 #ifdef __APPLE__
@@ -194,12 +187,87 @@ namespace qtuser_core
 			if (state == 3)
 			{
 				userinfo.userID = result.value(QString::fromLatin1("userId")).toString();
+				m_userInfo.userID = userinfo.userID;
+				userinfo.token = result.value(QString::fromLatin1("token")).toString();
+				m_userInfo.token = userinfo.token;
 				QJsonObject confirmUserInfo = result.value(QString::fromLatin1("confirmUserInfo")).toObject();
 				userinfo.nickName = confirmUserInfo.value(QString::fromLatin1("nickName")).toString();
+				m_userInfo.nickName = userinfo.nickName;
+
+				m_userInfo.loginState = 1;
 			}
 			
 		}
 		return state;
+	}
+
+
+	bool getVerificationCodeFromCloud(QString account, int verifyCodeType, int accountType, QString& errormsg)
+	{
+		QString strContent = QString::fromLatin1("{\"account\":\"%1\", \"verifyCodeType\" : %2, \"accountType\" : %3}").arg(account).arg(verifyCodeType).arg(accountType);
+
+		auto body = strContent.toLatin1();
+		int body_len = strContent.length();
+
+		QString duid = getMacAddress();
+
+		QString os_version = "Win";
+#ifdef __APPLE__
+		os_version = "Mac";
+#endif
+
+		QString cloudUrl = "http://2-model-admin-dev.crealitygroup.com/api/account/getVerifyCode";
+
+		QNetworkRequest request;
+		request.setUrl(QUrl(cloudUrl));
+		request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		request.setRawHeader("__CXY_OS_LANG_", "0");
+		request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		request.setRawHeader("__CXY_PLATFORM_", "6");
+
+		QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		request.setSslConfiguration(m_sslConfig);
+
+		QEventLoop eventLoop;
+		QNetworkAccessManager* manager = new QNetworkAccessManager();
+		QNetworkReply* reply = manager->post(request, body);
+
+		QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		eventLoop.exec();
+
+		int state = -1;
+		if (reply->error() == QNetworkReply::NoError)
+		{
+			QJsonParseError error;
+
+			QByteArray arrayJson = reply->readAll();
+			const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
+			if (error.error != QJsonParseError::NoError)
+			{
+				qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+				return false;
+			}
+			QString strJson(document.toJson(QJsonDocument::Compact));
+
+			QJsonObject object = document.object();
+			const QJsonObject result = object.value(QString::fromLatin1("result")).toObject();
+			state = object.value(QString::fromLatin1("code")).toInt();
+
+			if (state == 0)
+			{
+				return true;
+			}
+			else
+			{
+				errormsg = object.value(QString::fromLatin1("msg")).toString();
+				return false;
+			}
+
+		}
 	}
 
 	int loginToCloud(QString loginType, QString account, QString passWrod, loginUserInfo& userinfo, QString& errorMsg)
@@ -209,20 +277,7 @@ namespace qtuser_core
 		auto body = strContent.toLatin1();
 		int body_len = strContent.length();
 
-
-		QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();// 获取所有网络接口列表
-		int nCnt = nets.count();
-		QString strMacAddr = "";
-		for (int i = 0; i < nCnt; i++)
-		{
-			// 如果此网络接口被激活并且正在运行并且不是回环地址，则就是我们需要找的Mac地址
-			if (nets[i].flags().testFlag(QNetworkInterface::IsUp) && nets[i].flags().testFlag(QNetworkInterface::IsRunning) && !nets[i].flags().testFlag(QNetworkInterface::IsLoopBack))
-			{
-				strMacAddr = nets[i].hardwareAddress();
-				break;
-			}
-		}
-		QString duid = strMacAddr;
+		QString duid = getMacAddress();
 
 		QString os_version = "Win";
 #ifdef __APPLE__
@@ -273,16 +328,104 @@ namespace qtuser_core
 			if (state == 0)
 			{
 				userinfo.userID = result.value(QString::fromLatin1("userId")).toString();
+				m_userInfo.userID = userinfo.userID;
+				userinfo.token = result.value(QString::fromLatin1("token")).toString();
+				m_userInfo.token = userinfo.token;
+				m_userInfo.loginState = 1;
 				//QJsonObject confirmUserInfo = result.value(QString::fromLatin1("confirmUserInfo")).toObject();
 				//userinfo.nickName = confirmUserInfo.value(QString::fromLatin1("nickName")).toString();
 			}
 			else
 			{
+				m_userInfo.loginState = 0;
 				errorMsg = object.value(QString::fromLatin1("msg")).toString();
 			}
 
 		}
 		return state;
+	}
+
+
+	int quickLoginToCloud(QString phoneNumber, QString phoneAreaCode, QString verifyCode, loginUserInfo& userinfo, QString& errorMsg)
+	{
+		QString strContent = QString::fromLatin1("{\"phoneNumber\": \"%1\", \"phoneAreaCode\" : \"%2\", \"verifyCode\" : \"%3\"}").arg(phoneNumber).arg(phoneAreaCode).arg(verifyCode);
+
+		auto body = strContent.toLatin1();
+		int body_len = strContent.length();
+
+		QString duid = getMacAddress();
+
+		QString os_version = "Win";
+#ifdef __APPLE__
+		os_version = "Mac";
+#endif
+
+		QString cloudUrl = "http://2-model-admin-dev.crealitygroup.com/api/account/quickLogin";
+
+		QNetworkRequest request;
+		request.setUrl(QUrl(cloudUrl));
+		request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		request.setRawHeader("__CXY_OS_LANG_", "0");
+		request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		request.setRawHeader("__CXY_PLATFORM_", "6");
+
+		QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		request.setSslConfiguration(m_sslConfig);
+
+		QEventLoop eventLoop;
+		QNetworkAccessManager* manager = new QNetworkAccessManager();
+		QNetworkReply* reply = manager->post(request, body);
+
+		QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		eventLoop.exec();
+
+		int state = -1;
+		if (reply->error() == QNetworkReply::NoError)
+		{
+			QJsonParseError error;
+
+			QByteArray arrayJson = reply->readAll();
+			const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
+			if (error.error != QJsonParseError::NoError)
+			{
+				qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+				return false;
+			}
+			QString strJson(document.toJson(QJsonDocument::Compact));
+
+			QJsonObject object = document.object();
+			const QJsonObject result = object.value(QString::fromLatin1("result")).toObject();
+			state = object.value(QString::fromLatin1("code")).toInt();
+
+			if (state == 0)
+			{
+				userinfo.userID = result.value(QString::fromLatin1("userId")).toString();
+				m_userInfo.userID = userinfo.userID;
+				userinfo.token = result.value(QString::fromLatin1("token")).toString();
+				m_userInfo.token = userinfo.token;
+
+				m_userInfo.loginState = 1;
+				//QJsonObject confirmUserInfo = result.value(QString::fromLatin1("confirmUserInfo")).toObject();
+				//userinfo.nickName = confirmUserInfo.value(QString::fromLatin1("nickName")).toString();
+			}
+			else
+			{
+				m_userInfo.loginState = 0;
+				errorMsg = object.value(QString::fromLatin1("msg")).toString();
+			}
+
+		}
+		return state;
+	}
+
+	int getUserInfo(loginUserInfo& userinfo)
+	{
+		memcpy(&userinfo, &m_userInfo, sizeof(m_userInfo));
+		return 0;
 	}
 
 }
