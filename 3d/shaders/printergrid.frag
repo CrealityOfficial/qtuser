@@ -3,14 +3,19 @@
 out vec4 fragColor;
 flat in vec2 flag;
 uniform float visible;
-uniform vec4 showcolor;
+uniform vec4 xshowcolor;
+uniform vec4 yshowcolor;
 uniform vec4 linecolor;
 
 void main() 
 {
-	if((int(flag.x) == 0) || (int(flag.y) == 0))
+	if(int(flag.x) == 0)
 	{
-		fragColor = showcolor;
+		fragColor = yshowcolor;
+	}
+	else if(int(flag.y) == 0)
+	{
+		fragColor = xshowcolor;
 	}
 	else
 	{

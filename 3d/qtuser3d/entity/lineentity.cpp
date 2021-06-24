@@ -11,7 +11,9 @@ namespace qtuser_3d
 	{
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
 
-		setEffect(EFFECTCREATE("pure", m_material));
+		// EFFECTCREATE 这种写法如果传入非空 parent 的话，会导致模型透明效果异常，原因有待研究
+		//setEffect(EFFECTCREATE("pure", m_material));
+		setEffect(EFFECT("pure"));
 
 		QList<Qt3DRender::QRenderPass*> renderPasses = m_material->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
 		m_lineWidth = new Qt3DRender::QLineWidth(m_material);

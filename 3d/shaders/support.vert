@@ -25,4 +25,9 @@ void main( void )
     normal          = normalMatrix * vertexNormal;
 	worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));
 	flag			= vertexFlag;
+	
+	if(vertexFlag == 0.0)
+	{
+		gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+	}
 }

@@ -5,7 +5,7 @@
 #include "qtuser3d/utils/primitiveshapecache.h"
 namespace qtuser_3d
 {
-	TranslateHelperEntity::TranslateHelperEntity(Qt3DCore::QNode* parent, int type, int shapetype)
+	TranslateHelperEntity::TranslateHelperEntity(Qt3DCore::QNode* parent, int type, int shapetype, QVector3D dir)
 		:Qt3DCore::QEntity(parent)
 		, m_xArrowEntity(nullptr)
 		, m_yArrowEntity(nullptr)
@@ -31,7 +31,7 @@ namespace qtuser_3d
 		if (type & 1)
 		{
 			QMatrix4x4 xMatrix;
-			xMatrix.rotate(-90.0f, 0.0f, 0.0f, 1.0f);
+			xMatrix.rotate(-90.0f * dir.x(), 0.0f, 0.0f, 1.0f);
 			xMatrix.scale(50.0f, 50.0f, 50.0f);
 
 			m_xArrowEntity = new qtuser_3d::ManipulateEntity(this);
@@ -45,6 +45,10 @@ namespace qtuser_3d
 		if (type & 2)
 		{
 			QMatrix4x4 yMatrix;
+			if (dir.y() < 0)
+			{
+				yMatrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+			}
 			yMatrix.scale(50.0f, 50.0f, 50.0f);
 
 			m_yArrowEntity = new qtuser_3d::ManipulateEntity(this);
@@ -58,7 +62,7 @@ namespace qtuser_3d
 		if (type & 4)
 		{
 			QMatrix4x4 zMatrix;
-			zMatrix.rotate(90.0f, 1.0f, 0.0f, 0.0f);
+			zMatrix.rotate(90.0f * dir.z(), 1.0f, 0.0f, 0.0f);
 			zMatrix.scale(50.0f, 50.0f, 50.0f);
 
 			m_zArrowEntity = new qtuser_3d::ManipulateEntity(this);

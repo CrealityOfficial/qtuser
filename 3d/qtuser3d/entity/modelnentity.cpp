@@ -15,12 +15,16 @@ namespace qtuser_3d
 		m_stateParameter = createParameter("state", 0.0f);
 		m_vertexBaseParameter = createParameter("vertexBase", QPoint(0, 0));
 		m_errorParameter = createParameter("error", 0.0f);
-		m_supportCosParameter = createParameter("supportCos", 0.7);
+		m_supportCosParameter = createParameter("supportCos", 0.5);
 		m_hoverParameter = createParameter("hoverState", 0);
 		m_waterParameter = createParameter("water", QVector3D(0, 0, -10000));
 		m_zchaParameter = createParameter("zcha", 0.01);
 		m_waterShowParameter = createParameter("waterState", 0);
 		m_fanzhuanParameter = createParameter("fanzhuan", 0);
+
+		m_customColorParameter = createParameter("customColor", QColor::fromRgb(0.0, 0.0, 0.0));
+		m_transparencyParameter = createParameter("transparency", 1.0f);
+		m_lightingFlagParameter = createParameter("lightingEnable", 1);
 
 		m_checkScopeParameter = createParameter("checkscope", 1);
 
@@ -100,6 +104,36 @@ namespace qtuser_3d
 	void ModelNEntity::setFanZhuan(int fz)
 	{
 		m_fanzhuanParameter->setValue(fz);
+	}
+
+	void ModelNEntity::setCustomColor(QColor color)
+	{
+		m_customColorParameter->setValue(color);
+	}
+
+	QColor ModelNEntity::getCustomColor()
+	{
+		return m_customColorParameter->value().value<QColor>();
+	}
+
+	void ModelNEntity::setTransparency(float alpha)
+	{
+		m_transparencyParameter->setValue(alpha);
+	}
+
+	float ModelNEntity::getTransparency()
+	{
+		return m_transparencyParameter->value().toFloat();
+	}
+
+	void ModelNEntity::setLightingEnable(bool enable)
+	{
+		m_lightingFlagParameter->setValue(enable ? 1 : 0);
+	}
+
+	bool ModelNEntity::getLightingEnable()
+	{
+		return m_lightingFlagParameter->value().toBool();
 	}
 
 	void ModelNEntity::setNeedCheckScope(int checkscope)

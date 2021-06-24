@@ -4,7 +4,7 @@
 #include "qtuser3d/utils/primitiveshapecache.h"
 namespace qtuser_3d
 {
-	AxisEntity::AxisEntity(Qt3DCore::QNode* parent, int axistype)
+	AxisEntity::AxisEntity(Qt3DCore::QNode* parent, int axistype, QVector3D* s_use)
 		:QEntity(parent)
 	{
 		m_xAxis = new qtuser_3d::PureColorEntity(this);
@@ -22,6 +22,10 @@ namespace qtuser_3d
 		{
 			s = QVector3D(2, 5, 2);
 			geometry = PRIMITIVESHAPE("cylinder");
+		}
+		if (s_use != nullptr)
+		{
+			s = *s_use;
 		}
 
 		QMatrix4x4 xMatrix;

@@ -63,6 +63,13 @@ namespace qtuser_3d
 			delete oldEffect;
 	}
 
+	Qt3DRender::QEffect* BasicEntity::selectEffect(Qt3DRender::QEffect* effect)
+	{
+		Qt3DRender::QEffect* oldEffect = m_material->effect();
+		m_material->setEffect(effect);
+		return oldEffect;
+	}
+
 	void BasicEntity::setPose(const QMatrix4x4& matrix)
 	{
 		m_transform->setMatrix(matrix);
