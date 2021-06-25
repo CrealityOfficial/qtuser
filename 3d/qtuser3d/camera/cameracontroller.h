@@ -30,6 +30,7 @@ public:
 	Q_INVOKABLE void viewFromRight(QVector3D* specificCenter = nullptr);
 	Q_INVOKABLE void viewFromFront(QVector3D* specificCenter = nullptr);
 	Q_INVOKABLE void viewFromBack(QVector3D* specificCenter = nullptr);
+	void view(const QVector3D& dir, const QVector3D& right, QVector3D* specificCenter = nullptr);
 
 	Q_INVOKABLE void viewFromOrthographic();
 	Q_INVOKABLE void viewFromPerspective();
@@ -68,9 +69,6 @@ protected:
 	void onMidMouseButtonClick(QMouseEvent* event) override;
 
 	void onWheelEvent(QWheelEvent* event) override;
-
-protected:
-	void view(const QVector3D& dir, const QVector3D& right, QVector3D* specificCenter = nullptr);
 signals:
 	void signalViewChanged(bool capture);
 protected:
