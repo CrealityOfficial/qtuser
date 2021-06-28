@@ -10,6 +10,8 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QUuid>
+#include <QFile>
 
 namespace qtuser_core
 {
@@ -422,9 +424,136 @@ namespace qtuser_core
 		return state;
 	}
 
+	int getUserInfoFromCloud(loginUserInfo& userinfo, QString& errorMsg)
+	{
+		QString strContent = QString::fromLatin1("{}");
+
+		auto body = strContent.toLatin1();
+		int body_len = strContent.length();
+
+		QString duid = getMacAddress();
+
+		QString os_version = "Win";
+#ifdef __APPLE__
+		os_version = "Mac";
+#endif
+
+		QUuid uuid = QUuid::createUuid();
+		QString requestID = uuid.toString();
+
+		QString cloudUrl = "http://2-model-admin-dev.crealitygroup.com/api/cxy/v2/user/getInfo";
+
+		QNetworkRequest request;
+		request.setUrl(QUrl(cloudUrl));
+		request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		request.setRawHeader("__CXY_OS_LANG_", "0");
+		request.setRawHeader("__CXY_PLATFORM_", "6");
+		request.setRawHeader("__CXY_UID_", m_userInfo.userID.toStdString().c_str());
+		request.setRawHeader("__CXY_REQUESTID_", requestID.toStdString().c_str());
+		request.setRawHeader("__CXY_TOKEN_", m_userInfo.token.toStdString().c_str());
+		
+		//QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		//m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		//m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		//request.setSslConfiguration(m_sslConfig);
+
+		QEventLoop eventLoop;
+		QNetworkAccessManager* manager = new QNetworkAccessManager();
+		QNetworkReply* reply = manager->post(request, body);
+
+		QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		eventLoop.exec();
+
+		int state = -1;
+		if (reply->error() == QNetworkReply::NoError)
+		{
+			QJsonParseError error;
+
+			QByteArray arrayJson = reply->readAll();
+			const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
+			if (error.error != QJsonParseError::NoError)
+			{
+				qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+				return false;
+			}
+			QString strJson(document.toJson(QJsonDocument::Compact));
+
+			QJsonObject object = document.object();
+			state = object.value(QString::fromLatin1("code")).toInt();
+
+			if (state == 0)
+			{
+				const QJsonObject result = object.value(QString::fromLatin1("result")).toObject();
+				const QJsonObject userInfoObj = result.value(QString::fromLatin1("userInfo")).toObject();
+				const QJsonObject userbaseInfoObj = userInfoObj.value(QString::fromLatin1("base")).toObject();
+
+				m_userInfo.avatar = userbaseInfoObj.value(QString::fromLatin1("avatar")).toString();
+				m_userInfo.nickName = userbaseInfoObj.value(QString::fromLatin1("nickName")).toString();
+
+				memcpy(&userinfo, &m_userInfo, sizeof(m_userInfo));
+
+			}
+			else
+			{
+				m_userInfo.loginState = 0;
+				errorMsg = object.value(QString::fromLatin1("msg")).toString();
+			}
+
+		}
+		return state;
+	}
+
+
 	int getUserInfo(loginUserInfo& userinfo)
 	{
 		memcpy(&userinfo, &m_userInfo, sizeof(m_userInfo));
+		return 0;
+	}
+
+
+	int downloadImgFileFromUrl(QString strUrl, QString strFilePath)
+	{
+
+		//循环拼接
+		QString baseUrl = strUrl;
+		//构造请求
+		QNetworkRequest request;
+		request.setUrl(QUrl(baseUrl));
+		QNetworkAccessManager* manager = new QNetworkAccessManager();
+		// 发送请求
+		QNetworkReply* pReplay = manager->get(request);
+		//开启一个局部的事件循环，等待响应结束，退出
+		QEventLoop eventLoop;
+		QObject::connect(pReplay, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		eventLoop.exec();
+
+		if (pReplay->error() == QNetworkReply::NoError)
+		{
+			qInfo() << QString("request imgFile NoError");
+			//获取响应信息
+			QByteArray bytes = pReplay->readAll();
+			QFile file;
+			file.setFileName(strFilePath);
+			if (file.open(QIODevice::WriteOnly))
+			{
+				file.write(bytes);
+				file.close();
+			}
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
+	int logout()
+	{
+		m_userInfo.loginState = 0;
+		m_userInfo.token = "";
 		return 0;
 	}
 
