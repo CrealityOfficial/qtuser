@@ -493,7 +493,12 @@ namespace qtuser_core
 				m_userInfo.avatar = userbaseInfoObj.value(QString::fromLatin1("avatar")).toString();
 				m_userInfo.nickName = userbaseInfoObj.value(QString::fromLatin1("nickName")).toString();
 
-				memcpy(&userinfo, &m_userInfo, sizeof(m_userInfo));
+				//memcpy(&userinfo, &m_userInfo, sizeof(m_userInfo));
+				userinfo.loginState = m_userInfo.loginState;
+				userinfo.userID = m_userInfo.userID;
+				userinfo.token = m_userInfo.token;
+				userinfo.nickName = m_userInfo.nickName;
+				userinfo.avatar = m_userInfo.avatar;
 
 			}
 			else
@@ -509,7 +514,12 @@ namespace qtuser_core
 
 	int getUserInfo(loginUserInfo& userinfo)
 	{
-		memcpy(&userinfo, &m_userInfo, sizeof(m_userInfo));
+		//memcpy(&userinfo, &m_userInfo, sizeof(m_userInfo));
+		userinfo.loginState = m_userInfo.loginState;
+		userinfo.userID = m_userInfo.userID;
+		userinfo.token = m_userInfo.token;
+		userinfo.nickName = m_userInfo.nickName;
+		userinfo.avatar = m_userInfo.avatar;
 		return 0;
 	}
 
