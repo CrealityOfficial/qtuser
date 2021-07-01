@@ -11,15 +11,18 @@ uniform vec4 ambient = vec4(0.4, 0.4, 0.4, 1.0);
 uniform vec4 diffuse = vec4(0.6, 0.6, 0.6, 1.0);
 uniform vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
 uniform float specularPower = 12.0;
-
 uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
+
+uniform int lightingEnable = 1;
+uniform float transparency = 1.0;
+
 uniform vec3 minSpace;
 uniform vec3 maxSpace;
 uniform float bottom; 
 uniform float topVisibleHeight = 100000.0;
 uniform float bottomVisibleHeight = -10000.0;
 uniform float error;
-uniform float supportCos = 0.7;
+uniform float supportCos = 0.5;
 
 uniform int hoverState = 0;
 uniform int waterState = 0;
@@ -31,6 +34,7 @@ uniform float zcha = 0.01;
 uniform float state;
 uniform float nozzle;
 uniform vec4 stateColors[5];
+uniform vec4 customColor;
 
 bool frontFacing()
 {
@@ -51,7 +55,7 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_col
 	diffuse_color		  = NdotL * diffuse_color * core_color;
 	specular_color        = specular_color * pow( RdotV, specularPower);
 	
-	return ambient_color + diffuse_color + specular_color;
+	return lightingEnable * (ambient_color + diffuse_color + specular_color) + (1 - lightingEnable) * core_color;
 }
 
 void main( void )
@@ -59,7 +63,13 @@ void main( void )
 	if(checkscope > 0 && (worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight))
 		discard;
 
-	vec4 color = stateColors[int(state)];	
+	int stateInt = int(state);
+	vec4 color;
+	if (stateInt < 5)
+		color = stateColors[stateInt];
+	else
+		color = customColor;
+	
 	if(error == 1.0)
 		color = stateColors[3];
 	
@@ -76,18 +86,20 @@ void main( void )
 	{
 		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
 		{
-			coreColor.g += 0.4;
+			coreColor *= 0.3;
+			coreColor.r += 0.6;
 		}
 		if( abs(worldPosition.z - bottom) < 0.05 )
 		{
-			coreColor.g += 0.4;
+			coreColor *= 0.3;
+			coreColor.r += 0.6;
 		}
 	}
 	
 	
 	if(hoverState > 0)
 	{
-		if(dot(fgnormal, vec3(0.0, 0.0, -1.0)) > supportCos)
+		if(dot(fgnormal, vec3(0.0, 0.0, -1.0)) >= supportCos)
 		{
 			coreColor.r += 0.8;
 		}
@@ -103,23 +115,23 @@ void main( void )
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
 
-        int fz = fanzhuan % 2;
+    int fz = fanzhuan % 2;
        
-        if(fz == 0)
+    if(fz == 0)
+    {
+        if(! frontFacing())
         {
-               if(! frontFacing())
-               {
-                      coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-               }
+            coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
         }
-        else
+    }
+    else
+    {
+        if(frontFacing())
         {
-               if(frontFacing())
-               {
-                      coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-               }
+            coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
         }
+    }
    
 
-	fragmentColor = vec4(coreColor.rgb, 1.0);
+	fragmentColor = vec4(coreColor.rgb, transparency);
 }

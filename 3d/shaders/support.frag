@@ -13,7 +13,7 @@ uniform float specularPower = 12.0;
 
 uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
-uniform vec4 stateColors[5];
+uniform vec4 stateColors[6];
 
 uniform vec3 minSpace;
 uniform vec3 maxSpace;
@@ -24,7 +24,7 @@ uniform float bottomVisibleHeight = -10000.0;
 void main( void )
 {
     vec4 color = stateColors[int(flag)];
-    color.a = flag;
+//    color.a = flag;
 
 	if(worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight)
 		discard;

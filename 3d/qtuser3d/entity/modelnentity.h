@@ -28,6 +28,18 @@ namespace qtuser_3d
 		void setWaterPoint(QVector3D pt, float zcha);
 		void unSetWaterPoint();
 		void setFanZhuan(int fz);
+		
+		// 自定义颜色，当 state 值大于 5 时生效
+		void setCustomColor(QColor color);
+		QColor getCustomColor();
+
+		// 透明度
+		void setTransparency(float alpha);
+		float getTransparency();
+
+		// 是否叠加光照效果
+		void setLightingEnable(bool enable);
+		bool getLightingEnable();
 
 		void setNeedCheckScope(int checkscope);
 
@@ -39,6 +51,10 @@ namespace qtuser_3d
 		Qt3DRender::QParameter* m_stateParameter;
 		Qt3DRender::QParameter* m_vertexBaseParameter;
 		Qt3DRender::QParameter* m_errorParameter;
+
+		Qt3DRender::QParameter* m_customColorParameter;
+		Qt3DRender::QParameter* m_transparencyParameter;
+		Qt3DRender::QParameter* m_lightingFlagParameter;
 
 		Qt3DRender::QParameter* m_supportCosParameter;
 		Qt3DRender::QParameter* m_hoverParameter;
