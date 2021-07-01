@@ -76,7 +76,6 @@ namespace qtuser_core
 	{
 		QString strContent = "{}";
 		auto body = strContent.toLatin1();
-		int body_len = strContent.length();
 
 		QString duid = getMacAddress();
 		QString os_version = "Win";
@@ -136,7 +135,6 @@ namespace qtuser_core
 		QString strContent = QString::fromLatin1("{\"identical\": \"%1\"}").arg(identical);
 
 		auto body = strContent.toLatin1();
-		int body_len = strContent.length();
 
 		QString duid = getMacAddress();
 
@@ -209,7 +207,6 @@ namespace qtuser_core
 		QString strContent = QString::fromLatin1("{\"account\":\"%1\", \"verifyCodeType\" : %2, \"accountType\" : %3}").arg(account).arg(verifyCodeType).arg(accountType);
 
 		auto body = strContent.toLatin1();
-		int body_len = strContent.length();
 
 		QString duid = getMacAddress();
 
@@ -270,6 +267,11 @@ namespace qtuser_core
 			}
 
 		}
+		else
+		{
+			errormsg = "Network Error";
+			return false;
+		}
 	}
 
 	int loginToCloud(QString loginType, QString account, QString passWrod, loginUserInfo& userinfo, QString& errorMsg)
@@ -277,7 +279,6 @@ namespace qtuser_core
 		QString strContent = QString::fromLatin1("{\"type\": %1, \"account\" : \"%2\", \"password\" : \"%3\"}").arg(loginType).arg(account).arg(passWrod);
 
 		auto body = strContent.toLatin1();
-		int body_len = strContent.length();
 
 		QString duid = getMacAddress();
 
@@ -342,9 +343,13 @@ namespace qtuser_core
 				m_userInfo.loginState = 0;
 				errorMsg = object.value(QString::fromLatin1("msg")).toString();
 			}
-
+			return state;
 		}
-		return state;
+		else
+		{
+			errorMsg = "Network Error";
+			return -1;
+		}
 	}
 
 
@@ -353,7 +358,6 @@ namespace qtuser_core
 		QString strContent = QString::fromLatin1("{\"phoneNumber\": \"%1\", \"phoneAreaCode\" : \"%2\", \"verifyCode\" : \"%3\"}").arg(phoneNumber).arg(phoneAreaCode).arg(verifyCode);
 
 		auto body = strContent.toLatin1();
-		int body_len = strContent.length();
 
 		QString duid = getMacAddress();
 
@@ -419,9 +423,13 @@ namespace qtuser_core
 				m_userInfo.loginState = 0;
 				errorMsg = object.value(QString::fromLatin1("msg")).toString();
 			}
-
+			return state;
 		}
-		return state;
+		else
+		{
+			errorMsg = "Network Error";
+			return -1;
+		}
 	}
 
 	int getUserInfoFromCloud(loginUserInfo& userinfo, QString& errorMsg)
@@ -429,7 +437,6 @@ namespace qtuser_core
 		QString strContent = QString::fromLatin1("{}");
 
 		auto body = strContent.toLatin1();
-		int body_len = strContent.length();
 
 		QString duid = getMacAddress();
 
