@@ -10,12 +10,14 @@ namespace qtuser_core
 		QString nickName;
 		QString userID;
 		QString token;
+		QString avatar;
 
-		loginUserInfo(){
+		loginUserInfo() {
 			loginState = 0;
 			nickName = "";
 			userID = "";
 			token = "";
+			avatar = "";
 		}
 	};
 
@@ -32,5 +34,11 @@ namespace qtuser_core
 	QTUSER_CORE_API bool getVerificationCodeFromCloud(QString account, int verifyCodeType, int accountType, QString& errormsg);
 
 	QTUSER_CORE_API int getUserInfo(loginUserInfo& userinfo);
+
+	QTUSER_CORE_API int getUserInfoFromCloud(loginUserInfo& userinfo, QString& errorMsg);
+
+	QTUSER_CORE_API int downloadImgFileFromUrl(QString strUrl, QString strFilePath);
+
+	QTUSER_CORE_API int logout();
 }
 #endif // _QTUSER_CORE_URLUTILS_1588905534361_H
