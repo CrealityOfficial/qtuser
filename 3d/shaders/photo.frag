@@ -17,7 +17,7 @@ vec3 hsv2rgb(vec3 c)
 void main() 
 {
 	float thick = clamp(height - D, 0.0, maxHeight) / maxHeight;
-	vec3 v = vec3(hs, 1.0 - thick);
+	vec3 v = vec3(hs, thick);
 	
 	fragColor = vec4(hsv2rgb(v), 1.0);
 }
