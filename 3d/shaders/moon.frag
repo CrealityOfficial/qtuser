@@ -17,7 +17,7 @@ void main()
 {
 	float thick = clamp(radius - D, 0.0, 1.0);
 	
-	float bright= 1.0 - thick;
+	float bright= thick;
 	vec3 v = vec3(hs, bright);
 	
 	fragColor = vec4(hsv2rgb(v), 1.0);
