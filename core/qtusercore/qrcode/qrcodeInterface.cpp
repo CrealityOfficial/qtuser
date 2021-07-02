@@ -83,7 +83,7 @@ namespace qtuser_core
 		os_version = "Mac";
 #endif
 
-		QString cloudUrl = "http://2-model-admin-dev.crealitygroup.com/api/account/qrLogin";
+		QString cloudUrl = getCloudUrl() + "/api/account/qrLogin";
 
 		QNetworkRequest request;
 		request.setUrl(QUrl(cloudUrl));
@@ -143,7 +143,7 @@ namespace qtuser_core
 		os_version = "Mac";
 #endif
 
-		QString cloudUrl = "http://2-model-admin-dev.crealitygroup.com/api/account/qrQuery";
+		QString cloudUrl = getCloudUrl() + "/api/account/qrQuery";
 
 		QNetworkRequest request;
 		request.setUrl(QUrl(cloudUrl));
@@ -215,7 +215,7 @@ namespace qtuser_core
 		os_version = "Mac";
 #endif
 
-		QString cloudUrl = "http://2-model-admin-dev.crealitygroup.com/api/account/getVerifyCode";
+		QString cloudUrl = getCloudUrl() + "/api/account/getVerifyCode";
 
 		QNetworkRequest request;
 		request.setUrl(QUrl(cloudUrl));
@@ -287,7 +287,7 @@ namespace qtuser_core
 		os_version = "Mac";
 #endif
 
-		QString cloudUrl = "http://2-model-admin-dev.crealitygroup.com/api/account/loginV2";
+		QString cloudUrl = getCloudUrl() + "/api/account/loginV2";
 
 		QNetworkRequest request;
 		request.setUrl(QUrl(cloudUrl));
@@ -366,7 +366,7 @@ namespace qtuser_core
 		os_version = "Mac";
 #endif
 
-		QString cloudUrl = "http://2-model-admin-dev.crealitygroup.com/api/account/quickLogin";
+		QString cloudUrl = getCloudUrl() + "/api/account/quickLogin";
 
 		QNetworkRequest request;
 		request.setUrl(QUrl(cloudUrl));
@@ -448,7 +448,7 @@ namespace qtuser_core
 		QUuid uuid = QUuid::createUuid();
 		QString requestID = uuid.toString();
 
-		QString cloudUrl = "http://2-model-admin-dev.crealitygroup.com/api/cxy/v2/user/getInfo";
+		QString cloudUrl = getCloudUrl() + "/api/cxy/v2/user/getInfo";
 
 		QNetworkRequest request;
 		request.setUrl(QUrl(cloudUrl));
@@ -572,6 +572,25 @@ namespace qtuser_core
 		m_userInfo.loginState = 0;
 		m_userInfo.token = "";
 		return 0;
+	}
+
+	QString getCloudUrl()
+	{
+		//测试
+		QString urlStr = "http://2-model-admin-dev.crealitygroup.com";
+#ifdef CLOUD_BETA_URL
+		if (1)
+		{
+			//国内
+			urlStr = "https://model-admin.crealitygroup.com";
+		}
+		else
+		{
+			//国外
+			urlStr = "https://model-admin.crealitygroup.com";
+		}
+#endif
+		return urlStr;
 	}
 
 }

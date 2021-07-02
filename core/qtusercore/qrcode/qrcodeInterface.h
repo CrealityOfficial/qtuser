@@ -40,5 +40,7 @@ namespace qtuser_core
 	QTUSER_CORE_API int downloadImgFileFromUrl(QString strUrl, QString strFilePath);
 
 	QTUSER_CORE_API int logout();
+
+	QTUSER_CORE_API QString getCloudUrl();
 }
 #endif // _QTUSER_CORE_URLUTILS_1588905534361_H
