@@ -8,6 +8,8 @@
         <file>shaders/modelline.vert</file>
         <file>shaders/support.frag</file>
         <file>shaders/support.vert</file>
+		<file>shaders/supportshow.frag</file>
+        <file>shaders/supportshow.vert</file>
         <file>shaders/finephong.frag</file>
         <file>shaders/finephong.vert</file>
         <file>shaders/pure.frag</file>
