@@ -65,7 +65,6 @@ namespace qtuser_3d
 
 	void ModelNEntity::setState(float state)
 	{
-		qDebug() << "model setState " << state;
 		m_stateParameter->setValue(state);
 	}
 

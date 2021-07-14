@@ -93,7 +93,9 @@ namespace qtuser_3d
 			QByteArray normalBytes(positionBytes->size(), 0);
 			QVector3D* normal = (QVector3D*)normalBytes.data();
 
-			for (int i = 0; i < m_chunkFaces; ++i)
+			int n = positionBytes->size() / (3 * 3 * sizeof(float));
+
+			for (int i = 0; i < n; ++i)
 			{
 				QVector3D v0 = *(position + 3 * i);
 				QVector3D v1 = *(position + 3 * i + 1);
