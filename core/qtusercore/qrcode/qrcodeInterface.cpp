@@ -587,7 +587,7 @@ namespace qtuser_core
 		else
 		{
 			//ЙњЭт
-			urlStr = "https://model-admin.crealitygroup.com";
+			urlStr = "https://model-admin2.creality.com";
 		}
 #endif
 		return urlStr;
