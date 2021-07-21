@@ -1,8 +1,8 @@
 #version 150 core
 out vec4 fragmentColor;
 
-noperspective in vec3 viewDirection;
-noperspective in vec3 normal;
+in vec3 viewDirection;
+in vec3 normal;
 
 uniform vec4 ambient = vec4(0.4, 0.4, 0.4, 1.0);
 uniform vec4 diffuse = vec4(0.6, 0.6, 0.6, 1.0);
