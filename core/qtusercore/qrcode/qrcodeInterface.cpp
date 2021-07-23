@@ -1,5 +1,6 @@
 #include "qtusercore/qrcode/qrcodeInterface.h"
 #include "qtusercore/qrcode/qrencode.h"
+#include "downimagetask.h"
 #include <QImage>
 #include <QPainter>
 #include <QNetworkRequest>
@@ -12,6 +13,8 @@
 #include <QJsonObject>
 #include <QUuid>
 #include <QFile>
+#include <QThreadPool>
+#include <QSettings>
 
 namespace qtuser_core
 {
@@ -34,6 +37,31 @@ namespace qtuser_core
 		return strMacAddr;
 	}
 
+	QString getCurrentLanguage() 
+	{
+		QSettings setting;
+		setting.beginGroup("language_perfer_config");
+		QString lang = setting.value("language_type", "zh_cn").toString();
+		setting.endGroup();
+
+		//please refer http://yapi.crealitygroup.com/project/8/wiki
+		if (lang == "en.ts")
+		{
+			return "0";
+		}
+		else if (lang == "zh_CN.ts")
+		{
+			return "1";
+		}
+		else if (lang == "zh_TW.ts")
+		{
+			return "2";
+		}
+		else
+		{
+			return "0";
+		}
+	}
 
 	QPixmap Url2QrCodeImage(QString urlStr, int imageWidth, int imageHeight)
 	{
@@ -499,6 +527,8 @@ namespace qtuser_core
 
 				m_userInfo.avatar = userbaseInfoObj.value(QString::fromLatin1("avatar")).toString();
 				m_userInfo.nickName = userbaseInfoObj.value(QString::fromLatin1("nickName")).toString();
+				m_userInfo.maxStorageSpace = userInfoObj.value(QString::fromLatin1("maxStorageSpace")).toDouble();
+				m_userInfo.usedStorageSpace = userInfoObj.value(QString::fromLatin1("usedStorageSpace")).toDouble();
 
 				//memcpy(&userinfo, &m_userInfo, sizeof(m_userInfo));
 				userinfo.loginState = m_userInfo.loginState;
@@ -506,6 +536,8 @@ namespace qtuser_core
 				userinfo.token = m_userInfo.token;
 				userinfo.nickName = m_userInfo.nickName;
 				userinfo.avatar = m_userInfo.avatar;
+				userinfo.maxStorageSpace = m_userInfo.maxStorageSpace;
+				userinfo.usedStorageSpace = m_userInfo.usedStorageSpace;
 
 			}
 			else
@@ -567,6 +599,12 @@ namespace qtuser_core
 		}
 	}
 
+	void downloadImgFileFromUrl(QString strUrl, QString fileName, QString strFilePath, const std::function<void(QString)>& call_back, const bool isImage)
+	{
+		DownImageTask* task = new DownImageTask(strUrl, fileName, strFilePath, call_back, isImage);
+		QThreadPool::globalInstance()->start(task);
+	}
+
 	int logout()
 	{
 		m_userInfo.loginState = 0;
@@ -592,5 +630,416 @@ namespace qtuser_core
 #endif
 		return urlStr;
 	}
+
+	 void getGCodeList(int page, int pageSize, const std::function<void(QByteArray, int)>& call_back, QString isUpload)
+	{
+		 QString strContent = QString("{\"page\":%1, \"pageSize\":%2, \"isUpload\":%3}").arg(page).arg(pageSize).arg(isUpload);
+		 auto body = strContent.toUtf8();
+
+		 QString duid = getMacAddress();
+
+		 QString os_version = "Win";
+#ifdef __APPLE__
+		 os_version = "Mac";
+#endif
+
+		 QUuid uuid = QUuid::createUuid();
+		 QString requestID = uuid.toString();
+
+		 QString cloudUrl = getCloudUrl() + "/api/cxy/v2/gcode/ownerList";
+
+		 QNetworkRequest request;
+		 request.setUrl(QUrl(cloudUrl));
+		 request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		 request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		 request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		 request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		 request.setRawHeader("__CXY_OS_LANG_", "0");
+		 request.setRawHeader("__CXY_PLATFORM_", "6");
+		 request.setRawHeader("__CXY_UID_", m_userInfo.userID.toStdString().c_str());
+		 request.setRawHeader("__CXY_REQUESTID_", requestID.toStdString().c_str());
+		 request.setRawHeader("__CXY_TOKEN_", m_userInfo.token.toStdString().c_str());
+
+		 QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		 m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		 m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		 request.setSslConfiguration(m_sslConfig);
+
+		 QEventLoop eventLoop;
+		 QNetworkAccessManager* manager = new QNetworkAccessManager();
+		 QNetworkReply* reply = manager->post(request, body);
+
+		 QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		 eventLoop.exec();
+
+		 int state = -1;
+		 if (reply->error() == QNetworkReply::NoError)
+		 {
+			 call_back(reply->readAll(), page);
+		 }
+	}
+
+	 void deleteGCodeItem(QString gCodeId, int page, const std::function<void(QString, int)>& call_back)
+	 {
+		 QString strContent = QString("{\"id\":\"%1\"}").arg(gCodeId);
+		 auto body = strContent.toUtf8();
+
+		 QString duid = getMacAddress();
+
+		 QString os_version = "Win";
+#ifdef __APPLE__
+		 os_version = "Mac";
+#endif
+
+		 QUuid uuid = QUuid::createUuid();
+		 QString requestID = uuid.toString();
+
+		 QString cloudUrl = getCloudUrl() + "/api/cxy/v2/gcode/deleteGcode";
+
+		 QNetworkRequest request;
+		 request.setUrl(QUrl(cloudUrl));
+		 request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		 request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		 request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		 request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		 request.setRawHeader("__CXY_OS_LANG_", "0");
+		 request.setRawHeader("__CXY_PLATFORM_", "6");
+		 request.setRawHeader("__CXY_UID_", m_userInfo.userID.toStdString().c_str());
+		 request.setRawHeader("__CXY_REQUESTID_", requestID.toStdString().c_str());
+		 request.setRawHeader("__CXY_TOKEN_", m_userInfo.token.toStdString().c_str());
+
+		 QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		 m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		 m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		 request.setSslConfiguration(m_sslConfig);
+
+		 QEventLoop eventLoop;
+		 QNetworkAccessManager* manager = new QNetworkAccessManager();
+		 QNetworkReply* reply = manager->post(request, body);
+
+		 QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		 eventLoop.exec();
+		 int state = -1;
+		 if (reply->error() == QNetworkReply::NoError)
+		 {
+			 QJsonParseError error;
+			 QByteArray arrayJson = reply->readAll();
+			 QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
+
+			 if (error.error != QJsonParseError::NoError)
+			 {
+				 qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+			 }
+			 QString strJson(document.toJson(QJsonDocument::Compact));
+
+			 QJsonObject object = document.object();
+			 const QJsonObject result = object.value(QString::fromLatin1("result")).toObject();
+			 const QJsonArray list = result.value(QString::fromLatin1("list")).toArray();
+			 state = object.value(QString::fromLatin1("code")).toInt();
+
+			 if (state == 0)
+			 {
+				 qDebug() << "deleteGCodeItem success";
+				 call_back(gCodeId, page);
+			 }
+			 else
+			 {
+				 QString errorMsg = object.value(QString::fromLatin1("msg")).toString();
+				 qDebug() << errorMsg << "\n";
+			 }
+		 }
+	 }
+
+	 void getModelList(int page, int pageSize, int listType, const std::function<void(QByteArray, int)>& call_back, bool isLogin, int categoryId, int userId, QString modelGroupId, int filterType)
+	 {
+		 QString strContent = "";
+
+		 if (listType == 7 || listType == 8)
+		 {
+			 strContent = QString("{\"page\":%1, \"pageSize\":%2,\"listType\": %3}").arg(page).arg(pageSize).arg(listType);
+		 }
+		 else if (listType == 2)
+		 {
+			 strContent = QString("{\"page\":%1, \"pageSize\":%2,\"listType\": %3, \"categoryId\": %4}").arg(page).arg(pageSize).arg(listType).arg(categoryId);
+		 }
+
+		 auto body = strContent.toUtf8();
+
+		 QString duid = getMacAddress();
+
+		 QString os_version = "Win";
+#ifdef __APPLE__
+		 os_version = "Mac";
+#endif
+
+		 QUuid uuid = QUuid::createUuid();
+		 QString requestID = uuid.toString();
+
+		 QString cloudUrl = getCloudUrl() + "/api/cxy/model/modelGroupList";
+
+		 QNetworkRequest request;
+		 request.setUrl(QUrl(cloudUrl));
+		 request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		 request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		 request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		 request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		 request.setRawHeader("__CXY_OS_LANG_", "0");
+		 request.setRawHeader("__CXY_PLATFORM_", "6");
+		 request.setRawHeader("__CXY_REQUESTID_", requestID.toStdString().c_str());
+		 if (isLogin) {
+			 request.setRawHeader("__CXY_UID_", m_userInfo.userID.toStdString().c_str());
+			 request.setRawHeader("__CXY_TOKEN_", m_userInfo.token.toStdString().c_str());
+		 }else{}
+		 
+
+		 QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		 m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		 m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		 request.setSslConfiguration(m_sslConfig);
+
+		 QEventLoop eventLoop;
+		 QNetworkAccessManager* manager = new QNetworkAccessManager();
+		 QNetworkReply* reply = manager->post(request, body);
+
+		 QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		 eventLoop.exec();
+
+		 int state = -1;
+		 if (reply->error() == QNetworkReply::NoError)
+		 {
+			 call_back(reply->readAll(), page);
+		 }
+	 }
+
+	 void deleteModelItem(QString modelId, int page,  const std::function<void(QString, int)>& call_back)
+	 {
+		 QString strContent = QString("{\"id\":\"%1\"}").arg(modelId);
+		 auto body = strContent.toUtf8();
+
+		 QString duid = getMacAddress();
+
+		 QString os_version = "Win";
+#ifdef __APPLE__
+		 os_version = "Mac";
+#endif
+
+		 QUuid uuid = QUuid::createUuid();
+		 QString requestID = uuid.toString();
+
+		 QString cloudUrl = getCloudUrl() + "/api/cxy/model/modelGroupDelete";
+
+		 QNetworkRequest request;
+		 request.setUrl(QUrl(cloudUrl));
+		 request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		 request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		 request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		 request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		 request.setRawHeader("__CXY_OS_LANG_", "0");
+		 request.setRawHeader("__CXY_PLATFORM_", "6");
+		 request.setRawHeader("__CXY_UID_", m_userInfo.userID.toStdString().c_str());
+		 request.setRawHeader("__CXY_REQUESTID_", requestID.toStdString().c_str());
+		 request.setRawHeader("__CXY_TOKEN_", m_userInfo.token.toStdString().c_str());
+
+		 QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		 m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		 m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		 request.setSslConfiguration(m_sslConfig);
+
+		 QEventLoop eventLoop;
+		 QNetworkAccessManager* manager = new QNetworkAccessManager();
+		 QNetworkReply* reply = manager->post(request, body);
+
+		 QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		 eventLoop.exec();
+		 int state = -1;
+		 if (reply->error() == QNetworkReply::NoError)
+		 {
+			 QJsonParseError error;
+			 QByteArray arrayJson = reply->readAll();
+			 QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
+
+			 if (error.error != QJsonParseError::NoError)
+			 {
+				 qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+			 }
+			 QString strJson(document.toJson(QJsonDocument::Compact));
+
+			 QJsonObject object = document.object();
+			 const QJsonObject result = object.value(QString::fromLatin1("result")).toObject();
+			 const QJsonArray list = result.value(QString::fromLatin1("list")).toArray();
+			 state = object.value(QString::fromLatin1("code")).toInt();
+
+			 if (state == 0)
+			 {
+				 qDebug() << "model success";
+				 call_back(modelId, page);
+			 }
+			 else
+			 {
+				 QString errorMsg = object.value(QString::fromLatin1("msg")).toString();
+				 qDebug() << errorMsg << "\n";
+			 }
+		 }
+	 }
+
+	 void getModelChildList(int page, int pageSize, QString modelId, const std::function<void(QByteArray, QString)>& call_back)
+	 {
+		 QString strContent = QString("{\"page\":%1, \"pageSize\":%2,\"groupId\": \"%3\"}").arg(page).arg(pageSize).arg(modelId);
+		 auto body = strContent.toUtf8();
+
+		 QString duid = getMacAddress();
+
+		 QString os_version = "Win";
+#ifdef __APPLE__
+		 os_version = "Mac";
+#endif
+
+		 QUuid uuid = QUuid::createUuid();
+		 QString requestID = uuid.toString();
+
+		 QString cloudUrl = getCloudUrl() + "/api/cxy/v2/model/modelList";
+
+		 QNetworkRequest request;
+		 request.setUrl(QUrl(cloudUrl));
+		 request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		 request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		 request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		 request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		 request.setRawHeader("__CXY_OS_LANG_", "0");
+		 request.setRawHeader("__CXY_PLATFORM_", "6");
+		 request.setRawHeader("__CXY_UID_", m_userInfo.userID.toStdString().c_str());
+		 request.setRawHeader("__CXY_REQUESTID_", requestID.toStdString().c_str());
+		 request.setRawHeader("__CXY_TOKEN_", m_userInfo.token.toStdString().c_str());
+
+		 QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		 m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		 m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		 request.setSslConfiguration(m_sslConfig);
+
+		 QEventLoop eventLoop;
+		 QNetworkAccessManager* manager = new QNetworkAccessManager();
+		 QNetworkReply* reply = manager->post(request, body);
+
+		 QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		 eventLoop.exec();
+		 int state = -1;
+		 if (reply->error() == QNetworkReply::NoError)
+		 {
+			 /*QJsonParseError json_error;
+			 QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &json_error);
+			 if (!document.isNull() && json_error.error == QJsonParseError::NoError) {
+				 QString strJson(document.toJson(QJsonDocument::Compact));
+				 QJsonObject object = document.object();
+				 int state = object.value(QString::fromLatin1("code")).toInt();
+			 }*/
+			 call_back(reply->readAll(), modelId);
+		 }
+	 }
+
+	 void getCategoryList(int type, const std::function<void(QByteArray)>& call_back, bool isLogin)
+	 {
+		 QString strContent = QString("{\"type\":%1}").arg(type);
+		 auto body = strContent.toUtf8();
+
+		 QString duid = getMacAddress();
+
+		 QString os_version = "Win";
+#ifdef __APPLE__
+		 os_version = "Mac";
+#endif
+
+		 QUuid uuid = QUuid::createUuid();
+		 QString requestID = uuid.toString();
+
+		 QString cloudUrl = getCloudUrl() + "/api/cxy/category/categoryList";
+
+		 QNetworkRequest request;
+		 request.setUrl(QUrl(cloudUrl));
+		 request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		 request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		 request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		 request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		 request.setRawHeader("__CXY_OS_LANG_", getCurrentLanguage().toStdString().c_str());
+		 request.setRawHeader("__CXY_PLATFORM_", "6");
+		 request.setRawHeader("__CXY_REQUESTID_", requestID.toStdString().c_str());
+		 if (isLogin)
+		 {
+			 request.setRawHeader("__CXY_UID_", m_userInfo.userID.toStdString().c_str());
+			 request.setRawHeader("__CXY_TOKEN_", m_userInfo.token.toStdString().c_str());
+		 }
+		 else {}
+		 
+
+		 QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		 m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		 m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		 request.setSslConfiguration(m_sslConfig);
+
+		 QEventLoop eventLoop;
+		 QNetworkAccessManager* manager = new QNetworkAccessManager();
+		 QNetworkReply* reply = manager->post(request, body);
+
+		 QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		 eventLoop.exec();
+
+		 int state = -1;
+		 if (reply->error() == QNetworkReply::NoError)
+		 {
+			 call_back(reply->readAll());
+		 }
+	 }
+
+	 void modelSearch(QString keyword, int page, int pageSize, const std::function<void(QByteArray, int)>& call_back, bool isLogin)
+	 {
+		 QString strContent = QString("{\"page\":%1, \"pageSize\":%2,\"keyword\": \"%3\"}").arg(page).arg(pageSize).arg(keyword);
+
+		 auto body = strContent.toUtf8();
+
+		 QString duid = getMacAddress();
+
+		 QString os_version = "Win";
+#ifdef __APPLE__
+		 os_version = "Mac";
+#endif
+
+		 QUuid uuid = QUuid::createUuid();
+		 QString requestID = uuid.toString();
+
+		 QString cloudUrl = getCloudUrl() + "/api/cxy/search/modelSearch";
+
+		 QNetworkRequest request;
+		 request.setUrl(QUrl(cloudUrl));
+		 request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+		 request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+		 request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+		 request.setRawHeader("__CXY_APP_ID_", "creality_model");
+		 request.setRawHeader("__CXY_OS_LANG_", "0");
+		 request.setRawHeader("__CXY_PLATFORM_", "6");
+		 request.setRawHeader("__CXY_REQUESTID_", requestID.toStdString().c_str());
+		 if (isLogin) {
+			 request.setRawHeader("__CXY_UID_", m_userInfo.userID.toStdString().c_str());
+			 request.setRawHeader("__CXY_TOKEN_", m_userInfo.token.toStdString().c_str());
+		 }
+		 else {}
+
+
+		 QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+		 m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+		 m_sslConfig.setProtocol(QSsl::TlsV1_2);
+		 request.setSslConfiguration(m_sslConfig);
+
+		 QEventLoop eventLoop;
+		 QNetworkAccessManager* manager = new QNetworkAccessManager();
+		 QNetworkReply* reply = manager->post(request, body);
+
+		 QObject::connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		 eventLoop.exec();
+
+		 int state = -1;
+		 if (reply->error() == QNetworkReply::NoError)
+		 {
+			 call_back(reply->readAll(), page);
+		 }
+	 }
 
 }
