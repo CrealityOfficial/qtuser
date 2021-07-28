@@ -142,7 +142,7 @@ namespace qtuser_core
 			const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
 			if (error.error != QJsonParseError::NoError)
 			{
-				qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+				qWarning() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
 				return false;
 			}
 			QString strJson(document.toJson(QJsonDocument::Compact));
@@ -203,7 +203,7 @@ namespace qtuser_core
 			const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
 			if (error.error != QJsonParseError::NoError)
 			{
-				qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+				qWarning() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
 				return false;
 			}
 			QString strJson(document.toJson(QJsonDocument::Compact));
@@ -275,7 +275,7 @@ namespace qtuser_core
 			const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
 			if (error.error != QJsonParseError::NoError)
 			{
-				qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+				qWarning() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
 				return false;
 			}
 			QString strJson(document.toJson(QJsonDocument::Compact));
@@ -347,7 +347,7 @@ namespace qtuser_core
 			const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
 			if (error.error != QJsonParseError::NoError)
 			{
-				qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+				qWarning() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
 				return false;
 			}
 			QString strJson(document.toJson(QJsonDocument::Compact));
@@ -426,7 +426,7 @@ namespace qtuser_core
 			const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
 			if (error.error != QJsonParseError::NoError)
 			{
-				qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+				qWarning() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
 				return false;
 			}
 			QString strJson(document.toJson(QJsonDocument::Compact));
@@ -511,7 +511,7 @@ namespace qtuser_core
 			const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
 			if (error.error != QJsonParseError::NoError)
 			{
-				qDebug() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+				qWarning() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
 				return false;
 			}
 			QString strJson(document.toJson(QJsonDocument::Compact));
@@ -617,7 +617,17 @@ namespace qtuser_core
 		//²âÊÔ
 		QString urlStr = "http://2-model-admin-dev.crealitygroup.com";
 #ifdef CLOUD_BETA_URL
-		if (1)
+		QSettings setting;
+		setting.beginGroup("profile_setting");
+		QString strStartType = setting.value("service_type", "-1").toString();
+		if (strStartType == "-1")
+		{
+			strStartType = "0";
+			setting.setValue("service_type", "0");
+		}
+		setting.endGroup();
+
+		if (strStartType == "0")
 		{
 			//¹úÄÚ
 			urlStr = "https://model-admin.crealitygroup.com";
