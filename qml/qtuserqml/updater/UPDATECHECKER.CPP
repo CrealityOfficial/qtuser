@@ -81,7 +81,7 @@ void UpdateChecker::checkForUpdates()
         connect(m_impl->networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
     }
     QString suffix = m_impl->currentVersion.extra();
-    qDebug() << suffix;
+    qDebug() << "version type = " << suffix;
 //#ifndef QT_NO_DEBUG
 //    suffix = "Beta";
 //#endif
@@ -89,6 +89,7 @@ void UpdateChecker::checkForUpdates()
     QString projectName = QString(m_impl->owner).toLower();
     QString urlstr = QString::fromLatin1("https://file-cdn.creality.com/ota-sz/") + projectName + "/" + suffix.toLower()+"/"+m_impl->currentVersion.os() + QString::fromLatin1("/latest.json");
     QUrl requestUrl = QUrl(urlstr);
+    qDebug() << urlstr;
     requestUrl.setQuery(QUrlQuery("time=" + QDateTime::currentDateTime().toString("ddMMyyyyhh")));
     request.setUrl(requestUrl);
     request.setRawHeader("User-Agent", QString::fromLatin1("%1/%2").arg(qApp->applicationName()).arg(qApp->applicationVersion()).toLatin1());
