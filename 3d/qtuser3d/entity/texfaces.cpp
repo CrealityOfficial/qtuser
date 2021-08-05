@@ -23,7 +23,7 @@ namespace qtuser_3d
 		Qt3DRender::QEffect* effect = EFFECTCREATE("printerbottom", this);
 		loadImage();
 
-		m_colorParameter = createParameter("color", QVector4D(0.90f, 0.90f, 0.90f, 0.3f));
+		m_colorParameter = createParameter("color", QVector4D(0.27f, 0.27f, 0.27f, 1.0f));//createParameter("color", QVector4D(0.90f, 0.90f, 0.90f, 0.3f));
 		m_logcolorParameter = createParameter("logcolor", QVector4D(0.66f, 0.66f, 0.66f, 0.5f));
 		//Qt3DRender::QEffect* effect = EFFECTCREATE("pure", m_material);
 		m_visibleParameter = createParameter("visible", 1);

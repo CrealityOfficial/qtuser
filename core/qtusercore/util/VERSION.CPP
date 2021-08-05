@@ -90,7 +90,7 @@ Version::Version(const QString &version, const QString &delimeter)
         break;
     }
     const QStringList list2 = version.split(" ");
-    if (list2.size() == 2)
+    if (list2.size() >= 2)
     {
         m_extra = list2[1];
     }

@@ -8,7 +8,7 @@ namespace qtuser_3d
 		:BasicEntity(parent)
 	{
 		//QVector4D color(0.180f, 0.541f, 0.968f, 1.0f);
-		QVector4D color(0.48f, 0.48f, 0.48f, 1.0f);
+		QVector4D color(0.15f, 0.15f, 0.15f, 1.0f);
 		m_colorParameter = createParameter("color", color);
 
 		setEffect(EFFECT("pure"));
