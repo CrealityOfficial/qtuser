@@ -63,6 +63,8 @@ namespace qtuser_3d
 		void removeCameraObserver(ScreenCameraObserver* observer);
 		void clearCameraObservers();
 		void notifyCameraChanged();
+
+		void setUpdateNearFarRuntime(bool update);
 	protected:
 		void _updateNearFar(const qtuser_3d::Box3D& box);
 	protected:
@@ -76,6 +78,8 @@ namespace qtuser_3d
 		QVector3D m_orignCenter;
 
 		QList<ScreenCameraObserver*> m_cameraObservers;
+		
+		bool m_updateNearFarRuntime;
 	};
 
 	QTUSER_3D_API bool cameraRayPoint(ScreenCamera* camera, QPoint point, QVector3D& planePosition, QVector3D& planeNormal, QVector3D& collide);

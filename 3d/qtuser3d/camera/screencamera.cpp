@@ -12,6 +12,7 @@ namespace qtuser_3d
 		,m_camera(nullptr)
 		, m_minDistance(1.0f)
 		, m_maxDistance(4000.0f)
+		, m_updateNearFarRuntime(true)
 	{
 		m_camera = new Qt3DRender::QCamera();
 		m_camera->lens()->setPerspectiveProjection(30.0f, 16.0f / 9.0f, 0.1f, 3000.0f);
@@ -98,6 +99,9 @@ namespace qtuser_3d
 
 	void ScreenCamera::_updateNearFar(const qtuser_3d::Box3D& box)
 	{
+		if (!m_updateNearFarRuntime)
+			return;
+
 		QVector3D cameraPosition = m_camera->position();
 		QVector3D cameraCenter = m_camera->viewCenter();
 		QVector3D cameraView = cameraCenter - cameraPosition;
@@ -467,5 +471,10 @@ namespace qtuser_3d
 		}
 
 		return false;
+	}
+
+	void ScreenCamera::setUpdateNearFarRuntime(bool update)
+	{
+		m_updateNearFarRuntime = update;
 	}
 }
