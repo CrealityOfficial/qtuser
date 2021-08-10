@@ -250,7 +250,7 @@ namespace qtuser_3d
 
 		else
 		{
-			liftZUp(-m_globalSpaceBox.max.z());  //reverse
+			liftZUp(0.0);  //reverse
 			m(2, 2) = -1;
 		}
 		mirror(m, true);
@@ -264,7 +264,7 @@ namespace qtuser_3d
 			QMatrix4x4 m;
 			if (mirrorZ_count % 2 != 0)
 			{
-				liftZUp(-m_globalSpaceBox.max.z());
+				liftZUp(0.0);
 				m(2, 2) = -1;
 			}
 
