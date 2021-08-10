@@ -33,7 +33,7 @@ uniform float zcha = 0.01;
 
 uniform float state;
 uniform float nozzle;
-uniform vec4 stateColors[5];
+uniform vec4 stateColors[6];
 uniform vec4 customColor;
 
 bool frontFacing()
@@ -121,14 +121,16 @@ void main( void )
     {
         if(! frontFacing())
         {
-            coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+            coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+			coreColor.a = 1.0;
         }
     }
     else
     {
         if(frontFacing())
         {
-            coreColor.rgb = vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+            coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+			coreColor.a = 1.0;
         }
     }
    

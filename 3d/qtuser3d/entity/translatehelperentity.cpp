@@ -1,4 +1,4 @@
-#include "qtuser3d/entity/translatehelperentity.h"
+﻿#include "qtuser3d/entity/translatehelperentity.h"
 #include "qtuser3d/entity/manipulateentity.h"
 #include "qtuser3d/module/manipulatepickable.h"
 
@@ -117,7 +117,23 @@ namespace qtuser_3d
 		if(m_zArrowEntity)
 			visibility ? m_zArrowEntity->setParent(this) : m_zArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
+	void TranslateHelperEntity::setDirColor(QVector4D v4, int nDir)
+	{
+		if (nDir == 0 && m_xArrowEntity)
+		{   //x 轴
+			m_xArrowEntity->setColor(v4);
+		}
+		else if (nDir == 1 && m_yArrowEntity)
+		{
+			m_yArrowEntity->setColor(v4);
+		
+		}
+		else if (nDir == 2 && m_zArrowEntity)
+		{
+			m_zArrowEntity->setColor(v4);
 
+		}
+	}
 	void TranslateHelperEntity::updateBox(const Box3D& box)
 	{
 		QVector3D center = box.center();

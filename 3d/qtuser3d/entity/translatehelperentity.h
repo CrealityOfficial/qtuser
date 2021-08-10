@@ -28,6 +28,7 @@ namespace qtuser_3d
 		void updateBox(const Box3D& box);
 		void setFixSize(bool fixSize);
 		QVector3D center();
+		void setDirColor(QVector4D v4, int nDir);
 	protected:
 		Qt3DCore::QTransform* m_transform;
 
