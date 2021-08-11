@@ -17,6 +17,7 @@ namespace qtuser_3d
 
 		void setBoxVisibility(bool visible);
 		void updateBoxLocal(Box3D& box, QMatrix4x4& parentMatrix);
+		void setBoxColor(QVector4D color);
 		void updateConvex(QVector<QVector3D>& points, QMatrix4x4& matrix, bool loop);
 
 		void setState(float state);
