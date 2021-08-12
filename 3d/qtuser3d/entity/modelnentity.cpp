@@ -46,6 +46,10 @@ namespace qtuser_3d
 	{
 		m_boxEntity->updateLocal(box, parentMatrix);
 	}
+	void ModelNEntity::setBoxColor(QVector4D color)
+	{
+		m_boxEntity->setColor(color);
+	}
 
 	void ModelNEntity::updateConvex(QVector<QVector3D>& points, QMatrix4x4& matrix, bool loop)
 	{
