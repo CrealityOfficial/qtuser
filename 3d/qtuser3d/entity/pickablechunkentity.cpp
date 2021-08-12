@@ -88,12 +88,15 @@ namespace qtuser_3d
 		if (positionBytes)
 		{
 			m_positionBuffer->updateData(baseIndex * 3, *positionBytes);
+			m_positionByteArray.replace(baseIndex * 3, positionBytes->size(), *positionBytes);
 
 			QVector3D* position = (QVector3D*)positionBytes->data();
 			QByteArray normalBytes(positionBytes->size(), 0);
 			QVector3D* normal = (QVector3D*)normalBytes.data();
 
-			for (int i = 0; i < m_chunkFaces; ++i)
+			int n = positionBytes->size() / (3 * 3 * sizeof(float));
+
+			for (int i = 0; i < n; ++i)
 			{
 				QVector3D v0 = *(position + 3 * i);
 				QVector3D v1 = *(position + 3 * i + 1);
@@ -107,11 +110,13 @@ namespace qtuser_3d
 				*normal++ = n;
 			}
 			m_normalBuffer->updateData(baseIndex * 3, normalBytes);
+			m_normalByteArray.replace(baseIndex * 3, normalBytes.size(), normalBytes);
 		}
 
 		if (flagsBytes)
 		{
 			m_flagBuffer->updateData(baseIndex, *flagsBytes);
+			m_flagByteArray.replace(baseIndex, flagsBytes->size(), *flagsBytes);
 		}
 	}
 
