@@ -25,7 +25,7 @@ uniform vec2 layershow;
 
 uniform vec4 typecolors[15];
 uniform vec4 speedcolors[13];
-uniform vec4 nozzlecolors[7];
+uniform vec4 nozzlecolors[8];
 
 uniform int typecolorsshow[15];
 
