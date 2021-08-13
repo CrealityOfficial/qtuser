@@ -152,6 +152,12 @@ void CameraController::onRightMouseButtonMove(QMouseEvent* event)
 
 	m_cameraManipulator->onRightMouseButtonMove(event);
 	emit signalViewChanged(false);
+
+	QVector3D position = getViewPosition();
+	QVector3D upview = getViewupVector();
+	QVector3D center = getviewCenter();
+	QVector3D diff = position - center;
+	emit signalCameraChaged(position-center, getViewupVector());
 }
 
 void CameraController::onRightMouseButtonRelease(QMouseEvent* event)
@@ -272,6 +278,13 @@ void CameraController::viewFromBack(QVector3D* specificCenter)
 {
 	QVector3D dir(0.0f, -1.0f, 0.0f);
 	QVector3D right(-1.0f, 0.0f, 0.0f);
+	view(dir, right, specificCenter);
+}
+
+void CameraController::viewFromUserSetting(QVector3D posion, QVector3D viewCenter, QVector3D upVector, QVector3D* specificCenter)
+{
+	QVector3D dir = viewCenter - posion;
+	QVector3D right = QVector3D::crossProduct(dir, upVector);
 	view(dir, right, specificCenter);
 }
 

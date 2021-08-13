@@ -30,6 +30,8 @@ public:
 	Q_INVOKABLE void viewFromRight(QVector3D* specificCenter = nullptr);
 	Q_INVOKABLE void viewFromFront(QVector3D* specificCenter = nullptr);
 	Q_INVOKABLE void viewFromBack(QVector3D* specificCenter = nullptr);
+	Q_INVOKABLE void viewFromUserSetting(QVector3D posion, QVector3D viewCenter, QVector3D upVector, QVector3D* specificCenter = nullptr);
+
 	void view(const QVector3D& dir, const QVector3D& right, QVector3D* specificCenter = nullptr);
 
 	Q_INVOKABLE void viewFromOrthographic();
@@ -71,6 +73,7 @@ protected:
 	void onWheelEvent(QWheelEvent* event) override;
 signals:
 	void signalViewChanged(bool capture);
+	void signalCameraChaged(QVector3D position, const QVector3D upVector);
 protected:
 	qtuser_3d::CameraMouseManipulator* m_cameraManipulator;
 	qtuser_3d::ScreenCamera* m_screenCamera;
