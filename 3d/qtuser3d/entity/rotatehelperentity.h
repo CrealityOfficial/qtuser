@@ -42,6 +42,7 @@ namespace qtuser_3d
 		void setXVisibility(bool visibility);
 		void setYVisibility(bool visibility);
 		void setZVisibility(bool visibility);
+		void setDirColor(QVector4D v4, int nDir);
 		QVector3D center();
 		void setFixSize(bool fixSize);
 	public slots:

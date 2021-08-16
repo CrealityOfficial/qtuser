@@ -189,7 +189,23 @@ namespace qtuser_3d
 		visibility ? m_zRingEntity->setParent(this) : m_zRingEntity->setParent((Qt3DCore::QNode*)nullptr);
 		visibility ? m_select_zRingEntity->setParent(this) : m_select_zRingEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
+	void RotateHelperEntity::setDirColor(QVector4D v4, int nDir)
+	{
+		if (nDir == 0 && m_xRingEntity)
+		{   //x Öá
+			m_xRingEntity->setColor(v4);
+		}
+		else if (nDir == 1 && m_yRingEntity)
+		{
+			m_yRingEntity->setColor(v4);
 
+		}
+		else if (nDir == 2 && m_zRingEntity)
+		{
+			m_zRingEntity->setColor(v4);
+
+		}
+	}
 	QVector3D RotateHelperEntity::center()
 	{
 		return m_center;
