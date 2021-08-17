@@ -32,7 +32,8 @@ namespace qtuser_3d
 		{
 			QMatrix4x4 xMatrix;
 			xMatrix.rotate(-90.0f * dir.x(), 0.0f, 0.0f, 1.0f);
-			xMatrix.scale(50.0f, 50.0f, 50.0f);
+			//xMatrix.scale(50.0f, 50.0f, 50.0f);
+			xMatrix.scale(15.0f, 15.0f, 15.0f);
 
 			m_xArrowEntity = new qtuser_3d::ManipulateEntity(this);
 			m_xArrowEntity->setPose(xMatrix);
@@ -49,8 +50,8 @@ namespace qtuser_3d
 			{
 				yMatrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
 			}
-			yMatrix.scale(50.0f, 50.0f, 50.0f);
-
+			//yMatrix.scale(50.0f, 50.0f, 50.0f);
+			yMatrix.scale(15.0f, 15.0f, 15.0f);
 			m_yArrowEntity = new qtuser_3d::ManipulateEntity(this);
 			m_yArrowEntity->setPose(yMatrix);
 			m_yArrowEntity->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
@@ -63,8 +64,8 @@ namespace qtuser_3d
 		{
 			QMatrix4x4 zMatrix;
 			zMatrix.rotate(90.0f * dir.z(), 1.0f, 0.0f, 0.0f);
-			zMatrix.scale(50.0f, 50.0f, 50.0f);
-
+			//zMatrix.scale(50.0f, 50.0f, 50.0f);
+			zMatrix.scale(15.0f, 15.0f, 15.0f);
 			m_zArrowEntity = new qtuser_3d::ManipulateEntity(this);
 			m_zArrowEntity->setPose(zMatrix);
 			m_zArrowEntity->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));

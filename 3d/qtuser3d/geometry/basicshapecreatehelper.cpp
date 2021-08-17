@@ -351,21 +351,22 @@ namespace qtuser_3d
 		float angdesSpan = 360.0 / seg;
 
 		float halflen = squarelen / 2.0;
+		float extraLen = 0.05;
 
-        float axisR = 0.05;
-        float axisLen = 0.2;
+        float axisR = 0.08;
+        float axisLen = 0.3;
 
-        float disLen = cylinderLen + axisLen + 0.01;
+        float disLen = cylinderLen + axisLen + 0.05;
 		QVector3D vs[8] = {
             QVector3D(-halflen, disLen, -halflen),
             QVector3D(-halflen, disLen, halflen),
             QVector3D(halflen, disLen, halflen),
             QVector3D(halflen, disLen, -halflen),
 
-            QVector3D(-halflen, disLen + squarelen, -halflen),
-            QVector3D(-halflen, disLen + squarelen, halflen),
-            QVector3D(halflen, disLen + squarelen, halflen),
-            QVector3D(halflen, disLen + squarelen, -halflen),
+            QVector3D(-halflen, disLen + squarelen + extraLen, -halflen),
+            QVector3D(-halflen, disLen + squarelen + extraLen, halflen),
+            QVector3D(halflen, disLen + squarelen + extraLen, halflen),
+            QVector3D(halflen, disLen + squarelen + extraLen, -halflen),
 		};
 
 		auto f = [&vs, &vertexDatas](int p1, int p2, int p3, int p4)
