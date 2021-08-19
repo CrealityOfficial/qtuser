@@ -54,11 +54,13 @@ namespace qtuser_core
 
 		QSettings settings;
 		settings.remove(key);
+		qDebug() << "QSettings -------------cacheStrings/key"<< key;
 		settings.beginWriteArray(key);
 		for (int i = 0; i < values.size(); ++i)
 		{
 			settings.setArrayIndex(i);
 			settings.setValue("name", values[i]);
+			qDebug() << i << "name" << values[i];
 		}
 		settings.endArray();
 	}
