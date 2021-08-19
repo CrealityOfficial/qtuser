@@ -25,7 +25,8 @@ namespace qtuser_core
 	{
 		if (!checkKey(groupName, key))
 			return;
-
+		qDebug() << "QSettings -------------cacheString/groupName";
+		qDebug() << groupName << key << value;
 		QSettings setting;
 		setting.beginGroup(groupName);
 		setting.setValue(key, value);
@@ -36,6 +37,8 @@ namespace qtuser_core
 	{
 		QString str;
 
+		qDebug() << "QSettings -------------traitString/groupName";
+		qDebug() << groupName << key << defaultStr;
 		QSettings setting;
 		setting.beginGroup(groupName);
 		str = setting.value(key, defaultStr).toString();
@@ -70,11 +73,13 @@ namespace qtuser_core
 		QStringList values;
 
 		QSettings settings;
+		qDebug() << "QSettings -------------traitString/name" << key;
 		int size = settings.beginReadArray(key);
 		for (int i = 0; i < size; ++i)
 		{
 			settings.setArrayIndex(i);
 			QString machine = settings.value("name").toString();
+			qDebug() << machine;
 			if (!machine.isEmpty())
 				values.append(machine);
 		}
@@ -88,6 +93,8 @@ namespace qtuser_core
 		if (!checkKey(groupName, key))
 			return;
 
+		qDebug() << "QSettings -------------cacheInt/groupName";
+		qDebug() << groupName << key << value;
 		QSettings setting;
 		setting.beginGroup(groupName);
 		setting.setValue(key, value);
@@ -98,6 +105,8 @@ namespace qtuser_core
 	{
 		int value;
 
+		qDebug() << "QSettings -------------traitInt/groupName";
+		qDebug() << groupName << key << defaultValue;
 		QSettings setting;
 		setting.beginGroup(groupName);
 		value = setting.value(key, defaultValue).toInt();
