@@ -19,7 +19,14 @@ namespace qtuser_3d
 	{
 		m_size = size;
 		for (ResizeEventHandler* handler : m_resizeEventHandlers)
+		{
 			handler->onResize(size);
+			if (!handler->m_resizeStatus)
+			{
+				handler->m_resizeStatus = true;
+				break;
+			}
+		}
 	}
 
 	void EventSubdivide::mousePressEvent(QMouseEvent* event)
@@ -27,17 +34,38 @@ namespace qtuser_3d
 		if ((event->button() == Qt::LeftButton))
 		{
 			for (LeftMouseEventHandler* handler : m_leftMouseEventHandlers)
+			{
 				handler->onLeftMouseButtonPress(event);
+				if (!handler->m_leftPressStatus)
+				{
+					handler->m_leftPressStatus = true;
+					break;
+				}
+			}
 		}
 		if ((event->button() == Qt::MiddleButton))
 		{
 			for (MidMouseEventHandler* handler : m_midMouseEventHandlers)
+			{
 				handler->onMidMouseButtonPress(event);
+				if (!handler->m_midPressStatus)
+				{
+					handler->m_midPressStatus = true;
+					break;
+				}
+			}
 		}
 		if ((event->button() == Qt::RightButton))
 		{
 			for (RightMouseEventHandler* handler : m_rightMouseEventHandlers)
+			{
 				handler->onRightMouseButtonPress(event);
+				if (!handler->m_rightPressStatus)
+				{
+					handler->m_rightPressStatus = true;
+					break;
+				}
+			}
             m_bLastMove = false;
 		}
 
@@ -49,18 +77,39 @@ namespace qtuser_3d
 		if ((event->buttons() == Qt::RightButton))
 		{
 			for (RightMouseEventHandler* handler : m_rightMouseEventHandlers)
+			{
 				handler->onRightMouseButtonMove(event);
+				if (!handler->m_rightMoveStatus)
+				{
+					handler->m_rightMoveStatus = true;
+					break;
+				}
+			}
             m_bLastMove = true;
 		}
 		if ((event->buttons() == Qt::MiddleButton))
 		{
 			for (MidMouseEventHandler* handler : m_midMouseEventHandlers)
+			{
 				handler->onMidMouseButtonMove(event);
+				if (!handler->m_midMoveStatus)
+				{
+					handler->m_midMoveStatus = true;
+					break;
+				}
+			}
 		}
 		if ((event->buttons() == Qt::LeftButton))
 		{
 			for (LeftMouseEventHandler* handler : m_leftMouseEventHandlers)
+			{
 				handler->onLeftMouseButtonMove(event);
+				if (!handler->m_leftMoveStatus)
+				{
+					handler->m_leftMoveStatus = true;
+					break;
+				}
+			}
 		}
 
 		m_clickEventChecker->mouseMoveEvent(event);
@@ -71,71 +120,157 @@ namespace qtuser_3d
 		if ((event->button() == Qt::RightButton))
 		{
 			for (RightMouseEventHandler* handler : m_rightMouseEventHandlers)
+			{
 				handler->onRightMouseButtonRelease(event);
+				if (!handler->m_rightReleaseStatus)
+				{
+					handler->m_rightReleaseStatus = true;
+					break;
+				}
+			}
 		}
 		if ((event->button() == Qt::MiddleButton))
 		{
 			for (MidMouseEventHandler* handler : m_midMouseEventHandlers)
+			{
 				handler->onMidMouseButtonRelease(event);
+				if (!handler->m_midReleaseStatus)
+				{
+					handler->m_midReleaseStatus = true;
+					break;
+				}
+			}
 		}
 		if ((event->button() == Qt::LeftButton))
 		{
 			for (LeftMouseEventHandler* handler : m_leftMouseEventHandlers)
+			{
 				handler->onLeftMouseButtonRelease(event);
+				if (!handler->m_leftReleaseStatus)
+				{
+					handler->m_leftReleaseStatus = true;
+					break;
+				}
+			}
 		}
 
 		if (m_clickEventChecker->CheckRightButton(event))
 		{
             if(m_bLastMove)return;
 			for (RightMouseEventHandler* handler : m_rightMouseEventHandlers)
+			{
 				handler->onRightMouseButtonClick(event);
+				if (!handler->m_rightClickStatus)
+				{
+					handler->m_rightClickStatus = true;
+					break;
+				}
+			}
 		}
 		if (m_clickEventChecker->CheckMiddleButton(event))
 		{
 			for (MidMouseEventHandler* handler : m_midMouseEventHandlers)
+			{
 				handler->onMidMouseButtonClick(event);
+				if (!handler->m_midClickStatus)
+				{
+					handler->m_midClickStatus = true;
+					break;
+				}
+			}
 		}
 		if (m_clickEventChecker->CheckLeftButton(event))
 		{
 			for (LeftMouseEventHandler* handler : m_leftMouseEventHandlers)
+			{
 				handler->onLeftMouseButtonClick(event);
+				if (!handler->m_leftClickStatus)
+				{
+					handler->m_leftClickStatus = true;
+					break;
+				}
+			}
 		}
 	}
 
 	void EventSubdivide::wheelEvent(QWheelEvent* event)
 	{
 		for (WheelEventHandler* handler : m_wheelEventHandlers)
+		{
 			handler->onWheelEvent(event);
+			if (!handler->m_wheelStatus)
+			{
+				handler->m_wheelStatus = true;
+				break;
+			}
+		}
 	}
 
 	void EventSubdivide::hoverEnterEvent(QHoverEvent* event)
 	{
 		for (HoverEventHandler* handler : m_hoverEventHandlers)
+		{
 			handler->onHoverEnter(event);
+			if (!handler->m_hoverEnterStatus)
+			{
+				handler->m_hoverEnterStatus = true;
+				break;
+			}
+		}
 	}
 
 	void EventSubdivide::hoverMoveEvent(QHoverEvent* event)
 	{
 		for (HoverEventHandler* handler : m_hoverEventHandlers)
+		{
 			handler->onHoverMove(event);
+			if (!handler->m_hoverMoveStatus)
+			{
+				handler->m_hoverMoveStatus = true;
+				break;
+			}
+		}
 	}
 
 	void EventSubdivide::hoverLeaveEvent(QHoverEvent* event)
 	{
 		for (HoverEventHandler* handler : m_hoverEventHandlers)
+		{
 			handler->onHoverLeave(event);
+			if (!handler->m_hoverLeaveStatus)
+			{
+				handler->m_hoverLeaveStatus = true;
+				break;
+			}
+		}
 	}
 
 	void EventSubdivide::keyPressEvent(QKeyEvent* event)
 	{
 		for (KeyEventHandler* handler : m_KeyEventHandlers)
+		{
 			handler->onKeyPress(event);
+			{
+				if (!handler->m_keyPressStatus)
+				{
+					handler->m_keyPressStatus = true;
+					break;
+				}
+			}
+		}
 	}
 
 	void EventSubdivide::keyReleaseEvent(QKeyEvent* event)
 	{
 		for (KeyEventHandler* handler : m_KeyEventHandlers)
+		{
 			handler->onKeyRelease(event);
+			if (!handler->m_keyRelaseStatus)
+			{
+				handler->m_keyRelaseStatus = true;
+				break;
+			}
+		}
 	}
 
 	void EventSubdivide::closeHandlers()
