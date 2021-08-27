@@ -12,10 +12,6 @@ namespace qtuser_3d
 		:m_iUnit(1)
 		, m_iModelGap(10)
 		, m_pProgress(nullptr)
-		, m_bOutTop(false)
-		, m_bOutLeft(false)
-		, m_bOutBottom(false)
-		, m_bOutRight(false)
 	{
 
 	}
@@ -35,173 +31,6 @@ namespace qtuser_3d
 	//    m_ptPlatformCenter.fX = ((iXLeftTop + iXRightBottom) / 2);
 	//    m_ptPlatformCenter.fY = ((iYLeftTop + iYRightBottom) / 2);        
 	//}
-
-	int CLayoutAlg::GetDstPointInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptDst)
-	{
-		//these four temporary variable will help reduce the searching time
-		m_bOutTop = false;//check this polygon is out of the top line when you move this polygon as this track
-		m_bOutLeft = false;
-		m_bOutBottom = false;
-		m_bOutRight = false;
-
-		if (plgGroup.count() == 0)
-		{
-			ptDst.fX = (m_rcPlatform.fXMax + m_rcPlatform.fXMin) / 2;
-			ptDst.fY = (m_rcPlatform.fYMax + m_rcPlatform.fYMin) / 2;
-
-			return 0;
-		}
-		else
-		{
-			QVector<SModelPolygon> plgSimpleGroup;
-
-			for (SModelPolygon itQVect : plgGroup)
-			{
-				if (itQVect.rcGrobalDst.fXMax < m_rcPlatform.fXMin || itQVect.rcGrobalDst.fYMax < m_rcPlatform.fYMin || itQVect.rcGrobalDst.fXMin > m_rcPlatform.fXMax || itQVect.rcGrobalDst.fYMin > m_rcPlatform.fYMax)
-				{
-					continue;
-				}
-
-				CollectVetex(itQVect);
-
-				plgSimpleGroup.push_back(itQVect);
-			}
-
-			CollectVetex(plgInsert);
-
-			m_ptPlatformCenter.fX = (m_rcPlatform.fXMax + m_rcPlatform.fXMin) / 2;
-			m_ptPlatformCenter.fY = (m_rcPlatform.fYMax - m_rcPlatform.fYMin) / 2;
-			int iPlatFormWidth = (m_rcPlatform.fXMax - m_rcPlatform.fXMin) / 2;
-			float fPro = 0;
-			for (int i = 0; i < iPlatFormWidth; i++)
-			{
-				//right up part
-				if (!m_bOutRight)
-				{
-					for (int j = 0; j <= i; j += m_iUnit)
-					{
-						int iX = i;
-						int iY = j;
-						iX += m_ptPlatformCenter.fX;
-						iY += m_ptPlatformCenter.fY;
-
-
-						S3DPrtPointF ptIDst;
-						ptIDst.fX = iX;
-						ptIDst.fY = iY;
-
-						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
-						{
-							ptDst = ptIDst;
-							return 0;
-						}
-
-					}
-				}
-
-				//top side
-				if (!m_bOutTop)
-				{
-					for (int j = i - 1; j >= -i; j -= m_iUnit)
-					{
-						int iX = j;
-						int iY = i;
-						iX += m_ptPlatformCenter.fX;
-						iY += m_ptPlatformCenter.fY;
-						S3DPrtPointF ptIDst;
-						ptIDst.fX = iX;
-						ptIDst.fY = iY;
-
-						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
-						{
-							ptDst = ptIDst;
-							return 0;
-						}
-					}
-				}
-
-				//left side
-				if (!m_bOutLeft)
-				{
-					for (int j = i - 1; j >= -i; j -= m_iUnit)
-					{
-						int iX = -i;
-						int iY = j;
-						iX += m_ptPlatformCenter.fX;
-						iY += m_ptPlatformCenter.fY;
-						S3DPrtPointF ptIDst;
-						ptIDst.fX = iX;
-						ptIDst.fY = iY;
-
-						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
-						{
-							ptDst = ptIDst;
-							return 0;
-						}
-					}
-				}
-
-				//bottom side
-				if (!m_bOutBottom)
-				{
-					for (int j = -i + 1; j <= i; j += m_iUnit)
-					{
-						int iY = -i;
-						int iX = j;
-						iX += m_ptPlatformCenter.fX;
-						iY += m_ptPlatformCenter.fY;
-
-						S3DPrtPointF ptIDst;
-						ptIDst.fX = iX;
-						ptIDst.fY = iY;
-
-						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
-						{
-							ptDst = ptIDst;
-							return 0;
-						}
-					}
-				}
-
-				//right down side
-				if (m_bOutRight)
-				{
-					for (int j = -i + 1; j < 0; j += m_iUnit)
-					{
-						int iX = i;
-						int iY = j;
-						iX += m_ptPlatformCenter.fX;
-						iY += m_ptPlatformCenter.fY;
-
-						S3DPrtPointF ptIDst;
-						ptIDst.fX = iX;
-						ptIDst.fY = iY;
-
-						if (IsDstPointValid(ptIDst, plgSimpleGroup, plgInsert))
-						{
-							ptDst = ptIDst;
-							return 0;
-						}
-					}
-				}
-
-				int iProcessRatio = i * i % 225;
-				if (iProcessRatio == 0)
-				{
-					if (m_pProgress)
-					{
-						fPro += 0.01;
-						m_pProgress->progress(fPro);
-					}
-				}
-			}
-		}
-
-		ptDst.fX = m_rcPlatform.fXMax + plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin;
-		ptDst.fY = m_rcPlatform.fYMin;
-
-		return 1;
-	}
 
 
 	bool CLayoutAlg::InitializeAllProjectSegment(QVector<SModelPolygon>& plgGroup, SModelPolygon& plgInsert)
@@ -262,14 +91,13 @@ namespace qtuser_3d
 		return true;
 	}
 
-
 	int CLayoutAlg::InsertModelInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptDst)
 	{
-		//these four temporary variable will help reduce the searching time
-		m_bOutTop = false;//check this polygon is out of the top line when you move this polygon as this track
-		m_bOutLeft = false;
-		m_bOutBottom = false;
-		m_bOutRight = false;
+		////these four temporary variable will help reduce the searching time
+		//m_bOutTop = false;//check this polygon is out of the top line when you move this polygon as this track
+		//m_bOutLeft = false;
+		//m_bOutBottom = false;
+		//m_bOutRight = false;
 
 		if (plgGroup.count() == 0)
 		{
@@ -302,41 +130,41 @@ namespace qtuser_3d
 			m_ptPlatformCenter.fY = (m_rcPlatform.fYMax + m_rcPlatform.fYMin) / 2;
 			int iPlatFormWidth = (m_rcPlatform.fXMax - m_rcPlatform.fXMin) / 2;
 			float fPro = 0;
-			for (int i = 0; i < iPlatFormWidth; i++)
+
+#if 1
+			int iPlatFormHeight = (m_rcPlatform.fYMax - m_rcPlatform.fYMin) / 2;
+			int whPlatFormSize = iPlatFormWidth > iPlatFormHeight ? iPlatFormWidth : iPlatFormHeight;
+			bool widthFlag = iPlatFormWidth > iPlatFormHeight ? true : false;
+			for (int i = 0; i < whPlatFormSize; i++)
 			{
 				//right up part
-				if (!m_bOutRight)
+				//if (!m_bOutRight)
 				{
-					for (int j = 0; j <= i; j += m_iUnit)
-					{
-						int iX = i;
-						int iY = j;
-						iX += m_ptPlatformCenter.fX;
-						iY += m_ptPlatformCenter.fY;
-
-
-						S3DPrtPointF ptIDst;
-						ptIDst.fX = iX;
-						ptIDst.fY = iY;
-
-						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
-						{
-							ptDst = ptIDst;
-							return 0;
-						}
-
-					}
-				}
-
-				//top side
-				if (!m_bOutTop)
-				{
-					for (int j = i - 1; j >= -i; j -= m_iUnit)
+					//for (int j = i-1; j >= -i; j -= m_iUnit)
+					for (int j = 0; j < i; j += m_iUnit)
 					{
 						int iX = j;
 						int iY = i;
 						iX += m_ptPlatformCenter.fX;
 						iY += m_ptPlatformCenter.fY;
+
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
+
+						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
+						{
+							ptDst = ptIDst;
+							return 0;
+						}
+					}
+					for (int j = 0; j > -i; j -= m_iUnit)
+					{
+						int iX = j;
+						int iY = i;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
+
 						S3DPrtPointF ptIDst;
 						ptIDst.fX = iX;
 						ptIDst.fY = iY;
@@ -348,16 +176,17 @@ namespace qtuser_3d
 						}
 					}
 				}
-
-				//left side
-				if (!m_bOutLeft)
+				//right up part
+				//if (!m_bOutRight)
 				{
-					for (int j = i - 1; j >= -i; j -= m_iUnit)
+					for (int j = 0; j <i; j += m_iUnit)
 					{
 						int iX = -i;
 						int iY = j;
 						iX += m_ptPlatformCenter.fX;
 						iY += m_ptPlatformCenter.fY;
+
+
 						S3DPrtPointF ptIDst;
 						ptIDst.fX = iX;
 						ptIDst.fY = iY;
@@ -368,18 +197,14 @@ namespace qtuser_3d
 							return 0;
 						}
 					}
-				}
-
-				//bottom side
-				if (!m_bOutBottom)
-				{
-					for (int j = -i + 1; j <= i; j += m_iUnit)
+					for (int j = 0; j > -i; j -= m_iUnit)
 					{
-						int iY = -i;
-						int iX = j;
+						int iX = -i;
+						int iY = j;
 						iX += m_ptPlatformCenter.fX;
 						iY += m_ptPlatformCenter.fY;
 
+
 						S3DPrtPointF ptIDst;
 						ptIDst.fX = iX;
 						ptIDst.fY = iY;
@@ -391,17 +216,75 @@ namespace qtuser_3d
 						}
 					}
 				}
-
-				//right down side
-				if (m_bOutRight)
+				//right up part
+				//if (!m_bOutRight)
 				{
-					for (int j = -i + 1; j < 0; j += m_iUnit)
+					for (int j = 0; j < i; j += m_iUnit)
+					{
+						int iX = j;
+						int iY = -i;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
+
+
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
+
+						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
+						{
+							ptDst = ptIDst;
+							return 0;
+						}
+					}
+					for (int j = 0; j > -i; j -= m_iUnit)
+					{
+						int iX = j;
+						int iY = -i;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
+
+
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
+
+						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
+						{
+							ptDst = ptIDst;
+							return 0;
+						}
+					}
+				}
+				//right up part
+				//if (!m_bOutRight)
+				{
+					for (int j = 0; j <  i; j += m_iUnit)
 					{
 						int iX = i;
 						int iY = j;
 						iX += m_ptPlatformCenter.fX;
 						iY += m_ptPlatformCenter.fY;
 
+
+						S3DPrtPointF ptIDst;
+						ptIDst.fX = iX;
+						ptIDst.fY = iY;
+
+						if (IsDstPointValidNewWay(ptIDst, plgSimpleGroup, plgInsert))
+						{
+							ptDst = ptIDst;
+							return 0;
+						}
+					}
+					for (int j = 0; j > -i; j -= m_iUnit)
+					{
+						int iX = i;
+						int iY = j;
+						iX += m_ptPlatformCenter.fX;
+						iY += m_ptPlatformCenter.fY;
+
+
 						S3DPrtPointF ptIDst;
 						ptIDst.fX = iX;
 						ptIDst.fY = iY;
@@ -413,6 +296,7 @@ namespace qtuser_3d
 						}
 					}
 				}
+
 
 				int iProcessRatio = i * i % 225;
 				if (iProcessRatio == 0)
@@ -424,6 +308,7 @@ namespace qtuser_3d
 					}
 				}
 			}
+#endif
 		}
 
 		ptDst.fX = m_rcPlatform.fXMax + plgInsert.rcGrobalDst.fXMax - plgInsert.rcGrobalDst.fXMin;
@@ -613,25 +498,13 @@ namespace qtuser_3d
 			CalculateNewPoint(ptDst, plgInsertCurPos, plgInsert);
 
 			bool bOutPlatform = false;
-			if (plgInsertCurPos.rcGrobalDst.fXMax > m_rcPlatform.fXMax)
+			if (plgInsertCurPos.rcGrobalDst.fXMax > m_rcPlatform.fXMax ||
+				plgInsertCurPos.rcGrobalDst.fYMax > m_rcPlatform.fXMax ||
+				plgInsertCurPos.rcGrobalDst.fXMin < m_rcPlatform.fXMin ||
+				plgInsertCurPos.rcGrobalDst.fYMin < m_rcPlatform.fYMin
+				)
 			{
-				bOutPlatform = true;
-				m_bOutRight = true;
-			}
-			if (plgInsertCurPos.rcGrobalDst.fYMax > m_rcPlatform.fXMax)
-			{
-				bOutPlatform = true;
-				m_bOutTop = true;
-			}
-			if (plgInsertCurPos.rcGrobalDst.fXMin < m_rcPlatform.fXMin)
-			{
-				bOutPlatform = true;
-				m_bOutLeft = true;
-			}
-			if (plgInsertCurPos.rcGrobalDst.fYMin < m_rcPlatform.fYMin)
-			{
-				bOutPlatform = true;
-				m_bOutBottom = true;
+				bOutPlatform = true;				
 			}
 
 			if (bOutPlatform)
@@ -1775,22 +1648,18 @@ namespace qtuser_3d
 			if (plgInsertCurPos.rcGrobalDst.fXMax > m_rcPlatform.fXMax)
 			{
 				bOutPlatform = true;
-				m_bOutRight = true;
 			}
-			if (plgInsertCurPos.rcGrobalDst.fYMax > m_rcPlatform.fXMax)
+			if (plgInsertCurPos.rcGrobalDst.fYMax > m_rcPlatform.fYMax)
 			{
 				bOutPlatform = true;
-				m_bOutTop = true;
 			}
 			if (plgInsertCurPos.rcGrobalDst.fXMin < m_rcPlatform.fXMin)
 			{
 				bOutPlatform = true;
-				m_bOutLeft = true;
 			}
 			if (plgInsertCurPos.rcGrobalDst.fYMin < m_rcPlatform.fYMin)
 			{
 				bOutPlatform = true;
-				m_bOutBottom = true;
 			}
 
 			if (bOutPlatform)
