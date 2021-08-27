@@ -43,10 +43,18 @@ namespace qtuser_3d
 			iXMax = 0;
 			iYMax = 0;
 		}
+#if 1
 		float iXMin;
 		float iYMin;
 		float iXMax;
 		float iYMax;
+#else
+
+		int iXMin;
+		int iYMin;
+		int iXMax;
+		int iYMax;
+#endif
 	};
 
 
@@ -221,27 +229,6 @@ namespace qtuser_3d
 
 
 	protected:
-		/*******************************************************************
-	describe:
-	when you get one point, you want to check this point is inside the polygon or not. you need to know the principle. If this point is inside the polygon and this polygon is convex hull, any straight line through this point, it will cross the edge of this polygon.
-	and you will got two points that they are on the edge of this polygon. at the same time, this point is at the middle of these two points. for using this principle, I use the line that is a special and it will reduce the complex that calculate out the two points value. at this time, I use the line that is parelle with x axis.
-	so the formula of this line is y=point.y. when I use this line formula, this line will cross the edge line of the polygon. you will get two points, you just compare their x axis value, then you can check the point is at the middle of these two points or not.
-
-	parameter:
-	plgGroup: all the model polygons
-	plgInsert: this model polygon will be inserted
-
-	return:
-	0: get the valid destination point in platform
-	1, this polygon is large than this platform
-
-	author:Gavin
-	date:june/sixteenth day/2020
-	******************************************************************/
-		int GetDstPointInPlatform(const QVector<SModelPolygon>& plgGroup, SModelPolygon plgInsert, S3DPrtPointF& ptDst);
-
-
-
 
 		//these three functions are used to calculate the destination position on the outside of the platform
 	private:
@@ -598,11 +585,6 @@ date:june/eighteenth day/2020
 		S3DPrtRectF  m_rcPlatform;
 		S3DPrtPointF m_ptPlatformCenter;
 		int m_iUnit;
-
-		bool m_bOutTop;
-		bool m_bOutLeft;
-		bool m_bOutBottom;
-		bool m_bOutRight;
 
 		int m_iModelGap;
 
