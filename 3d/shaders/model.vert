@@ -28,10 +28,20 @@ void main( void )
     normal          = normalMatrix * vertexNormal;
     gnormal        = mat3(modelMatrix) * vertexNormal;
 		
-	if(normaldir == 1)
+	if(normaldir & 1)
 	{
-		normal = -normal;
-		gnormal = -gnormal;
+		normal.x = -normal.x;
+		gnormal.x = -gnormal.x;
+	}
+	if(normaldir & 2)
+	{
+		normal.y = -normal.y;
+		gnormal.y = -gnormal.y;
+	}
+	if(normaldir & 4)
+	{
+		normal.z = -normal.z;
+		gnormal.z = -gnormal.z;
 	}
 		
     worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));
