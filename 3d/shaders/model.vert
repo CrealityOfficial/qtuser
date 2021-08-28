@@ -28,17 +28,17 @@ void main( void )
     normal          = normalMatrix * vertexNormal;
     gnormal        = mat3(modelMatrix) * vertexNormal;
 		
-	if(normaldir & 1)
+	if((normaldir & 1) > 0)
 	{
 		normal.x = -normal.x;
 		gnormal.x = -gnormal.x;
 	}
-	if(normaldir & 2)
+	if((normaldir & 2) > 0)
 	{
 		normal.y = -normal.y;
 		gnormal.y = -gnormal.y;
 	}
-	if(normaldir & 4)
+	if((normaldir & 4) > 0)
 	{
 		normal.z = -normal.z;
 		gnormal.z = -gnormal.z;
