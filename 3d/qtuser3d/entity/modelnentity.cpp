@@ -29,6 +29,7 @@ namespace qtuser_3d
 		m_checkScopeParameter = createParameter("checkscope", 1);
 
 		m_nozzleParameter = createParameter("nozzle", 0);
+		m_normaldirParameter = createParameter("normaldir", 0);
 	}
 	
 	ModelNEntity::~ModelNEntity()
@@ -103,6 +104,11 @@ namespace qtuser_3d
 	void ModelNEntity::unSetWaterPoint()
 	{
 		m_waterShowParameter->setValue(0);
+	}
+
+	void ModelNEntity::setNormaldir(int normaldir)
+	{
+		m_normaldirParameter->setValue(normaldir);
 	}
 
 	void ModelNEntity::setFanZhuan(int fz)
