@@ -114,25 +114,31 @@ void main( void )
 	}
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
+	
+	if(!frontFacing())
+	{
+		coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+		coreColor.a = 1.0;
+	}
 
-    int fz = fanzhuan % 2;
-       
-    if(fz == 0)
-    {
-        if(! frontFacing())
-        {
-            coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-			coreColor.a = 1.0;
-        }
-    }
-    else
-    {
-        if(frontFacing())
-        {
-            coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-			coreColor.a = 1.0;
-        }
-    }
+    //int fz = fanzhuan % 2;
+    //   
+    //if(fz == 0)
+    //{
+    //    if(! frontFacing())
+    //    {
+    //        //coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+	//		coreColor.a = 1.0;
+    //    }
+    //}
+    //else
+    //{
+    //    if(frontFacing())
+    //    {
+    //        //coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+	//		coreColor.a = 1.0;
+    //    }
+    //}
    
 
 	fragmentColor = vec4(coreColor.rgb, transparency);

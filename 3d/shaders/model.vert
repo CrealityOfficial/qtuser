@@ -8,8 +8,6 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform vec3 water;
 
-uniform int normaldir = 0;
-
 out vec3 viewDirection;
 out vec3 normal;
 out vec3 gnormal;
@@ -27,22 +25,6 @@ void main( void )
 
     normal          = normalMatrix * vertexNormal;
     gnormal        = mat3(modelMatrix) * vertexNormal;
-		
-	if((normaldir & 1) > 0)
-	{
-		normal.x = -normal.x;
-		gnormal.x = -gnormal.x;
-	}
-	if((normaldir & 2) > 0)
-	{
-		normal.y = -normal.y;
-		gnormal.y = -gnormal.y;
-	}
-	if((normaldir & 4) > 0)
-	{
-		normal.z = -normal.z;
-		gnormal.z = -gnormal.z;
-	}
 		
     worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));
     worldWater = water;

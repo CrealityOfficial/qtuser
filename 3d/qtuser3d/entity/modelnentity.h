@@ -46,8 +46,6 @@ namespace qtuser_3d
 
 		void setNozzle(float nozzle);
 
-		//¾µÏñ·¨Ïß
-		void setNormaldir(int normaldir);
 	protected:
 		qtuser_3d::BoxEntity* m_boxEntity;
 		qtuser_3d::LineEntity* m_convexXYEntity;
@@ -70,7 +68,6 @@ namespace qtuser_3d
 
 		Qt3DRender::QParameter* m_nozzleParameter;
 
-		Qt3DRender::QParameter* m_normaldirParameter;
 	};
 }
 #endif // QTUSER_3D_MODELNENTITY_1595161543232_H
