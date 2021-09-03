@@ -14,6 +14,20 @@ namespace qtuser_3d
 	}
 
 	Node3D::Node3D(const Node3D& node)
+		: mirrorZ_count(0)
+		, m_localCenter()
+		, m_localPosition()
+		, m_localScale()
+		, m_localRotate()
+		, m_globalSpaceBox()
+		, m_localBox()
+		, m_local2Parent()
+		, m_parent2Global()
+		, m_localMatrixDirty(false)
+		, m_parentMatrixDirty(false)
+		, m_globalMatrix()
+		, m_objectMatrix()
+		, m_mirrorMatrix()
 	{
 	}
 
