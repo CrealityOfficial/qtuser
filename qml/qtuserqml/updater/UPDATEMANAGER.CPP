@@ -187,7 +187,14 @@ QString UpdateManager::getCurrentVersion()
 
 void UpdateManager::initAutoCheckVersionFlag()
 {
-    m_initAutoCheckFlag = true;
+    if(m_impl->updaterSettings.value(KEY_AUTO_CHECK_FOR_UPDATES).toBool())
+    {
+        m_initAutoCheckFlag = true;
+    }
+    else
+    {
+        m_initAutoCheckFlag = false;
+    }
 }
 
 QString UpdateManager::version()
