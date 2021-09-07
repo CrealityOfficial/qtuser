@@ -8,10 +8,10 @@ namespace qtuser_3d
 	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, int type)
 		:PickableEntity(parent)
 	{
-		QString shader_type = "manipulate.view_pickFace.pick";
+		QString shader_type = "manipulate.alpha_pickFace.pick";
 		if (type == 1)
 		{
-			shader_type = "manipulate.view";
+			shader_type = "manipulate.alpha";
 		}
 		else if (type == 2)
 		{
