@@ -15,6 +15,7 @@ namespace qtuser_3d
 
 		void translate(QVector3D v);
 		void updateGlobal(Box3D& box);
+		void updateGlobal2(Box3D& box);
 
 	protected:
 		PureColorEntity* m_xAxis;
