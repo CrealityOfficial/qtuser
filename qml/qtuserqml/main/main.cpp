@@ -25,7 +25,9 @@ namespace qtuser_qml
 
 	int qmlAppMain(int argc, char* argv[], const QString& dll)
 	{
+#ifndef __APPLE__
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
         QGuiApplication app(argc, argv);
 
         QQmlApplicationEngine *engine=new QQmlApplicationEngine();
