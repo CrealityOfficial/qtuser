@@ -25,7 +25,7 @@ namespace qtuser_3d
 		loadImage();
 
 		m_colorParameter = createParameter("color", QVector4D(0.27f, 0.27f, 0.27f, 1.0f));//createParameter("color", QVector4D(0.90f, 0.90f, 0.90f, 0.3f));
-		m_logcolorParameter = createParameter("logcolor", QVector4D(0.66f, 0.66f, 0.66f, 0.5f));
+		m_logcolorParameter = createParameter("logcolor", QVector4D(0.2f, 0.2f, 0.2f, 0.8f));
 		//Qt3DRender::QEffect* effect = EFFECTCREATE("pure", m_material);
 		m_visibleParameter = createParameter("visible", 1);
 		m_platformsizeParameter = createParameter("platformsize", QVector2D(1.0f, 1.0f));
@@ -88,7 +88,7 @@ namespace qtuser_3d
 		createParameter("imageshape", imageshape);
 
 		createParameter("shapeTexture", QVariant::fromValue(imageTexture));
-		createParameter("imagebili", QVector2D(1.1f, 1.1f));
+		createParameter("imagebili", QVector2D(2.0f, 1.4f));
 	}
 
 	void TexFaces::updateBox(const Box3D& box)
