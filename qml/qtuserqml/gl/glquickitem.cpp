@@ -114,6 +114,7 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 	, m_renderGraph(nullptr)
 	, m_always(false)
 	, m_sharedContext(nullptr)
+	, m_ratio(1)
 {
 	setFlag(ItemHasContents, true);
 
@@ -220,6 +221,7 @@ bool GLQuickItem::always()
 
 void GLQuickItem::handleWindowChanged(QQuickWindow* win)
 {
+	m_ratio = win->devicePixelRatio();
 	update();
 }
 
@@ -345,6 +347,7 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 	, m_renderGraph(nullptr)
 	, m_always(false)
 	, m_sharedContext(nullptr)
+	, m_ratio(1)
 {
 	setFlag(ItemHasContents, true);
 	m_aspectEngine->registerAspect(m_renderAspect);
@@ -412,6 +415,7 @@ bool GLQuickItem::always()
 
 void GLQuickItem::handleWindowChanged(QQuickWindow* win)
 {
+	m_ratio = win->devicePixelRatio();
 	update();
 }
 
@@ -462,6 +466,10 @@ void GLQuickItem::geometryChanged(const QRectF& newGeometry, const QRectF& oldGe
 	QQuickFramebufferObject::geometryChanged(newGeometry, oldGeometry);
 
 	QSize size = newGeometry.size().toSize();
+	if (m_ratio > 0)
+	{
+		size *= m_ratio;
+	}
 	m_eventSubdivide->geometryChanged(size);
 	if (m_renderGraph) m_renderGraph->updateRenderSize(size);
 	requestUpdate();
@@ -579,6 +587,10 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		if (sceneGraph) sceneGraph->setEnabled(true);
 
 		QSize itemSize = size().toSize();
+		if (m_ratio > 0)
+		{
+			itemSize *= m_ratio;
+		}
 		m_renderGraph->updateRenderSize(itemSize);
 	}
 

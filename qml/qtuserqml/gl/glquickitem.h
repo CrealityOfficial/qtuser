@@ -107,5 +107,7 @@ private:
 
 	QOpenGLContext* m_sharedContext;
 	qtuser_qml::RawOGL* m_rawOGL;
+
+	float m_ratio;
 };
 #endif // _QTUSER_QML3D_GLQUICKITEM_1588076188113_H
