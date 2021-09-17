@@ -221,7 +221,8 @@ bool GLQuickItem::always()
 
 void GLQuickItem::handleWindowChanged(QQuickWindow* win)
 {
-	m_ratio = win->devicePixelRatio();
+    m_ratio = win->devicePixelRatio();
+    qDebug() << "handleWindowChanged = " << m_ratio;
 	update();
 }
 
@@ -466,10 +467,11 @@ void GLQuickItem::geometryChanged(const QRectF& newGeometry, const QRectF& oldGe
 	QQuickFramebufferObject::geometryChanged(newGeometry, oldGeometry);
 
 	QSize size = newGeometry.size().toSize();
-	if (m_ratio > 0)
+	if (m_ratio < 0.01)
 	{
-		size *= m_ratio;
+		m_ratio = 1;
 	}
+	size *= m_ratio;
 	m_eventSubdivide->geometryChanged(size);
 	if (m_renderGraph) m_renderGraph->updateRenderSize(size);
 	requestUpdate();
@@ -477,39 +479,54 @@ void GLQuickItem::geometryChanged(const QRectF& newGeometry, const QRectF& oldGe
 
 void GLQuickItem::mousePressEvent(QMouseEvent* event)
 {
+    QPoint pt = event->pos();
+    pt.rx() *= m_ratio;
+    pt.ry() *= m_ratio;
+    event->setLocalPos(pt);
 	m_eventSubdivide->mousePressEvent(event);
 	setFocus(true);
 }
 
 void GLQuickItem::mouseMoveEvent(QMouseEvent* event)
 {
+    QPoint pt = event->pos();
+    pt.rx() *= m_ratio;
+    pt.ry() *= m_ratio;
+    event->setLocalPos(pt);
 	m_eventSubdivide->mouseMoveEvent(event);
 }
 
 void GLQuickItem::mouseReleaseEvent(QMouseEvent* event)
 {
+    QPoint pt = event->pos();
+    pt.rx() *= m_ratio;
+    pt.ry() *= m_ratio;
+    event->setLocalPos(pt);
 	m_eventSubdivide->mouseReleaseEvent(event);
 }
 
 void GLQuickItem::wheelEvent(QWheelEvent* event)
 {
-    m_eventSubdivide->wheelEvent(event);
+    QWheelEvent new_event(event->posF() * m_ratio, event->globalPosF(), event->delta() * m_ratio, event->buttons(), event->modifiers(), event->orientation());
+    m_eventSubdivide->wheelEvent(&new_event);
 }
 
 void GLQuickItem::hoverEnterEvent(QHoverEvent* event)
 {
-	m_eventSubdivide->hoverEnterEvent(event);
+    QHoverEvent new_event(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
+    m_eventSubdivide->hoverEnterEvent(&new_event);
 }
 
 void GLQuickItem::hoverMoveEvent(QHoverEvent* event)
 {
-	//qDebug() << event->pos();
-	m_eventSubdivide->hoverMoveEvent(event);
+    QHoverEvent new_event(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
+    m_eventSubdivide->hoverMoveEvent(&new_event);
 }
 
 void GLQuickItem::hoverLeaveEvent(QHoverEvent* event)
 {
-	m_eventSubdivide->hoverLeaveEvent(event);
+    QHoverEvent new_event(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
+    m_eventSubdivide->hoverLeaveEvent(&new_event);
 }
 
 void GLQuickItem::keyPressEvent(QKeyEvent* event)
