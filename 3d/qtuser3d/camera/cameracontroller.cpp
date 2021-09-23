@@ -124,6 +124,12 @@ QVector3D CameraController::getviewCenter() const
 	return m_screenCamera->camera()->viewCenter();
 }
 
+QVector3D CameraController::getViewDir() const
+{
+	QVector3D v = -m_screenCamera->camera()->viewVector();
+	return v.normalized();
+}
+
 void CameraController::setViewPosition(const QVector3D position)
 {
 	m_screenCamera->camera()->setPosition(position);

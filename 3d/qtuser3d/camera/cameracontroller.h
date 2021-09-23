@@ -49,6 +49,7 @@ public:
 	QVector3D getViewPosition() const;
 	QVector3D getViewupVector() const;
 	QVector3D getviewCenter() const;
+	QVector3D getViewDir() const;
 
 	void setViewPosition(const QVector3D position);
 	void setViewupVector(const QVector3D upVector);
