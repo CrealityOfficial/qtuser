@@ -25,10 +25,27 @@ namespace qtuser_3d
 		float minY = box.min.y();
 		float maxY = box.max.y();
 
-		int startX = 1;
+		int startX;
+		if (minX==0.0)
+		{
+			startX = 1;
+		}
+		else
+		{
+			startX = minX / gap;
+		}
 		int endX = qFloor(maxX / gap);
 		if (float(endX) * gap == maxX) endX -= 1;
-		int startY = 1;
+
+		int startY;
+		if (minX == 0.0)
+		{
+			startY = 1;
+		}
+		else
+		{
+			startY = minY / gap;
+		}
 		int endY = qFloor(maxY / gap);
 		if (float(endY) * gap == maxY) endY -= 1;
 
