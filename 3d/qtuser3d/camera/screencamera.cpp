@@ -119,8 +119,8 @@ namespace qtuser_3d
 		float nearpos = dmin < 1.0f ? (box.size().length() > 1.0f ? 1.0f : dmin) : dmin;
 		float farpos = dmax > 0.0f ? dmax : 3000.0f;
 
-		m_camera->lens()->setNearPlane(nearpos);
-		m_camera->lens()->setFarPlane(farpos);
+		m_camera->lens()->setNearPlane(0.1);
+		m_camera->lens()->setFarPlane(3000);
 	}
 
 	qtuser_3d::Ray ScreenCamera::screenRay(const QPoint& point)

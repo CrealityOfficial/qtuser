@@ -250,6 +250,12 @@ void CameraController::viewFromBottom(QVector3D* specificCenter)
 	QVector3D dir(0.0f, 0.0f, 1.0f);
 	QVector3D right(1.0f, 0.0f, 0.0f);
 	view(dir, right, specificCenter);
+
+	QVector3D position = getViewPosition();
+	QVector3D upview = getViewupVector();
+	QVector3D center = getviewCenter();
+	QVector3D diff = position - center;
+	emit signalCameraChaged(position - center, getViewupVector());
 }
 
 void CameraController::viewFromTop(QVector3D* specificCenter)
@@ -257,6 +263,12 @@ void CameraController::viewFromTop(QVector3D* specificCenter)
 	QVector3D dir(0.0f, 0.0f, -1.0f);
 	QVector3D right(1.0f, 0.0f, 0.0f);
 	view(dir, right, specificCenter);
+
+	QVector3D position = getViewPosition();
+	QVector3D upview = getViewupVector();
+	QVector3D center = getviewCenter();
+	QVector3D diff = position - center;
+	emit signalCameraChaged(position - center, getViewupVector());
 }
 
 void CameraController::viewFromLeft(QVector3D* specificCenter)
@@ -264,6 +276,12 @@ void CameraController::viewFromLeft(QVector3D* specificCenter)
 	QVector3D dir(1.0f, 0.0f, 0.0f);
 	QVector3D right(0.0f, -1.0f, 0.0f);
 	view(dir, right, specificCenter);
+
+	QVector3D position = getViewPosition();
+	QVector3D upview = getViewupVector();
+	QVector3D center = getviewCenter();
+	QVector3D diff = position - center;
+	emit signalCameraChaged(position - center, getViewupVector());
 }
 
 void CameraController::viewFromRight(QVector3D* specificCenter)
@@ -271,6 +289,12 @@ void CameraController::viewFromRight(QVector3D* specificCenter)
 	QVector3D dir(-1.0f, 0.0f, 0.0f);
 	QVector3D right(0.0f, 1.0f, 0.0f);
 	view(dir, right, specificCenter);
+
+	QVector3D position = getViewPosition();
+	QVector3D upview = getViewupVector();
+	QVector3D center = getviewCenter();
+	QVector3D diff = position - center;
+	emit signalCameraChaged(position - center, getViewupVector());
 }
 
 void CameraController::viewFromFront(QVector3D* specificCenter)
@@ -278,6 +302,12 @@ void CameraController::viewFromFront(QVector3D* specificCenter)
 	QVector3D dir(0.0f, 1.0f, 0.0f);
 	QVector3D right(1.0f, 0.0f, 0.0f);
 	view(dir, right, specificCenter);
+
+	QVector3D position = getViewPosition();
+	QVector3D upview = getViewupVector();
+	QVector3D center = getviewCenter();
+	QVector3D diff = position - center;
+	emit signalCameraChaged(position - center, getViewupVector());
 }
 
 void CameraController::viewFromBack(QVector3D* specificCenter)
@@ -285,6 +315,12 @@ void CameraController::viewFromBack(QVector3D* specificCenter)
 	QVector3D dir(0.0f, -1.0f, 0.0f);
 	QVector3D right(-1.0f, 0.0f, 0.0f);
 	view(dir, right, specificCenter);
+
+	QVector3D position = getViewPosition();
+	QVector3D upview = getViewupVector();
+	QVector3D center = getviewCenter();
+	QVector3D diff = position - center;
+	emit signalCameraChaged(position - center, getViewupVector());
 }
 
 void CameraController::viewFromUserSetting(QVector3D posion, QVector3D viewCenter, QVector3D upVector, QVector3D* specificCenter)
