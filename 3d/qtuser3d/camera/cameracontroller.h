@@ -58,7 +58,7 @@ public:
 	void enableRotate(bool enabled);
 	void enableScale(bool enabled);
 	void enableTranslate(bool enabled);
-protected:
+public:
 	void onResize(const QSize& size) override;
 
 	void onRightMouseButtonPress(QMouseEvent* event) override;
