@@ -23,7 +23,7 @@ uniform int retractionShow = 0;
 uniform vec4 clipValue;
 uniform vec2 layershow;
 
-uniform vec4 typecolors[15];
+uniform vec4 typecolors[16];
 uniform vec4 speedcolors[13];
 uniform vec4 nozzlecolors[8];
 
@@ -66,19 +66,25 @@ void main( void )
 	if(showType == 0)
 	{
 		core_color = typecolors[int(drawFlag.y)];
+		if(retractionShow == 1)
+		{
+			if(int(drawFlag.y) == 13 || int(drawFlag.y) == 14)//travel and react
+				core_color = typecolors[15];	
+		}
 	}
 	else if(showType == 1)
+	{
 		core_color = nozzlecolors[int(drawFlag.z)];
+		if(retractionShow == 1)
+		{
+			if(int(drawFlag.z) == 6)//travel and react
+				core_color = nozzlecolors[7];	
+		}
+	}
 	else if(showType == 2)
 	{
 		int stype = int(drawFlag.x);
 		core_color = speedcolors[stype];
-	}
-	
-	if(retractionShow == 0)
-	{
-		if(core_color.w == 0)
-		discard;
 	}
 	
 	vec3 fnormal 		  =	normalize(normal);
