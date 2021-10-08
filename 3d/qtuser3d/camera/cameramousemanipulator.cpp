@@ -18,6 +18,11 @@ namespace qtuser_3d
 	{
 	}
 
+	void CameraMouseManipulator::setNeed360Rotate(bool is_need)
+	{
+		//
+	}
+
 	void CameraMouseManipulator::setCamera(ScreenCamera* screenCamera)
 	{
 		if (m_screenCamera == screenCamera) return;

@@ -10,10 +10,17 @@ namespace qtuser_3d
 		:CameraMouseManipulator(parent)
 	{
 		m_revertY = false;
+
+		m_need360Rotate = false;
 	}
 
 	EularMouseManipulator::~EularMouseManipulator()
 	{
+	}
+
+	void EularMouseManipulator::setNeed360Rotate(bool is_need)
+	{
+		m_need360Rotate = is_need;
 	}
 
 	void EularMouseManipulator::onRightMouseButtonPress(QMouseEvent* event)
@@ -42,7 +49,14 @@ namespace qtuser_3d
 		//}
 		//else
 		{
-			performRotate(p);
+			if (m_need360Rotate)
+			{
+				performRotate360(p);
+			}
+			else
+			{
+				performRotate(p);
+			}
 		}
 
 		m_savePoint = p;
@@ -138,6 +152,66 @@ namespace qtuser_3d
 		else if (vangle >= M_PI)
 		{
 			dir = QVector3D(0.0f, 0.0f, -1.0f);
+		}
+
+		QVector3D saveDir = viewCenter - position;
+		float distance = saveDir.length();
+
+		QVector3D newPosition = viewCenter - dir * distance;
+		QVector3D up = QVector3D::crossProduct(right, dir);
+		m_camera->setUpVector(up);
+		m_camera->setPosition(newPosition);
+
+		if (up.x() == 0.0f && up.y() == 0.0f && up.z() == 0.0f)
+		{
+			qDebug() << "error";
+		}
+
+		m_screenCamera->updateNearFar();
+	}
+	void EularMouseManipulator::performRotate360(const QPoint& pos)
+	{
+		QVector3D viewCenter = m_camera->viewCenter();
+		QVector3D position = m_camera->position();
+		QVector3D horizontal = m_screenCamera->horizontal();
+
+		QPoint delta = pos - m_savePoint;
+
+		float hangle = -0.1f * (float)delta.x();
+		QQuaternion hq = QQuaternion::fromAxisAndAngle(QVector3D(0.0f, 0.0f, 1.0f), hangle);
+		QVector3D h = hq * horizontal;
+		h.normalize();
+
+		float o_angle = m_screenCamera->verticalAngle360();
+
+		float vangle = o_angle + 0.003f * (float)delta.y();
+//		if (vangle < 0.0f) vangle = 0.0f;
+		if (vangle > 2 * M_PI) vangle -= (float)(2 * M_PI);
+
+		QVector3D dir;
+		QVector3D right = h;
+
+		if (vangle < 0.001f && vangle > -0.001f)
+		{
+			dir = QVector3D(0.0f, 0.0f, 1.0f);
+		}
+		else if (vangle > M_PI - 0.001 && vangle < M_PI + 0.001)
+		{
+			dir = QVector3D(0.0f, 0.0f, -1.0f);
+		}
+		else
+		{
+			dir = QVector3D(-h.y(), h.x(), 0.0f);
+			float z = dir.length() / (tanf(vangle));
+			dir.setZ(z);
+			dir.normalize();
+
+			if (vangle > M_PI || vangle < 0)
+			{
+				dir.setX(-dir.x());
+				dir.setY(-dir.y());
+				dir.setZ(-dir.z());
+			}
 		}
 
 		QVector3D saveDir = viewCenter - position;

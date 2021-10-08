@@ -438,6 +438,29 @@ namespace qtuser_3d
 		return angle;
 	}
 
+	float ScreenCamera::verticalAngle360()
+	{
+		QVector3D v = QVector3D(0.0f, 0.0f, 1.0f);
+		QVector3D viewCenter = m_camera->viewCenter();
+		QVector3D position = m_camera->position();
+		QVector3D dir = viewCenter - position;
+		dir.normalize();
+		float angle = acosf(QVector3D::dotProduct(v, dir));
+
+		QVector3D t = QVector3D::crossProduct(v, dir);
+		QVector3D h = ScreenCamera::horizontal();
+
+		float vv = QVector3D::dotProduct(h, t);
+
+		float result = angle;
+
+		if (vv > 0)
+		{
+			result = 2 * M_PI - angle;
+		}
+		return result;
+	}
+
 	void ScreenCamera::addCameraObserver(ScreenCameraObserver* observer)
 	{
 		if (observer)

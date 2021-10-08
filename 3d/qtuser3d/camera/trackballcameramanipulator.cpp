@@ -19,6 +19,11 @@ namespace qtuser_3d
 
 	}
 
+	void TrackballCameraManipulator::setNeed360Rotate(bool is_need)
+	{
+		//
+	}
+
 	void TrackballCameraManipulator::onCameraChanged()
 	{
 		m_savePoint = QPoint(-1, -1);

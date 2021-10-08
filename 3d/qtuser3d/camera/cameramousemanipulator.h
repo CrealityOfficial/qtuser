@@ -26,6 +26,8 @@ namespace qtuser_3d
 		void onMidMouseButtonMove(QMouseEvent* event) override;
 		void onMidMouseButtonClick(QMouseEvent* event) override;
 
+		virtual void setNeed360Rotate(bool is_need);
+
 	protected:
 		virtual void onCameraChanged();
 

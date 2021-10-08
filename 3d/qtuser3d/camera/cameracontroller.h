@@ -24,6 +24,8 @@ public:
 
 	void setScreenCamera(qtuser_3d::ScreenCamera* camera);
 
+	void setNeed360Rotate(bool is_need);
+
 	Q_INVOKABLE void viewFromBottom(QVector3D* specificCenter=nullptr);
 	Q_INVOKABLE void viewFromTop(QVector3D* specificCenter = nullptr);
 	Q_INVOKABLE void viewFromLeft(QVector3D* specificCenter = nullptr);

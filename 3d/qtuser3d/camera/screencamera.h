@@ -58,6 +58,7 @@ namespace qtuser_3d
 		QVector3D horizontal();
 		QVector3D vertical();
 		float verticalAngle();
+		float verticalAngle360();     // scope [0, 360)
 
 		void addCameraObserver(ScreenCameraObserver* observer);
 		void removeCameraObserver(ScreenCameraObserver* observer);

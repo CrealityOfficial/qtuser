@@ -12,6 +12,8 @@ namespace qtuser_3d
 		TrackballCameraManipulator(QObject* parent = nullptr);
 		virtual ~TrackballCameraManipulator();
 
+		void setNeed360Rotate(bool is_need) override;
+
 		void setRightHorizontal(bool horizontal);
 	protected:
 		void performRotate(const QPoint& p);

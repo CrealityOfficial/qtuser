@@ -25,6 +25,11 @@ CameraController::~CameraController()
 {
 }
 
+void CameraController::setNeed360Rotate(bool is_need)
+{
+	m_cameraManipulator->setNeed360Rotate(is_need);
+}
+
 void CameraController::setScreenCamera(qtuser_3d::ScreenCamera* camera)
 {
 	m_screenCamera = camera;
