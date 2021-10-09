@@ -1,6 +1,7 @@
 #include "pickablechunkentity.h"
 #include "qtuser3d/math/space3d.h"
 #include "qtuser3d/module/chunkbufferuser.h"
+#include <QThread>
 
 namespace qtuser_3d
 {
@@ -84,6 +85,10 @@ namespace qtuser_3d
 		if (chunk < 0 || chunk >= m_chunks)
 			return;
 
+		QNode* pNode = (QNode*)parent();
+		setParent((QNode*)nullptr);
+		QThread::usleep(20);
+
 		int baseIndex = m_chunkBytes * chunk;
 		if (positionBytes)
 		{
@@ -118,6 +123,8 @@ namespace qtuser_3d
 			m_flagBuffer->updateData(baseIndex, *flagsBytes);
 			m_flagByteArray.replace(baseIndex, flagsBytes->size(), *flagsBytes);
 		}
+
+		setParent(pNode);
 	}
 
 	void PickableChunkEntity::setFaceBase(QPoint faceBase)

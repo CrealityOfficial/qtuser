@@ -1,4 +1,5 @@
 #include "basicentity.h"
+#include <QThread>
 
 namespace qtuser_3d
 {
@@ -6,6 +7,11 @@ namespace qtuser_3d
 		:Qt3DCore::QEntity(parent)
 		, m_geometryRenderer(nullptr)
 	{
+		if (parent != nullptr)
+		{
+			int test = 1;
+		}
+
 		m_material = new Qt3DRender::QMaterial(this);
 		addComponent(m_material);
 
@@ -82,6 +88,11 @@ namespace qtuser_3d
 
 	void BasicEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type)
 	{
+		qDebug() << objectName() << " setGeometry";
+		QNode* pNode = (QNode*)parent();
+		setParent((QNode*)nullptr);
+		QThread::usleep(20);
+
 		Qt3DRender::QGeometry* oldGeometry = m_geometryRenderer->geometry();
 		if (oldGeometry && (oldGeometry->parent() == m_geometryRenderer))
 		{
@@ -93,6 +104,9 @@ namespace qtuser_3d
 
 		if(geometry)
 			m_geometryRenderer->setPrimitiveType(type);
+		setParent(pNode);
+
+		qDebug() << objectName() << " setGeometry over";
 	}
 
 	Qt3DRender::QGeometry* BasicEntity::geometry()
