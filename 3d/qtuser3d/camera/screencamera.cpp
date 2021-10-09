@@ -108,10 +108,11 @@ namespace qtuser_3d
 		cameraView.normalize();
 
 		QVector3D center = box.center();
+		float times = 1.5f;
 		float r = box.size().length() / 2.0f;
 		float d = QVector3D::dotProduct(cameraView, center - cameraPosition);
-		float dmin = d - 1.2f * r;
-		float dmax = d + 1.2f * r;
+		float dmin = d - times * r;
+		float dmax = d + times * r;
 
 		//float fieldofview = m_camera->lens()->fieldOfView();
 		//float aspect = m_camera->lens()->aspectRatio();
@@ -119,8 +120,8 @@ namespace qtuser_3d
 		float nearpos = dmin < 1.0f ? (box.size().length() > 1.0f ? 1.0f : dmin) : dmin;
 		float farpos = dmax > 0.0f ? dmax : 3000.0f;
 
-		m_camera->lens()->setNearPlane(0.1);
-		m_camera->lens()->setFarPlane(3000);
+		m_camera->lens()->setNearPlane(nearpos);
+		m_camera->lens()->setFarPlane(nearpos + 1000.0f);
 	}
 
 	qtuser_3d::Ray ScreenCamera::screenRay(const QPoint& point)
