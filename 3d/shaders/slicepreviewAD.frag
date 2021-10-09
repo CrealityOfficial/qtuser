@@ -25,7 +25,7 @@ uniform vec2 layershow;
 
 uniform vec4 typecolors[16];
 uniform vec4 speedcolors[13];
-uniform vec4 nozzlecolors[8];
+uniform vec4 nozzlecolors[9];
 
 uniform int typecolorsshow[15];
 
@@ -77,8 +77,8 @@ void main( void )
 		core_color = nozzlecolors[int(drawFlag.z)];
 		if(retractionShow == 1)
 		{
-			if(int(drawFlag.z) == 6)//travel and react
-				core_color = nozzlecolors[7];	
+			if(int(drawFlag.z) == 6 || int(drawFlag.z) == 7)//travel and react
+				core_color = nozzlecolors[8];	
 		}
 	}
 	else if(showType == 2)
