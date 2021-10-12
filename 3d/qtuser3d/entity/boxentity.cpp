@@ -11,6 +11,7 @@ namespace qtuser_3d
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
 
 		setEffect(EFFECT("pure"));
+		setObjectName("BoxEntity");
 	}
 
 	BoxEntity::~BoxEntity()

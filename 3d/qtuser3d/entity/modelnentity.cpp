@@ -11,6 +11,7 @@ namespace qtuser_3d
 		m_boxEntity->setColor(QVector4D(0.306f, 0.702f, 0.769f, 1.0f));
 
 		m_convexXYEntity = new qtuser_3d::LineEntity(this);
+		m_convexXYEntity->setObjectName("ModelNEntity");
 
 		m_stateParameter = createParameter("state", 0.0f);
 		m_vertexBaseParameter = createParameter("vertexBase", QPoint(0, 0));
@@ -35,6 +36,11 @@ namespace qtuser_3d
 	{
 		if (!m_boxEntity->parent())
 			delete m_boxEntity;
+	}
+
+	void ModelNEntity::setConvexName(QString name)
+	{
+		m_convexXYEntity->setObjectName(name);
 	}
 
 	void ModelNEntity::setBoxVisibility(bool visible)

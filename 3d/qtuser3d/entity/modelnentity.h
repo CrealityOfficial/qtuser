@@ -15,6 +15,8 @@ namespace qtuser_3d
 		ModelNEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~ModelNEntity();
 
+		void setConvexName(QString name);
+
 		void setBoxVisibility(bool visible);
 		void updateBoxLocal(Box3D& box, QMatrix4x4& parentMatrix);
 		void setBoxColor(QVector4D color);

@@ -21,6 +21,7 @@ namespace qtuser_3d
 		:BasicEntity(parent)
 	{
 		Qt3DRender::QEffect* effect = EFFECTCREATE("bottomface", this);
+		setObjectName("BottomFace");
 
 		m_colorParameter = createParameter("color", QVector4D(0.90f, 0.90f, 0.90f, 0.3f));
 

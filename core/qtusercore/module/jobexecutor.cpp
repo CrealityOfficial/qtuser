@@ -85,7 +85,7 @@ namespace qtuser_core
 	{
 		JobPtr job = m_exsitJobs.front();
         m_jobDescription = job->description();
-        qDebug()<<"m_jobDescription =" <<m_jobDescription;
+        qDebug() << "job " << job->name() << "start";
 		m_exsitJobs.pop_front();
 
 		m_runThread->setJob(job);

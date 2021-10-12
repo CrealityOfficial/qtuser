@@ -26,8 +26,11 @@ namespace qtuser_3d
 		addComponent(m_transform);
 
 		m_xRingEntity = new ManipulateEntity(this, 1);
+		m_xRingEntity->setObjectName("RotateHelperEntity.xRingEntity");
 		m_yRingEntity = new ManipulateEntity(this, 1);
+		m_yRingEntity->setObjectName("RotateHelperEntity.yRingEntity");
 		m_zRingEntity = new ManipulateEntity(this, 1);
+		m_zRingEntity->setObjectName("RotateHelperEntity.zRingEntity");
 
 		m_xPickable = new ManipulatePickable(this);
 		m_yPickable = new ManipulatePickable(this);

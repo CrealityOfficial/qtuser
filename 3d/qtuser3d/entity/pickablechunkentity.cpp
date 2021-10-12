@@ -11,6 +11,7 @@ namespace qtuser_3d
 		, m_chunkBytes(0)
 		, m_chunks(0)
 	{
+		setObjectName("PickableChunkEntity");
 		m_geometry = new Qt3DRender::QGeometry(m_geometryRenderer);
 
 		m_positionBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
@@ -85,6 +86,7 @@ namespace qtuser_3d
 		if (chunk < 0 || chunk >= m_chunks)
 			return;
 
+		qDebug() << "PickableChunkEntity update start";
 		QNode* pNode = (QNode*)parent();
 		setParent((QNode*)nullptr);
 		QThread::usleep(20);
@@ -125,6 +127,7 @@ namespace qtuser_3d
 		}
 
 		setParent(pNode);
+		qDebug() << "PickableChunkEntity update end";
 	}
 
 	void PickableChunkEntity::setFaceBase(QPoint faceBase)

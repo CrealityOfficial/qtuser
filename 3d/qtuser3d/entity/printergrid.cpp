@@ -19,6 +19,8 @@ namespace qtuser_3d
 		m_lineColorParam = useEffect->createParameter("linecolor", m_lineColor);
 		m_visible = createParameter("visible", 0.0f);
 
+		setObjectName("PrinterGrid");
+
 		Qt3DRender::QLineWidth* lineWidth = new Qt3DRender::QLineWidth(this);
 		lineWidth->setSmooth(true);
 		lineWidth->setValue(lw);

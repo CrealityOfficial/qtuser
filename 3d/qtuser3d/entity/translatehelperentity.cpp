@@ -36,6 +36,7 @@ namespace qtuser_3d
 			//xMatrix.scale(15.0f, 15.0f, 15.0f);
 
 			m_xArrowEntity = new qtuser_3d::ManipulateEntity(this);
+			m_xArrowEntity->setObjectName("TranslateHelperEntity.xArrowEntity");
 			m_xArrowEntity->setPose(xMatrix);
 			m_xArrowEntity->setColor(QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
 			m_xArrowEntity->setGeometry(geometry, Qt3DRender::QGeometryRenderer::Triangles);
@@ -53,6 +54,7 @@ namespace qtuser_3d
 			yMatrix.scale(40.0f, 40.0f, 40.0f);
 			//yMatrix.scale(15.0f, 15.0f, 15.0f);
 			m_yArrowEntity = new qtuser_3d::ManipulateEntity(this);
+			m_yArrowEntity->setObjectName("TranslateHelperEntity.yArrowEntity");
 			m_yArrowEntity->setPose(yMatrix);
 			m_yArrowEntity->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
 			m_yArrowEntity->setGeometry(geometry, Qt3DRender::QGeometryRenderer::Triangles);
@@ -67,6 +69,7 @@ namespace qtuser_3d
 			zMatrix.scale(40.0f, 40.0f, 40.0f);
 			//zMatrix.scale(15.0f, 15.0f, 15.0f);
 			m_zArrowEntity = new qtuser_3d::ManipulateEntity(this);
+			m_zArrowEntity->setObjectName("TranslateHelperEntity.zArrowEntity");
 			m_zArrowEntity->setPose(zMatrix);
 			m_zArrowEntity->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
 			m_zArrowEntity->setGeometry(geometry, Qt3DRender::QGeometryRenderer::Triangles);

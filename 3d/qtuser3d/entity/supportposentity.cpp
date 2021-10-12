@@ -11,6 +11,7 @@ namespace qtuser_3d
 		, m_position(position)
 		, m_normal(normal)
 	{
+		setObjectName("SupportPosEntity");
 		setGeometry(BasicShapeCreateHelper::createBall(position, r, 20));
 		m_pointNum = (180 / 10) * (360 / 10) * 2 * 3;
 	}

@@ -7,9 +7,13 @@ namespace qtuser_3d
 	AxisEntity::AxisEntity(Qt3DCore::QNode* parent, int axistype, QVector3D* s_use)
 		:QEntity(parent)
 	{
+		setObjectName("AxisEntity");
 		m_xAxis = new qtuser_3d::PureColorEntity(this);
+		m_xAxis->setObjectName("AxisEntity.xAxis");
 		m_yAxis = new qtuser_3d::PureColorEntity(this);
+		m_yAxis->setObjectName("AxisEntity.yAxis");
 		m_zAxis = new qtuser_3d::PureColorEntity(this);
+		m_zAxis->setObjectName("AxisEntity.zAxis");
 
 		Qt3DRender::QGeometry* geometry = nullptr;
 		QVector3D s(50, 50, 50);
@@ -44,7 +48,7 @@ namespace qtuser_3d
 		m_yAxis->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
 		m_zAxis->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
 
-		m_xAxis->setGeometry(geometry);
+		m_xAxis->setGeometry(geometry);	
 		m_yAxis->setGeometry(geometry);
 		m_zAxis->setGeometry(geometry);
 	}
