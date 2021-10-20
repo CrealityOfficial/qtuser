@@ -99,9 +99,10 @@ void main( void )
 	
 	if(hoverState > 0)
 	{
-		if(dot(fgnormal, vec3(0.0, 0.0, -1.0)) >= supportCos)
+		float v = dot(fgnormal, vec3(0.0, 0.0, -1.0));
+		if(v >= supportCos)
 		{
-			coreColor.r += 0.8;
+			coreColor.r += 0.8 * v;
 		}
 		
 		if(waterState == 1)
