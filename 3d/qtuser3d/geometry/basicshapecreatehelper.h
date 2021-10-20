@@ -29,6 +29,8 @@ namespace qtuser_3d
 	public:
 		static int createCylinderData(float r, float h, int seg, std::vector<float> &datas);
 
+		static int createVerticalCylinderData(float r, float h, int seg, float offset_per, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
+
 		static int createPenData(float r, float headh, float bodyh, int seg, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
 
 		static int createBallData(QVector3D center, float r, float angleSpan, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);

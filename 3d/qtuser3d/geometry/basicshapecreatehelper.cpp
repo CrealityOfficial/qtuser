@@ -160,6 +160,59 @@ namespace qtuser_3d
 		return 0;
 	}
 
+	int BasicShapeCreateHelper::createVerticalCylinderData(float r, float h, int seg, float offset_per, std::vector<float>& vertexDatas, std::vector<float>& normalDatas)
+	{
+		const float PI = 3.1415926535897932384;
+		float hoffset = h * offset_per;
+
+		float angdesSpan = 360.0 / seg;
+		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
+		{
+			float angrad = angdeg * PI / 180.0;
+			float angradNext = (angdeg + angdesSpan) * PI / 180.0;
+
+			QVector3D v1(0, 0, h / 2 + hoffset);
+			QVector3D v2(-r * sin(angrad), -r * cos(angrad), h / 2 + hoffset);
+			QVector3D v3(-r * sin(angradNext), -r * cos(angradNext), h / 2 + hoffset);
+
+			QVector3D n = QVector3D::normal(v1, v2, v3);
+			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas, normalDatas);
+		}
+		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
+		{
+			float angrad = angdeg * PI / 180.0;
+			float angradNext = (angdeg + angdesSpan) * PI / 180.0;
+
+			QVector3D v1(0, 0, -h / 2 + hoffset);
+			QVector3D v2(-r * sin(angradNext), -r * cos(angradNext), -h / 2 + hoffset);
+			QVector3D v3(-r * sin(angrad), -r * cos(angrad), -h / 2 + hoffset);
+
+			QVector3D n = QVector3D::normal(v1, v2, v3);
+			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas, normalDatas);
+		}
+		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
+		{
+			float angrad = angdeg * PI / 180.0;
+			float angradNext = (angdeg + angdesSpan) * PI / 180.0;
+
+			QVector3D v1(-r * sin(angrad), -r * cos(angrad), -h / 2 + hoffset);
+			QVector3D v2(-r * sin(angradNext), -r * cos(angradNext), h / 2 + hoffset);
+			QVector3D v3(-r * sin(angrad), -r * cos(angrad), h / 2 + hoffset);
+
+			QVector3D n = QVector3D::normal(v1, v2, v3);
+			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas, normalDatas);
+
+			QVector3D v4(-r * sin(angrad), -r * cos(angrad), -h / 2 + hoffset);
+			QVector3D v5(-r * sin(angradNext), -r * cos(angradNext), -h / 2 + hoffset);
+			QVector3D v6(-r * sin(angradNext), -r * cos(angradNext), h / 2 + hoffset);
+
+			QVector3D n4 = QVector3D::normal(v4, v5, v6);
+			addFaceDataWithQVector3D(v4, v5, v6, n4, vertexDatas, normalDatas);
+		}
+
+		return 0;
+	}
+
 	int BasicShapeCreateHelper::createPenData(float r, float headh, float bodyh, int seg, std::vector<float>& vertexDatas, std::vector<float>& normalDatas)
 	{
 		const float PI = 3.1415926535897932384;

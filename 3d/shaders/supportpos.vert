@@ -7,9 +7,9 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 viewDirection;
-out vec3 normal;
-out vec3 worldPosition;
+noperspective out vec3 viewDirection;
+noperspective out vec3 normal;
+noperspective out vec3 worldPosition;
 
 void main( void )
 {

@@ -1,12 +1,12 @@
 #version 150 core
 out vec4 fragmentColor;
 
-in vec3 viewDirection;
-in vec3 normal;
-in vec3 worldPosition;
+noperspective in vec3 viewDirection;
+noperspective in vec3 normal;
+noperspective in vec3 worldPosition;
 
-uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 1.0);
-uniform vec4 diffuse = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 ambient = vec4(0.4, 0.4, 0.4, 1.0);
+uniform vec4 diffuse = vec4(0.6, 0.6, 0.6, 1.0);
 uniform vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
 uniform float specularPower = 12.0;
 
@@ -30,24 +30,14 @@ void main( void )
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 specular_color   = specular;
 	
-	float NdotL 		  = dot(fnormal, lightDirection);
+	float NdotL 		  = max(dot(fnormal, lightDirection), 0.0);
 	vec4 ambientColor 	  = ambient * color;
-	vec3 freflection      = normalize(((2.0 * fnormal) * NdotL) - lightDirection);
+	vec3 freflection      = reflect(-lightDirection, fnormal);
 	vec3 fViewDirection   = normalize(viewDirection);
 	float RdotV           = max(0.0, dot(freflection, fViewDirection)); 
 	vec4 diffuseColor     = NdotL * diffuse * color;
 	vec4 specularColor    = specular * pow( RdotV, specularPower);
 	vec4 coreColor = ambientColor + diffuseColor + specularColor;
-	
-		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
-	{
-		coreColor.g += 0.4;
-	}
-	
-	if( abs(worldPosition.z - bottom) < 0.01 )
-	{
-		coreColor.g += 0.4;
-	}
-	
+
 	fragmentColor = vec4(coreColor.rgb, 0.8);
 }
