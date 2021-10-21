@@ -46,6 +46,7 @@ namespace qtuser_3d
 
     void TextureRenderTarget::resize(const QSize& size)
     {
+        qDebug() << "TextureRenderTarget::resize " << size;
         if (size.width() == 0 || size.height() == 0 || m_size == size)
             return;
 

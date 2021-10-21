@@ -163,6 +163,7 @@ namespace qtuser_3d
 
 	void PickableChunkEntity::releaseChunk(int chunk)
 	{
+		qDebug() << "PickableChunkEntity releaseChunk " << chunk;
 		if (chunk < 0 || chunk >= m_chunks)
 			return;
 
@@ -179,6 +180,7 @@ namespace qtuser_3d
 
 	void PickableChunkEntity::releaseAllChunks()
 	{
+		qDebug() << "PickableChunkEntity::releaseAllChunks";
 		m_freeList.clear();
 		for (int i = 0; i < m_chunks; ++i)
 			m_freeList << i;

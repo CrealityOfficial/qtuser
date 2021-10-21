@@ -45,6 +45,7 @@ namespace qtuser_3d
 
 	void Surface::setClearColor(const QColor& color)
 	{
+		qDebug() << "Surface setClearColor " << color;
 		m_clearBuffer->setClearColor(color);
 	}
 
