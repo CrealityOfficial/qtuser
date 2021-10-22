@@ -55,7 +55,9 @@ namespace qtuser_3d
 
 	void ColorPicker::requestCapture()
 	{
+#ifdef TEST_TEST
 		qDebug() << "ColorPicker::requestCapture " << m_useDelay;
+#endif
 		m_createImageFinished=false;
 		if(m_useDelay)
 			m_delayTimer->start(30);

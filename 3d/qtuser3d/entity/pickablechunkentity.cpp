@@ -85,11 +85,14 @@ namespace qtuser_3d
 	{
 		if (chunk < 0 || chunk >= m_chunks)
 			return;
-
+#ifdef TEST_TEST
 		qDebug() << "PickableChunkEntity update start";
+
 		QNode* pNode = (QNode*)parent();
 		setParent((QNode*)nullptr);
 		QThread::usleep(20);
+#endif
+		
 
 		int baseIndex = m_chunkBytes * chunk;
 		if (positionBytes)
@@ -126,8 +129,11 @@ namespace qtuser_3d
 			m_flagByteArray.replace(baseIndex, flagsBytes->size(), *flagsBytes);
 		}
 
+		
+#ifdef TEST_TEST
 		setParent(pNode);
 		qDebug() << "PickableChunkEntity update end";
+#endif
 	}
 
 	void PickableChunkEntity::setFaceBase(QPoint faceBase)

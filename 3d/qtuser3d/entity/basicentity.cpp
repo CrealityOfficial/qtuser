@@ -88,14 +88,13 @@ namespace qtuser_3d
 
 	void BasicEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type)
 	{
+#ifdef TEST_TEST
 		qDebug() << objectName() << " setGeometry";
-		if (objectName().isEmpty())
-		{
-			int test = 1;
-		}
 		QNode* pNode = (QNode*)parent();
 		setParent((QNode*)nullptr);
 		QThread::usleep(20);
+#endif
+		
 
 		Qt3DRender::QGeometry* oldGeometry = m_geometryRenderer->geometry();
 		if (oldGeometry && (oldGeometry->parent() == m_geometryRenderer))
@@ -108,9 +107,11 @@ namespace qtuser_3d
 
 		if(geometry)
 			m_geometryRenderer->setPrimitiveType(type);
-		setParent(pNode);
-
+		
+#ifdef TEST_TEST
 		qDebug() << objectName() << " setGeometry over";
+		setParent(pNode);
+#endif
 	}
 
 	Qt3DRender::QGeometry* BasicEntity::geometry()
