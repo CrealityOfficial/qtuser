@@ -39,5 +39,5 @@ void main( void )
 	vec4 specularColor    = specular * pow( RdotV, specularPower);
 	vec4 coreColor = ambientColor + diffuseColor + specularColor;
 
-	fragmentColor = vec4(coreColor.rgb, 0.8);
+	fragmentColor = vec4(coreColor.rgb, 1.0);
 }
