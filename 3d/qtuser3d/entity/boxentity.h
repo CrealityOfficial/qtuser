@@ -12,8 +12,8 @@ namespace qtuser_3d
 		BoxEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~BoxEntity();
 
-		void updateGlobal(Box3D& box, bool need_bottom = true);
-		void updateLocal(Box3D& box, const QMatrix4x4& parentMatrix);
+		void updateGlobal(const Box3D& box, bool need_bottom = true);
+		void updateLocal(const Box3D& box, const QMatrix4x4& parentMatrix);
 		void setColor(const QVector4D& color);
 	protected:
 		Qt3DRender::QParameter* m_colorParameter;

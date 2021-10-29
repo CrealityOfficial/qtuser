@@ -48,10 +48,11 @@ namespace qtuser_3d
 		m_boxEntity->setParent(visible ? this : nullptr);
 	}
 
-	void ModelNEntity::updateBoxLocal(Box3D& box, QMatrix4x4& parentMatrix)
+	void ModelNEntity::updateBoxLocal(const Box3D& box, const QMatrix4x4& parentMatrix)
 	{
 		m_boxEntity->updateLocal(box, parentMatrix);
 	}
+
 	void ModelNEntity::setBoxColor(QVector4D color)
 	{
 		m_boxEntity->setColor(color);

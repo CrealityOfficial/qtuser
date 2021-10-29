@@ -19,7 +19,7 @@ namespace qtuser_3d
 
 	}
 
-	void BoxEntity::updateGlobal(Box3D& box, bool need_bottom)
+	void BoxEntity::updateGlobal(const Box3D& box, bool need_bottom)
 	{
 		QMatrix4x4 m;
 
@@ -37,7 +37,7 @@ namespace qtuser_3d
 		setPose(m);
 	}
 
-	void BoxEntity::updateLocal(Box3D& box, const QMatrix4x4& parentMatrix)
+	void BoxEntity::updateLocal(const Box3D& box, const QMatrix4x4& parentMatrix)
 	{
 		setGeometry(BoxCreateHelper::createPartBox(box, 0.3), Qt3DRender::QGeometryRenderer::Lines);
 
