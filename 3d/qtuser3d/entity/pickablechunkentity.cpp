@@ -128,12 +128,6 @@ namespace qtuser_3d
 			m_flagBuffer->updateData(baseIndex, *flagsBytes);
 			m_flagByteArray.replace(baseIndex, flagsBytes->size(), *flagsBytes);
 		}
-
-		
-#ifdef TEST_TEST
-		setParent(pNode);
-		qDebug() << "PickableChunkEntity update end";
-#endif
 	}
 
 	void PickableChunkEntity::setFaceBase(QPoint faceBase)

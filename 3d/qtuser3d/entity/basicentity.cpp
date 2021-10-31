@@ -1,5 +1,7 @@
 #include "basicentity.h"
 #include <QThread>
+#include <Qt3DRender/QAttribute>
+#include <Qt3DRender/QBuffer>
 
 namespace qtuser_3d
 {
@@ -7,11 +9,6 @@ namespace qtuser_3d
 		:Qt3DCore::QEntity(parent)
 		, m_geometryRenderer(nullptr)
 	{
-		if (parent != nullptr)
-		{
-			int test = 1;
-		}
-
 		m_material = new Qt3DRender::QMaterial(this);
 		addComponent(m_material);
 
@@ -88,14 +85,6 @@ namespace qtuser_3d
 
 	void BasicEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type)
 	{
-#ifdef TEST_TEST
-		qDebug() << objectName() << " setGeometry";
-		QNode* pNode = (QNode*)parent();
-		setParent((QNode*)nullptr);
-		QThread::usleep(20);
-#endif
-		
-
 		Qt3DRender::QGeometry* oldGeometry = m_geometryRenderer->geometry();
 		if (oldGeometry && (oldGeometry->parent() == m_geometryRenderer))
 		{
@@ -107,11 +96,6 @@ namespace qtuser_3d
 
 		if(geometry)
 			m_geometryRenderer->setPrimitiveType(type);
-		
-#ifdef TEST_TEST
-		qDebug() << objectName() << " setGeometry over";
-		setParent(pNode);
-#endif
 	}
 
 	Qt3DRender::QGeometry* BasicEntity::geometry()
@@ -142,5 +126,43 @@ namespace qtuser_3d
 			return argumnets.at(0);
 
 		return nullptr;
+	}
+
+	Qt3DRender::QAttribute* BasicEntity::positionAttribute()
+	{
+		Qt3DRender::QGeometry* geom = geometry();
+		if (!geom)
+			return nullptr;
+
+		QVector<Qt3DRender::QAttribute*> attributes = geom->attributes();
+		if (attributes.size() == 0 || attributes.at(0)->name() != Qt3DRender::QAttribute::defaultPositionAttributeName())
+			return nullptr;
+
+		Qt3DRender::QAttribute* attribute = attributes.at(0);
+		if (attribute->vertexSize() != 3)
+			return nullptr;
+
+		return attribute;
+	}
+	int BasicEntity::traitPositionCount()
+	{
+		Qt3DRender::QAttribute* attribute = BasicEntity::positionAttribute();
+		if (!attribute)
+			return 0;
+
+		return (int)attribute->count();
+	}
+
+	void BasicEntity::fillPositionData(char* buffer, int len)
+	{
+		Qt3DRender::QAttribute* attribute = BasicEntity::positionAttribute();
+		if (!attribute)
+			return;
+
+		int l = attribute->count() * attribute->vertexSize() * sizeof(float);
+		if (len < l)
+			return;
+
+		memcpy(buffer, attribute->buffer()->data(), l);
 	}
 }

@@ -33,6 +33,11 @@ namespace qtuser_3d
 		void replaceGeometryRenderer(Qt3DRender::QGeometryRenderer* geometryRenderer);
 
 		Qt3DRender::QBlendEquationArguments* blendArguments();
+
+		int traitPositionCount();
+		void fillPositionData(char* buffer, int len);
+	protected:
+		Qt3DRender::QAttribute* positionAttribute();
 	protected:
 		Qt3DRender::QMaterial* m_material;
 		Qt3DCore::QTransform* m_transform;
