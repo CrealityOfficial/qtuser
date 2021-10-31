@@ -99,7 +99,7 @@ namespace qtuser_3d
 		m_supportCosParameter->setValue(supportCos);
 	}
 
-	void ModelNEntity::setWaterPoint(QVector3D pt, float zcha)
+	void ModelNEntity::setWaterPoint(const QVector3D& pt, float zcha)
 	{
 		m_waterShowParameter->setValue(1);
 		m_waterParameter->setValue(pt);

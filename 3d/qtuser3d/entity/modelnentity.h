@@ -28,7 +28,7 @@ namespace qtuser_3d
 		void setSupportCos(float supportCos);
 		void enterSupportStatus();
 		void leaveSupportStatus();
-		void setWaterPoint(QVector3D pt, float zcha);
+		void setWaterPoint(const QVector3D& pt, float zcha);
 		void unSetWaterPoint();
 		void setFanZhuan(int fz);
 		
