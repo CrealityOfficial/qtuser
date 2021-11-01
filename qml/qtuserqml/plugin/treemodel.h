@@ -77,7 +77,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void addGroup(int index,QObject* group);
-    void addModel(QObject*group,QObject* model);
+    void addModel(QObject* model, QObject* group = nullptr);
     Q_INVOKABLE void delModel(QModelIndex index);
     Q_INVOKABLE void delModel(QObject* model);
 

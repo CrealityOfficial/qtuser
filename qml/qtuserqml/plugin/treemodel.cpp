@@ -88,6 +88,7 @@ void TreeModel::addItem(QModelIndex parent,TreeItem* item)
     endInsertRows();
     emit addNewItem(parent);
 }
+
 QModelIndex TreeModel::getModelIndex(QObject *entity)
 {
     QModelIndex selectedIndex = QModelIndex();
@@ -99,7 +100,7 @@ QModelIndex TreeModel::getModelIndex(QObject *entity)
 
      return selectedIndex;
 }
-void TreeModel::addModel(QObject*group,QObject* model)
+void TreeModel::addModel(QObject* model, QObject* group)
 {
     QModelIndex parent = getModelIndex(group);
     if(parent.isValid())
