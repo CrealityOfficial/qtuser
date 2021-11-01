@@ -7,7 +7,7 @@ namespace qtuser_core
 	ProgressorTracer::ProgressorTracer(Progressor* progressor)
 		:m_progressor(progressor)
 	{
-
+		resetProgressScope();
 	}
 
 	ProgressorTracer::~ProgressorTracer()
@@ -17,8 +17,9 @@ namespace qtuser_core
 
 	void ProgressorTracer::progress(float r)
 	{
+		m_realValue = m_start + r * (m_end - m_start);
 		if (m_progressor)
-			m_progressor->progress(r);
+			m_progressor->progress(m_realValue);
 	}
 
 	bool ProgressorTracer::interrupt()
