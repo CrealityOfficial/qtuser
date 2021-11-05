@@ -77,7 +77,9 @@ namespace qtuser_3d
 
 	void ColorPicker::delayCapture()
 	{
+#if 0
 		qDebug() << "ColorPicker::delayCapture";
+#endif
 		m_captureReply.reset(m_renderCapture->requestCapture());
 		connect(m_captureReply.data(), &Qt3DRender::QRenderCaptureReply::completed, this, &ColorPicker::captureCompleted);
 
@@ -87,7 +89,9 @@ namespace qtuser_3d
 
 	void ColorPicker::captureCompleted()
 	{
+#if 0
 		qDebug() << "ColorPicker::captureCompleted";
+#endif
 		m_colorPickerImage = m_captureReply->image();
         m_captureReply.reset();
         m_updateTimer->stop();
