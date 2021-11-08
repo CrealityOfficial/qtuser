@@ -59,6 +59,8 @@ private Q_SLOTS:
     void onUpdateNotFound(const ReleaseInfo &currentRelease);
     void onUpdateFound(const ReleaseInfo &currentRelease, const QList<ReleaseInfo> &newReleases);
     void onUpdateError(const QString &errorString);
+private:
+    QString getUpdateLogFileName();
 
 private:
     struct Impl;

@@ -43,7 +43,7 @@ QString MDEditor::readMarkdownFile(QString fname)
     QFile file(fname);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QString error;
-        error.append("open file faled! file:").append(fname);
+        error.append(tr("Log file Not found:")).append(fname);
         qDebug() << error;
         return error;
     }
@@ -119,7 +119,7 @@ QString MDEditor::md2html(QString md)
         ModifyHtmlTagsStyle();
         qDebug()<<markdown_html;
     }else{
-        html = "error";
+        html = tr("Log file error!");
     }
     return html;
 }

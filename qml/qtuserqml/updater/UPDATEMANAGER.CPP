@@ -165,13 +165,24 @@ void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList
 		m_releaseNote = newReleases[0].body;
         //qDebug() << m_releaseNote;
 		//emit updateFound();
-        QString default_md =  MDEditor::instance().readMarkdownFile();
+        QString fname = getUpdateLogFileName();
+        fname = QCoreApplication::applicationDirPath() + "/doc/" + fname;
+        QString default_md =  MDEditor::instance().readMarkdownFile(fname);
         QString html_md = MDEditor::instance().md2html(default_md);
         //emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
         emit updateFound(newReleases[0].tagName, newReleases[0].url, html_md);
     }
 
     m_impl->inProgress = false;
+}
+
+QString UpdateManager::getUpdateLogFileName()
+{
+    QSettings setting;
+    setting.beginGroup("language_perfer_config");
+    QString fname = setting.value("language_type","en.ts").toString();
+    fname.replace(".ts", ".md");
+    return fname;
 }
 
 void UpdateManager::onUpdateError(const QString &errorString)
