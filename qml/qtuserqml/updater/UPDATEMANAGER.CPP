@@ -29,6 +29,8 @@
 #include "SettingsKeys.h"
 #include "UpdateChecker.h"
 #include <QFile>
+#include "mdeditor.h"
+
 static const qint64 DAYS_TO_NEXT_AUTO_CHECK = 1;
 
 struct UpdateManager::Impl
@@ -163,7 +165,10 @@ void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList
 		m_releaseNote = newReleases[0].body;
         //qDebug() << m_releaseNote;
 		//emit updateFound();
-        emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
+        QString default_md =  MDEditor::instance().readMarkdownFile();
+        QString html_md = MDEditor::instance().md2html(default_md);
+        //emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
+        emit updateFound(newReleases[0].tagName, newReleases[0].url, html_md);
     }
 
     m_impl->inProgress = false;
