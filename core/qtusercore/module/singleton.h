@@ -52,4 +52,51 @@ T* Singleton<T>::single = nullptr;
 							}
 
 #define SINGLETON_EXPORT(api, x) api x* get##x();
+
+template<class T>
+class Singleton2
+{
+public:
+	Singleton2()
+	{
+		single = new T();
+	}
+
+	virtual ~Singleton2()
+	{
+		if (single)
+		{
+			delete single;
+			single = nullptr;
+		}
+	}
+
+	T* single;
+};
+
+#define SINGLETON_DECLARE2(x) protected:\
+								friend class Singleton2<x>;\
+								x();
+
+#define SINGLETON_IMPL2(x)  Singleton2<x>* static##x = nullptr;\
+							x* get##x()\
+							{ \
+								if(!static##x)\
+								{\
+									static##x = new Singleton2<x>();\
+								}\
+								return static##x->single;\
+							}\
+							void release##x()\
+							{\
+								if(static##x)\
+								{\
+									delete static##x;\
+									static##x = nullptr;\
+								}\
+							}
+						   
+
+#define SINGLETON_EXPORT2(api, x) api x* get##x(); \
+								  api void release##x();
 #endif // _QTUSER_CORE_SINGLETON_1590845087811_H
