@@ -1,10 +1,19 @@
-__tree_add_current(SRCS)
-set(LIBS Qt5::Core Qt5::Gui Qt5::Widgets Qt5::3DRender)
+set(SRCS)
+set(LIBS Qt5::Core Qt5::Gui Qt5::Widgets)
 set(DEFS QTUSER_CORE_DLL)
 
-__add_real_target(qtuser_core dll SOURCE ${SRCS} LIB ${LIBS} DEF ${DEFS})
-set_property(TARGET qtuser_core PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR})
-add_definitions(-DHAVE_CONFIG_H)
+include(auto.module.cmake)
+include(module.module.cmake)
+include(string.module.cmake)
+include(util.module.cmake)
+
+__add_real_target(qtuser_core dll SOURCE ${SRCS}
+								  LIB ${LIBS}
+								  DEF ${DEFS}
+								  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+								  FOLDER qtuser
+								  SOURCE_FOLDER
+								  )
 
 if(INSTALL_QTUSER)
 	INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/qtusercore DESTINATION include/ FILES_MATCHING PATTERN "*.h")

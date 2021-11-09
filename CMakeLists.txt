@@ -1,8 +1,16 @@
 add_subdirectory(core)
-add_subdirectory(3d)
-add_subdirectory(qml)
 
-set(qtuser qtuser_core qtuser_3d qtuser_qml PARENT_SCOPE)
-__set_folder_targets(qtuser TARGET ${qtuser})
+set(build_libs qtuser_core)
+if(TARGET Qt5::3DRender)
+	message(STATUS "qtuser setup qtuser_3d qtuser_qml")
+	add_subdirectory(3d)
+	add_subdirectory(qml)
+	list(APPEND build_libs qtuser_3d qtuser_qml)
+endif()
+
+message(STATUS "qtuser --> [${build_libs}]")
+__set_folder_targets(qtuser TARGET ${build_libs})
+
+set(qtuser qtuser_core PARENT_SCOPE)
 
 
