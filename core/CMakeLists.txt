@@ -1,6 +1,7 @@
 set(SRCS)
 set(LIBS Qt5::Core Qt5::Gui Qt5::Widgets)
 set(DEFS QTUSER_CORE_DLL)
+set(UIS)
 
 include(auto.module.cmake)
 include(module.module.cmake)
@@ -10,6 +11,7 @@ include(util.module.cmake)
 __add_real_target(qtuser_core dll SOURCE ${SRCS}
 								  LIB ${LIBS}
 								  DEF ${DEFS}
+								  QTUI ${UIS}
 								  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
 								  FOLDER qtuser
 								  SOURCE_FOLDER

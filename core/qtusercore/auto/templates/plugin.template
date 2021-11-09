@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <file> 
+        <name><![CDATA[
+CMakeLists.txt
+		]]></name>
+	    <source><![CDATA[
+__add_real_target(QCCPlugin@Name@ dll SOURCE @name@plugin.h
+											 @name@plugin.cpp
+											 @name@ui.h
+											 @name@ui.cpp
+									   QTUI @name@.ui
+									   LIB ${PLUGIN_BASE_LIBS} osgQt OSGWrapper trimesh2 mmesh ${OSG_LIBS}
+									   FOLDER plugin
+									   )
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@plugin.h
+		]]></name>
+	    <source><![CDATA[
+#ifndef _@NAME@PLUGIN_@TIME@_H
+#define _@NAME@PLUGIN_@TIME@_H
+#include "qcc/plugin/qccplugininterface.h"
+
+class @Name@UI;
+class QCCPlugin@Name@ : public QObject, public QCCPluginInterface
+{
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "qcc.plugin.QCCPlugin@Name@")
+	Q_INTERFACES(QCCPluginInterface)
+public:
+	QCCPlugin@Name@();
+	virtual ~QCCPlugin@Name@();
+
+protected:
+	QString name() override;
+	QString info() override;
+
+	void initialize() override;
+	void uninitialize() override;
+
+protected:
+	@Name@UI* m_ui;
+};
+
+#endif // _@NAME@PLUGIN_@TIME@_H
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@plugin.cpp
+		]]></name>
+	    <source><![CDATA[
+#include "@name@plugin.h"
+#include "@name@ui.h"
+#include "qcc/interface/idockermanager.h"
+
+QCCPlugin@Name@::QCCPlugin@Name@()
+	:m_ui(nullptr)
+{
+
+}
+
+QCCPlugin@Name@::~QCCPlugin@Name@()
+{
+
+}
+
+QString QCCPlugin@Name@::name()
+{
+	return "QCCPlugin@Name@";
+}
+
+QString QCCPlugin@Name@::info()
+{
+	return "QCCPlugin@Name@";
+}
+
+void QCCPlugin@Name@::initialize()
+{
+	m_ui = new @Name@UI();
+
+	qcc::registerRightWidget(m_ui);
+}
+
+void QCCPlugin@Name@::uninitialize()
+{
+	qcc::unRegisterWidget(m_ui);
+	delete m_ui;
+	m_ui = nullptr;
+}
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@ui.h
+		]]></name>
+	    <source><![CDATA[
+#ifndef _@NAME@UI_@TIME@_H
+#define _@NAME@UI_@TIME@_H
+#include <QtWidgets/QWidget>
+#include "ui_@name@.h"
+
+#include "osgQt/osgQOpenGLWidget.h"
+#include "scc/log/tracer.h"
+
+class osgQOpenGLWidget;
+class @Name@UI : public QWidget
+{
+	Q_OBJECT
+public:
+	@Name@UI(QWidget* parent = nullptr);
+	virtual ~@Name@UI();
+
+protected:
+	Ui::@Name@* ui;
+	osgQOpenGLWidget* m_glWidget;
+	scc::Tracer m_tracer;
+};
+#endif // _@NAME@UI_@TIME@_H
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@ui.cpp
+		]]></name>
+	    <source><![CDATA[
+#include "@name@ui.h"
+#include <QtWidgets/QBoxLayout>
+
+#include "qcc/interface/idockermanager.h"
+#include "qcc/util/opendialog.h"
+
+#include "OSGWrapper/main/MeshGeodeBuilder.h"
+#include <OSGWrapper/test/baseviewer.h>
+
+#include "scc/log/log.h"
+
+#include "../..//buildinfo.h"
+
+@Name@UI::@Name@UI(QWidget* parent)
+	:QWidget(parent)
+	, ui(new Ui::@Name@())
+{
+	ui->setupUi(this);
+
+	m_glWidget = new osgQOpenGLWidget(nullptr);
+	m_glWidget->setObjectName("@Name@");
+	//m_glWidget->viewer()->setBase(nullptr);
+	qcc::registerMainWidget(m_glWidget);
+}
+
+@Name@UI::~@Name@UI()
+{
+	qcc::unRegisterWidget(m_glWidget);
+
+	delete m_glWidget;
+	m_glWidget = nullptr;
+}
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@.ui
+		]]></name>
+	    <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>@Name@</class>
+ <widget class="QWidget" name="@Name@">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>332</width>
+    <height>613</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>@Name@Form</string>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+		]]></source>	
+    </file>
+</template>
