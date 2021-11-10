@@ -36,7 +36,7 @@ namespace qtuser_core
 			return;
 
 		QString directory = m_ui->out_path->text();
-		QList<KeywordItem*> keywordItems = m_ui->keywords->findChildren<KeywordItem*>(QString());
+		QList<KeywordItem*> keywordItems = m_tempKeywords;
 		QString names;
 		for (KeywordItem* item : keywordItems)
 		{

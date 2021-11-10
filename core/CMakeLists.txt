@@ -7,6 +7,7 @@ include(auto.module.cmake)
 include(module.module.cmake)
 include(string.module.cmake)
 include(util.module.cmake)
+include(widget.module.cmake)
 
 __add_real_target(qtuser_core dll SOURCE ${SRCS}
 								  LIB ${LIBS}

@@ -11,6 +11,7 @@ namespace Ui
 class TemplateLibrary;
 namespace qtuser_core
 {
+	class KeywordItem;
 	class QTUSER_CORE_API AutoCodePanel : public QWidget
 	{
 		Q_OBJECT
@@ -32,7 +33,7 @@ namespace qtuser_core
 		Ui::AutoCodePanel* m_ui;
 		TemplateLibrary* m_templateLibrary;
 
-		QList<QWidget*> m_tempKeywords;
+		QList<KeywordItem*> m_tempKeywords;
 	};
 }
 #endif // _NULLSPACE_MAINWINDOW_1591970265844_H

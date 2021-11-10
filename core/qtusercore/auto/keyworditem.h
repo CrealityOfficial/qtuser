@@ -13,6 +13,7 @@ namespace qtuser_core
 {
 	class KeywordItem : public QWidget
 	{
+		Q_OBJECT
 	public:
 		KeywordItem(QWidget* parent = nullptr);
 		virtual ~KeywordItem();
