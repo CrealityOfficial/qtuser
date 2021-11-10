@@ -1,5 +1,5 @@
 #include "autocodepanel.h"
-#include "ui_AutoCodePanel.h"
+#include "ui_autocodepanel.h"
 
 #include "keyworditem.h"
 
