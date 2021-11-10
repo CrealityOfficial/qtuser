@@ -221,9 +221,12 @@ bool GLQuickItem::always()
 
 void GLQuickItem::handleWindowChanged(QQuickWindow* win)
 {
-    m_ratio = win->devicePixelRatio();
-    qDebug() << "handleWindowChanged = " << m_ratio;
-	update();
+    if(win)
+    {
+        m_ratio = win->devicePixelRatio();
+        qDebug() << "handleWindowChanged = " << m_ratio;
+        update();
+    }
 }
 
 void GLQuickItem::applyRootEntity()
@@ -416,8 +419,11 @@ bool GLQuickItem::always()
 
 void GLQuickItem::handleWindowChanged(QQuickWindow* win)
 {
-	m_ratio = win->devicePixelRatio();
-	update();
+	if (win)
+	{
+		m_ratio = win->devicePixelRatio();
+		update();
+	}
 }
 
 void GLQuickItem::applyRootEntity()
