@@ -31,7 +31,7 @@ namespace qtuser_core
 	{
 		Q_OBJECT
 	public:
-		CXFileOpenAndSaveManager();
+		CXFileOpenAndSaveManager(QObject* parent = nullptr);
 		virtual ~CXFileOpenAndSaveManager();
 
 		void init(QObject* obj);
@@ -89,6 +89,7 @@ namespace qtuser_core
 
 		QStringList generateFilters(const QStringList& extensions);
 		QStringList generateFiltersFromHandlers(bool saveState);
+		QString generateFilterFromHandlers(bool saveState);
 	protected:
 		QObject* m_invokeObject;
 		OpenSaveState m_State;

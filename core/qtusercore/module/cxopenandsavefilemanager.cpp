@@ -12,8 +12,9 @@
 namespace qtuser_core
 {
 
-	CXFileOpenAndSaveManager::CXFileOpenAndSaveManager()
-		: m_invokeObject(nullptr)
+	CXFileOpenAndSaveManager::CXFileOpenAndSaveManager(QObject* parent)
+		: QObject(parent)
+		, m_invokeObject(nullptr)
 		, m_State(OpenSaveState::oss_none)
 		, m_externalHandler(nullptr)
 	{
@@ -112,6 +113,30 @@ namespace qtuser_core
 		return filters;
 	}
 
+	QString CXFileOpenAndSaveManager::generateFilterFromHandlers(bool saveState)
+	{
+		QMap<QString, CXHandleBase*>& handlers = saveState ? m_saveHandlers : m_openHandlers;
+		QString filter;
+		QStringList extensions;
+		filter += "FILES (";
+		for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin(); it != handlers.end(); ++it)
+		{
+			QStringList enableFilters = it.value()->enableFilters();
+			for (const QString& ext : enableFilters)
+			{
+				if (!extensions.contains(ext))
+				{
+					QString suffix = QString("*.%1 ").arg(ext);
+					filter += suffix;
+					extensions << ext;
+				}
+			}
+		}
+		filter += ")";
+
+		return filter;
+	}
+
 	void CXFileOpenAndSaveManager::fileOpen(const QString& url)
 	{
 		openWithUrl(QUrl(url));
@@ -149,13 +174,10 @@ namespace qtuser_core
 		else
 		{
 			auto f = [this](const QStringList& files) {
-				if (files.size() == 1)
-					openWithName(files.at(0));
-				else
-					openWithNames(files);
+				openWithNames(files);
 			};
 
-			QString filter;
+			QString filter = generateFilterFromHandlers(false);
 			dialogOpenFiles(filter, f);
 		}
 	}
