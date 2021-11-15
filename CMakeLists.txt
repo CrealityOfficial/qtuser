@@ -11,6 +11,6 @@ endif()
 message(STATUS "qtuser --> [${build_libs}]")
 __set_folder_targets(qtuser TARGET ${build_libs})
 
-set(qtuser qtuser_core PARENT_SCOPE)
+set(qtuser ${build_libs} PARENT_SCOPE)
 
 
