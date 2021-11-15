@@ -22,6 +22,7 @@
 #include "qtuserqml/qtuserqmlexport.h"
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
+#include <QTimer>
 
 #include "qtuserqml/updater/RemoteType.h"
 #include "qtuserqml/updater/ReleaseInfo.h"
@@ -59,6 +60,9 @@ private Q_SLOTS:
     void onUpdateNotFound(const ReleaseInfo &currentRelease);
     void onUpdateFound(const ReleaseInfo &currentRelease, const QList<ReleaseInfo> &newReleases);
     void onUpdateError(const QString &errorString);
+
+public slots:
+    void displayCurrentVersionInfo();
 private:
     QString getUpdateLogFileName();
 

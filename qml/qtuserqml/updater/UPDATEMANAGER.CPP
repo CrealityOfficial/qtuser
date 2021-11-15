@@ -62,10 +62,13 @@ UpdateManager::UpdateManager(RemoteType remoteType, const QString &owner, const 
     connect(m_impl->checker, SIGNAL(updateNotFound(const ReleaseInfo&)), this, SLOT(onUpdateNotFound(const ReleaseInfo&)));
     connect(m_impl->checker, SIGNAL(updateFound(const ReleaseInfo&, const QList<ReleaseInfo>&)), this, SLOT(onUpdateFound(const ReleaseInfo&, const QList<ReleaseInfo>&)));
     connect(m_impl->checker, SIGNAL(updateError(const QString&)), this, SLOT(onUpdateError(const QString&)));
-    m_impl->updateTimer.setInterval(1000);
+
+    connect(&m_impl->updateTimer, SIGNAL(timeout()), this, SLOT(displayCurrentVersionInfo()));
+
+    m_impl->updateTimer.setInterval(2000);
     m_impl->updateTimer.setSingleShot(true);
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
-    m_impl->updateTimer.setTimerType(Qt::VeryCoarseTimer);
+    m_impl->updateTimer.setTimerType(Qt::CoarseTimer);
 #endif
     if(autoCheck && m_impl->updaterSettings.value(KEY_AUTO_CHECK_FOR_UPDATES).toBool())
     {
@@ -107,11 +110,13 @@ void UpdateManager::checkForUpdates(bool silent)
         if(silent)
             return;
     }
-    if(!silent && !m_impl->updaterSettings.value(KEY_AUTO_CHECK_FOR_UPDATES).toBool())
+
+    if (!silent && !m_impl->updaterSettings.value(KEY_AUTO_CHECK_FOR_UPDATES).toBool())
     {
         return;
     }
 
+    m_impl->updateTimer.start();
     m_impl->inProgress = true;
     m_impl->silent = silent;
     m_impl->checker->checkForUpdates();
@@ -130,48 +135,61 @@ void UpdateManager::forceCheckForUpdates()
 
 void UpdateManager::onUpdateNotFound(const ReleaseInfo &currentRelease)
 {
+    m_impl->updateTimer.stop();
     m_impl->inProgress = false;
     if (!m_initAutoCheckFlag) {
-        emit updateNotFound();
+        //emit updateNotFound();
     }
     else {
         m_initAutoCheckFlag = false;
     }
+    displayCurrentVersionInfo();
 }
 
-void UpdateManager::onUpdateFound(const ReleaseInfo &currentRelease, const QList<ReleaseInfo> &newReleases)
+void UpdateManager::displayCurrentVersionInfo()
+{
+    m_impl->inProgress = false;
+    QString fname = getUpdateLogFileName();
+    fname = QCoreApplication::applicationDirPath() + "/doc/" + fname;
+    QString default_md = MDEditor::instance().readMarkdownFile(fname);
+    QString html_md = MDEditor::instance().md2html(default_md);
+    //emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
+    emit updateFound("null", QUrl("127.0.0.1"), html_md);//"null" is keyword for qml function
+}
+
+void UpdateManager::onUpdateFound(const ReleaseInfo& currentRelease, const QList<ReleaseInfo>& newReleases)
 {
     const Version skippedVersion = Version(m_impl->updaterSettings.value(KEY_SKIPPED_VERSION).toString());
-    //if(m_impl->silent)
-    //{
-    //    onUpdateNotFound(currentRelease);
-    //    return;
-    //}
-    if(skippedVersion == newReleases.first().version)
+    m_impl->updateTimer.stop();
+    if (skippedVersion == newReleases.first().version)
     {
-        onUpdateNotFound(currentRelease);
+        //onUpdateNotFound(currentRelease);
+        displayCurrentVersionInfo();
         return;
     }
-    if(currentRelease.version >= newReleases.first().version)
+    if (currentRelease.version >= newReleases.first().version)
     {
-        onUpdateNotFound(currentRelease);
+        //onUpdateNotFound(currentRelease);
+        displayCurrentVersionInfo();
         return;
     }
 
-    if(newReleases.length() > 0)
+    if (newReleases.length() > 0)
     {
-		m_releaseVersion = newReleases[0].tagName;
-		m_releaseUrl = newReleases[0].url;
-		m_releaseNote = newReleases[0].body;
-        //qDebug() << m_releaseNote;
-		//emit updateFound();
-        QString fname = getUpdateLogFileName();
-        fname = QCoreApplication::applicationDirPath() + "/doc/" + fname;
-        QString default_md =  MDEditor::instance().readMarkdownFile(fname);
+        m_releaseVersion = newReleases[0].tagName;
+        m_releaseUrl = newReleases[0].url;
+        m_releaseNote = newReleases[0].body;
+
+        QString default_md = newReleases[0].body;
         QString html_md = MDEditor::instance().md2html(default_md);
         //emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
         emit updateFound(newReleases[0].tagName, newReleases[0].url, html_md);
     }
+    else 
+    {
+        displayCurrentVersionInfo();
+    }
+
 
     m_impl->inProgress = false;
 }
@@ -187,13 +205,15 @@ QString UpdateManager::getUpdateLogFileName()
 
 void UpdateManager::onUpdateError(const QString &errorString)
 {
+    m_impl->updateTimer.stop();
     m_impl->inProgress = false;
     if (!m_initAutoCheckFlag) {
-        emit updateNotFound();
+        //emit updateNotFound();
     }
     else {
         m_initAutoCheckFlag = false;
     }
+    displayCurrentVersionInfo();
 }
 
 QString UpdateManager::getCurrentVersion()
