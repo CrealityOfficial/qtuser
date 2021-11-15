@@ -180,10 +180,10 @@ void UpdateManager::onUpdateFound(const ReleaseInfo& currentRelease, const QList
         m_releaseUrl = newReleases[0].url;
         m_releaseNote = newReleases[0].body;
 
-        QString default_md = newReleases[0].body;
-        QString html_md = MDEditor::instance().md2html(default_md);
-        //emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
-        emit updateFound(newReleases[0].tagName, newReleases[0].url, html_md);
+        //QString default_md = newReleases[0].body;
+        //QString html_md = MDEditor::instance().md2html(default_md);
+        emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
+        //emit updateFound(newReleases[0].tagName, newReleases[0].url, html_md);
     }
     else 
     {
