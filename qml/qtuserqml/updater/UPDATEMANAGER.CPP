@@ -65,7 +65,7 @@ UpdateManager::UpdateManager(RemoteType remoteType, const QString &owner, const 
 
     connect(&m_impl->updateTimer, SIGNAL(timeout()), this, SLOT(displayCurrentVersionInfo()));
 
-    m_impl->updateTimer.setInterval(2000);
+    m_impl->updateTimer.setInterval(2500);
     m_impl->updateTimer.setSingleShot(true);
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     m_impl->updateTimer.setTimerType(Qt::CoarseTimer);
