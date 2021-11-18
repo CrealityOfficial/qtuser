@@ -151,6 +151,10 @@ void UpdateManager::displayCurrentVersionInfo()
     m_impl->inProgress = false;
     QString fname = getUpdateLogFileName();
     fname = QCoreApplication::applicationDirPath() + "/doc/" + fname;
+    if (!QFile::exists(fname))
+    {
+        fname = QCoreApplication::applicationDirPath() + "/doc/" + "en.md";
+    }
     QString default_md = MDEditor::instance().readMarkdownFile(fname);
     QString html_md = MDEditor::instance().md2html(default_md);
     //emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
