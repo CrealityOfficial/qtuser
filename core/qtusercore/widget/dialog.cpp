@@ -12,6 +12,7 @@ namespace qtuser_core
 		QBoxLayout* layout = new QBoxLayout(QBoxLayout::LeftToRight);
 		layout->addWidget(widget);
 		QDialog dialog;
+		dialog.setWindowTitle(widget->windowTitle());
 		dialog.setLayout(layout);
 		dialog.exec();
 	}
