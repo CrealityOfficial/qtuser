@@ -5,6 +5,7 @@
 #include <QtCore/QDir>
 #include <QCoreApplication>
 #include <QStandardPaths>
+#include <QSettings>
 
 #ifdef _WINDOWS
 
@@ -148,4 +149,74 @@ QString mkMutiDir(const QString path)
 	if (!dirname.isEmpty())
 		parentPath.mkpath(dirname);
 	return parentDir + "/" + dirname;
+}
+
+/**
+* 自动对区分不同区域的可获取的网络地址
+* key, 网络地址类型
+* return:   返回网络地址
+*/
+QString getUrlAddress(QString type)
+{
+	QSettings setting;
+	setting.beginGroup("language_perfer_config");
+	QString strLanguageType = setting.value("language_type", "en.ts").toString();
+	setting.endGroup();
+
+	QString qurl;
+	const char* url = nullptr;
+
+	bool isCN = false;
+	if (strLanguageType == "zh_CN.ts")
+	{
+		isCN = true;
+	}
+
+	if (type == "modelStore")
+	{
+		if (isCN)
+		{
+			url = "https://www.crealitycloud.cn/model";
+		}
+		else
+		{
+			url = "https://www.crealitycloud.com/model";
+		}
+	}
+	else if (type == "updateVersionCheck")
+	{
+		if (isCN)
+		{
+			url = "https://file-cdn.creality.com/ota-sz/";
+		}
+		else
+		{
+			url = "https://file2-cdn.creality.com/ota-sz/";
+		}
+	}
+	else if (type == "feedBack")
+	{
+		if (isCN)
+		{
+			url = "https://support.qq.com/product/317172";
+		}
+		else
+		{
+			url = "https://www.crealitycloud.com/group-detail/61372a382685eb12cd004154";
+		}
+	}
+	else if (type == "homePage")
+	{
+		if (isCN)
+		{
+			url = "https://www.cxsw3d.cn/";
+		}
+		else
+		{
+			url = "https://www.cxsw3d.com/";
+		}
+	}
+
+	qurl = QString::fromLatin1(url);
+	return qurl;
 }

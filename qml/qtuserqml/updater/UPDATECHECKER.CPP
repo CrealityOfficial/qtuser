@@ -35,6 +35,7 @@
 #include <QUrlQuery>
 
 #include <QSettings>
+#include "qtusercore/module/systemutil.h"
 
 static bool releaseInfoGreater(const ReleaseInfo &lhs, const ReleaseInfo &rhs)
 {
@@ -87,7 +88,8 @@ void UpdateChecker::checkForUpdates()
 //#endif
     QNetworkRequest request;
     QString projectName = QString(m_impl->owner).toLower();
-    QString urlstr = QString::fromLatin1("https://file-cdn.creality.com/ota-sz/") + projectName + "/" + suffix.toLower()+"/"+m_impl->currentVersion.os() + QString::fromLatin1("/latest.json");
+    QString serverUrl = getUrlAddress("updateVersionCheck");
+    QString urlstr = serverUrl + projectName + "/" + suffix.toLower()+"/"+m_impl->currentVersion.os() + QString::fromLatin1("/latest.json");
     QUrl requestUrl = QUrl(urlstr);
     requestUrl.setQuery(QUrlQuery("time=" + QDateTime::currentDateTime().toString("ddMMyyyyhh")));
     request.setUrl(requestUrl);
