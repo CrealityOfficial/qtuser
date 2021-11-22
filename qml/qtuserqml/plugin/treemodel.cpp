@@ -130,6 +130,11 @@ void TreeModel::delModel(QModelIndex index)
     QModelIndex parentIndex = parent(index);
     TreeItem* parentItem = getItem(parentIndex);
     TreeItem* childItem = getItem(index);
+    if (nullptr == childItem)
+    {
+        return;
+    }
+
     if(parentItem)
     {
         //The second level and lower level nodes are deleted
