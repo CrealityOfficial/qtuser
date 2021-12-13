@@ -10,7 +10,7 @@ __add_real_target(QCCPlugin@Name@ dll SOURCE @name@plugin.h
 											 @name@ui.h
 											 @name@ui.cpp
 									   QTUI @name@.ui
-									   LIB ${PLUGIN_BASE_LIBS} osgQt OSGWrapper trimesh2 mmesh ${OSG_LIBS}
+									   LIB ${PLUGIN_BASE_LIBS}
 									   FOLDER plugin
 									   )
 		]]></source>	
@@ -103,10 +103,7 @@ void QCCPlugin@Name@::uninitialize()
 #include <QtWidgets/QWidget>
 #include "ui_@name@.h"
 
-#include "osgQt/osgQOpenGLWidget.h"
 #include "scc/log/tracer.h"
-
-class osgQOpenGLWidget;
 class @Name@UI : public QWidget
 {
 	Q_OBJECT
@@ -116,8 +113,6 @@ public:
 
 protected:
 	Ui::@Name@* ui;
-	osgQOpenGLWidget* m_glWidget;
-	scc::Tracer m_tracer;
 };
 #endif // _@NAME@UI_@TIME@_H
 		]]></source>	
@@ -130,12 +125,6 @@ protected:
 #include "@name@ui.h"
 #include <QtWidgets/QBoxLayout>
 
-#include "qcc/interface/idockermanager.h"
-#include "qcc/util/opendialog.h"
-
-#include "OSGWrapper/main/MeshGeodeBuilder.h"
-#include <OSGWrapper/test/baseviewer.h>
-
 #include "scc/log/log.h"
 
 #include "../..//buildinfo.h"
@@ -145,19 +134,10 @@ protected:
 	, ui(new Ui::@Name@())
 {
 	ui->setupUi(this);
-
-	m_glWidget = new osgQOpenGLWidget(nullptr);
-	m_glWidget->setObjectName("@Name@");
-	//m_glWidget->viewer()->setBase(nullptr);
-	qcc::registerMainWidget(m_glWidget);
 }
 
 @Name@UI::~@Name@UI()
 {
-	qcc::unRegisterWidget(m_glWidget);
-
-	delete m_glWidget;
-	m_glWidget = nullptr;
 }
 		]]></source>	
     </file>
