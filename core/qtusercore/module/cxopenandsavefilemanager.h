@@ -111,6 +111,9 @@ namespace qtuser_core
 
 	typedef std::function<void(const QStringList& fileNames)> loadFunc;
 	QTUSER_CORE_API void dialogOpenFiles(const QString& filter, loadFunc func);
+
+	typedef std::function<void(const QString& fileName)> saveFunc;
+	QTUSER_CORE_API void dialogSave(const QString& filter, saveFunc func);
 }
 
 #endif // !QTUSER_CORE_CXFileOpenAndSaveManager_H

@@ -199,7 +199,12 @@ namespace qtuser_core
 		}
 		else
 		{
+			auto f = [this](const QString& file) {
+				saveWithName(file);
+			};
 
+			QString filter = generateFilterFromHandlers(true);
+			dialogSave(filter, f);
 		}
 	}
 
@@ -492,6 +497,21 @@ namespace qtuser_core
 			return;
 
 		QStringList fileName = QFileDialog::getOpenFileNames(
+			nullptr, QObject::tr("OpenFile"),
+			QString(), filter);
+
+		if (fileName.isEmpty())
+			return;
+
+		func(fileName);
+	}
+
+	void dialogSave(const QString& filter, saveFunc func)
+	{
+		if (!func)
+			return;
+
+		QString fileName = QFileDialog::getSaveFileName(
 			nullptr, QObject::tr("OpenFile"),
 			QString(), filter);
 

@@ -26,24 +26,20 @@ __append_global_property(GLOBAL_PLUGINS QCCPlugin@Name@)
 #include "qcc/plugin/qccplugininterface.h"
 
 class @Name@UI;
-class QCCPlugin@Name@ : public QObject, public QCCPluginInterface
+class QCCPlugin@Name@ : public QObject, public QCCBackendInterface
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "qcc.plugin.QCCPlugin@Name@")
-	Q_INTERFACES(QCCPluginInterface)
+	Q_INTERFACES(QCCBackendInterface)
 public:
 	QCCPlugin@Name@();
 	virtual ~QCCPlugin@Name@();
 
 protected:
-	QString name() override;
-	QString info() override;
-
-	void initialize() override;
-	void uninitialize() override;
+	void start() override;
+	void stop() override;
 
 protected:
-	@Name@UI* m_ui;
 };
 
 #endif // _@NAME@PLUGIN_@TIME@_H
@@ -55,11 +51,8 @@ protected:
 		]]></name>
 	    <source><![CDATA[
 #include "@name@plugin.h"
-#include "@name@ui.h"
-#include "qcc/interface/idockermanager.h"
 
 QCCPlugin@Name@::QCCPlugin@Name@()
-	:m_ui(nullptr)
 {
 
 }
@@ -69,28 +62,12 @@ QCCPlugin@Name@::~QCCPlugin@Name@()
 
 }
 
-QString QCCPlugin@Name@::name()
+void QCCPlugin@Name@::start()
 {
-	return "QCCPlugin@Name@";
 }
 
-QString QCCPlugin@Name@::info()
+void QCCPlugin@Name@::stop()
 {
-	return "QCCPlugin@Name@";
-}
-
-void QCCPlugin@Name@::initialize()
-{
-	m_ui = new @Name@UI();
-
-	qcc::registerRightWidget(m_ui);
-}
-
-void QCCPlugin@Name@::uninitialize()
-{
-	qcc::unRegisterWidget(m_ui);
-	delete m_ui;
-	m_ui = nullptr;
 }
 		]]></source>	
     </file>
