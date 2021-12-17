@@ -24,6 +24,7 @@ __append_global_property(GLOBAL_PLUGINS QCCPlugin@Name@)
 #ifndef _@NAME@PLUGIN_@TIME@_H
 #define _@NAME@PLUGIN_@TIME@_H
 #include "qcc/plugin/qccplugininterface.h"
+#include <QtWidgets/QAction>
 
 class @Name@UI;
 class QCCPlugin@Name@ : public QObject, public QCCBackendInterface
@@ -39,7 +40,11 @@ protected:
 	void start() override;
 	void stop() override;
 
+public slots:
+	void slotPluginCheck(bool on);
 protected:
+	QAction* m_action;
+	SimplifyUI* m_ui;
 };
 
 #endif // _@NAME@PLUGIN_@TIME@_H
@@ -51,8 +56,13 @@ protected:
 		]]></name>
 	    <source><![CDATA[
 #include "@name@plugin.h"
+#include "@name@ui.h"
+#include "qcc/interface/menuinterface.h"
+#include "qcc/interface/idockermanager.h"
 
 QCCPlugin@Name@::QCCPlugin@Name@()
+	: m_action(nullptr)
+	, m_ui(nullptr)
 {
 
 }
@@ -64,10 +74,33 @@ QCCPlugin@Name@::~QCCPlugin@Name@()
 
 void QCCPlugin@Name@::start()
 {
+	m_action = qcc::addPluginAction(QString::fromLocal8Bit("xxx"));
+	m_action->setCheckable(true);
+	QObject::connect(m_action, SIGNAL(toggled(bool)), this, SLOT(slotPluginCheck(bool)));
 }
 
 void QCCPlugin@Name@::stop()
 {
+	qcc::removePluginAction(m_action);
+}
+
+void QCCPlugin@Name@::slotPluginCheck(bool on)
+{
+	if(!m_ui)
+		m_ui = new @Name@UI();
+
+	if (on)
+	{
+		qcc::DockState state;
+		state.name = QString::fromLocal8Bit("xxx");
+		qcc::registerRightWidget(m_ui, state);
+	}
+	else
+	{
+		qcc::unRegisterWidget(m_ui);
+		delete m_ui;
+		m_ui = nullptr;
+	}
 }
 		]]></source>	
     </file>
