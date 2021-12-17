@@ -5,12 +5,13 @@
 CMakeLists.txt
 		]]></name>
 	    <source><![CDATA[
+set(LIBS ${PLUGIN_BASE_LIBS})
 __add_real_target(QCCPlugin@Name@ dll SOURCE @name@plugin.h
 											 @name@plugin.cpp
 											 @name@ui.h
 											 @name@ui.cpp
 									   QTUI @name@.ui
-									   LIB ${PLUGIN_BASE_LIBS}
+									   LIB ${LIBS}
 									   FOLDER plugin
 									   )
 __append_global_property(GLOBAL_PLUGINS QCCPlugin@Name@)
@@ -44,7 +45,7 @@ public slots:
 	void slotPluginCheck(bool on);
 protected:
 	QAction* m_action;
-	SimplifyUI* m_ui;
+	@Name@UI* m_ui;
 };
 
 #endif // _@NAME@PLUGIN_@TIME@_H

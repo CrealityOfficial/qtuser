@@ -106,6 +106,9 @@ namespace qtuser_core
 	{
 		for (QWidget* widget : m_tempKeywords)
 			m_ui->keywords->removeWidget(widget);
+		
+		qDeleteAll(m_tempKeywords);
+		m_tempKeywords.clear();
 	}
 
 	void AutoCodePanel::buildKeywordItems()
