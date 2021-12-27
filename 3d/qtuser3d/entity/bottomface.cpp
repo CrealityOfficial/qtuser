@@ -12,6 +12,7 @@
 #include <Qt3DRender/QMultiSampleAntiAliasing>
 #include <Qt3DRender/QDithering>
 #include <Qt3DRender/QLineWidth>
+#include <Qt3DRender/QPolygonOffset>
 
 #include <QVector2D>
 
@@ -37,6 +38,8 @@ namespace qtuser_3d
 		Qt3DRender::QNoDepthMask* mask = new Qt3DRender::QNoDepthMask(this);
 		Qt3DRender::QLineWidth* lineWidth = new Qt3DRender::QLineWidth(this);
 		lineWidth->setSmooth(true);
+		Qt3DRender::QPolygonOffset* polygonOffset = new Qt3DRender::QPolygonOffset(this);
+		polygonOffset->setScaleFactor(3.0);
 
 		QList<Qt3DRender::QRenderPass*> passes = effect->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
 		for (Qt3DRender::QRenderPass* pass : passes)
@@ -45,6 +48,7 @@ namespace qtuser_3d
 			pass->addRenderState(antiAlias);
 			pass->addRenderState(dither);
 			pass->addRenderState(lineWidth);
+			pass->addRenderState(polygonOffset);
 		}
 		setEffect(effect);
 	}
