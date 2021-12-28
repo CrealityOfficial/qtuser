@@ -43,7 +43,12 @@ QString ToolCommand::name() const
 
 void ToolCommand::setEnabledIcon(const QString& icon)
 {
-	m_enabledIcon = icon;
+	if (m_enabledIcon != icon)
+	{
+		m_enabledIcon = icon;
+		emit enabledIconChanged();
+	}
+	
 }
 
 void ToolCommand::setPressedIcon(const QString& icon)

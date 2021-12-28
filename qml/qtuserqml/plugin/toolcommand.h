@@ -7,6 +7,12 @@ class QTUSER_QML_API ToolCommand: public QObject
 {
 	Q_OBJECT
 	Q_PROPERTY(bool enabled READ enabled NOTIFY enabledChanged)
+
+	Q_PROPERTY(QString enabledIcon READ enabledIcon NOTIFY enabledIconChanged)
+	//Q_PROPERTY(QString pressedIcon READ pressedIcon NOTIFY pressedIconChanged)
+	//Q_PROPERTY(QString disabledIcon READ disableIcon NOTIFY disableIconChanged)
+
+
     Q_PROPERTY(QString source READ source)
 public:
 	ToolCommand(QObject* parent = nullptr);
@@ -34,6 +40,7 @@ public:
 signals:
 	void enabledChanged();
 	void executed();
+	void enabledIconChanged();
 private:
 	bool m_enabled;
 

@@ -22,6 +22,8 @@ namespace qtuser_3d
 
 		virtual void showPrinterEntity(bool isShow) = 0;
 
+		virtual void onThemeChanged(int themeType) = 0;
+
 	};
 }
 #endif // _RENDERHELPER_PRINTERENTITY_1588651416007_H
