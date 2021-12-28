@@ -15,6 +15,7 @@ namespace qtuser_qml
 		virtual ~ToolCommandCenter();
 
 		void addCommand(ToolCommand* command);
+		void addCommand(ToolCommand* command, int index);
 		void removeCommand(ToolCommand* command);
         void changeCommand(ToolCommand* command);
         Q_INVOKABLE QObject* get(int index);

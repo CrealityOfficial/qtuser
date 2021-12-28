@@ -49,6 +49,27 @@ namespace qtuser_qml
         }
 
     }
+    void ToolCommandCenter::addCommand(ToolCommand* command,int index)
+    {
+        if (command)
+        {
+            
+            const QModelIndex& modelindex = QModelIndex();
+            beginInsertRows(modelindex, 0, 0);
+            if (index >= m_toolCommands.size())
+            {
+                m_toolCommands.push_back(command);
+            }
+            else
+            { 
+                m_toolCommands.insert(index, command);
+            }
+            endInsertRows();
+            if (!command->parent())
+                command->setParent(this);
+        }
+
+    }
 
     void ToolCommandCenter::removeCommand(ToolCommand* command)
     {
