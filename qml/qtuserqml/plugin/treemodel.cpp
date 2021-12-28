@@ -143,8 +143,8 @@ void TreeModel::delModel(QModelIndex index)
          endRemoveRows();
 
     }
-    //2020-11-17 lisugui
-    else
+    //2020-11-17 lisugui   add wj for delete mesh crash bug
+    else if(childItem) 
     {
 
         //For the first level node (root node)
