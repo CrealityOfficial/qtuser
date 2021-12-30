@@ -50,7 +50,7 @@ namespace qtuser_3d
 
 	void PrinterGrid::visibleSubGrid(bool visible)
 	{
-		m_visible->setValue(visible ? 1.0f : 1.0f);
+		m_visible->setValue(visible ? 1.0f : 0.0f);
 	}
 
 	void PrinterGrid::setGap(float gap)
