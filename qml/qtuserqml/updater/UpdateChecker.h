@@ -19,7 +19,7 @@
 
 #if !defined (UPDATER_UPDATE_CHECKER_H_INCLUDED)
 #define UPDATER_UPDATE_CHECKER_H_INCLUDED
-
+#include "qtuserqml/qtuserqmlexport.h"
 #include <QObject>
 
 #include "RemoteType.h"
@@ -27,7 +27,7 @@
 class QNetworkReply;
 struct ReleaseInfo;
 
-class UpdateChecker : public QObject
+class QTUSER_QML_API UpdateChecker : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(UpdateChecker)
