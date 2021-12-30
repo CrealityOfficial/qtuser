@@ -19,14 +19,15 @@
 
 #if !defined (UPDATER_SETTINGS_KEYS_H_INCLUDED)
 #define UPDATER_SETTINGS_KEYS_H_INCLUDED
+#include "qtuserqml/qtuserqmlexport.h"
 
 #include <QString>
 
-extern const QString GROUP_UPDATE_MANAGER;
-
-extern const QString KEY_SKIPPED_VERSION;
-extern const QString KEY_AUTO_CHECK_FOR_UPDATES;
-extern const QString KEY_LAST_CHECK_TIMESTAMP;
+QTUSER_QML_API extern const QString GROUP_UPDATE_MANAGER;
+	
+QTUSER_QML_API extern const QString KEY_SKIPPED_VERSION;
+QTUSER_QML_API extern const QString KEY_AUTO_CHECK_FOR_UPDATES;
+QTUSER_QML_API extern const QString KEY_LAST_CHECK_TIMESTAMP;
 
 #endif // UPDATER_SETTINGS_KEYS_H_INCLUDED
 
