@@ -4,6 +4,7 @@ out vec4 fragment_color;
 in vec3 normal;
 flat in vec2 flag;
 flat in vec4 drawFlag;
+in vec4 smoothFlag;
 in vec3 viewDirection;
 
 uniform vec4 color = vec4(0.8, 0.8, 0.8, 1.0);
@@ -21,6 +22,7 @@ uniform int animation = 0;
 
 uniform vec4 clipValue;
 uniform vec2 layershow;
+uniform int layerstartflag_show;
 
 uniform vec4 typecolors[18];
 uniform vec4 speedcolors[13];
@@ -71,6 +73,9 @@ void main( void )
 		core_color = typecolors[int(drawFlag.y)];
 	else if(showType == 2)
 		core_color = nozzlecolors[int(drawFlag.z)];
+		
+	if(layerstartflag_show == 1 && smoothFlag.x > 0.0 && smoothFlag.x <= 0.2)
+		core_color = vec4(1.0, 1.0, 1.0, 1.0);
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 ambient_color 	  = front_ambient;
