@@ -16,20 +16,20 @@ namespace qtuser_3d
 
 		virtual ~Node3D();
 
-		QVector3D center();
+		QVector3D center() const;
 		void setCenter(const QVector3D& center, bool update = true);
 
 		void setLocalScale(const QVector3D& scale, bool update = true);
 		void resetLocalScale(bool update = true);
-		QVector3D localScale();
+		QVector3D localScale() const;
 
-		QQuaternion localQuaternion();
+		QQuaternion localQuaternion() const;
 		void setLocalQuaternion(const QQuaternion& q, bool update = true);
 		void resetLocalQuaternion(bool update = true);
 
 		void setLocalPosition(const QVector3D& position, bool update = true);
 		void resetLocalPosition(bool update = true);
-		QVector3D localPosition();
+		QVector3D localPosition() const;
 
 		void mirrorX();
 		void mirrorY();
@@ -45,15 +45,15 @@ namespace qtuser_3d
 
 		void updateMatrix();
 
-		Box3D localBox();
-		Box3D globalSpaceBox();
+		Box3D localBox() const;
+		Box3D globalSpaceBox() const;
 
-		QMatrix4x4 parent2Global();
-		QMatrix4x4 globalMatrix();
-		QMatrix4x4 localMatrix();
-		QMatrix4x4 objectMatrix();
+		QMatrix4x4 parent2Global() const;
+		QMatrix4x4 globalMatrix() const;
+		QMatrix4x4 localMatrix() const;
+		QMatrix4x4 objectMatrix() const;
 
-		bool isFanZhuan();
+		bool isFanZhuan() const;
 
 		void setParent2Global(const QMatrix4x4& matrix);
 

@@ -65,7 +65,7 @@ namespace qtuser_3d
 
 	}
 
-	QVector3D Node3D::center()
+	QVector3D Node3D::center() const
 	{
 		return m_localCenter;
 	}
@@ -92,12 +92,12 @@ namespace qtuser_3d
 		setLocalScale(QVector3D(1.0f, 1.0f, 1.0f), update);
 	}
 
-	QVector3D Node3D::localScale()
+	QVector3D Node3D::localScale() const
 	{
 		return m_localScale;
 	}
 
-	QQuaternion Node3D::localQuaternion()
+	QQuaternion Node3D::localQuaternion() const
 	{
 		return m_localRotate;
 	}
@@ -128,7 +128,7 @@ namespace qtuser_3d
 		setLocalPosition(QVector3D(0.0f, 0.0f, 0.0f), update);
 	}
 
-	QVector3D Node3D::localPosition()
+	QVector3D Node3D::localPosition() const
 	{
 		return m_localPosition;
 	}
@@ -163,12 +163,12 @@ namespace qtuser_3d
 		m_parentMatrixDirty = false;
 	}
 
-	qtuser_3d::Box3D Node3D::localBox()
+	qtuser_3d::Box3D Node3D::localBox() const
 	{
 		return m_localBox;
 	}
 
-	qtuser_3d::Box3D Node3D::globalSpaceBox()
+	qtuser_3d::Box3D Node3D::globalSpaceBox() const
 	{
 		return m_globalSpaceBox;
 	}
@@ -183,27 +183,27 @@ namespace qtuser_3d
 		m_globalSpaceBox = calculateGlobalSpaceBox();
 	}
 
-	QMatrix4x4 Node3D::parent2Global()
+	QMatrix4x4 Node3D::parent2Global() const
 	{
 		return m_parent2Global;
 	}
 
-	QMatrix4x4 Node3D::globalMatrix()
+	QMatrix4x4 Node3D::globalMatrix() const
 	{
 		return m_globalMatrix;
 	}
 
-	QMatrix4x4 Node3D::localMatrix()
+	QMatrix4x4 Node3D::localMatrix() const
 	{
 		return m_local2Parent;
 	}
 
-	QMatrix4x4 Node3D::objectMatrix()
+	QMatrix4x4 Node3D::objectMatrix() const
 	{
 		return m_objectMatrix;
 	}
 
-	bool Node3D::isFanZhuan()
+	bool Node3D::isFanZhuan() const
 	{
 		bool fanzhuan = false;
 		for (int i = 0; i < 3; i++)
