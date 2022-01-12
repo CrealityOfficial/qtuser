@@ -77,55 +77,7 @@ namespace qtuser_3d
 		initAxis(m_select_yRingEntity, m_select_yPickable, m_yRingEntity, yMatrix, yclr, ychangeClr, select_out_r, select_inner_r, type);
 		initAxis(m_select_zRingEntity, m_select_zPickable, m_zRingEntity, zMatrix, zclr, zchangeClr, select_out_r, select_inner_r, type);
 
-		if (type == 1)
-		{
-			m_xRingEntity->setChangeColor(QVector4D(-0.2f, 0.3f, 0.2f, 0.0f));
-			m_yRingEntity->setChangeColor(QVector4D(0.2f, -0.2f, 0.2f, 0.0f));
-			m_zRingEntity->setChangeColor(QVector4D(0.2f, 0.2f, -0.2f, 0.0f));
 
-			m_xRingEntity->setMethod(1);
-			m_yRingEntity->setMethod(1);
-			m_zRingEntity->setMethod(1);
-		}
-		
-
-		{
-			Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
-			torusMesh->setRadius(2);
-			torusMesh->setMinorRadius(0.02f);
-			torusMesh->setRings(100);
-			m_xRingEntity->replaceGeometryRenderer(torusMesh);
-		}
-		{
-			Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
-			torusMesh->setRadius(2);
-			torusMesh->setMinorRadius(0.02f);
-			torusMesh->setRings(100);
-			m_yRingEntity->replaceGeometryRenderer(torusMesh);
-		}
-		{
-			Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
-			torusMesh->setRadius(2);
-			torusMesh->setMinorRadius(0.02f);
-			torusMesh->setRings(100);
-			m_zRingEntity->replaceGeometryRenderer(torusMesh);
-		}
-
-		m_xPickable = new ManipulatePickable(this);
-		m_yPickable = new ManipulatePickable(this);
-		m_zPickable = new ManipulatePickable(this);
-
-		if (type == 1)
-		{
-			float sf[3] = { 0, 1, 2 };
-			m_xPickable->setStateFactor(sf);
-			m_yPickable->setStateFactor(sf);
-			m_zPickable->setStateFactor(sf);
-		}
-
-		m_xPickable->setPickableEntity(m_xRingEntity);
-		m_yPickable->setPickableEntity(m_yRingEntity);
-		m_zPickable->setPickableEntity(m_zRingEntity);
 	}
 
 	RotateHelperEntity::~RotateHelperEntity()
@@ -263,21 +215,18 @@ namespace qtuser_3d
 		QMatrix4x4 matrix;
 		matrix.translate(center);
 
-		//double len = 1.0;
-		//if (m_fixSize)
-		//{
-		//	len = 1.0;
-		//}
-		//else
-		//{
-		//	QVector3D sz = box.size();
-		//	double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
-		//	maxlen = maxlen > sz.z() ? maxlen : sz.z();
-		//	if (maxlen > 80)
-		//		len = maxlen / 80;
-		//}
-
-		//matrix.scale(len);
+		float len = 1.0f;
+		if (m_fixSize)
+		{
+			QVector3D sz = box.size();
+			double maxlen = sz.x() > sz.y() ? sz.x() : sz.y();
+			maxlen = maxlen > sz.z() ? maxlen : sz.z();
+			if (maxlen * 1.1 < 50 && maxlen > 0.00000001)
+			{
+				len = maxlen * 1.1 / 50;
+			}
+		}
+		matrix.scale(len);
 		m_transform->setMatrix(matrix);
 	}
 

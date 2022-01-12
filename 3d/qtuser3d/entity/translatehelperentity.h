@@ -26,7 +26,7 @@ namespace qtuser_3d
 		void setZVisibility(bool visibility);
 
 		void updateBox(const Box3D& box);
-		void setFixSize(bool fixSize);
+		void setFixSize(int fixSize);
 		QVector3D center();
 		void setDirColor(QVector4D v4, int nDir);
 	protected:
@@ -39,7 +39,7 @@ namespace qtuser_3d
 		SimplePickable* m_yPickable;
 		SimplePickable* m_zPickable;
 
-		bool m_fixSize;
+		int m_fixSize;
 		QVector3D m_center;
 	};
 }
