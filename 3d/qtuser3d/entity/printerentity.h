@@ -21,6 +21,7 @@ namespace qtuser_3d
 		virtual void onModelChanged(Box3D basebox, bool bleft, bool bright, bool bfront, bool bback, bool bup, bool bdown) = 0;
 
 		virtual void showPrinterEntity(bool isShow) = 0;
+		virtual void visibleLogo(bool visible) = 0;
 
 		virtual void onThemeChanged(int themeType) = 0;
 
