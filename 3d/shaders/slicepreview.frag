@@ -9,13 +9,13 @@ in vec3 viewDirection;
 
 uniform vec4 color = vec4(0.8, 0.8, 0.8, 1.0);
 
-uniform vec4 front_ambient = vec4(0.7, 0.7, 0.7, 1.0);
-uniform vec4 front_diffuse = vec4(0.3, 0.3, 0.3, 1.0);
+uniform vec4 front_ambient = vec4(0.8, 0.8, 0.8, 1.0);
+uniform vec4 front_diffuse = vec4(0.8, 0.8, 0.8, 1.0);
 uniform vec4 back_ambient = vec4(0.3, 0.3, 0.3, 1.0);
 uniform vec4 back_diffuse = vec4(0.3, 0.3, 0.3, 1.0);
-uniform vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
+uniform vec4 specular = vec4(0.2, 0.2, 0.2, 1.0);
 
-uniform vec3 light_direction1 = vec3(0.0, 0.0, 1.0);
+uniform vec3 light_direction1 = vec3(1.0, 0.0, 1.0);
 
 uniform int showType = 0;
 uniform int animation = 0;
@@ -42,7 +42,7 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 diffuse_color, vec4 core_col
 	vec3 freflection      = reflect(-light_dir, fnormal);
 	vec3 fViewDirection   = normalize(viewDirection);
 	float RdotV           = max(0.0, dot(freflection, fViewDirection)); 
-	vec4 specularColor    = specular * pow( RdotV, specularPower);
+	vec4 specularColor    = specular * pow( RdotV, specularPower) * core_color;
 //	*/
 	
 	return total_diffuse + specularColor;
@@ -63,6 +63,7 @@ void main( void )
 		discard;
 	
 	vec4 core_color = vec4(0.5, 0.5, 0.5, 1.0);
+	vec3 lightDir = normalize(light_direction1);
 	
 	if(showType == 0)
 	{
@@ -83,7 +84,7 @@ void main( void )
 	
 	ambient_color 		  = ambient_color * core_color;
 	
-	vec4 light_color1     = directLight(light_direction1, fnormal, diffuse_color, core_color);
+	vec4 light_color1     = directLight(lightDir, fnormal, diffuse_color, core_color);
 	
 	core_color = ambient_color + light_color1;
 	core_color.a = color.a;
