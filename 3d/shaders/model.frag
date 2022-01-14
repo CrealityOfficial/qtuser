@@ -7,9 +7,9 @@ in vec3 gnormal;
 in vec3 worldPosition;
 in vec3 worldWater;
 
-uniform vec4 ambient = vec4(0.4, 0.4, 0.4, 1.0);
-uniform vec4 diffuse = vec4(0.6, 0.6, 0.6, 1.0);
-uniform vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
+uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);
+uniform vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
+uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);
 uniform float specularPower = 12.0;
 uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
@@ -53,7 +53,7 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_col
 	float RdotV           = max(0.0, dot(freflection, fViewDirection)); 
 	
 	diffuse_color		  = NdotL * diffuse_color * core_color;
-	specular_color        = specular_color * pow( RdotV, specularPower);
+	specular_color        = specular_color * pow( RdotV, specularPower) * core_color;
 	
 	return lightingEnable * (ambient_color + diffuse_color + specular_color) + (1 - lightingEnable) * core_color;
 }
@@ -78,7 +78,8 @@ void main( void )
 	vec4 diffuse_color    = diffuse;
 	vec4 specular_color   = specular;
 	
-	vec4 coreColor = directLight(lightDirection, fnormal, color, ambient_color, diffuse_color, specular_color);
+	vec3 lightDir = normalize(lightDirection);
+	vec4 coreColor = directLight(lightDir, fnormal, color, ambient_color, diffuse_color, specular_color);
 	
 	vec3 fgnormal 		  =	normalize(gnormal);
 	
@@ -140,7 +141,10 @@ void main( void )
 	//		coreColor.a = 1.0;
     //    }
     //}
-   
+   	
+	float vnValue = viewDirection.x * fnormal.x + viewDirection.y * fnormal.y + viewDirection.z * fnormal.z;
+	if (vnValue < -0.2)
+		coreColor = vec4(1.0, 0.54, 0.0, 1.0);
 
 	fragmentColor = vec4(coreColor.rgb, transparency);
 }
