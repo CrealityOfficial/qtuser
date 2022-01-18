@@ -24,7 +24,7 @@ namespace qtuser_3d
 		}
 		else if (axistype == 1)
 		{
-			s = QVector3D(2, 5, 2);
+			s = QVector3D(2, 3.3, 2);
 			geometry = PRIMITIVESHAPE("cylinder");
 		}
 		if (s_use != nullptr)
