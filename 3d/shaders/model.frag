@@ -71,12 +71,15 @@ void main( void )
 		color = customColor;
 	
 	if(error == 1.0)
-		color = stateColors[3];
+		color = stateColors[3];	
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 ambient_color 	  = ambient;
 	vec4 diffuse_color    = diffuse;
 	vec4 specular_color   = specular;
+	
+	if (stateInt == 2)
+		ambient_color += vec4(0.24f, 0.24f, 0.24f, 0.0f);
 	
 	vec3 lightDir = normalize(lightDirection);
 	vec4 coreColor = directLight(lightDir, fnormal, color, ambient_color, diffuse_color, specular_color);
