@@ -144,10 +144,6 @@ void main( void )
 	//		coreColor.a = 1.0;
     //    }
     //}
-   	
-	float vnValue = viewDirection.x * fnormal.x + viewDirection.y * fnormal.y + viewDirection.z * fnormal.z;
-	if (vnValue < 0)
-		coreColor = vec4(1.0, 0.54, 0.0, 1.0);
 
 	fragmentColor = vec4(coreColor.rgb, transparency);
 }
