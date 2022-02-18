@@ -81,20 +81,80 @@ void UpdateChecker::checkForUpdates()
         m_impl->networkManager = new QNetworkAccessManager(this);
         connect(m_impl->networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
     }
-    QString suffix = m_impl->currentVersion.extra();
-    qDebug() << suffix;
-//#ifndef QT_NO_DEBUG
-//    suffix = "Beta";
-//#endif
+
+    QString duid = "12345678";
+
+    QString os_version = "Win";
+    int osType = 1;
+#ifdef __APPLE__
+    os_version = "Mac";
+    osType = 3;
+#endif
+
+    QString strContent = QString::fromLatin1("{\"page\": %1, \"pageSize\": %2, \"type\" : %3, \"palform\" : %4}").arg(1).arg(999).arg(7).arg(osType);
+    auto body = strContent.toLatin1();
+
+    QString cloudUrl;
+    QSettings setting;
+    setting.beginGroup("profile_setting");
+    QString strStartType = setting.value("service_type", "-1").toString();
+    if (strStartType == "-1")
+    {
+        strStartType = "0";
+        setting.setValue("service_type", "0");
+    }
+    setting.endGroup();
+
+    if (strStartType == "0")
+    {
+        cloudUrl = "https://www.crealitycloud.cn";
+    }
+    else
+    {
+        cloudUrl = "https://www.crealitycloud.com";
+    }
+    cloudUrl = cloudUrl + "/api/cxy/search/softwareSearch";
+
+    QSettings settingLang;
+    settingLang.beginGroup("language_perfer_config");
+    QString lang = settingLang.value("language_type", "zh_cn").toString();
+    settingLang.endGroup();
+    QString currentLanguage;
+    //please refer http://yapi.crealitygroup.com/project/8/wiki
+    if (lang == "en.ts")
+    {
+        currentLanguage = "0";
+    }
+    else if (lang == "zh_CN.ts")
+    {
+        currentLanguage = "1";
+    }
+    else if (lang == "zh_TW.ts")
+    {
+        currentLanguage = "2";
+    }
+    else
+    {
+        currentLanguage = "0";
+    }
+
     QNetworkRequest request;
-    QString projectName = QString(m_impl->owner).toLower();
-    QString serverUrl = getUrlAddress("updateVersionCheck");
-    QString urlstr = serverUrl + projectName + "/" + suffix.toLower()+"/"+m_impl->currentVersion.os() + QString::fromLatin1("/latest.json");
-    QUrl requestUrl = QUrl(urlstr);
-    requestUrl.setQuery(QUrlQuery("time=" + QDateTime::currentDateTime().toString("ddMMyyyyhh")));
-    request.setUrl(requestUrl);
-    request.setRawHeader("User-Agent", QString::fromLatin1("%1/%2").arg(qApp->applicationName()).arg(qApp->applicationVersion()).toLatin1());
-    m_impl->activeReply = m_impl->networkManager->get(request);
+    request.setUrl(QUrl(cloudUrl));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+    request.setRawHeader("__CXY_APP_ID_", "creality_model");
+    request.setRawHeader("__CXY_OS_LANG_", currentLanguage.toStdString().c_str());
+    request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
+    request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+    request.setRawHeader("__CXY_PLATFORM_", "6");
+    request.setRawHeader("__CXY_APP_VER_", "3.5.0");
+
+    QSslConfiguration m_sslConfig = QSslConfiguration::defaultConfiguration();
+    m_sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+    m_sslConfig.setProtocol(QSsl::TlsV1_2);
+    request.setSslConfiguration(m_sslConfig);
+
+    m_impl->activeReply = m_impl->networkManager->post(request, body);
+
 }
 
 void UpdateChecker::cancel()
@@ -110,61 +170,77 @@ void UpdateChecker::replyFinished(QNetworkReply *reply)
     QSettings setting;
     m_impl->activeReply = Q_NULLPTR;
 
-    if(reply->error() != QNetworkReply::NoError)
-    {
-        qWarning() << "[UpdateChecker]" << reply->errorString() << "\n";
-        Q_EMIT updateError(reply->errorString());
-        return;
-    }
+    int osType = 1;
+#ifdef __APPLE__
+    osType = 3;
+#endif
+
+    int state = -1;
     QJsonParseError error;
-    const QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &error);
-    if(error.error != QJsonParseError::NoError)
+    ReleaseInfo currentRelease;
+    QList<ReleaseInfo> newReleases;
+
+    QNetworkReply::NetworkError aa = reply->error();
+
+    if (reply->error() == QNetworkReply::NoError)
+    {
+        QByteArray arrayJson = reply->readAll();
+        const QJsonDocument document = QJsonDocument::fromJson(arrayJson, &error);
+        if (error.error != QJsonParseError::NoError)
+        {
+            qWarning() << "[getQrinfoFromCloud QJsonDocument]" << error.errorString() << "\n";
+        }
+        QString strJson(document.toJson(QJsonDocument::Compact));
+
+        QJsonObject object = document.object();
+        const QJsonObject result = object.value(QString::fromLatin1("result")).toObject();
+        state = object.value(QString::fromLatin1("code")).toInt();
+
+        if (state == 0)
+        {
+            QJsonArray verList = result.value(QString::fromLatin1("list")).toArray();
+            for (int i = 0; i < verList.count(); i++)
+            {
+                int platform = verList[i].toObject().value(QString::fromLatin1("platform")).toInt();
+                if (platform != osType)
+                {
+                    continue;
+                }
+
+                ReleaseInfo info;
+                info.url = QUrl(verList[i].toObject().value(QString::fromLatin1("fileUrl")).toString());
+                info.tagName = verList[i].toObject().value(QString::fromLatin1("versionNumber")).toString();
+                info.createdAt = QDateTime::fromString(verList[i].toObject().value(QString::fromLatin1("createTime")).toString(), Qt::ISODate);
+                info.version = Version(info.tagName);
+                QJsonArray descriptionlist = verList[i].toObject().value(QString::fromLatin1("description")).toArray();
+                QString html = info.tagName + "\n";
+                for (int j = 0; j < descriptionlist.count(); j++)
+                {
+                    html += descriptionlist[j].toString();
+                }
+
+                info.body = html + "\n";
+                
+                if (info.version == m_impl->currentVersion)
+                    currentRelease = info;
+                else if (info.version > m_impl->currentVersion)
+                    newReleases.append(info);
+            }
+        }
+        else
+        {
+            qWarning() << "[UpdateChecker]" << error.errorString() << "\n";
+            Q_EMIT updateError(error.errorString());
+            return;
+        }
+        
+    }
+    else
     {
         qWarning() << "[UpdateChecker]" << error.errorString() << "\n";
         Q_EMIT updateError(error.errorString());
         return;
     }
-
-    ReleaseInfo currentRelease;
-    QList<ReleaseInfo> newReleases;
-
-    //const QJsonArray array = document.array();
-    //for(QJsonArray::ConstIterator it = array.constBegin(), itEnd = array.constEnd(); it != itEnd; ++it)
-    //{
-     //   const QJsonObject object = (*it).toObject();
-      //  if(object.value(QString::fromLatin1("draft")).toBool())
-        //    continue;
-        QJsonObject object = document.object();
-        ReleaseInfo info;
-        info.url = QUrl(object.value(QString::fromLatin1("url")).toString());
-        info.tagName = object.value(QString::fromLatin1("tag_name")).toString();
-        info.md5 = object.value(QString::fromLatin1("md5sum")).toString();
-        //info.name = object.value(QString::fromLatin1("name")).toString();
-        //info.body = object.value(QString::fromLatin1("body")).toString();
-        //info.prerelease = object.value(QString::fromLatin1("prerelease")).toBool();
-        info.createdAt = QDateTime::fromString(object.value(QString::fromLatin1("created_at")).toString(), Qt::ISODate);
-        info.publishedAt = QDateTime::fromString(object.value(QString::fromLatin1("published_at")).toString(), Qt::ISODate);
-        info.version = Version(info.tagName);
-        const QJsonObject htmls = object.value(QString::fromLatin1("release_notes")).toObject();
-        setting.beginGroup("language_perfer_config");
-        QString lang = setting.value("language_type","zh_cn").toString();
-        setting.endGroup();
-        lang = lang.mid(0,lang.indexOf(".")).toLower();
-        qDebug() << lang;
-        if(lang!="zh_cn")
-        {
-            lang="en";
-        }
-        QString html = htmls.value(lang.toLower()).toString();
-        if(html!="")
-        {
-            info.body = html;
-        }
-        if(info.version == m_impl->currentVersion)
-            currentRelease = info;
-        else if(info.version > m_impl->currentVersion)
-            newReleases.append(info);
-    //}
 
     if(currentRelease.version.isValid() && !currentRelease.prerelease)
         newReleases.erase(std::remove_if(newReleases.begin(), newReleases.end(), isPrerelase), newReleases.end());
