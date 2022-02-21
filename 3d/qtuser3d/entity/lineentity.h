@@ -16,8 +16,8 @@ namespace qtuser_3d
 		virtual ~LineEntity();
 
 		void setLineWidth(float width);
-		void updateGeometry(QVector<QVector3D>& positions, QVector<QVector4D>& colors, bool loop = false);
-		void updateGeometry(QVector<QVector3D>& positions, bool loop = false);
+		void updateGeometry(const QVector<QVector3D>& positions, const QVector<QVector4D>& colors, bool loop = false);
+		void updateGeometry(const QVector<QVector3D>& positions, bool loop = false);
 		void updateGeometry(int pointsNum, float* positions, float* color = nullptr, bool loop = false);
 		void updateGeometry(Qt3DRender::QGeometry* geometry, bool color = false, bool loop = false);
 		void setColor(const QVector4D& color);

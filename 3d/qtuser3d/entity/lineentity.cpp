@@ -31,7 +31,7 @@ namespace qtuser_3d
 		m_lineWidth->setValue(width);
 	}
 
-	void LineEntity::updateGeometry(QVector<QVector3D>& positions, QVector<QVector4D>& colors, bool loop)
+	void LineEntity::updateGeometry(const QVector<QVector3D>& positions, const QVector<QVector4D>& colors, bool loop)
 	{
 		int pointsNum = (int)positions.size();
 		if (pointsNum <= 0)
@@ -42,7 +42,7 @@ namespace qtuser_3d
 		}
 	}
 
-	void LineEntity::updateGeometry(QVector<QVector3D>& positions, bool loop)
+	void LineEntity::updateGeometry(const QVector<QVector3D>& positions, bool loop)
 	{
 		updateGeometry(positions.size(), positions.size() > 0 ? (float*)&positions.at(0) : nullptr, nullptr);
 	}
