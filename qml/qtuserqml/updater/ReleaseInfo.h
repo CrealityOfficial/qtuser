@@ -24,7 +24,7 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 
-#include "qtusercore/util/Version.h"
+#include "qtusercore/util/version.h"
 
 struct ReleaseInfo
 {
