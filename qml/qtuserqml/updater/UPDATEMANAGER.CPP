@@ -78,9 +78,9 @@ UpdateManager::UpdateManager(RemoteType remoteType, const QString &owner, const 
     }
 
 #ifdef _DEBUG
-	m_releaseVersion = "DEBUG VERSION";
-	m_releaseUrl = "DEBUG URL";
-	m_releaseNote = "DEBUG NOTE";
+    m_releaseVersion = "DEBUG VERSION";
+    m_releaseUrl = "DEBUG URL";
+    m_releaseNote = "DEBUG NOTE";
 #endif
 }
 
@@ -189,7 +189,7 @@ void UpdateManager::onUpdateFound(const ReleaseInfo& currentRelease, const QList
         emit updateFound(newReleases[0].tagName, newReleases[0].url, newReleases[0].body);
         //emit updateFound(newReleases[0].tagName, newReleases[0].url, html_md);
     }
-    else 
+    else
     {
         displayCurrentVersionInfo();
     }
@@ -222,7 +222,9 @@ void UpdateManager::onUpdateError(const QString &errorString)
 
 QString UpdateManager::getCurrentVersion()
 {
-    return m_currentVersion;
+    int pos = m_currentVersion.lastIndexOf(".");
+    QString temp = m_currentVersion.left(pos);
+    return temp;
 }
 
 void UpdateManager::initAutoCheckVersionFlag()
@@ -239,17 +241,17 @@ void UpdateManager::initAutoCheckVersionFlag()
 
 QString UpdateManager::version()
 {
-	return m_releaseVersion;
+    return m_releaseVersion;
 }
 
 QUrl UpdateManager::url()
 {
-	return m_releaseUrl;
+    return m_releaseUrl;
 }
 
 QString UpdateManager::releaseNote()
 {
-	return m_releaseNote;
+    return m_releaseNote;
 }
 
 QString UpdateManager::getProjectName()
