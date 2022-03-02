@@ -37,7 +37,7 @@ class QTUSER_QML_API UpdateManager : public QObject
 	Q_PROPERTY(QUrl url READ url CONSTANT)
 	Q_PROPERTY(QString releaseNote READ releaseNote CONSTANT)
 public:
-    UpdateManager(RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, bool autoCheck = false, QObject *parent = Q_NULLPTR);
+    UpdateManager(RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, const int app_type, const QString& build_os, bool autoCheck = false, QObject *parent = Q_NULLPTR);
     ~UpdateManager();
     Q_INVOKABLE void setAutoCheck(bool autoCheck);
     Q_INVOKABLE void skipVersion(QString version);

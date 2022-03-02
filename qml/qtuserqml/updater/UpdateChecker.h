@@ -38,7 +38,7 @@ Q_SIGNALS:
     void updateError(const QString &errorString);
 
 public:
-    UpdateChecker(RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, QObject *parent = Q_NULLPTR);
+    UpdateChecker(RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, const int app_type, const QString& build_os, QObject *parent = Q_NULLPTR);
     ~UpdateChecker();
 
 public Q_SLOTS:

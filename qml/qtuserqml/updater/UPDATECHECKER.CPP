@@ -52,21 +52,49 @@ struct UpdateChecker::Impl
     const QString owner;
     const QString repo;
     const Version currentVersion;
+    const int appType;
+    int osType;
+    QString osVersion;
     QNetworkAccessManager *networkManager;
     QNetworkReply *activeReply;
 
-    Impl(const QString &owner, const QString &repo, const QString &currentVersion)
+    Impl(const QString &owner, const QString &repo, const QString &currentVersion, const int app_type, const QString& build_os)
         : owner(owner)
         , repo(repo)
         , currentVersion(currentVersion)
+        , appType(app_type)
         , networkManager(Q_NULLPTR)
         , activeReply(Q_NULLPTR)
-    {}
+    {
+        QString q_os_type = build_os;
+        q_os_type = q_os_type.toLower();
+        osType = 0;
+        if (q_os_type == "win64")
+        {
+            osType = 1;
+            osVersion = "Win";
+        }
+        else if (q_os_type == "win32")
+        {
+            osType = 1;
+            osVersion = "Win";
+        }
+        else if (q_os_type == "linux")
+        {
+            osType = 2;
+            osVersion = "Linux";
+        }
+        else if (q_os_type == "macx")
+        {
+            osType = 3;
+            osVersion = "Mac";
+        }
+    }
 };
 
-UpdateChecker::UpdateChecker(RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, QObject *parent)
+UpdateChecker::UpdateChecker(RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, const int app_type, const QString& build_os, QObject *parent)
     : QObject(parent)
-    , m_impl(new Impl(owner, repo, currentVersion))
+    , m_impl(new Impl(owner, repo, currentVersion, app_type, build_os))
 {
 
 }
@@ -84,14 +112,14 @@ void UpdateChecker::checkForUpdates()
 
     QString duid = "12345678";
 
-    QString os_version = "Win";
-    int osType = 1;
-#ifdef __APPLE__
-    os_version = "Mac";
-    osType = 3;
-#endif
+//    QString os_version = "Win";
+//    int osType = 1;
+//#ifdef __APPLE__
+//    os_version = "Mac";
+//    osType = 3;
+//#endif
 
-    QString strContent = QString::fromLatin1("{\"page\": %1, \"pageSize\": %2, \"type\" : %3, \"palform\" : %4}").arg(1).arg(999).arg(7).arg(osType);
+    QString strContent = QString::fromLatin1("{\"page\": %1, \"pageSize\": %2, \"type\" : %3, \"palform\" : %4}").arg(1).arg(999).arg(m_impl->appType).arg(m_impl->osType);
     auto body = strContent.toLatin1();
 
     QString cloudUrl;
@@ -144,7 +172,7 @@ void UpdateChecker::checkForUpdates()
     request.setRawHeader("__CXY_APP_ID_", "creality_model");
     request.setRawHeader("__CXY_OS_LANG_", currentLanguage.toStdString().c_str());
     request.setRawHeader("__CXY_DUID_", duid.toStdString().c_str());
-    request.setRawHeader("__CXY_OS_VER_", os_version.toStdString().c_str());
+    request.setRawHeader("__CXY_OS_VER_", m_impl->osVersion.toStdString().c_str());
     request.setRawHeader("__CXY_PLATFORM_", "6");
     request.setRawHeader("__CXY_APP_VER_", "3.5.0");
 

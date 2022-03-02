@@ -41,8 +41,8 @@ struct UpdateManager::Impl
     bool silent;
     bool inProgress;
 
-    Impl(UpdateManager *manager, RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, bool autoCheck)
-        : checker(new UpdateChecker(remoteType, owner, repo, currentVersion, manager))
+    Impl(UpdateManager *manager, RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, const int app_type, const QString& build_os, bool autoCheck)
+        : checker(new UpdateChecker(remoteType, owner, repo, currentVersion, app_type, build_os, manager))
         , updaterSettings()
         , silent(false)
         , inProgress(false)
@@ -53,9 +53,9 @@ struct UpdateManager::Impl
     }
 };
 
-UpdateManager::UpdateManager(RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, bool autoCheck, QObject *parent)
+UpdateManager::UpdateManager(RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, const int app_type, const QString& build_os, bool autoCheck, QObject *parent)
     : QObject(parent)
-    , m_impl(new Impl(this, remoteType, owner, repo, currentVersion, autoCheck))
+    , m_impl(new Impl(this, remoteType, owner, repo, currentVersion, app_type, build_os, autoCheck))
 {
     m_initAutoCheckFlag = false;
     m_currentVersion=currentVersion;
