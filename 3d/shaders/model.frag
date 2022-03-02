@@ -116,11 +116,16 @@ void main( void )
 	}
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
-	
+
 	if(!frontFacing())
 	{
-		coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-		coreColor.a = 1.0;
+		color = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
+		color.a = 1.0;
+		vec3 fbnormal = -fnormal;
+		vec4 ambient_color_t 	  = ambient + vec4(0.03, 0.03, 0.03, 0.0);
+		vec4 diffuse_color_t    = diffuse;
+		vec4 specular_color_t   = specular;
+		coreColor = directLight(lightDir, fbnormal, color, ambient_color_t, diffuse_color_t, specular_color_t);
 	}
 
     //int fz = fanzhuan % 2;
