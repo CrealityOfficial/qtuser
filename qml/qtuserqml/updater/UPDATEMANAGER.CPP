@@ -222,9 +222,7 @@ void UpdateManager::onUpdateError(const QString &errorString)
 
 QString UpdateManager::getCurrentVersion()
 {
-    int pos = m_currentVersion.lastIndexOf(".");
-    QString temp = m_currentVersion.left(pos);
-    return temp;
+    return m_currentVersion;
 }
 
 void UpdateManager::initAutoCheckVersionFlag()
