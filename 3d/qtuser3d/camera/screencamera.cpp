@@ -365,6 +365,16 @@ namespace qtuser_3d
 		notifyCameraChanged();
 	}
 
+	QMatrix4x4 ScreenCamera::projectionMatrix() const
+	{
+		return m_camera->projectionMatrix();
+	}
+
+	QMatrix4x4 ScreenCamera::viewMatrix() const
+	{
+		return m_camera->viewMatrix();
+	}
+
 	void ScreenCamera::showSelf() const
 	{
 		if (m_camera != nullptr)

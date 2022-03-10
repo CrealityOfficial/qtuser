@@ -46,6 +46,9 @@ namespace qtuser_3d
 
 		void home(const qtuser_3d::Box3D& box, int type = 0);
 
+		QMatrix4x4 projectionMatrix() const;
+		QMatrix4x4 viewMatrix() const;
+
 		void showSelf() const;
 
 		bool testCameraValid();
