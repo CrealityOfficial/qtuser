@@ -1,5 +1,6 @@
 #include "qtuserqml/main/main.h"
-#include <QtGui/QGuiApplication>
+//#include <QtGui/QGuiApplication>
+#include <QApplication>
 #include <QtWidgets/QApplication>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QDebug>
@@ -28,7 +29,7 @@ namespace qtuser_qml
 #ifndef __APPLE__
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-        QGuiApplication app(argc, argv);
+        QApplication app(argc, argv);
 
         QQmlApplicationEngine *engine=new QQmlApplicationEngine();
         
@@ -57,7 +58,7 @@ namespace qtuser_qml
     int qmlAppMainNoPointer(int argc, char* argv[], const QString& dll)
     {
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-        QGuiApplication app(argc, argv);
+        QApplication app(argc, argv);
 
         QQmlApplicationEngine engine;
         specifyOpenGL();
@@ -86,7 +87,7 @@ namespace qtuser_qml
 	int hookMain(int argc, char* argv[])
 	{
 		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-		QGuiApplication app(argc, argv);
+        QApplication app(argc, argv);
 		app.setOrganizationName("DEMO");
 		app.setOrganizationDomain("DEMO");
 		app.setApplicationName("DEMO");
