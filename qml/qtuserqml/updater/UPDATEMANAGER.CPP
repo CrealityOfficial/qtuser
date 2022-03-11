@@ -40,12 +40,14 @@ struct UpdateManager::Impl
     QTimer updateTimer;
     bool silent;
     bool inProgress;
+    QString ownerstr;
 
     Impl(UpdateManager *manager, RemoteType remoteType, const QString &owner, const QString &repo, const QString &currentVersion, const int app_type, const QString& build_os, bool autoCheck)
         : checker(new UpdateChecker(remoteType, owner, repo, currentVersion, app_type, build_os, manager))
         , updaterSettings()
         , silent(false)
         , inProgress(false)
+        , ownerstr(owner)
     {
         updaterSettings.setValue(KEY_AUTO_CHECK_FOR_UPDATES, updaterSettings.value(KEY_AUTO_CHECK_FOR_UPDATES, autoCheck));
         updaterSettings.setValue(KEY_SKIPPED_VERSION, updaterSettings.value(KEY_SKIPPED_VERSION, QString()));
@@ -254,5 +256,5 @@ QString UpdateManager::releaseNote()
 
 QString UpdateManager::getProjectName()
 {
-    return qApp->applicationName();
+    return m_impl->ownerstr;//qApp->applicationName();
 }
