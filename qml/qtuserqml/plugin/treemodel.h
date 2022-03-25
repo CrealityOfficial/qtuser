@@ -81,6 +81,8 @@ public:
     Q_INVOKABLE void delModel(QModelIndex index);
     Q_INVOKABLE void delModel(QObject* model);
 
+    Q_INVOKABLE void rename(QObject* model);
+
      QModelIndex getModelIndex(QObject *entity);
      QModelIndex getRoot();
      QObject* getItemObject(QModelIndex index);

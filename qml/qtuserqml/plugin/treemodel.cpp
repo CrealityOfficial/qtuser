@@ -165,6 +165,32 @@ void TreeModel::delModel(QObject* model)
     emit rowChanged();
 }
 
+void TreeModel::rename(QObject* model)
+{
+    QModelIndex index = getModelIndex(model);
+
+    QModelIndex parentIndex = parent(index);
+    TreeItem* parentItem = getItem(parentIndex);
+    TreeItem* childItem = getItem(index);
+    if (nullptr == childItem)
+    {
+        return;
+    }
+
+    if (parentItem)
+    {
+
+    }
+    //2020-11-17 lisugui   add wj for delete mesh crash bug
+    else if (childItem)
+    {
+        QVariant varObj = childItem->data(0);
+        CustomType* modelData = varObj.value<CustomType*>();
+        modelData->setText(model->objectName());
+    }
+
+    emit rowChanged();
+}
 //! [0]
 
 //! [1]
