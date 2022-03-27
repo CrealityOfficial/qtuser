@@ -55,6 +55,21 @@ namespace qtuser_qml
         return e;
 	}
 
+    int qmlAppMain(int argc, char* argv[], appFunc func)
+    {
+#ifndef __APPLE__
+        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+        QApplication app(argc, argv);
+
+        QQmlApplicationEngine engine;
+
+        specifyOpenGL();
+        
+        func(engine);
+        return app.exec();
+    }
+
     int qmlAppMainNoPointer(int argc, char* argv[], const QString& dll)
     {
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
