@@ -62,6 +62,7 @@ namespace qtuser_qml
 #endif
         QApplication app(argc, argv);
 
+	QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/lib/");
         QQmlApplicationEngine engine;
 
         specifyOpenGL();
