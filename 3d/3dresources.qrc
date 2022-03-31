@@ -4,6 +4,9 @@
         <file>shaders/manipulate.vert</file>
         <file>shaders/model.frag</file>
         <file>shaders/model.vert</file>
+		<file>shaders/modelwireframe.frag</file>
+		<file>shaders/modelwireframe.vert</file>
+		<file>shaders/modelwireframe.geom</file>
         <file>shaders/modelline.frag</file>
         <file>shaders/modelline.vert</file>
         <file>shaders/support.frag</file>

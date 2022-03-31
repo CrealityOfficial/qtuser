@@ -30,6 +30,8 @@ namespace qtuser_3d
 		m_checkScopeParameter = createParameter("checkscope", 1);
 
 		m_nozzleParameter = createParameter("nozzle", 0);
+
+		m_renderModeParameter = createParameter("renderModel", 1);
 	}
 	
 	ModelNEntity::~ModelNEntity()
@@ -149,5 +151,11 @@ namespace qtuser_3d
 	void ModelNEntity::setNeedCheckScope(int checkscope)
 	{
 		m_checkScopeParameter->setValue(checkscope);
+	}
+
+
+	void ModelNEntity::setRenderMode(int mode)
+	{
+		m_renderModeParameter->setValue(mode);
 	}
 }

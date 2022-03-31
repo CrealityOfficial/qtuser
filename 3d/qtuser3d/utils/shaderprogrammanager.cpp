@@ -68,16 +68,19 @@ namespace qtuser_3d
 		Qt3DRender::QShaderProgram* shaderProgram = new Qt3DRender::QShaderProgram(m_root);
 
 		const static QString prefix = QString("qrc:/renderhelper/shaders/");
-		const static QString extensions[2] = { ".vert", ".frag" };
+		const static QString extensions[3] = { ".vert", ".frag", ".geom" };
 
 		QUrl vertexUrl(prefix + name + extensions[0]);
 		QUrl fragmentUrl(prefix + name + extensions[1]);
+		QUrl geometryUrl(prefix + name + extensions[2]);
 
 		QByteArray vertexByteArray = Qt3DRender::QShaderProgram::loadSource(vertexUrl);
 		QByteArray fragmentByteArray = Qt3DRender::QShaderProgram::loadSource(fragmentUrl);
+		QByteArray geometryByteArray = Qt3DRender::QShaderProgram::loadSource(geometryUrl);
 
 		if (vertexByteArray.size() > 0) shaderProgram->setVertexShaderCode(vertexByteArray);
 		if (fragmentByteArray.size() > 0) shaderProgram->setFragmentShaderCode(fragmentByteArray);
+		if (geometryByteArray.size() > 0) shaderProgram->setGeometryShaderCode(geometryByteArray);
 
 		return shaderProgram;
 	}
