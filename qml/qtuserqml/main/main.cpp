@@ -60,9 +60,11 @@ namespace qtuser_qml
 #ifndef __APPLE__
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-        QApplication app(argc, argv);
 
-	QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/lib/");
+        QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/lib/");
+        QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/plugins/");
+
+        QApplication app(argc, argv);
         QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
         specifyOpenGL();
