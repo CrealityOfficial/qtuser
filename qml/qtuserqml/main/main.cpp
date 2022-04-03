@@ -22,6 +22,10 @@ namespace qtuser_qml
         format.setSamples(4);
         QSurfaceFormat::setDefaultFormat(format);
 #endif
+
+#ifdef Q_OS_WIN32
+		QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+#endif
     }
 
 	int qmlAppMain(int argc, char* argv[], const QString& dll)
@@ -55,18 +59,48 @@ namespace qtuser_qml
         return e;
 	}
 
+	void setDynamicLoadPath(QQmlApplicationEngine& engine)
+	{
+		//dynamic plugin
+	        QStringList dynamicPathList;
+		//qml plugin
+		QStringList qmlPathList = engine.importPathList();
+
+		QString applicationDir = QCoreApplication::applicationDirPath();
+		qDebug() << "applicationDir " << applicationDir;
+
+		dynamicPathList << applicationDir;
+#ifdef Q_OS_OSX
+		qDebug() << "OS OSX setDynamicLoadPath";
+    		qmlPathList << QCoreApplication::applicationDirPath() + "/../Resources/qml";
+#elif defined Q_OS_WIN32
+		qDebug() << "OS WIN32 setDynamicLoadPath";
+#elif defined Q_OS_LINUX
+		qDebug() << "OS LINUX setDynamicLoadPath";
+		dynamicPathList << applicationDir + "/lib/";
+		qmlPathList << applicationDir + "/lib/";
+		//qmlPathList << applicationDir + "/qml/";
+#endif
+
+    		qDebug() << "Qml import paths:";
+            	qDebug() << qmlPathList;
+		qDebug() << "Dynamic import paths:";
+		qDebug() << dynamicPathList;
+
+		engine.setImportPathList(qmlPathList);
+		QCoreApplication::setLibraryPaths(dynamicPathList);
+	}
+
     int qmlAppMain(int argc, char* argv[], appFunc func)
     {
 #ifndef __APPLE__
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
-        QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/lib/");
-        QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() + "/plugins/");
-
-        QApplication app(argc, argv);
+		QApplication app(argc, argv);
         QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
+		setDynamicLoadPath(*engine);
         specifyOpenGL();
         
         func(*engine);
