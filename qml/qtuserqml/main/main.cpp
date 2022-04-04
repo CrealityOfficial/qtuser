@@ -78,6 +78,7 @@ namespace qtuser_qml
 #elif defined Q_OS_LINUX
 		qDebug() << "OS LINUX setDynamicLoadPath";
 		dynamicPathList << applicationDir + "/lib/";
+		dynamicPathList << applicationDir + "/plugins/platforms/";
 		qmlPathList << applicationDir + "/lib/";
 		//qmlPathList << applicationDir + "/qml/";
 #endif
