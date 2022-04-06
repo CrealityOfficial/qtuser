@@ -9,6 +9,7 @@
 #include <QtGui/QOpenGLContext>
 #include "qtuserqml/interface/qmlapplicationinterface.h"
 #include  <QThread>
+#include<QDir>
 namespace qtuser_qml
 {
     void specifyOpenGL()
@@ -59,8 +60,9 @@ namespace qtuser_qml
         return e;
 	}
 
-	void preSetDynamicLoadPath()
+	void preSetDynamicLoadPath(const QString& path)
 	{
+        qDebug() << "preSetDynamicLoadPath: " << path;
 		//dynamic plugin
 	    QStringList dynamicPathList = QCoreApplication::libraryPaths();
 
@@ -70,7 +72,7 @@ namespace qtuser_qml
 		qDebug() << "OS WIN32 pre setDynamicLoadPath";
 #elif defined Q_OS_LINUX
 		qDebug() << "OS LINUX pre setDynamicLoadPath";
-		dynamicPathList << "plugins/";
+		dynamicPathList << path+ "/plugins/";
 #endif
 
 		qDebug() << "Pre Dynamic import paths:";
@@ -116,7 +118,7 @@ namespace qtuser_qml
 #ifndef __APPLE__
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-	preSetDynamicLoadPath();
+	preSetDynamicLoadPath(QDir(argv[0]).absolutePath());
 	QApplication app(argc, argv);
         QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
