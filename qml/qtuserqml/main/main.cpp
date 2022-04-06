@@ -62,10 +62,11 @@ namespace qtuser_qml
 	void preSetDynamicLoadPath()
 	{
 		//dynamic plugin
-	        QStringList dynamicPathList = QCoreApplication::libraryPaths();
+	    QStringList dynamicPathList = QCoreApplication::libraryPaths();
 
 #ifdef Q_OS_OSX
 		qDebug() << "OS OSX pre setDynamicLoadPath";
+		dynamicPathList << dynamicPathList + "/../Frameworks";
 #elif defined Q_OS_WIN32
 		qDebug() << "OS WIN32 pre setDynamicLoadPath";
 #elif defined Q_OS_LINUX
@@ -81,7 +82,7 @@ namespace qtuser_qml
 	void setDynamicLoadPath(QQmlApplicationEngine& engine)
 	{
 		//dynamic plugin
-	        QStringList dynamicPathList = QCoreApplication::libraryPaths();
+	    QStringList dynamicPathList = QCoreApplication::libraryPaths();
 		//qml plugin
 		QStringList qmlPathList = engine.importPathList();
 
@@ -91,7 +92,8 @@ namespace qtuser_qml
 		dynamicPathList << applicationDir;
 #ifdef Q_OS_OSX
 		qDebug() << "OS OSX setDynamicLoadPath";
-    		qmlPathList << QCoreApplication::applicationDirPath() + "/../Resources/qml";
+		
+    	qmlPathList << QCoreApplication::applicationDirPath() + "/../Resources/qml";
 #elif defined Q_OS_WIN32
 		qDebug() << "OS WIN32 setDynamicLoadPath";
 #elif defined Q_OS_LINUX
@@ -101,8 +103,8 @@ namespace qtuser_qml
 		qmlPathList << applicationDir + "/qml/";
 #endif
 
-    		qDebug() << "Qml import paths:";
-            	qDebug() << qmlPathList;
+    	qDebug() << "Qml import paths:";
+        qDebug() << qmlPathList;
 		qDebug() << "Dynamic import paths:";
 		qDebug() << dynamicPathList;
 
