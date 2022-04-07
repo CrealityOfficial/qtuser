@@ -60,9 +60,8 @@ namespace qtuser_qml
         return e;
 	}
 
-	void preSetDynamicLoadPath(const QString& path)
+	void preSetDynamicLoadPath()
 	{
-        qDebug() << "preSetDynamicLoadPath: " << path;
 		//dynamic plugin
 	    QStringList dynamicPathList = QCoreApplication::libraryPaths();
 
@@ -72,7 +71,13 @@ namespace qtuser_qml
 		qDebug() << "OS WIN32 pre setDynamicLoadPath";
 #elif defined Q_OS_LINUX
 		qDebug() << "OS LINUX pre setDynamicLoadPath";
-		dynamicPathList << path+ "/plugins";
+
+        if (qEnvironmentVariableIsSet("APPDIR"))
+        {
+            QString appdir = qEnvironmentVariable("APPDIR");
+            qDebug() << "Linux get the APPDIR : " << appdir;
+            dynamicPathList << appdir + "/plugins";
+        }
 #endif
 
 		qDebug() << "Pre Dynamic import paths:";
@@ -118,14 +123,8 @@ namespace qtuser_qml
 #ifndef __APPLE__
        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-       auto binPath = QCoreApplication::applicationFilePath();
-       if (qEnvironmentVariableIsSet("APPDIR"))
-       {
-           binPath = qEnvironmentVariable("APPDIR");
-           qDebug() << "get the APPDIR : " << binPath;
-        }
-	preSetDynamicLoadPath(binPath);
-	QApplication app(argc, argv);
+        preSetDynamicLoadPath();
+	    QApplication app(argc, argv);
         QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
 		setDynamicLoadPath(*engine);
