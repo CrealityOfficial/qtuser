@@ -72,7 +72,7 @@ namespace qtuser_qml
 		qDebug() << "OS WIN32 pre setDynamicLoadPath";
 #elif defined Q_OS_LINUX
 		qDebug() << "OS LINUX pre setDynamicLoadPath";
-		dynamicPathList << path+ "/plugins/";
+		dynamicPathList << path+ "/plugins";
 #endif
 
 		qDebug() << "Pre Dynamic import paths:";
