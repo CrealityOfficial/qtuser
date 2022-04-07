@@ -118,7 +118,8 @@ namespace qtuser_qml
 #ifndef __APPLE__
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-	preSetDynamicLoadPath(QDir(argv[0]).absolutePath());
+   auto binPath = qEnvironmentVariableIsSet("APPIMAGE") ? qEnvironmentVariable("APPIMAGE") : QCoreApplication::applicationFilePath();
+	preSetDynamicLoadPath(binPath);
 	QApplication app(argc, argv);
         QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
