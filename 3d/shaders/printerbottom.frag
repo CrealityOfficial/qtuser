@@ -13,6 +13,7 @@ uniform sampler2D shapeTexture;
 uniform vec4 color;
 uniform vec4 logcolor;
 uniform int visible;
+uniform int colorVisible;
 
 void main() 
 {
@@ -34,7 +35,7 @@ void main()
 		if(texuse.x >= 0.0 && texuse.x <= 1.0 && texuse.y >= 0.0 && texuse.y <= 1.0)
 		{
 			coloruse = texture(shapeTexture, texuse);
-			if(coloruse.a > 0.0)
+			if(coloruse.a > 0.0 && colorVisible <= 0)
 			{
 				coloruse = logcolor;
 			}

@@ -22,12 +22,27 @@ namespace qtuser_3d
 		:BasicEntity(parent)
 	{
 		Qt3DRender::QEffect* effect = EFFECTCREATE("printerbottom", this);
-		loadImage();
+		//loadImage();
 
 		m_colorParameter = createParameter("color", QVector4D(0.27f, 0.27f, 0.27f, 1.0f));//createParameter("color", QVector4D(0.90f, 0.90f, 0.90f, 0.3f));
 		m_logcolorParameter = createParameter("logcolor", QVector4D(0.2f, 0.2f, 0.2f, 0.8f));
 		//Qt3DRender::QEffect* effect = EFFECTCREATE("pure", m_material);
 		m_visibleParameter = createParameter("visible", 1);
+		
+		ImageTexture* backgroundImage = new ImageTexture(QString::fromUtf8(":/UI/images/creality_logo.png"));
+		Qt3DRender::QTexture2D* imageTexture = new Qt3DRender::QTexture2D();
+		imageTexture->addTextureImage(backgroundImage);
+		imageTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
+		imageTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
+		QVector2D imageshape((float)(backgroundImage->width()), (float)(backgroundImage->height()));
+
+		m_imageshape =createParameter("imageshape", imageshape);
+		m_shapeTexture =createParameter("shapeTexture", QVariant::fromValue(imageTexture));
+		m_imagebili = createParameter("imagebili", QVector2D(2.0f, 1.4f));
+		m_colorVisibleParameter = createParameter("colorVisible", 0);
+		m_imageColor = 0;
+		 
+		
 		m_platformsizeParameter = createParameter("platformsize", QVector2D(1.0f, 1.0f));
 
 		Qt3DRender::QBlendEquationArguments* blend = blendArguments();
@@ -71,24 +86,38 @@ namespace qtuser_3d
 		m_logcolorParameter->setValue(color);
 	}
 
-	void TexFaces::loadImage()
+	void TexFaces::loadImage(int type)
 	{
-		//Qt3DRender::QTextureImage* backgroundImage = new Qt3DRender::QTextureImage();
-		//backgroundImage->setSource(QUrl("qrc:/UI/images/creality_logo.png"));
-		////backgroundImage->setSource(QUrl("file:///F:/work/Creality/c3d/plugins/CrealityUI/images/creality_logo.png"));
+		m_imageColor = type;
+		if (type ==1)
+		{
+			ImageTexture* backgroundImage = new ImageTexture(QString::fromUtf8(":/UI/images/hotbottom.png"));
+			Qt3DRender::QTexture2D* imageTexture = new Qt3DRender::QTexture2D();
+			imageTexture->addTextureImage(backgroundImage);
+			imageTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
+			imageTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
+			QVector2D imageshape((float)(backgroundImage->width()), (float)(backgroundImage->height()));
+			
+			m_imageshape->setValue(imageshape);
+			m_shapeTexture->setValue(QVariant::fromValue(imageTexture));
+			m_imagebili->setValue(QVector2D(1.0f, 1.0f));
+			m_colorVisibleParameter->setValue(1);
+			m_visibleParameter->setValue(1);
+		} 
+		else
+		{
+			ImageTexture* backgroundImage = new ImageTexture(QString::fromUtf8(":/UI/images/creality_logo.png"));
+			Qt3DRender::QTexture2D* imageTexture = new Qt3DRender::QTexture2D();
+			imageTexture->addTextureImage(backgroundImage);
+			imageTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
+			imageTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
+			QVector2D imageshape((float)(backgroundImage->width()), (float)(backgroundImage->height()));
 
-		ImageTexture* backgroundImage = new ImageTexture(QString::fromUtf8(":/UI/images/creality_logo.png"));
-
-		Qt3DRender::QTexture2D* imageTexture = new Qt3DRender::QTexture2D();
-		imageTexture->addTextureImage(backgroundImage);
-		imageTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
-		imageTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
-
-		QVector2D imageshape((float)(backgroundImage->width()), (float)(backgroundImage->height()));
-		createParameter("imageshape", imageshape);
-
-		createParameter("shapeTexture", QVariant::fromValue(imageTexture));
-		createParameter("imagebili", QVector2D(2.0f, 1.4f));
+			m_imageshape->setValue(imageshape);
+			m_shapeTexture->setValue(QVariant::fromValue(imageTexture));
+			m_imagebili->setValue(QVector2D(2.0f, 1.4f));
+			m_colorVisibleParameter->setValue(0);
+		}
 	}
 
 	void TexFaces::updateBox(const Box3D& box)
@@ -131,4 +160,10 @@ namespace qtuser_3d
 	{
 		m_visibleParameter->setValue(visible ? 1 : 0);
 	}
+
+	int TexFaces::isImageColor()
+	{
+		return m_imageColor;
+	}
+
 }
