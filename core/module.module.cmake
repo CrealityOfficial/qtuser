@@ -31,5 +31,8 @@ list(APPEND SRCS qtusercore/module/commandcenter.cpp
 				 qtusercore/module/cxhandlerbase.h
 				 qtusercore/module/cxhandlerbase.cpp
 				 qtusercore/module/cxopenandsavefilemanager.h
-				 qtusercore/module/cxopenandsavefilemanager.cpp 
+				 qtusercore/module/cxopenandsavefilemanager.cpp
+				 qtusercore/module/creativeinterface.h
+				 qtusercore/module/creativeplugincenter.h
+				 qtusercore/module/creativeplugincenter.cpp
 				 )
