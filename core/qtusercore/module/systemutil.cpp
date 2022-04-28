@@ -4,8 +4,12 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QCoreApplication>
-#include <QStandardPaths>
+#include <QtCore/QStandardPaths>
+#include <QtCore/QDateTime>
 #include <QSettings>
+
+#include "qtusercore/string/resourcesfinder.h"
+#include "ccglobal/log.h"
 
 #ifdef _WINDOWS
 
@@ -219,4 +223,59 @@ QString getUrlAddress(QString type)
 
 	qurl = QString::fromLatin1(url);
 	return qurl;
+}
+
+void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg)
+{
+#ifdef QT_NO_DEBUG
+	QString text = QString("[%3]").arg(msg);
+#else
+	QString text = QString("[FILE %1, FUNCTION %2]\n[%3]").arg(context.file).arg(context.function).arg(msg);
+#endif
+	switch (type)//log 信息类型
+	{
+	case QtDebugMsg:
+		LOGD("%s", text.toLocal8Bit().constData());
+		break;
+	case QtInfoMsg:
+		LOGI("%s", text.toLocal8Bit().constData());
+		break;
+	case QtWarningMsg:
+		LOGW("%s", text.toLocal8Bit().constData());
+		break;
+	case QtCriticalMsg:
+		LOGM("%s", text.toLocal8Bit().constData());
+		break;
+	case QtFatalMsg:
+		LOGC("%s", text.toLocal8Bit().constData());
+		break;
+	default:
+		LOGV("%s", text.toLocal8Bit().constData());
+		break;
+	}
+}
+
+namespace qtuser_core
+{
+	void initializeLog()
+	{
+#ifdef QT_NO_DEBUG
+		QString logDirectory = qtuser_core::getOrCreateAppDataLocation("Log");
+		auto func = [](const char* name)->std::string {
+			QString  dataTime = QDateTime::currentDateTime().toString("yyyy-MM-dd");
+			dataTime += QString(".cxlog");
+			return dataTime.toLocal8Bit().data();
+		};
+
+		cxlog::CXLog::Instance().setNameFunc(func);
+		LOGDIR(logDirectory.toLocal8Bit().data());
+#else
+		cxlog::CXLog::Instance().setColorConsole();
+#endif
+		LOGLEVEL(1);
+
+		qInstallMessageHandler(outputMessage);
+
+		qDebug() << QString("----------> START LOG <-----------");
+	}
 }

@@ -7,9 +7,10 @@
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
 #include <QtGui/QOpenGLContext>
+#include "qtusercore/module/systemutil.h"
 #include "qtuserqml/interface/qmlapplicationinterface.h"
-#include  <QThread>
-#include<QDir>
+#include <QThread>
+#include <QDir>
 namespace qtuser_qml
 {
     void specifyOpenGL()
@@ -125,6 +126,8 @@ namespace qtuser_qml
 #endif
         preSetDynamicLoadPath();
 	    QApplication app(argc, argv);
+		qtuser_core::initializeLog();
+
         QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
 		setDynamicLoadPath(*engine);

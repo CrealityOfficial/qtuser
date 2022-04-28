@@ -1,4 +1,6 @@
 #include "resourcesfinder.h"
+#include <QtCore/QStandardPaths>
+#include <QtCore/QDir>
 
 namespace qtuser_core
 {
@@ -40,5 +42,20 @@ namespace qtuser_core
 		QString filter = systemPrefix + prefix + postFix;
 		filters << filter;
 		return filters;
+	}
+
+	QString getOrCreateAppDataLocation(const QString& folder)
+	{
+		QString directory = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+		QDir dir(directory);
+		if (!dir.exists())
+			dir.mkdir(directory);
+
+		QString folderDirectory = directory + QString("/") + folder;
+		dir.setPath(folderDirectory);
+		if (!dir.exists())
+			dir.mkdir(folderDirectory);
+
+		return folderDirectory;
 	}
 }
