@@ -5,89 +5,79 @@
 #include <QtCore/QPluginLoader>
 #include <QtCore/QDebug>
 
-CreativePluginCenter::CreativePluginCenter(QObject* parent)
-	:QObject(parent)
+#include "qtusercore/string/resourcesfinder.h"
+namespace qtuser_core
 {
-}
-
-CreativePluginCenter::~CreativePluginCenter()
-{
-}
-
-void CreativePluginCenter::load()
-{
-	if (m_searchPathes.empty())
-		m_searchPathes << QCoreApplication::applicationDirPath();
-
-	QStringList nameFilters;
-#ifdef __APPLE__
-    QString plugin_root_path = QCoreApplication::applicationDirPath()+"/../Frameworks/";
-    qDebug() << "plugin_root_path = " << plugin_root_path;
-    m_searchPathes << QCoreApplication::applicationDirPath()+"/../Frameworks/";
-    int pos_debug = plugin_root_path.indexOf("Debug");
-    int pos_release = plugin_root_path.indexOf("Release");
-    if(pos_debug >= 0 || pos_release)
-    {
-        m_searchPathes << QCoreApplication::applicationDirPath() + "/../../../";
-    }
-    qDebug() << "m_searchPathes = " << m_searchPathes;
-    nameFilters << QString("libplugin*.dylib");
-    qDebug() << "nameFilters = " << nameFilters;
-#else
-	nameFilters << QString("plugin*.dll");
-#endif
-	for (const QString& path : m_searchPathes)
+	CreativePluginCenter::CreativePluginCenter(QObject* parent)
+		:QObject(parent)
 	{
-		QDir dir(path);
-		QList<QFileInfo> fileInfos = dir.entryInfoList(nameFilters, QDir::Files);
-		for (const QFileInfo& fileInfo : fileInfos)
+	}
+	
+	CreativePluginCenter::~CreativePluginCenter()
+	{
+	}
+	void CreativePluginCenter::load()
+	{
+		m_searchPathes = QCoreApplication::libraryPaths();
+		QStringList nameFilters = qtuser_core::dynamicLoadFilters();
+		qDebug() << "CreativePluginCenter nameFilters : " << nameFilters;
+		qDebug() << "CreativePluginCenter searchPathes : " << m_searchPathes;
+		for (const QString& path : m_searchPathes)
 		{
-            qDebug() << "plugin load " << fileInfo.filePath();
-			QPluginLoader loader(fileInfo.filePath());
-			if (loader.load())
+			QDir dir(path);
+			QList<QFileInfo> fileInfos = dir.entryInfoList(nameFilters, QDir::Files);
+			QString log = QString("CreativePluginCenter try find in path: [%1]->[%2]").arg(path).arg(fileInfos.size());
+			qDebug() << log; 
+			for (const QFileInfo& fileInfo : fileInfos)
 			{
-				QObject* object = loader.instance();
+				QPluginLoader loader(fileInfo.filePath());
+				if (loader.load())
 				{
-					CreativeInterface* interf = qobject_cast<CreativeInterface*>(object);
-					if (interf)
+					QObject* object = loader.instance();
 					{
-                        m_interfaces.insert(fileInfo.baseName(),interf);
-					}else
-						qDebug() << "Can't Find Interface in Plugin." << fileInfo.filePath();
+						CreativeInterface* interf = qobject_cast<CreativeInterface*>(object);
+						if (interf)
+						{
+	                        m_interfaces.insert(fileInfo.baseName(),interf);
+						}else
+							qDebug() << "Can't Find Interface in Plugin." << fileInfo.filePath();
+					}
+					qDebug() << fileInfo.filePath() << " QPluginLoader sucess.";
 				}
-			}
-			else
-			{
-				qDebug() << fileInfo.filePath() << " QPluginLoader Error. " << loader.errorString();
+				else
+				{
+					qDebug() << fileInfo.filePath() << " QPluginLoader Error." << loader.errorString();
+				}
 			}
 		}
 	}
-}
-
-void CreativePluginCenter::initialize()
-{
-    for (CreativeInterface* interf : m_interfaces.values())
+	
+	void CreativePluginCenter::initialize()
 	{
-		interf->initialize();
+	    for (CreativeInterface* interf : m_interfaces.values())
+		{
+			interf->initialize();
+		}
 	}
-}
-
-void CreativePluginCenter::uninitialize()
-{	
-    for (CreativeInterface* interf : m_interfaces.values())
+	
+	void CreativePluginCenter::uninitialize()
+	{	
+	    for (CreativeInterface* interf : m_interfaces.values())
+		{
+			interf->uninitialize();
+		}
+	
+		qDeleteAll(m_interfaces);
+	}
+	
+	CreativeInterface* CreativePluginCenter::getPluginByName(QString name)
 	{
-		interf->uninitialize();
+	    if(m_interfaces.contains(name))
+	    {
+	        return m_interfaces.value(name);
+	    }
+	    return nullptr;
 	}
 
-	qDeleteAll(m_interfaces);
-}
-
-CreativeInterface* CreativePluginCenter::getPluginByName(QString name)
-{
-    if(m_interfaces.contains(name))
-    {
-        return m_interfaces.value(name);
-    }
-    return nullptr;
 }
 
