@@ -143,6 +143,34 @@ namespace qtuser_qml
         return ret;
     }
 
+    int qmlAppMain(int argc, char* argv[], QmlAppModule& appModule)
+    {
+        qtuser_core::initializeLog(argc, argv);
+        appModule.beforeAppConstruct();
+
+        int ret = 0;
+        {
+#ifndef __APPLE__
+            QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+            preSetDynamicLoadPath();
+            QApplication app(argc, argv);
+            QQmlApplicationEngine engine;
+
+            setDynamicLoadPath(engine);
+            specifyOpenGL();
+            appModule.afterAppConstruct();
+
+            appModule.startLoadQmlEngine(app, engine);
+            ret = app.exec();
+
+            appModule.onAppEngineShutDown();
+        }
+
+        qtuser_core::uninitializeLog();
+        return ret;
+    }
+
     int qmlAppMainNoPointer(int argc, char* argv[], const QString& dll)
     {
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
