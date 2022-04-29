@@ -13,6 +13,15 @@
 #include <QDir>
 namespace qtuser_qml
 {
+	void preSpecifyOpenGL()
+	{
+#ifdef Q_OS_WIN32
+		QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+#elif defined Q_OS_OSX
+		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+	}
+
     void specifyOpenGL()
     {
 #if __APPLE__
@@ -24,10 +33,6 @@ namespace qtuser_qml
         format.setSamples(4);
         QSurfaceFormat::setDefaultFormat(format);
 #endif
-
-#ifdef Q_OS_WIN32
-		QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
-#endif
     }
 
 	int qmlAppMain(int argc, char* argv[], const QString& dll)
@@ -37,7 +42,7 @@ namespace qtuser_qml
 #endif
         QApplication app(argc, argv);
 
-        QQmlApplicationEngine *engine=new QQmlApplicationEngine();
+        QQmlApplicationEngine* engine = new QQmlApplicationEngine();
         
         specifyOpenGL();
         QMLApplicationInterface* appInterface = nullptr;
@@ -125,12 +130,9 @@ namespace qtuser_qml
 
         int ret = 0;
         {
-#ifndef __APPLE__
-            QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
+			preSpecifyOpenGL();
             preSetDynamicLoadPath();
             QApplication app(argc, argv);
-
             QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
             setDynamicLoadPath(*engine);

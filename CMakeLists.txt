@@ -8,6 +8,11 @@ if(TARGET Qt5::3DRender)
 	list(APPEND build_libs qtuser_3d qtuser_qml)
 endif()
 
+if(TARGET Qt5::Quick)
+	add_subdirectory(quick)
+	list(APPEND build_libs qtuser_quick)
+endif()
+
 message(STATUS "qtuser --> [${build_libs}]")
 __set_folder_targets(qtuser TARGET ${build_libs})
 

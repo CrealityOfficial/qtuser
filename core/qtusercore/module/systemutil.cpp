@@ -225,6 +225,7 @@ QString getUrlAddress(QString type)
 	return qurl;
 }
 
+<<<<<<< HEAD
 void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg)
 {
 #ifdef QT_NO_DEBUG
@@ -287,5 +288,70 @@ namespace qtuser_core
 	{
 		qDebug() << QString("----------> END LOG <-----------");
 		cxlog::CXLog::Instance().EndLog();
+	}
+	
+	void setDefaultBeforApp()
+	{
+#ifdef Q_OS_WIN32
+		QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+#elif defined Q_OS_OSX
+		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+
+		//dynamic plugin
+		QStringList dynamicPathList = QCoreApplication::libraryPaths();
+
+#ifdef Q_OS_OSX
+		qDebug() << "OS OSX pre setDynamicLoadPath";
+#elif defined Q_OS_WIN32
+		qDebug() << "OS WIN32 pre setDynamicLoadPath";
+#elif defined Q_OS_LINUX
+		qDebug() << "OS LINUX pre setDynamicLoadPath";
+
+		if (qEnvironmentVariableIsSet("APPDIR"))
+		{
+			QString appdir = qEnvironmentVariable("APPDIR");
+			qDebug() << "Linux get the APPDIR : " << appdir;
+			dynamicPathList << appdir + "/plugins";
+		}
+#endif
+
+		qDebug() << "Pre Dynamic import paths:";
+		qDebug() << dynamicPathList;
+		QCoreApplication::setLibraryPaths(dynamicPathList);
+	}
+
+	void setDefaultAfterApp()
+	{
+#ifdef Q_OS_OSX
+		QSurfaceFormat format;
+		format.setVersion(3, 2);
+		format.setProfile(QSurfaceFormat::CoreProfile);
+		format.setDepthBufferSize(24);
+		format.setStencilBufferSize(8);
+		format.setSamples(4);
+		QSurfaceFormat::setDefaultFormat(format);
+#endif
+
+		//dynamic plugin
+		QStringList dynamicPathList = QCoreApplication::libraryPaths();
+
+		QString applicationDir = QCoreApplication::applicationDirPath();
+		qDebug() << "applicationDir: " << applicationDir;
+
+		dynamicPathList << applicationDir;
+#ifdef Q_OS_OSX
+		qDebug() << "OS OSX setDynamicLoadPath";
+		dynamicPathList << QCoreApplication::applicationDirPath() + "/../Frameworks";
+#elif defined Q_OS_WIN32
+		qDebug() << "OS WIN32 setDynamicLoadPath";
+#elif defined Q_OS_LINUX
+		qDebug() << "OS LINUX setDynamicLoadPath";
+		dynamicPathList << applicationDir + "/lib/";
+#endif
+
+		qDebug() << "Dynamic import paths:";
+		qDebug() << dynamicPathList;
+		QCoreApplication::setLibraryPaths(dynamicPathList);
 	}
 }
