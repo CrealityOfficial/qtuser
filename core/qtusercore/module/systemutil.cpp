@@ -257,10 +257,14 @@ void outputMessage(QtMsgType type, const QMessageLogContext& context, const QStr
 
 namespace qtuser_core
 {
-	void initializeLog()
+	void initializeLog(int argc, char* argv[])
 	{
 #ifdef QT_NO_DEBUG
-		QString logDirectory = qtuser_core::getOrCreateAppDataLocation("Log");
+		QFileInfo info(argv[0]);
+		QString name = QString("/%1/Log/").arg(info.baseName());
+		QString logDirectory = qtuser_core::getOrCreateAppDataLocation(name);
+		qDebug() << logDirectory;
+
 		auto func = [](const char* name)->std::string {
 			QString  dataTime = QDateTime::currentDateTime().toString("yyyy-MM-dd");
 			dataTime += QString(".cxlog");
@@ -277,5 +281,11 @@ namespace qtuser_core
 		qInstallMessageHandler(outputMessage);
 
 		qDebug() << QString("----------> START LOG <-----------");
+	}
+
+	void uninitializeLog()
+	{
+		qDebug() << QString("----------> END LOG <-----------");
+		cxlog::CXLog::Instance().EndLog();
 	}
 }

@@ -121,20 +121,26 @@ namespace qtuser_qml
 
     int qmlAppMain(int argc, char* argv[], appFunc func)
     {
+        qtuser_core::initializeLog(argc, argv);
+
+        int ret = 0;
+        {
 #ifndef __APPLE__
-       QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+            QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-        preSetDynamicLoadPath();
-	    QApplication app(argc, argv);
-		qtuser_core::initializeLog();
+            preSetDynamicLoadPath();
+            QApplication app(argc, argv);
 
-        QQmlApplicationEngine* engine = new QQmlApplicationEngine();
+            QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
-		setDynamicLoadPath(*engine);
-        specifyOpenGL();
-        
-        func(*engine);
-        return app.exec();
+            setDynamicLoadPath(*engine);
+            specifyOpenGL();
+
+            func(*engine);
+            ret = app.exec();
+        }
+        qtuser_core::uninitializeLog();
+        return ret;
     }
 
     int qmlAppMainNoPointer(int argc, char* argv[], const QString& dll)

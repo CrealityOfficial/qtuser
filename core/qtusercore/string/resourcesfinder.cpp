@@ -1,4 +1,5 @@
 #include "resourcesfinder.h"
+#include "qtusercore/module/systemutil.h"
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
 
@@ -52,10 +53,7 @@ namespace qtuser_core
 			dir.mkdir(directory);
 
 		QString folderDirectory = directory + QString("/") + folder;
-		dir.setPath(folderDirectory);
-		if (!dir.exists())
-			dir.mkdir(folderDirectory);
-
+		folderDirectory = mkMutiDir(folderDirectory);
 		return folderDirectory;
 	}
 }
