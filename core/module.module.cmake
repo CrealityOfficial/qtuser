@@ -35,4 +35,6 @@ list(APPEND SRCS qtusercore/module/commandcenter.cpp
 				 qtusercore/module/creativeinterface.h
 				 qtusercore/module/creativeplugincenter.h
 				 qtusercore/module/creativeplugincenter.cpp
+				 qtusercore/module/openglcontextsaver.h
+				 qtusercore/module/openglcontextsaver.cpp
 				 )

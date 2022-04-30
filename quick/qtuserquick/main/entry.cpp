@@ -1,8 +1,6 @@
 #include "qtuserquick/main/entry.h"
 #include <QtWidgets/QApplication>
 
-
-
 #include <QtCore/QDebug>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
@@ -41,38 +39,31 @@ namespace qtuser_quick
 		engine.setImportPathList(qmlPathList);
 	}
 
-    int qmlAppMain(int argc, char* argv[], appFunc func)
-    {
-		qtuser_core::setDefaultBeforApp();
-		setDefaultQmlBeforeApp();
-
-	    QApplication app(argc, argv);
-        QQmlApplicationEngine* engine = new QQmlApplicationEngine();
-
-		qtuser_core::setDefaultAfterApp();
-		setDefaultQmlAfterApp(*engine);
-
-        func(*engine);
-        return app.exec();
-    }
-
-	int qmlAppMain(int argc, char* argv[], QmlEntry& entry)
+	int qmlAppMain(int argc, char* argv[], QmlAppModule& appModule)
 	{
-		qtuser_core::setDefaultBeforApp();
-		setDefaultQmlBeforeApp();
+		qtuser_core::initializeLog(argc, argv);
+		appModule.beforeAppConstruct();
 
-		entry.beforeApp();
+		int ret = 0;
+		{
+			qtuser_core::setDefaultBeforApp();
+			setDefaultQmlBeforeApp();
 
-		QApplication app(argc, argv);
-		QQmlApplicationEngine engine;
+			QApplication app(argc, argv);
+			QQmlApplicationEngine engine;
 
-		qtuser_core::setDefaultAfterApp();
-		setDefaultQmlAfterApp(engine);
+			qtuser_core::setDefaultAfterApp();
+			setDefaultQmlAfterApp(engine);
 
-		entry.afterApp(app, engine);
-		int e = app.exec();
+			appModule.afterAppConstruct();
 
-		entry.exitApp();
-		return e;
+			appModule.startLoadQmlEngine(app, engine);
+			ret = app.exec();
+
+			appModule.onAppEngineShutDown();
+		}
+
+		qtuser_core::uninitializeLog();
+		return ret;
 	}
 }

@@ -3,7 +3,7 @@
 #include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
-#include <QCoreApplication>
+#include <QtWidgets/QApplication>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDateTime>
 #include <QSettings>
@@ -225,7 +225,6 @@ QString getUrlAddress(QString type)
 	return qurl;
 }
 
-<<<<<<< HEAD
 void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg)
 {
 #ifdef QT_NO_DEBUG
