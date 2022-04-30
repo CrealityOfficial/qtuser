@@ -35,6 +35,7 @@ public:
 	{
 		static_cast<Qt3DRender::QRenderAspectPrivate*>(
 			Qt3DRender::QRenderAspectPrivate::get(m_renderAspect))->renderInitialize(QOpenGLContext::currentContext());
+		m_item->setSharedContext(QOpenGLContext::currentContext());
 
 		qDebug() << "NativeFrameBufferObjectRenderer Ctr. thread " << QThread::currentThreadId();
 	}
@@ -97,6 +98,8 @@ QuickNativeRenderItem::QuickNativeRenderItem(QQuickItem* parent)
 	, m_renderGraph(nullptr)
 	, m_always(false)
 	, m_ratio(1.0f)
+	, m_raw(nullptr)
+	, m_sharedContext(nullptr)
 {
 	setFlag(ItemHasContents, true);
 	m_aspectEngine->registerAspect(m_renderAspect);
@@ -120,6 +123,7 @@ QuickNativeRenderItem::QuickNativeRenderItem(QQuickItem* parent)
 	m_rootFrameGraph = new Qt3DRender::QFrameGraphNode(m_renderSettings);
 	m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
 
+	m_raw = new qtuser_core::RawOGL();
 	qDebug() << "QuickNativeRenderItem Ctr. thread " << QThread::currentThreadId();
 }
 
@@ -128,6 +132,7 @@ QuickNativeRenderItem::~QuickNativeRenderItem()
 	m_eventSubdivide->closeHandlers();
 	m_renderGraph = nullptr;
 
+	delete m_raw;
 	delete m_aspectEngine;
 
 	qDebug() << "QuickNativeRenderItem Ctr. thread " << QThread::currentThreadId();
@@ -333,6 +338,23 @@ void QuickNativeRenderItem::unRegisterResidentNode(Qt3DCore::QNode* node)
 bool QuickNativeRenderItem::isRenderRenderGraph(qtuser_3d::RenderGraph* graph)
 {
 	return m_renderGraph == graph;
+}
+
+void QuickNativeRenderItem::setSharedContext(QOpenGLContext* context)
+{
+	m_sharedContext = context;
+	m_raw->init(m_sharedContext);
+	assert(m_sharedContext);
+}
+
+QOpenGLContext* QuickNativeRenderItem::sharedContext()
+{
+	return m_sharedContext;
+}
+
+qtuser_core::RawOGL* QuickNativeRenderItem::rawOGL()
+{
+	return m_raw;
 }
 
 void QuickNativeRenderItem::renderRenderGraph(qtuser_3d::RenderGraph* graph)

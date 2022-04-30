@@ -25,6 +25,12 @@ namespace qtuser_3d
 	class RenderGraph;
 	class EventSubdivide;
 }
+
+namespace qtuser_core
+{
+	class RawOGL;
+}
+
 class QTUSER_QUICK_API QuickNativeRenderItem : public QQuickFramebufferObject
 {
 	friend class NativeFrameBufferObjectRenderer;
@@ -52,6 +58,9 @@ public:
 	void unRegisterAll();
 
 	bool isRenderRenderGraph(qtuser_3d::RenderGraph* graph);
+	
+	QOpenGLContext* sharedContext();
+	qtuser_core::RawOGL* rawOGL();
 public slots:
 	void handleWindowChanged(QQuickWindow* win);
 	void applyRootEntity();
@@ -70,6 +79,7 @@ protected:
 	void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 	void keyReleaseEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 
+	void setSharedContext(QOpenGLContext* context);
 protected:
 	Qt3DCore::QAspectEngine* m_aspectEngine;
 	Qt3DRender::QRenderAspect* m_renderAspect;
@@ -92,6 +102,9 @@ protected:
 
 	bool m_always;
 	float m_ratio;
+
+	qtuser_core::RawOGL* m_raw;
+	QOpenGLContext* m_sharedContext;
 };
 
 #endif // _QUICKNATIVERENDERITEM_1650183679751_H
