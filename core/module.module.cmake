@@ -37,4 +37,6 @@ list(APPEND SRCS qtusercore/module/commandcenter.cpp
 				 qtusercore/module/creativeplugincenter.cpp
 				 qtusercore/module/openglcontextsaver.h
 				 qtusercore/module/openglcontextsaver.cpp
+				 qtusercore/module/quicknativerendersystem.h
+				 qtusercore/module/quicknativerendersystem.cpp
 				 )
