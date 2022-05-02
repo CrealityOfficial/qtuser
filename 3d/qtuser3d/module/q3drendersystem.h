@@ -11,6 +11,7 @@
 #include <Qt3DInput/QInputSettings>
 #include <Qt3DLogic/QLogicAspect>
 #include <Qt3DCore/QEntity>
+#include <QtCore/QTimer>
 
 #include "qtuser3d/framegraph/rendergraph.h"
 
@@ -39,6 +40,10 @@ namespace qtuser_3d
 
 		QOpenGLContext* sharedContext();
 		qtuser_core::RawOGL* rawOGL();
+
+		void setContinousRender();
+		void setCommandRender();
+		void requestUpdate();
 	protected:
 		void initializeFromRenderThread() override;
 		void render() override;
@@ -47,7 +52,6 @@ namespace qtuser_3d
 
 	public slots:
 		void applyRootEntity();
-
 	protected:
 		Qt3DCore::QAspectEngine* m_aspectEngine;
 		Qt3DRender::QRenderAspect* m_renderAspect;
@@ -68,6 +72,7 @@ namespace qtuser_3d
 
 		qtuser_core::RawOGL* m_raw;
 		QOpenGLContext* m_sharedContext;
+		int m_times;
 	};
 }
 

@@ -8,6 +8,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtWidgets/QFileDialog>
+#include <QtCore/QOperatingSystemVersion>
 
 namespace qtuser_core
 {
@@ -73,6 +74,11 @@ namespace qtuser_core
 		}
 
 		return filterList;
+	}
+
+	QString CXFileOpenAndSaveManager::currOpenFile()
+	{
+	    return m_lastOpenFile.mid(0, m_lastOpenFile.size() - 4);
 	}
 
 	QStringList CXFileOpenAndSaveManager::generateFilters(const QStringList& extensions)
@@ -154,6 +160,24 @@ namespace qtuser_core
 	void CXFileOpenAndSaveManager::fileSave(const QString& url)
 	{
 		saveWithUrl(QUrl(url));
+	}
+
+	 bool CXFileOpenAndSaveManager::cancelHandle()
+	{
+		if (m_externalHandler)
+		{
+			if (m_State == OpenSaveState::oss_save || m_State == OpenSaveState::oss_external_save)
+			{
+	            m_externalHandler->cancelHandle();
+				//dlp save gcode canel back Mainscene
+				//creative_kernel::AbstractKernelUI::getSelf()->backMainSceneShow();
+			}
+			m_externalHandler = nullptr;
+			m_State = OpenSaveState::oss_none;
+			
+			return true;
+		}
+		return true;
 	}
 
 	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver, const QStringList& filters)
@@ -456,7 +480,10 @@ namespace qtuser_core
 	{
 		return m_lastSaveFile;
 	}
-
+void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
+{
+    m_lastOpenFile = filePath;
+}
 	void CXFileOpenAndSaveManager::setLastSaveFileName(QString filePath)
 	{
 		m_lastSaveFile = filePath;
@@ -476,7 +503,22 @@ namespace qtuser_core
 
 	void CXFileOpenAndSaveManager::openFolder(const QString& folder)
 	{
-		QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
+		QOperatingSystemVersion version = QOperatingSystemVersion::current();
+		QProcess process;
+		qDebug()<<"openFolder version.type() : " <<version.type();
+		if(version.type() == QOperatingSystemVersion::Windows)
+		{
+		    QString strPath = "explorer.exe /select," + m_lastSaveFile;
+		    qDebug() << "strFile =" << m_lastSaveFile;
+		    process.startDetached(QStringLiteral("explorer.exe /select,") + m_lastSaveFile);
+		}
+		else if(version.type() == QOperatingSystemVersion::MacOS)
+		{
+		    m_lastSaveFile.replace("\\","/");
+		    process.startDetached("/usr/bin/open",QStringList() << folder);
+		}
+		qDebug()<<"m_lastSaveFile replace =" <<m_lastSaveFile;
+		//QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
 	}
 
 	void CXFileOpenAndSaveManager::addCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback)
@@ -489,6 +531,24 @@ namespace qtuser_core
 	{
 		if (callback)
 			m_callbacks.removeOne(callback);
+	}
+	
+	uint32_t CXFileOpenAndSaveManager::getFileSize(const QString& fileName)
+	{
+		if (fileName.isEmpty())
+			return -1;
+	
+		FILE* file = fopen(fileName.toLocal8Bit().constData(), "rb+");
+		if (nullptr == file)
+		{
+			return -2;
+		}
+
+		fseek(file, 0, SEEK_END);
+		uint32_t filesize = ftell(file);
+	
+		fclose(file);
+		return filesize;	
 	}
 
 	void dialogOpenFiles(const QString& filter, loadFunc func)

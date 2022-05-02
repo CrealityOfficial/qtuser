@@ -19,6 +19,7 @@ namespace qtuser_3d
 		, m_renderSettings(nullptr)
 		, m_inputSettings(nullptr)
 		, m_renderGraph(nullptr)
+		, m_times(0)
 	{
 		m_aspectEngine->registerAspect(m_renderAspect);
 		m_aspectEngine->registerAspect(m_inputAspect);
@@ -78,9 +79,28 @@ namespace qtuser_3d
 		return m_raw;
 	}
 
+	void Q3DRenderSystem::setContinousRender()
+	{
+		m_times = 99999999;
+		emit signalUpdate();
+	}
+
+	void Q3DRenderSystem::setCommandRender()
+	{
+		m_times = 10;
+		emit signalUpdate();
+	}
+
+	void Q3DRenderSystem::requestUpdate()
+	{
+		m_times = 10;
+		emit signalUpdate();
+	}
+
 	void Q3DRenderSystem::renderRenderGraph(qtuser_3d::RenderGraph* graph)
 	{
-		if (m_renderGraph == graph) return;
+		if (m_renderGraph == graph)
+			return;
 
 		if (m_renderGraph)
 		{
@@ -91,7 +111,8 @@ namespace qtuser_3d
 			{
 				frameGraph->setParent((Qt3DCore::QNode*)nullptr);
 			}
-			if (sceneGraph) sceneGraph->setEnabled(false);
+			if (sceneGraph)
+				sceneGraph->setEnabled(false);
 			m_renderGraph->endRender();
 		}
 
@@ -107,7 +128,8 @@ namespace qtuser_3d
 			{
 				frameGraph->setParent(m_rootFrameGraph);
 			}
-			if (sceneGraph) sceneGraph->setEnabled(true);
+			if (sceneGraph)
+				sceneGraph->setEnabled(true);
 
 			m_renderGraph->updateRenderSize(m_size);
 		}
@@ -197,7 +219,11 @@ namespace qtuser_3d
 		static_cast<Qt3DRender::QRenderAspectPrivate*>(
 			Qt3DRender::QRenderAspectPrivate::get(m_renderAspect))->renderSynchronous();
 
-		emit signalUpdate();
+		if (m_times > 0)
+		{
+			--m_times;
+			emit signalUpdate();
+		}
 	}
 
 	void Q3DRenderSystem::synchronize()

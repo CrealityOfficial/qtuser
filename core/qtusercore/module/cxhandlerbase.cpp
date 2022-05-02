@@ -23,6 +23,10 @@ namespace qtuser_core
 		return supportFilters();
 	}
 
+void CXHandleBase::cancelHandle()
+{
+
+}
 	void CXHandleBase::handle(const QString& fileName)
 	{
 		m_fileName = fileName;
@@ -34,5 +38,9 @@ namespace qtuser_core
 		{
 			m_fileNames << fileName;
 		}
+	}
+void CXHandleBase::openfail()
+{
+	return ;
 	}
 }
