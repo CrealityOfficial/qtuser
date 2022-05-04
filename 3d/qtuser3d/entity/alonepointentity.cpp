@@ -14,7 +14,6 @@ namespace qtuser_3d
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
 
 		setEffect(EFFECT("pure"));
-		setGeometry(PRIMITIVESHAPE("point"), Qt3DRender::QGeometryRenderer::Points);
 		selectEffect();
 	}
 	

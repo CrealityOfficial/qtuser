@@ -28,11 +28,11 @@ namespace qtuser_3d
 
 		if (need_bottom)
 		{
-			setGeometry(PRIMITIVESHAPE("box"), Qt3DRender::QGeometryRenderer::Lines);
+			setGeometry(createLinesPrimitive("box"), Qt3DRender::QGeometryRenderer::Lines);
 		}
 		else
 		{
-			setGeometry(PRIMITIVESHAPE("box_nobottom"), Qt3DRender::QGeometryRenderer::Lines);
+			setGeometry(createLinesPrimitive("box_nobottom"), Qt3DRender::QGeometryRenderer::Lines);
 		}
 		setPose(m);
 	}

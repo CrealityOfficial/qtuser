@@ -21,11 +21,11 @@ namespace qtuser_3d
 		Qt3DRender::QGeometry* geometry = nullptr;
 		if (shapetype == 0)
 		{
-			geometry = PRIMITIVESHAPE("arrow");
+			geometry = createTrianglesPrimitive("arrow");
 		}
 		else
 		{
-			geometry = PRIMITIVESHAPE("scaleindicator");
+			geometry = createTrianglesPrimitive("scaleindicator");
 		}
 
 		if (type & 1)

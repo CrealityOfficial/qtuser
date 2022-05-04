@@ -20,12 +20,12 @@ namespace qtuser_3d
 		if (axistype == 0)
 		{
 			s = QVector3D(50, 50, 50);
-			geometry = PRIMITIVESHAPE("arrow");
+			geometry = createTrianglesPrimitive("arrow");
 		}
 		else if (axistype == 1)
 		{
 			s = QVector3D(2, 3.3, 2);
-			geometry = PRIMITIVESHAPE("cylinder");
+			geometry = createTrianglesPrimitive("cylinder");
 		}
 		if (s_use != nullptr)
 		{

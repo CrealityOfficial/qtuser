@@ -27,4 +27,11 @@ namespace qtuser_3d
 
 #define PRIMITIVEROOT qtuser_3d::getPrimitiveShapeCache()->root()
 #define PRIMITIVESHAPE(x) qtuser_3d::getPrimitiveShapeCache()->shape(x)
+
+namespace qtuser_3d
+{
+	QTUSER_3D_API Qt3DRender::QGeometry* createLinesPrimitive(const QString& name);
+	QTUSER_3D_API Qt3DRender::QGeometry* createPointsPrimitive(const QString& name);
+	QTUSER_3D_API Qt3DRender::QGeometry* createTrianglesPrimitive(const QString& name);
+}
 #endif // QTUSER_3D_PRIMITIVESHAPECACHE_1594861761536_H
