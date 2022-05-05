@@ -1,5 +1,6 @@
 #include "qtusercore/string/stringtool.h"
 #include <QtCore/QDateTime>
+#include <QtCore/QCryptographicHash>
 #include <fstream>
 #include <iostream>
 #include<string.h>
@@ -10,6 +11,11 @@ namespace qtuser_core
 	{
 		QString time = QString("%1").arg(QDateTime::currentDateTime().toMSecsSinceEpoch());
 		return time;
+	}
+
+	QString qstringMd5(const QString& s)
+	{
+		return QCryptographicHash::hash(s.toLocal8Bit(), QCryptographicHash::Md5).toHex();
 	}
 
 	char* _strrev(char* str)

@@ -1,12 +1,14 @@
 #ifndef _QTUSER_CORE_STRINGTOOL_1589422468670_H
 #define _QTUSER_CORE_STRINGTOOL_1589422468670_H
 #include "qtusercore/qtusercoreexport.h"
+#include <QtCore/QString>
 #include <string>
 #include <vector>
 
 namespace qtuser_core
 {
 	QTUSER_CORE_API QString timeString();
+	QTUSER_CORE_API QString qstringMd5(const QString& s);
 
 	QTUSER_CORE_API float StrToFloat(const std::string& value);
 

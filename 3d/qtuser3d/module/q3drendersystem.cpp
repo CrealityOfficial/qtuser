@@ -19,6 +19,7 @@ namespace qtuser_3d
 		, m_renderSettings(nullptr)
 		, m_inputSettings(nullptr)
 		, m_renderGraph(nullptr)
+		, m_sharedContext(nullptr)
 		, m_times(0)
 	{
 		m_aspectEngine->registerAspect(m_renderAspect);
