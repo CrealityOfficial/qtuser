@@ -46,4 +46,20 @@ namespace qtuser_3d
 			delete (*it);
 		}
 	}
+
+	QVector<Qt3DRender::QRenderPass*> UEffect::renderPasses()
+	{
+		QVector<Qt3DRender::QRenderPass*> passes = techniques()[0]->renderPasses();
+		return passes;
+	}
+
+	void UEffect::addRenderState(Qt3DRender::QRenderState* state)
+	{
+		if (!state)
+			return;
+
+		QVector<Qt3DRender::QRenderPass*> passes = renderPasses();
+		for (Qt3DRender::QRenderPass* pass : passes)
+			pass->addRenderState(state);
+	}
 }

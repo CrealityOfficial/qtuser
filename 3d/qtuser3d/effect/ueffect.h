@@ -21,6 +21,9 @@ namespace qtuser_3d
 
 		void addRenderPass(QString& name);
 		void removeRenderPass(QString& name);
+
+		QVector<Qt3DRender::QRenderPass*> renderPasses();
+		void addRenderState(Qt3DRender::QRenderState* state);
 	protected:
 		QMap<QString, Qt3DRender::QRenderPass*> m_attachedPasses;
 	};

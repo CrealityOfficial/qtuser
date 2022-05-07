@@ -63,6 +63,8 @@
 		<file>shaders/moon.frag</file>
 		<file>shaders/photo.vert</file>
 		<file>shaders/photo.frag</file>
+		<file>shaders/dlpsupportindicator.vert</file>
+		<file>shaders/dlpsupportindicator.frag</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
