@@ -10,6 +10,7 @@
 #include <Qt3DRender/QEffect>
 
 #include <Qt3DRender/QBlendEquationArguments>
+
 namespace qtuser_3d
 {
 	class QTUSER_3D_API BasicEntity : public Qt3DCore::QEntity
@@ -40,8 +41,9 @@ namespace qtuser_3d
 		Qt3DRender::QAttribute* positionAttribute();
 	protected:
 		Qt3DRender::QMaterial* m_material;
-		Qt3DCore::QTransform* m_transform;
 		Qt3DRender::QGeometryRenderer* m_geometryRenderer;
+
+		QMatrix4x4 m_matrix;
 	};
 }
 #endif // QTUSER_3D_BASICENTITY_1594569444448_H
