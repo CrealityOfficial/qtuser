@@ -55,6 +55,7 @@ namespace qtuser_core
 		void openWithNames(const QStringList& fileNames);
 		bool openWithUrl(const QUrl& url);
 		bool openWithUrl(const QList<QUrl>& urls);
+		bool openWithString(const QString& commonName);
 
 		bool saveWithName(const QString& fileName);
 		bool saveWithUrl(const QUrl& url);

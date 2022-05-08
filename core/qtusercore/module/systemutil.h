@@ -12,7 +12,7 @@ QTUSER_CORE_API void printCallStack();
 QTUSER_CORE_API QString getCanWriteFolder();
 
 QTUSER_CORE_API void redirectIo();
-QTUSER_CORE_API QString mkMutiDir(const QString path);
+QTUSER_CORE_API QString mkMutiDir(const QString& path);
 
 namespace qtuser_core
 {

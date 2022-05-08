@@ -305,6 +305,20 @@ namespace qtuser_core
 		return openWithName(url.toLocalFile());
 	}
 
+	bool CXFileOpenAndSaveManager::openWithString(const QString& commonName)
+	{
+		if (commonName.startsWith("file:///"))
+		{
+			QUrl url(commonName);
+			openWithUrl(url);
+		}
+		else
+		{
+			openWithName(commonName);
+		}
+		return true;
+	}
+
 	bool CXFileOpenAndSaveManager::openWithUrl(const QList<QUrl>& urls)
 	{
 		if (urls.size() == 1)

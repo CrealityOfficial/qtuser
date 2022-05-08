@@ -29,6 +29,7 @@ namespace qtuser_3d
 		Q3DRenderSystem(QObject* parent = nullptr);
 		virtual ~Q3DRenderSystem();
 
+		void renderNode(Qt3DRender::QFrameGraphNode* node, Qt3DCore::QEntity* entity);
 		void registerResidentNode(Qt3DCore::QNode* node);
 		void unRegisterResidentNode(Qt3DCore::QNode* node);
 		void renderRenderGraph(qtuser_3d::RenderGraph* graph);

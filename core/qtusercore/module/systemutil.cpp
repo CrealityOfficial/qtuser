@@ -109,7 +109,7 @@ void printCallStack()
 	{
 		SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
 
-		printf("%i: %s - 0x%0X\n", frames - i - 1, symbol->Name, symbol->Address);
+		printf("%i: %s - 0x%11X\n", frames - i - 1, symbol->Name, symbol->Address);
 	}
 
 	free(symbol);
@@ -139,7 +139,7 @@ void redirectIo()
 #endif
 }
 
-QString mkMutiDir(const QString path)
+QString mkMutiDir(const QString& path)
 {
 	QDir dir(path);
 	if (dir.exists(path)) {

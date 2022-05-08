@@ -46,6 +46,16 @@ namespace qtuser_3d
 		qDebug() << "Q3DRenderSystem Ctr~. thread " << QThread::currentThreadId();
 	}
 
+	void Q3DRenderSystem::renderNode(Qt3DRender::QFrameGraphNode* node, Qt3DCore::QEntity* entity)
+	{
+		if (node)
+			node->setParent(m_rootFrameGraph);
+		if (entity)
+			entity->setParent(m_rootEntity);
+
+		requestUpdate();
+	}
+
 	void Q3DRenderSystem::registerResidentNode(Qt3DCore::QNode* node)
 	{
 		if (node && (m_residentNodes.indexOf(node) == -1))
