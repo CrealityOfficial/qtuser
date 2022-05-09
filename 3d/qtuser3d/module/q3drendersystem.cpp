@@ -207,6 +207,8 @@ namespace qtuser_3d
 		{
 			unRegisterResidentNode(m_residentNodes.front());
 		}
+
+		renderRenderGraph(nullptr);
 	}
 
 	void Q3DRenderSystem::initializeFromRenderThread()
