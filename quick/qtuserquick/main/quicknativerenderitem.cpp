@@ -23,6 +23,7 @@ public:
 
 	virtual ~NativeRenderSystemWrapper()
 	{
+		m_item->_uninitialize();
 		qDebug() << "NativeRenderSystemWrapper Ctr~. thread " << QThread::currentThreadId();
 	}
 
@@ -220,6 +221,12 @@ void QuickNativeRenderItem::_initialize()
 {
 	if (m_renderSystem)
 		m_renderSystem->initializeFromRenderThread();
+}
+
+void QuickNativeRenderItem::_uninitialize()
+{
+	if (m_renderSystem)
+		m_renderSystem->unitializeFromRenderThread();
 }
 
 void QuickNativeRenderItem::_render()

@@ -14,6 +14,7 @@ namespace qtuser_core
 		virtual ~QuickNativeRenderSystem() {}
 
 		virtual void initializeFromRenderThread() = 0;
+		virtual void unitializeFromRenderThread() = 0;
 		virtual void render() = 0;   // called from render thread
 		virtual void synchronize() = 0;
 		virtual void updateContextSize(const QSize& size) = 0;

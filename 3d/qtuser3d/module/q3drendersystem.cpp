@@ -11,7 +11,7 @@ namespace qtuser_3d
 {
 	Q3DRenderSystem::Q3DRenderSystem(QObject* parent)
 		: QuickNativeRenderSystem(parent)
-		, m_aspectEngine(new Qt3DCore::QAspectEngine(this))
+		, m_aspectEngine(new Qt3DCore::QAspectEngine())
 		, m_renderAspect(new Qt3DRender::QRenderAspect(Qt3DRender::QRenderAspect::Synchronous))
 		, m_inputAspect(new Qt3DInput::QInputAspect)
 		, m_logicAspect(new Qt3DLogic::QLogicAspect)
@@ -35,7 +35,7 @@ namespace qtuser_3d
 		m_rootFrameGraph = new Qt3DRender::QFrameGraphNode(m_renderSettings);
 		m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
 
-		m_raw = new qtuser_core::RawOGL();
+		m_raw = new qtuser_core::RawOGL(this);
 		qDebug() << "Q3DRenderSystem Ctr. thread " << QThread::currentThreadId();
 	}
 
@@ -209,6 +209,8 @@ namespace qtuser_3d
 		}
 
 		renderRenderGraph(nullptr);
+
+		m_aspectEngine->setRootEntity(nullptr);
 	}
 
 	void Q3DRenderSystem::initializeFromRenderThread()
@@ -220,6 +222,11 @@ namespace qtuser_3d
 		m_raw->init(context);
 		m_sharedContext = context;
 		QMetaObject::invokeMethod(this, "applyRootEntity", Qt::QueuedConnection);
+	}
+
+	void Q3DRenderSystem::unitializeFromRenderThread()
+	{
+		//delete m_aspectEngine;
 	}
 
 	void Q3DRenderSystem::applyRootEntity()

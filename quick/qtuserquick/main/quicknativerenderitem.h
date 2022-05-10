@@ -50,6 +50,7 @@ protected:
 	void keyReleaseEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 
 	void _initialize(); // called from renderer ctr
+	void _uninitialize(); // called from renderer ctr
 	void _render(); // called from Renderer
 	void _synchronize();
 protected:

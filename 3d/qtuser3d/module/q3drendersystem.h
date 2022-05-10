@@ -47,6 +47,7 @@ namespace qtuser_3d
 		void requestUpdate();
 	protected:
 		void initializeFromRenderThread() override;
+		void unitializeFromRenderThread() override;
 		void render() override;
 		void synchronize() override;
 		void updateContextSize(const QSize& size) override;
