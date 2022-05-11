@@ -10,17 +10,18 @@ QTUSER_CORE_API void showSysMemory();
 QTUSER_CORE_API void printCallStack();
 
 QTUSER_CORE_API QString getCanWriteFolder();
-
 QTUSER_CORE_API void redirectIo();
 QTUSER_CORE_API QString mkMutiDir(const QString& path);
 
 namespace qtuser_core
 {
-
 	QTUSER_CORE_API void initializeLog(int argc, char* argv[]);
 	QTUSER_CORE_API void uninitializeLog();
 
 	QTUSER_CORE_API void setDefaultBeforApp();
 	QTUSER_CORE_API void setDefaultAfterApp();
+
+
+	QTUSER_CORE_API void removeFile(const QString& fileName);
 }
 #endif // creative_kernel_MATRIX_UTIL_H

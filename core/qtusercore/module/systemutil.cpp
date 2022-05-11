@@ -281,4 +281,11 @@ namespace qtuser_core
 		qDebug() << dynamicPathList;
 		QCoreApplication::setLibraryPaths(dynamicPathList);
 	}
+
+	void removeFile(const QString& fileName)
+	{
+		QFile file(fileName);
+		if (file.exists())
+			file.remove();
+	}
 }
