@@ -1,4 +1,4 @@
-#include "systemutil.h"
+Ôªø#include "systemutil.h"
 
 #include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QDebug>
@@ -160,7 +160,7 @@ void outputMessage(QtMsgType type, const QMessageLogContext& context, const QStr
 #else
 	QString text = QString("[FILE %1, FUNCTION %2]\n[%3]").arg(context.file).arg(context.function).arg(msg);
 #endif
-	switch (type)//log –≈œ¢¿‡–Õ
+	switch (type)//log ‰ø°ÊÅØÁ±ªÂûã
 	{
 	case QtDebugMsg:
 		LOGD("%s", text.toLocal8Bit().constData());
@@ -202,7 +202,7 @@ namespace qtuser_core
 		cxlog::CXLog::Instance().setNameFunc(func);
 		LOGDIR(logDirectory.toLocal8Bit().data());
 #else
-		cxlog::CXLog::Instance().setColorConsole();
+		LOGCONSOLE();
 #endif
 		LOGLEVEL(1);
 
@@ -214,7 +214,7 @@ namespace qtuser_core
 	void uninitializeLog()
 	{
 		qDebug() << QString("----------> END LOG <-----------");
-		cxlog::CXLog::Instance().EndLog();
+		LOGEND();
 	}
 	
 	void setDefaultBeforApp()
