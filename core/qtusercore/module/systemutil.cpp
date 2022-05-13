@@ -199,7 +199,7 @@ namespace qtuser_core
 			return dataTime.toLocal8Bit().data();
 		};
 
-		cxlog::CXLog::Instance().setNameFunc(func);
+		LOGNAMEFUNC(func);
 		LOGDIR(logDirectory.toLocal8Bit().data());
 #else
 		LOGCONSOLE();

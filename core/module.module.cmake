@@ -39,4 +39,6 @@ list(APPEND SRCS qtusercore/module/commandcenter.cpp
 				 qtusercore/module/openglcontextsaver.cpp
 				 qtusercore/module/quicknativerendersystem.h
 				 qtusercore/module/quicknativerendersystem.cpp
+				 qtusercore/module/contextbase.h
+				 qtusercore/module/contextbase.cpp
 				 )
