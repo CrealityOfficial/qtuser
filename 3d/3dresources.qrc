@@ -65,6 +65,8 @@
 		<file>shaders/photo.frag</file>
 		<file>shaders/dlpsupportindicator.vert</file>
 		<file>shaders/dlpsupportindicator.frag</file>
+		<file>shaders/boxclippure.vert</file>
+		<file>shaders/boxclippure.frag</file>	
     </qresource>
     <qresource prefix="/"/>
 </RCC>

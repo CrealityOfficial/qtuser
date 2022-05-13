@@ -1,6 +1,7 @@
 #ifndef QTUSER_3D_EFFECTMANAGER_1594867313653_H
 #define QTUSER_3D_EFFECTMANAGER_1594867313653_H
 #include "qtuser3d/qtuser3dexport.h"
+#include "qtuser3d/effect/ueffect.h"
 #include "qtusercore/module/singleton.h"
 #include <Qt3DRender/QEffect>
 
