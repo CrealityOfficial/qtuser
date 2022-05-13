@@ -32,8 +32,8 @@ namespace qtuser_core
 		if (index >= 0)
 			name = childName.left(index);
 		
-		QMap<QString, QObject*>::iterator it = m_objects.find(name);
-		if (it != m_objects.end())
+		QMap<QString, QObject*>::iterator it = parent->m_objects.find(name);
+		if (it != parent->m_objects.end())
 			child = it.value();
 
 		if (!child)
@@ -49,7 +49,7 @@ namespace qtuser_core
 		}
 
 		ContextBase* base = qobject_cast<ContextBase*>(child);
-		QString resetName = childName.right(index + 1);
+		QString resetName = childName.right(childName.size() - index - 1);
 		if (!base && index >= 0)
 		{
 			qWarning() << QString("ContextBase::obj [%1] is not ContextBase object, skip rest children [%2].").arg(name).arg(resetName);
