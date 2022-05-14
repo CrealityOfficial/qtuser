@@ -1,7 +1,7 @@
 #include "axisentity.h"
 #include "qtuser3d/entity/purecolorentity.h"
-
 #include "qtuser3d/utils/primitiveshapecache.h"
+
 namespace qtuser_3d
 {
 	AxisEntity::AxisEntity(Qt3DCore::QNode* parent, int axistype, QVector3D* s_use)
@@ -24,7 +24,7 @@ namespace qtuser_3d
 		}
 		else if (axistype == 1)
 		{
-			s = QVector3D(2, 3.3, 2);
+			s = QVector3D(2.0f, 3.3f, 2.0f);
 			geometry = createTrianglesPrimitive("cylinder");
 		}
 		if (s_use != nullptr)
@@ -33,11 +33,14 @@ namespace qtuser_3d
 		}
 
 		QMatrix4x4 xMatrix;
+		xMatrix.setToIdentity();
 		xMatrix.rotate(-90.0f, 0.0f, 0.0f, 1.0f);
 		xMatrix.scale(s);
 		QMatrix4x4 yMatrix;
+		yMatrix.setToIdentity();
 		yMatrix.scale(s);
 		QMatrix4x4 zMatrix;
+		zMatrix.setToIdentity();
 		zMatrix.rotate(90.0f, 1.0f, 0.0f, 0.0f);
 		zMatrix.scale(s);
 		m_xAxis->setPose(xMatrix);

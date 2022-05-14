@@ -26,6 +26,8 @@
 
 #endif
 
+#define DEBUG_FUNCTION 0
+
 enum SYSTEM_TYPE
 {
 	WINDOWS = 1,
@@ -49,7 +51,7 @@ void initSystemUtil()
 
 void showDetailSystemInfo()
 {
-	qDebug() << "--------------------------------";
+	qDebug() << "--------------------------------showDetailSystemInfo----------------------------";
 	qDebug() << "buildAbi: " << QSysInfo::buildAbi();
 	qDebug() << "buildCpuArchitecture: " << QSysInfo::buildCpuArchitecture();
 	qDebug() << "currentCpuArchitecture: " << QSysInfo::currentCpuArchitecture();
@@ -63,10 +65,10 @@ void showDetailSystemInfo()
 	QOperatingSystemVersion version = QOperatingSystemVersion::current();
 	qDebug() << version.name() << version.majorVersion() << version.minorVersion() << version.microVersion();
 	showSysMemory();
-	qDebug() << "--------------------------------\n";
 
-	QString write_folder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-	qDebug() << "write_folder = " << write_folder;
+	QString appLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	qDebug() << "WriteAppData: " << appLocation;
+	qDebug() << "--------------------------------showDetailSystemInfo----------------------------";
 }
 
 
@@ -79,7 +81,7 @@ void showSysMemory()
 
 	int msize = 1024 * 1024;
 
-	qDebug() << "memory use: " << pmc.WorkingSetSize / msize << "M/" << pmc.PeakWorkingSetSize / msize << "M + "
+	qDebug() << "Memory Use: " << pmc.WorkingSetSize / msize << "M/" << pmc.PeakWorkingSetSize / msize << "M + "
 		<< pmc.PagefileUsage / msize << "M/" << pmc.PeakPagefileUsage / msize << "M";
 
 #else
@@ -109,7 +111,7 @@ void printCallStack()
 	{
 		SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
 
-		printf("%i: %s - 0x%11X\n", frames - i - 1, symbol->Name, symbol->Address);
+		printf("%d: %s - 0x%d\n", (int)(frames - i - 1), symbol->Name, (size_t)symbol->Address); 
 	}
 
 	free(symbol);
@@ -158,7 +160,11 @@ void outputMessage(QtMsgType type, const QMessageLogContext& context, const QStr
 #ifdef QT_NO_DEBUG
 	QString text = QString("[%3]").arg(msg);
 #else
-	QString text = QString("[FILE %1, FUNCTION %2]\n[%3]").arg(context.file).arg(context.function).arg(msg);
+	#if DEBUG_FUNCTION
+		QString text = QString("[FILE %1, FUNCTION %2][%3]").arg(context.file).arg(context.function).arg(msg);
+	#else
+		QString text = QString("[%3]").arg(msg);
+	#endif
 #endif
 	switch (type)//log 信息类型
 	{

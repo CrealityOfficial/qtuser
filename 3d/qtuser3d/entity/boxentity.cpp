@@ -40,9 +40,13 @@ namespace qtuser_3d
 	void BoxEntity::updateLocal(const Box3D& box, const QMatrix4x4& parentMatrix)
 	{
 		setGeometry(BoxCreateHelper::createPartBox(box, 0.3f), Qt3DRender::QGeometryRenderer::Lines);
-
 		QMatrix4x4 m = parentMatrix.inverted();
 		setPose(m);
+	}
+
+	void BoxEntity::update(const Box3D& box)
+	{
+		setGeometry(BoxCreateHelper::create(box), Qt3DRender::QGeometryRenderer::Lines);
 	}
 
 	void BoxEntity::setColor(const QVector4D& color)
