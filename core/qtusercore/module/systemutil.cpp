@@ -111,7 +111,7 @@ void printCallStack()
 	{
 		SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
 
-		printf("%d: %s - 0x%d\n", (int)(frames - i - 1), symbol->Name, (size_t)symbol->Address); 
+		printf("%d: %s - 0x%zd\n", (int)(frames - i - 1), symbol->Name, (size_t)symbol->Address); 
 	}
 
 	free(symbol);
