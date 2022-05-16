@@ -66,19 +66,66 @@ namespace qtuser_core
 
 	bool ContextBase::registerObj(const QString& name, QObject* object)
 	{
-		if (name.isEmpty() || !object)
+		return registerObj(this, object, name);
+	}
+
+	bool ContextBase::registerObj(ContextBase* parent, QObject* object, const QString& childName)
+	{
+		if (childName.isEmpty() || !object)
 		{
 			qWarning() << "ContextBase::registerObj with empty name or object";
 			return false;
 		}
 
-		if (m_objects.contains(name))
+		int index = childName.indexOf('.');
+		QString name = childName;
+		if (index < 0)
 		{
-			qCritical() << "ContextBase::registerObj with exist name.";
-			return false;
+			if (m_objects.contains(name))
+			{
+				qCritical() << "ContextBase::registerObj with exist name.";
+				return false;
+			}
+
+			m_objects.insert(name, object);
+			return true;
+		}
+		else
+		{
+			QObject* child = nullptr;
+			name = childName.left(index);
+			QMap<QString, QObject*>::iterator it = parent->m_objects.find(name);
+			if (it != parent->m_objects.end())
+				child = it.value();
+
+			if (!child)
+			{
+				qWarning() << QString("ContextBase::obj try find noexsit child [%1] in object [%2].").arg(name).arg(parent->contextName());
+				return false;
+			}
+
+			ContextBase* base = qobject_cast<ContextBase*>(child);
+			QString resetName = childName.right(childName.size() - index - 1);
+			if (!base && index >= 0)
+			{
+				qWarning() << QString("ContextBase::obj [%1] is not ContextBase object, skip rest children [%2].").arg(name).arg(resetName);
+				return child;
+			}
+
+			return registerObj(base, object, resetName);
+		}
+		
+		return false;
+	}
+
+	void ContextBase::unRegisterObj(const QString& name)
+	{
+		if (!m_objects.contains(name))
+		{
+			qWarning() << "ContextBase::unRegisterObj invalid key " << name;
+			return;
 		}
 
-		m_objects.insert(name, object);
-		return true;
+		m_objects.remove(name);
 	}
 }
