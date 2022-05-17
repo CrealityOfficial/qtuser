@@ -40,11 +40,11 @@
 
 #ifndef TREEMODEL_H
 #define TREEMODEL_H
-
-#include <QAbstractItemModel>
-#include <QModelIndex>
-#include <QVariant>
 #include "qtuserqml/qtuserqmlexport.h"
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QModelIndex>
+#include <QtCore/QVariant>
+
 class TreeItem;
 namespace qtuser_qml
 {
