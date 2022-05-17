@@ -66,7 +66,9 @@
 		<file>shaders/dlpsupportindicator.vert</file>
 		<file>shaders/dlpsupportindicator.frag</file>
 		<file>shaders/boxclippure.vert</file>
-		<file>shaders/boxclippure.frag</file>	
+		<file>shaders/boxclippure.frag</file>
+		<file>shaders/modeldlp.vert</file>
+		<file>shaders/modeldlp.frag</file>		
     </qresource>
     <qresource prefix="/"/>
 </RCC>

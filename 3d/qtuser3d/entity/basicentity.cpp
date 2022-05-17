@@ -14,6 +14,8 @@ namespace qtuser_3d
 
 		m_geometryRenderer = new Qt3DRender::QGeometryRenderer(this);
 		addComponent(m_geometryRenderer);
+
+		m_vertexBaseParameter = createParameter("vertexBase", QPoint(0, 0));
 	}
 
 	BasicEntity::~BasicEntity()
@@ -53,6 +55,11 @@ namespace qtuser_3d
 			m_material->removeParameter(parameter);
 			delete parameter;
 		}
+	}
+
+	void BasicEntity::setVertexBase(QPoint vertexBase)
+	{
+		m_vertexBaseParameter->setValue(vertexBase);
 	}
 
 	void BasicEntity::setEffect(Qt3DRender::QEffect* effect)

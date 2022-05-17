@@ -23,6 +23,7 @@ namespace qtuser_3d
 		Qt3DRender::QParameter* createParameter(const QString& name, const QVariant& value);
 		void setParameter(const QString& name, const QVariant& value);
 		void destroyParameter(Qt3DRender::QParameter* parameter);
+		void setVertexBase(QPoint vertexBase);
 
 		void setEffect(Qt3DRender::QEffect* effect);
 		Qt3DRender::QEffect* selectEffect(Qt3DRender::QEffect* effect);
@@ -42,6 +43,7 @@ namespace qtuser_3d
 	protected:
 		Qt3DRender::QMaterial* m_material;
 		Qt3DRender::QGeometryRenderer* m_geometryRenderer;
+		Qt3DRender::QParameter* m_vertexBaseParameter;
 
 		QMatrix4x4 m_matrix;
 	};
