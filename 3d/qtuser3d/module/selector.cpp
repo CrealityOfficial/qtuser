@@ -44,7 +44,7 @@ namespace qtuser_3d
 		{
 			_add(pickable);
 
-			if (m_disableReverseSelect && (m_pickables.size() == 1))
+			if (m_pickables.size() == 1)
 			{
 				selectPickable(pickable);
 			}

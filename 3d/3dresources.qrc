@@ -68,7 +68,9 @@
 		<file>shaders/boxclippure.vert</file>
 		<file>shaders/boxclippure.frag</file>
 		<file>shaders/modeldlp.vert</file>
-		<file>shaders/modeldlp.frag</file>		
+		<file>shaders/modeldlp.frag</file>
+		<file>shaders/zproject.vert</file>
+		<file>shaders/zproject.frag</file>		
     </qresource>
     <qresource prefix="/"/>
 </RCC>
