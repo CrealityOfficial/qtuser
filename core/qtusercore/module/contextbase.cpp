@@ -81,13 +81,13 @@ namespace qtuser_core
 		QString name = childName;
 		if (index < 0)
 		{
-			if (m_objects.contains(name))
+			if (parent->m_objects.contains(name))
 			{
 				qCritical() << "ContextBase::registerObj with exist name.";
 				return false;
 			}
 
-			m_objects.insert(name, object);
+			parent->m_objects.insert(name, object);
 			return true;
 		}
 		else
