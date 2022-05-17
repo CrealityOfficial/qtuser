@@ -37,11 +37,9 @@ namespace qtuser_3d
 		setPose(m);
 	}
 
-	void BoxEntity::updateLocal(const Box3D& box, const QMatrix4x4& parentMatrix)
+	void BoxEntity::updateLocal(const Box3D& box, float ratio)
 	{
-		setGeometry(BoxCreateHelper::createPartBox(box, 0.3f), Qt3DRender::QGeometryRenderer::Lines);
-		QMatrix4x4 m = parentMatrix.inverted();
-		setPose(m);
+		setGeometry(BoxCreateHelper::createPartBox(box, ratio), Qt3DRender::QGeometryRenderer::Lines);
 	}
 
 	void BoxEntity::update(const Box3D& box)

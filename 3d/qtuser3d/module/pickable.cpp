@@ -9,6 +9,7 @@ namespace qtuser_3d
 		, m_enableSelect(true)
 		, m_faceBase(0)
 		, m_noPrimitive(false)
+		, m_visible(true)
 	{
 	}
 
@@ -114,6 +115,16 @@ namespace qtuser_3d
 		noPrimitiveChanged(m_noPrimitive);
 	}
 
+	void Pickable::setVisible(bool visible)
+	{
+		m_visible = visible;
+	}
+
+	bool Pickable::isVisible()
+	{
+		return m_visible;
+	}
+
 	Pickable* checkPickableFromList(FacePicker* picker, QPoint point, QList<Pickable*>& list, int* primitiveID)
 	{
 		Pickable* pickable = nullptr;
@@ -131,7 +142,7 @@ namespace qtuser_3d
 					int faceBase = p->faceBase();
 					int faceEnd = faceBase + (p->noPrimitive() ? 1 : p->primitiveNum());
 
-					if (faceID >= faceBase && faceID < faceEnd)
+					if (faceID >= faceBase && faceID < faceEnd && p->isVisible())
 					{
 						pickable = p;
 						break;

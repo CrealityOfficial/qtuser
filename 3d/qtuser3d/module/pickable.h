@@ -34,6 +34,9 @@ namespace qtuser_3d
 
 		bool noPrimitive();
 		void setNoPrimitive(bool noPrimitive);  // only set once at construct
+
+		virtual void setVisible(bool visible);
+		bool isVisible();
 	public slots:
 		void setSelected(bool selected);
 	protected:
@@ -41,7 +44,7 @@ namespace qtuser_3d
 		virtual void faceBaseChanged(int faceBase);
 		virtual void noPrimitiveChanged(bool noPrimitive);
 	protected:
-
+		bool m_visible;
 
 		ControlState m_state;
 		int m_faceBase;

@@ -13,7 +13,7 @@ namespace qtuser_3d
 		virtual ~BoxEntity();
 
 		void updateGlobal(const Box3D& box, bool need_bottom = true);
-		void updateLocal(const Box3D& box, const QMatrix4x4& parentMatrix);
+		void updateLocal(const Box3D& box, float ratio = 0.3f);
 		void update(const Box3D& box);
 		void setColor(const QVector4D& color);
 	protected:

@@ -6,6 +6,9 @@ in vec3 normal;
 in vec3 gnormal;
 in vec3 worldPosition;
 
+uniform int state;
+uniform float error;
+
 uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);
 uniform vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
 uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);
@@ -17,7 +20,6 @@ uniform vec3 maxSpace;
 uniform float bottom; 
 uniform float topVisibleHeight = 100000.0;
 uniform float bottomVisibleHeight = -10000.0;
-uniform float error;
 uniform float supportCos = 0.5;
 
 uniform int hoverState = 0;
@@ -26,16 +28,14 @@ uniform int checkscope = 1;
 
 uniform float zcha = 0.01;
 
-uniform float state;
 uniform vec4 stateColors[6];
-uniform vec4 customColor;
 uniform vec3 water;
 
 bool frontFacing()
 {
-        vec3 fdx = dFdx(worldPosition);
-        vec3 fdy = dFdy(worldPosition);
-        return dot(gnormal, cross(fdx, fdy)) > 0.0;
+	vec3 fdx = dFdx(worldPosition);
+	vec3 fdy = dFdy(worldPosition);
+	return dot(gnormal, cross(fdx, fdy)) > 0.0;
 } 
 
 vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_color, vec4 diffuse_color, vec4 specular_color)
@@ -58,15 +58,8 @@ void main( void )
 	if(checkscope > 0 && (worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight))
 		discard;
 
-	int stateInt = int(state);
-	vec4 color;
-	if (stateInt < 5)
-		color = stateColors[stateInt];
-	else
-		color = customColor;
-	
-	if(error == 1.0)
-		color = stateColors[3];	
+	vec4 color = stateColors[state];
+	color = error * stateColors[3] + (1.0 - error) * color;	
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 ambient_color 	  = ambient;
@@ -122,6 +115,6 @@ void main( void )
 		vec4 specular_color_t   = specular;
 		coreColor = directLight(lightDir, fbnormal, color, ambient_color_t, diffuse_color_t, specular_color_t);
 	}
-
+	
 	fragmentColor = vec4(coreColor.rgb, 1.0);
 }
