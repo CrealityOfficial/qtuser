@@ -97,6 +97,16 @@ namespace qtuser_3d
 		_updateNearFar(m_box);
 	}
 
+	bool ScreenCamera::checkUpState()
+	{
+		QVector3D viewDir = camera()->viewVector();
+		viewDir = viewDir.normalized();
+
+		QVector3D normal = QVector3D(0.0f, 0.0f, -1.0f);
+		float product = viewDir.dotProduct(viewDir, normal);
+		return product > 0.5f;
+	}
+
 	void ScreenCamera::_updateNearFar(const qtuser_3d::Box3D& box)
 	{
 		if (!m_updateNearFarRuntime)

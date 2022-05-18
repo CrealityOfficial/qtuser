@@ -144,6 +144,8 @@ namespace qtuser_3d
 
 			m_renderGraph->updateRenderSize(m_size);
 		}
+
+		requestUpdate();
 	}
 
 	void Q3DRenderSystem::registerRenderGraph(qtuser_3d::RenderGraph* graph)
