@@ -42,8 +42,6 @@ public:
 	Q_INVOKABLE void showSelf();
 
 	void sendViewUpdateSingle(bool capture);
-
-	void uninitialize();
 	void fittingBoundingBox(const qtuser_3d::Box3D& box);
 	void updateNearFar(const qtuser_3d::Box3D& box);
 	void home(const qtuser_3d::Box3D& box, int type = 0);

@@ -88,10 +88,6 @@ void CameraController::sendViewUpdateSingle(bool capture)
 	emit signalViewChanged(capture);
 }
 
-void CameraController::uninitialize()
-{
-}
-
 void CameraController::fittingBoundingBox(const qtuser_3d::Box3D& box)
 {
 	if(m_screenCamera)
