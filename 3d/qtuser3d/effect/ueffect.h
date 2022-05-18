@@ -17,6 +17,7 @@ namespace qtuser_3d
 		virtual ~UEffect();
 
 		Qt3DRender::QParameter* createParameter(const QString& name, const QVariant& value);
+		void setParameter(const QString& name, const QVariant& value);
 		void destroyParameter(Qt3DRender::QParameter* parameter);
 
 		void addRenderPass(QString& name);

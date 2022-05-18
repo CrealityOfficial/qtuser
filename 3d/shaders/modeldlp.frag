@@ -15,28 +15,28 @@ uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);
 uniform float specularPower = 12.0;
 uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
+uniform vec4 clipPlane1;
+uniform vec4 clipPlane2;
+
+uniform int checkScope = 1;
+
 uniform vec3 minSpace;
 uniform vec3 maxSpace;
-uniform float bottom; 
-uniform float topVisibleHeight = 100000.0;
-uniform float bottomVisibleHeight = -10000.0;
 uniform float supportCos = 0.5;
 
 uniform int hoverState = 0;
 uniform int waterState = 0;
-uniform int checkscope = 1;
 
-uniform float zcha = 0.01;
+const float zcha = 0.01;
 
 uniform vec4 stateColors[6];
 uniform vec3 water;
 
-bool frontFacing()
+float distance2Plane(vec3 position, vec4 plane)
 {
-	vec3 fdx = dFdx(worldPosition);
-	vec3 fdy = dFdy(worldPosition);
-	return dot(gnormal, cross(fdx, fdy)) > 0.0;
-} 
+	vec3 p = position - vec3(0.0, 0.0, plane.w);
+	return dot(p, plane.xyz);
+}
 
 vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_color, vec4 diffuse_color, vec4 specular_color)
 {
@@ -55,30 +55,30 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_col
 
 void main( void )
 {
-	if(checkscope > 0 && (worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight))
+	if(distance2Plane(worldPosition, clipPlane1) < 0.0)
 		discard;
 
+	if(distance2Plane(worldPosition, clipPlane2) < 0.0)
+		discard;
+		
 	vec4 color = stateColors[state];
 	color = error * stateColors[3] + (1.0 - error) * color;	
 	
 	vec3 fnormal 		  =	normalize(normal);
-	vec4 ambient_color 	  = ambient;
-	vec4 diffuse_color    = diffuse;
-	vec4 specular_color   = specular;
-	
-	vec3 lightDir = normalize(lightDirection);
-	vec4 coreColor = directLight(lightDir, fnormal, color, ambient_color, diffuse_color, specular_color);
-	
 	vec3 fgnormal 		  =	normalize(gnormal);
-	
-	if(checkscope > 0)
+		
+	vec3 lightDir = normalize(lightDirection);
+
+	if(!gl_FrontFacing)
 	{
-		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
-		{
-			coreColor *= 0.3;
-			coreColor.r += 0.6;
-		}
-		if( abs(worldPosition.z - bottom) < 0.05 )
+		color = vec4(stateColors[5].xyz, 1.0);
+		fnormal = - fnormal;
+	}
+	
+	vec4 coreColor = directLight(lightDir, fnormal, color, ambient, diffuse, specular);	
+	if(checkScope > 0)
+	{
+		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < 0.1 || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
 		{
 			coreColor *= 0.3;
 			coreColor.r += 0.6;
@@ -101,19 +101,6 @@ void main( void )
 				coreColor = vec4(0.1, 0.1, 0.1, 1.0);
 			}
 		}
-	}
-	
-	coreColor.rgb = coreColor.rgb;
-
-	if(!frontFacing())
-	{
-		color = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-		color.a = 1.0;
-		vec3 fbnormal = -fnormal;
-		vec4 ambient_color_t 	  = ambient + vec4(0.03, 0.03, 0.03, 0.0);
-		vec4 diffuse_color_t    = diffuse;
-		vec4 specular_color_t   = specular;
-		coreColor = directLight(lightDir, fbnormal, color, ambient_color_t, diffuse_color_t, specular_color_t);
 	}
 	
 	fragmentColor = vec4(coreColor.rgb, 1.0);
