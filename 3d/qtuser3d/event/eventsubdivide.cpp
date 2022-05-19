@@ -21,11 +21,6 @@ namespace qtuser_3d
 		for (ResizeEventHandler* handler : m_resizeEventHandlers)
 		{
 			handler->onResize(size);
-			if (!handler->m_resizeStatus)
-			{
-				handler->m_resizeStatus = true;
-				break;
-			}
 		}
 	}
 
@@ -36,11 +31,6 @@ namespace qtuser_3d
 			for (LeftMouseEventHandler* handler : m_leftMouseEventHandlers)
 			{
 				handler->onLeftMouseButtonPress(event);
-				if (!handler->m_leftPressStatus)
-				{
-					handler->m_leftPressStatus = true;
-					break;
-				}
 			}
 		}
 		if ((event->button() == Qt::MiddleButton))
@@ -48,11 +38,6 @@ namespace qtuser_3d
 			for (MidMouseEventHandler* handler : m_midMouseEventHandlers)
 			{
 				handler->onMidMouseButtonPress(event);
-				if (!handler->m_midPressStatus)
-				{
-					handler->m_midPressStatus = true;
-					break;
-				}
 			}
 		}
 		if ((event->button() == Qt::RightButton))
@@ -60,11 +45,6 @@ namespace qtuser_3d
 			for (RightMouseEventHandler* handler : m_rightMouseEventHandlers)
 			{
 				handler->onRightMouseButtonPress(event);
-				if (!handler->m_rightPressStatus)
-				{
-					handler->m_rightPressStatus = true;
-					break;
-				}
 			}
             m_bLastMove = false;
 		}
@@ -79,11 +59,6 @@ namespace qtuser_3d
 			for (RightMouseEventHandler* handler : m_rightMouseEventHandlers)
 			{
 				handler->onRightMouseButtonMove(event);
-				if (!handler->m_rightMoveStatus)
-				{
-					handler->m_rightMoveStatus = true;
-					break;
-				}
 			}
             m_bLastMove = true;
 		}
@@ -92,11 +67,6 @@ namespace qtuser_3d
 			for (MidMouseEventHandler* handler : m_midMouseEventHandlers)
 			{
 				handler->onMidMouseButtonMove(event);
-				if (!handler->m_midMoveStatus)
-				{
-					handler->m_midMoveStatus = true;
-					break;
-				}
 			}
 		}
 		if ((event->buttons() == Qt::LeftButton))
@@ -104,11 +74,6 @@ namespace qtuser_3d
 			for (LeftMouseEventHandler* handler : m_leftMouseEventHandlers)
 			{
 				handler->onLeftMouseButtonMove(event);
-				if (!handler->m_leftMoveStatus)
-				{
-					handler->m_leftMoveStatus = true;
-					break;
-				}
 			}
 		}
 
@@ -122,11 +87,6 @@ namespace qtuser_3d
 			for (RightMouseEventHandler* handler : m_rightMouseEventHandlers)
 			{
 				handler->onRightMouseButtonRelease(event);
-				if (!handler->m_rightReleaseStatus)
-				{
-					handler->m_rightReleaseStatus = true;
-					break;
-				}
 			}
 		}
 		if ((event->button() == Qt::MiddleButton))
@@ -134,11 +94,6 @@ namespace qtuser_3d
 			for (MidMouseEventHandler* handler : m_midMouseEventHandlers)
 			{
 				handler->onMidMouseButtonRelease(event);
-				if (!handler->m_midReleaseStatus)
-				{
-					handler->m_midReleaseStatus = true;
-					break;
-				}
 			}
 		}
 		if ((event->button() == Qt::LeftButton))
@@ -146,11 +101,6 @@ namespace qtuser_3d
 			for (LeftMouseEventHandler* handler : m_leftMouseEventHandlers)
 			{
 				handler->onLeftMouseButtonRelease(event);
-				if (!handler->m_leftReleaseStatus)
-				{
-					handler->m_leftReleaseStatus = true;
-					break;
-				}
 			}
 		}
 
@@ -160,11 +110,6 @@ namespace qtuser_3d
 			for (RightMouseEventHandler* handler : m_rightMouseEventHandlers)
 			{
 				handler->onRightMouseButtonClick(event);
-				if (!handler->m_rightClickStatus)
-				{
-					handler->m_rightClickStatus = true;
-					break;
-				}
 			}
 		}
 		if (m_clickEventChecker->CheckMiddleButton(event))
@@ -172,11 +117,6 @@ namespace qtuser_3d
 			for (MidMouseEventHandler* handler : m_midMouseEventHandlers)
 			{
 				handler->onMidMouseButtonClick(event);
-				if (!handler->m_midClickStatus)
-				{
-					handler->m_midClickStatus = true;
-					break;
-				}
 			}
 		}
 		if (m_clickEventChecker->CheckLeftButton(event))
@@ -184,11 +124,6 @@ namespace qtuser_3d
 			for (LeftMouseEventHandler* handler : m_leftMouseEventHandlers)
 			{
 				handler->onLeftMouseButtonClick(event);
-				if (!handler->m_leftClickStatus)
-				{
-					handler->m_leftClickStatus = true;
-					break;
-				}
 			}
 		}
 	}
@@ -198,11 +133,6 @@ namespace qtuser_3d
 		for (WheelEventHandler* handler : m_wheelEventHandlers)
 		{
 			handler->onWheelEvent(event);
-			if (!handler->m_wheelStatus)
-			{
-				handler->m_wheelStatus = true;
-				break;
-			}
 		}
 	}
 
@@ -211,11 +141,6 @@ namespace qtuser_3d
 		for (HoverEventHandler* handler : m_hoverEventHandlers)
 		{
 			handler->onHoverEnter(event);
-			if (!handler->m_hoverEnterStatus)
-			{
-				handler->m_hoverEnterStatus = true;
-				break;
-			}
 		}
 	}
 
@@ -224,11 +149,6 @@ namespace qtuser_3d
 		for (HoverEventHandler* handler : m_hoverEventHandlers)
 		{
 			handler->onHoverMove(event);
-			if (!handler->m_hoverMoveStatus)
-			{
-				handler->m_hoverMoveStatus = true;
-				break;
-			}
 		}
 	}
 
@@ -237,11 +157,6 @@ namespace qtuser_3d
 		for (HoverEventHandler* handler : m_hoverEventHandlers)
 		{
 			handler->onHoverLeave(event);
-			if (!handler->m_hoverLeaveStatus)
-			{
-				handler->m_hoverLeaveStatus = true;
-				break;
-			}
 		}
 	}
 
@@ -250,13 +165,6 @@ namespace qtuser_3d
 		for (KeyEventHandler* handler : m_KeyEventHandlers)
 		{
 			handler->onKeyPress(event);
-			{
-				if (!handler->m_keyPressStatus)
-				{
-					handler->m_keyPressStatus = true;
-					break;
-				}
-			}
 		}
 	}
 
@@ -265,11 +173,6 @@ namespace qtuser_3d
 		for (KeyEventHandler* handler : m_KeyEventHandlers)
 		{
 			handler->onKeyRelease(event);
-			if (!handler->m_keyRelaseStatus)
-			{
-				handler->m_keyRelaseStatus = true;
-				break;
-			}
 		}
 	}
 
