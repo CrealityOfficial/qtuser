@@ -35,7 +35,6 @@ namespace qtuser_core
 		virtual ~CXFileOpenAndSaveManager();
 
 		void init(QObject* obj);
-		void clear();
 
 		Q_INVOKABLE QString title();
 		Q_INVOKABLE QStringList nameFilters();
@@ -49,6 +48,9 @@ namespace qtuser_core
 	public:
 		void open(CXHandleBase* receiver = nullptr, const QStringList& filters = QStringList());
 		void save(CXHandleBase* receiver = nullptr, const QStringList& filters = QStringList());
+
+		Q_INVOKABLE void qOpen(QObject* receiver);
+		Q_INVOKABLE void qSave(QObject* receiver);
 		Q_INVOKABLE void qOpen();
 
 		void openWithParams(const QStringList& fileNames);
@@ -82,7 +84,7 @@ namespace qtuser_core
 		void openLastSaveFolder();
 		void openFolder(const QString& folder);
 
-		uint32_t getFileSize(const QString& fileName);
+		size_t getFileSize(const QString& fileName);
 	protected:
 		bool openWithNameSuffix(const QString& fileName, const QString suffix);
 		bool openWithNamesSuffix(const QStringList& fileNames);

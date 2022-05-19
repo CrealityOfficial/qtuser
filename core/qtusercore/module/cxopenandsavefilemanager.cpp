@@ -10,6 +10,8 @@
 #include <QtWidgets/QFileDialog>
 #include <QtCore/QOperatingSystemVersion>
 
+#include "ccglobal/platform.h"
+
 namespace qtuser_core
 {
 
@@ -27,12 +29,9 @@ namespace qtuser_core
 
 	void CXFileOpenAndSaveManager::init(QObject* obj)
 	{
+#ifdef CXFILE_USE_INVOKE
 		m_invokeObject = obj;
-	}
-
-	void CXFileOpenAndSaveManager::clear()
-	{
-
+#endif
 	}
 
 	QString CXFileOpenAndSaveManager::title()
@@ -162,13 +161,13 @@ namespace qtuser_core
 		saveWithUrl(QUrl(url));
 	}
 
-	 bool CXFileOpenAndSaveManager::cancelHandle()
+	bool CXFileOpenAndSaveManager::cancelHandle()
 	{
 		if (m_externalHandler)
 		{
 			if (m_State == OpenSaveState::oss_save || m_State == OpenSaveState::oss_external_save)
 			{
-	            m_externalHandler->cancelHandle();
+		           m_externalHandler->cancelHandle();
 				//dlp save gcode canel back Mainscene
 				//creative_kernel::AbstractKernelUI::getSelf()->backMainSceneShow();
 			}
@@ -180,10 +179,22 @@ namespace qtuser_core
 		return true;
 	}
 
-	 void CXFileOpenAndSaveManager::qOpen()
-	 {
-		 open();
-	 }
+	void CXFileOpenAndSaveManager::qOpen()
+	{
+		open();
+	}
+
+	void CXFileOpenAndSaveManager::qOpen(QObject* receiver)
+	{
+		CXHandleBase* handle = qobject_cast<CXHandleBase*>(receiver);
+		open(handle);
+	}
+
+	void CXFileOpenAndSaveManager::qSave(QObject* receiver)
+	{
+		CXHandleBase* handle = qobject_cast<CXHandleBase*>(receiver);
+		save(handle);
+	}
 
 	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver, const QStringList& filters)
 	{
@@ -192,6 +203,8 @@ namespace qtuser_core
 		{
 			m_externalHandler = receiver;
 			m_externalFilterList = filters;
+			if (m_externalFilterList.empty())
+				m_externalFilterList = receiver->supportFilters();
 			m_State = OpenSaveState::oss_external_open;
 		}
 
@@ -218,6 +231,8 @@ namespace qtuser_core
 		{
 			m_externalHandler = receiver;
 			m_externalFilterList = filters;
+			if (m_externalFilterList.empty())
+				m_externalFilterList = receiver->supportFilters();
 			m_State = OpenSaveState::oss_external_save;
 		}
 
@@ -552,21 +567,21 @@ void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
 			m_callbacks.removeOne(callback);
 	}
 	
-	uint32_t CXFileOpenAndSaveManager::getFileSize(const QString& fileName)
+	size_t CXFileOpenAndSaveManager::getFileSize(const QString& fileName)
 	{
 		if (fileName.isEmpty())
-			return -1;
+			return 0;
 	
 		FILE* file = fopen(fileName.toLocal8Bit().constData(), "rb+");
 		if (nullptr == file)
 		{
-			return -2;
+			return 0;
 		}
 
 		fseek(file, 0, SEEK_END);
-		uint32_t filesize = ftell(file);
-	
+		size_t filesize = _cc_ftelli64(file);
 		fclose(file);
+
 		return filesize;	
 	}
 

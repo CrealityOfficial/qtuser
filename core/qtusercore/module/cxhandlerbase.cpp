@@ -2,9 +2,9 @@
 
 namespace qtuser_core
 {
-	CXHandleBase::CXHandleBase()
+	CXHandleBase::CXHandleBase(QObject* parent)
+		:QObject(parent)
 	{
-
 	}
 
 	CXHandleBase::~CXHandleBase()
@@ -23,10 +23,11 @@ namespace qtuser_core
 		return supportFilters();
 	}
 
-void CXHandleBase::cancelHandle()
-{
+	void CXHandleBase::cancelHandle()
+	{
+	
+	}
 
-}
 	void CXHandleBase::handle(const QString& fileName)
 	{
 		m_fileName = fileName;
@@ -39,8 +40,9 @@ void CXHandleBase::cancelHandle()
 			m_fileNames << fileName;
 		}
 	}
-void CXHandleBase::openfail()
-{
-	return ;
+
+	void CXHandleBase::openfail()
+	{
+		return ;
 	}
 }
