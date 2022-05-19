@@ -180,6 +180,11 @@ namespace qtuser_core
 		return true;
 	}
 
+	 void CXFileOpenAndSaveManager::qOpen()
+	 {
+		 open();
+	 }
+
 	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver, const QStringList& filters)
 	{
 		m_State = OpenSaveState::oss_open;

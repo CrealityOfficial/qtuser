@@ -49,6 +49,7 @@ namespace qtuser_core
 	public:
 		void open(CXHandleBase* receiver = nullptr, const QStringList& filters = QStringList());
 		void save(CXHandleBase* receiver = nullptr, const QStringList& filters = QStringList());
+		Q_INVOKABLE void qOpen();
 
 		void openWithParams(const QStringList& fileNames);
 		bool openWithName(const QString& fileName);
