@@ -263,6 +263,11 @@ namespace qtuser_3d
 		selectPickables(onLists, offlist);
 	}
 
+	void Selector::selectNone()
+	{
+		selectPickable(nullptr);
+	}
+
 	void Selector::selectPickables(QList<Pickable*>& onList, QList<Pickable*>& offList)
 	{
 		if (selectNotifying)
