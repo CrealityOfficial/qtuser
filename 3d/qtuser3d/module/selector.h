@@ -27,7 +27,7 @@ namespace qtuser_3d
 
 		void clearHover();
 		bool hover(const QPoint& p);
-		virtual void select(const QPoint& p);
+		virtual void select(const QPoint& p, bool sGroup = false);
 		void selectPickable(qtuser_3d::Pickable* pickable);
 		void appendSelect(qtuser_3d::Pickable* pickable);
 		void selectGroup(qtuser_3d::Pickable* pickable);
@@ -35,7 +35,6 @@ namespace qtuser_3d
 
 		void selectPickables(QList<qtuser_3d::Pickable*>& onList, QList<qtuser_3d::Pickable*>& offList);
 		void selectAll();
-		void setSelectStatus(bool bStatus);
 
 		void changed(qtuser_3d::Pickable* pickable);
 	private:
@@ -53,7 +52,6 @@ namespace qtuser_3d
 		QList<qtuser_3d::SelectorTracer*> m_selectorTracers;
 
 		int m_currentFaceBase;
-		bool m_selectStatus;
 		bool selectNotifying;
 
 		bool m_disableReverseSelect;

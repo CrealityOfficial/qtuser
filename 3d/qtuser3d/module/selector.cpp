@@ -10,7 +10,6 @@ namespace qtuser_3d
 		, selectNotifying(false)
 		, m_disableReverseSelect(false)
 	{
-		m_selectStatus = false;
 	}
 
 	Selector::~Selector()
@@ -195,13 +194,13 @@ namespace qtuser_3d
 		return true;
 	}
 
-	void Selector::select(const QPoint& p)
+	void Selector::select(const QPoint& p, bool sGroup)
 	{
 		if (selectNotifying)
 			return;
 
 		Pickable* pickable = check(p, nullptr);
-		if (m_selectStatus)
+		if (sGroup)
 			selectGroup(pickable);
 		else selectPickable(pickable);
 	}
@@ -262,11 +261,6 @@ namespace qtuser_3d
 			onLists << pickable;
 		}
 		selectPickables(onLists, offlist);
-	}
-
-	void Selector::setSelectStatus(bool bStatus)
-	{
-		m_selectStatus = bStatus;
 	}
 
 	void Selector::selectPickables(QList<Pickable*>& onList, QList<Pickable*>& offList)
