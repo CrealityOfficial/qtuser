@@ -123,20 +123,29 @@ namespace qtuser_core
 		QMap<QString, CXHandleBase*>& handlers = saveState ? m_saveHandlers : m_openHandlers;
 		QString filter;
 		QStringList extensions;
+		QStringList enableFilters;
 		filter += "FILES (";
-		for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin(); it != handlers.end(); ++it)
+		if (m_externalHandler)
 		{
-			QStringList enableFilters = it.value()->enableFilters();
-			for (const QString& ext : enableFilters)
+			enableFilters = m_externalFilterList;
+		}
+		else
+		{
+			for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin(); it != handlers.end(); ++it)
 			{
-				if (!extensions.contains(ext))
-				{
-					QString suffix = QString("*.%1 ").arg(ext);
-					filter += suffix;
-					extensions << ext;
-				}
+				enableFilters << it.value()->enableFilters();
 			}
 		}
+		for (const QString& ext : enableFilters)
+		{
+			if (!extensions.contains(ext))
+			{
+				QString suffix = QString("*.%1 ").arg(ext);
+				filter += suffix;
+				extensions << ext;
+			}
+		}
+
 		filter += ")";
 
 		return filter;
@@ -249,6 +258,8 @@ namespace qtuser_core
 
 			QString filter = generateFilterFromHandlers(true);
 			dialogSave(filter, f);
+
+			m_externalHandler = nullptr;
 		}
 	}
 
