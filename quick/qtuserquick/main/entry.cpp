@@ -4,7 +4,7 @@
 #include <QtCore/QDebug>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
-
+#include <QFont>
 #include "qtusercore/module/systemutil.h"
 
 namespace qtuser_quick
@@ -50,6 +50,9 @@ namespace qtuser_quick
 			setDefaultQmlBeforeApp();
 
 			QApplication app(argc, argv);
+            QFont default_font = QFont();
+            default_font.setPointSize(9);
+            app.setFont(default_font);
 			QQmlApplicationEngine engine;
 
 			qtuser_core::setDefaultAfterApp();
