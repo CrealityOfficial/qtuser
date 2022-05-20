@@ -44,6 +44,7 @@ namespace qtuser_3d
 		void _remove(qtuser_3d::Pickable* pickable);
 
 		void notifyTracers();
+		virtual void onChanged();
 	protected:
 		qtuser_3d::FacePicker* m_pickSource;
 		QList<qtuser_3d::Pickable*> m_pickables;

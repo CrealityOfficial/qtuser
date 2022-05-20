@@ -300,5 +300,11 @@ namespace qtuser_3d
 		}
 
 		selectNotifying = false;
+		onChanged();
+	}
+
+	void Selector::onChanged()
+	{
+
 	}
 }

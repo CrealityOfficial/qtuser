@@ -7,48 +7,16 @@ class QTUSER_QML_API ToolCommand: public QObject
 {
 	Q_OBJECT
 	Q_PROPERTY(bool enabled READ enabled NOTIFY enabledChanged)
-
-	Q_PROPERTY(QString enabledIcon READ enabledIcon NOTIFY enabledIconChanged)
-	//Q_PROPERTY(QString pressedIcon READ pressedIcon NOTIFY pressedIconChanged)
-	//Q_PROPERTY(QString disabledIcon READ disableIcon NOTIFY disableIconChanged)
-
-
-    Q_PROPERTY(QString source READ source)
 public:
 	ToolCommand(QObject* parent = nullptr);
 	virtual ~ToolCommand();
-    int orderindex;
+
 	bool enabled();
-	QString enabledIcon() const;
-	QString disableIcon() const;
-	QString pressedIcon() const;
-	QString source() const;
-	QString name() const;
-	void setEnabledIcon(const QString& icon);
-	void setPressedIcon(const QString& icon);
-	void setDisabledIcon(const QString& icon);
-	void setName(const QString& name);
-    void setSource(const QString& source);
-    Q_INVOKABLE virtual bool checkSelect();
-	Q_INVOKABLE virtual bool outofPlatform();
-	void setEnabled(bool enabled);
-
 	Q_INVOKABLE void execute();
+protected:
 	virtual void onExecute();
-
-    Q_INVOKABLE virtual bool isSelectModel();
+	virtual bool enableImpl();
 signals:
 	void enabledChanged();
-	void executed();
-	void enabledIconChanged();
-private:
-	bool m_enabled;
-
-protected:
-	QString m_enabledIcon;
-	QString m_disableIcon;
-	QString m_pressedIcon;
-	QString m_source;
-	QString m_name;
 };
 #endif // _NULLSPACE_TOOLCOMMAND_1589423984319_H
