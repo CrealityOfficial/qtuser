@@ -1,9 +1,9 @@
 #ifndef _QTUSER_CORE_UNDOPROXY_1588906890012_H
 #define _QTUSER_CORE_UNDOPROXY_1588906890012_H
-#include "qtuser3d/qtuser3dexport.h"
+#include "qtusercore/qtusercoreexport.h"
 #include <QtWidgets/QUndoStack>
 
-class QTUSER_3D_API UndoProxy : public QObject
+class QTUSER_CORE_API UndoProxy : public QObject
 {
 	Q_OBJECT
 
