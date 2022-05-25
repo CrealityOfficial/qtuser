@@ -104,6 +104,21 @@ namespace qtuser_3d
 			m_colorVisibleParameter->setValue(1);
 			m_visibleParameter->setValue(1);
 		} 
+		else if (type == 2)
+		{
+			ImageTexture* backgroundImage = new ImageTexture(QString::fromUtf8(":/UI/images/hotbottom9.png"));
+			Qt3DRender::QTexture2D* imageTexture = new Qt3DRender::QTexture2D();
+			imageTexture->addTextureImage(backgroundImage);
+			imageTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
+			imageTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
+			QVector2D imageshape((float)(backgroundImage->width()), (float)(backgroundImage->height()));
+
+			m_imageshape->setValue(imageshape);
+			m_shapeTexture->setValue(QVariant::fromValue(imageTexture));
+			m_imagebili->setValue(QVector2D(1.0f, 1.0f));
+			m_colorVisibleParameter->setValue(1);
+			m_visibleParameter->setValue(1);
+		}
 		else
 		{
 			ImageTexture* backgroundImage = new ImageTexture(QString::fromUtf8(":/UI/images/creality_logo.png"));
