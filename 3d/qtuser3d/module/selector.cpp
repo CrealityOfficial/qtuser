@@ -69,7 +69,11 @@ namespace qtuser_3d
 
 	void Selector::addTracer(SelectorTracer* tracer)
 	{
-		if (tracer) m_selectorTracers.push_back(tracer);
+		if (tracer)
+		{
+			m_selectorTracers.push_back(tracer);
+			notifyTracers(tracer);
+		}
 	}
 
 	void Selector::removeTracer(SelectorTracer* tracer)
@@ -290,13 +294,20 @@ namespace qtuser_3d
 		notifyTracers();
 	}
 
-	void Selector::notifyTracers()
+	void Selector::notifyTracers(qtuser_3d::SelectorTracer* tracer)
 	{
 		selectNotifying = true;
 
-		for (SelectorTracer* tracer : m_selectorTracers)
+		if (tracer)
 		{
 			tracer->onSelectionsChanged();
+		}
+		else
+		{
+			for (SelectorTracer* tracer : m_selectorTracers)
+			{
+				tracer->onSelectionsChanged();
+			}
 		}
 
 		selectNotifying = false;
