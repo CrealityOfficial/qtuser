@@ -294,4 +294,24 @@ namespace qtuser_core
 		if (file.exists())
 			file.remove();
 	}
+
+	SystemUtil::SystemUtil(QObject* parent)
+	{
+
+	}
+
+	SystemUtil::~SystemUtil()
+	{
+
+	}
+
+	int SystemUtil::getDiskTotalSpace(const QString& driver)
+	{
+		return 4096;
+	}
+
+	int SystemUtil::getDiskFreeSpace(const QString& driver)
+	{
+		return 4096;
+	}
 }
