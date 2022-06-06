@@ -43,6 +43,10 @@ namespace qtuser_3d
 		virtual void onStateChanged(ControlState state);
 		virtual void faceBaseChanged(int faceBase);
 		virtual void noPrimitiveChanged(bool noPrimitive);
+
+	signals:
+		void signalStateChanged(ControlState state);
+		void signalFaceBaseChanged(int faceBase);
 	protected:
 		bool m_visible;
 

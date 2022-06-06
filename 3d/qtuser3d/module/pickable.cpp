@@ -55,7 +55,7 @@ namespace qtuser_3d
 
 	void Pickable::onStateChanged(ControlState state)
 	{
-
+		emit signalStateChanged(state);
 	}
 
 	bool Pickable::enableSelect()
@@ -70,7 +70,7 @@ namespace qtuser_3d
 
 	void Pickable::faceBaseChanged(int faceBase)
 	{
-
+		emit signalFaceBaseChanged(faceBase);
 	}
 
 	void Pickable::noPrimitiveChanged(bool noPrimitive)
