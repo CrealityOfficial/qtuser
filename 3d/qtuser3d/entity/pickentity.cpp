@@ -37,6 +37,9 @@ namespace qtuser_3d
 		{
 			connect(m_pickable, SIGNAL(signalStateChanged(ControlState)), this, SLOT(slotStateChanged(ControlState)));
 			connect(m_pickable, SIGNAL(signalFaceBaseChanged(int)), this, SLOT(slotFaceBaseChanged(int)));
+
+			m_pickable->signalStateChanged(m_pickable->state());
+			m_pickable->signalFaceBaseChanged(m_pickable->faceBase());
 		}
 	}
 
