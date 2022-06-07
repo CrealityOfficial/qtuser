@@ -41,10 +41,8 @@ namespace qtuser_3d
 		Qt3DRender::QAttribute* positionAttribute();
 	protected:
 		Qt3DRender::QMaterial* m_material;
-		//Qt3DCore::QTransform* m_transform;
+		Qt3DCore::QTransform* m_transform;
 		Qt3DRender::QGeometryRenderer* m_geometryRenderer;
-
-		QMatrix4x4 m_matrix;
 	};
 }
 #endif // QTUSER_3D_BASICENTITY_1594569444448_H

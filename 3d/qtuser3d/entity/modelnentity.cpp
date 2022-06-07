@@ -47,12 +47,12 @@ namespace qtuser_3d
 
 	void ModelNEntity::setBoxVisibility(bool visible)
 	{
-		m_boxEntity->setParent(visible ? this : nullptr);
+		m_boxEntity->setParent(visible ? (Qt3DCore::QNode*)this->parent() : nullptr);
 	}
 
 	void ModelNEntity::updateBoxLocal(const Box3D& box, const QMatrix4x4& parentMatrix)
 	{
-		m_boxEntity->updateLocal(box, parentMatrix);
+		m_boxEntity->update(box, parentMatrix);
 	}
 
 	void ModelNEntity::setBoxColor(QVector4D color)

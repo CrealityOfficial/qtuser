@@ -48,7 +48,10 @@ namespace qtuser_3d
 	void BoxEntity::update(const Box3D& box, const QMatrix4x4& parentMatrix)
 	{
 		setGeometry(BoxCreateHelper::createPartBox(box, 0.3f), Qt3DRender::QGeometryRenderer::Lines);
-		setPose(parentMatrix);
+
+		QMatrix4x4 matrix;
+		matrix.setToIdentity();
+		setPose(matrix);
 	}
 
 	void BoxEntity::setColor(const QVector4D& color)

@@ -10,8 +10,8 @@ namespace qtuser_3d
 		, m_geometryRenderer(nullptr)
 	{
 		m_material = new Qt3DRender::QMaterial(this);
-		//m_transform = new Qt3DCore::QTransform(this);
-		//addComponent(m_transform);
+		m_transform = new Qt3DCore::QTransform(this);
+		addComponent(m_transform);
 		addComponent(m_material);
 
 		m_geometryRenderer = new Qt3DRender::QGeometryRenderer(this);
@@ -74,14 +74,13 @@ namespace qtuser_3d
 
 	void BasicEntity::setPose(const QMatrix4x4& matrix)
 	{
-		//m_transform->setMatrix(matrix);
-		m_matrix = matrix;
-		setParameter("modelMatrix", m_matrix);
+		m_transform->setMatrix(matrix);
+		//setParameter("modelMatrix", m_matrix);
 	}
 
 	QMatrix4x4 BasicEntity::pose() const
 	{
-		return m_matrix;
+		return m_transform->matrix();
 	}
 
 	void BasicEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type)
