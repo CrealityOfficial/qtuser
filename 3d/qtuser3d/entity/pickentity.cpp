@@ -8,7 +8,9 @@ namespace qtuser_3d
 	{
 		m_stateParameter = createParameter("state", 0.0f);
 		m_vertexBaseParameter = createParameter("vertexBase", QPoint(0, 0));
-		bindPickable(new Pickable(this));
+		Pickable* pickable = new Pickable(this);
+		pickable->setNoPrimitive(true);
+		bindPickable(pickable);
 	}
 	
 	PickEntity::~PickEntity()
