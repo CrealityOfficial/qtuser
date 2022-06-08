@@ -18,10 +18,9 @@ namespace qtuser_3d
 		void slotStateChanged(ControlState state);
 		void slotFaceBaseChanged(int faceBase);
 	protected:
+		virtual void onStateChanged(ControlState state);
+	protected:
 		Pickable* m_pickable;
-
-		Qt3DRender::QParameter* m_stateParameter;
-		Qt3DRender::QParameter* m_vertexBaseParameter;
 	};
 }
 #endif // QTUSER_3D_PICKENTITY_1595086493891_H

@@ -6,8 +6,6 @@ namespace qtuser_3d
 		: BasicEntity(parent)
 		, m_pickable(nullptr)
 	{
-		m_stateParameter = createParameter("state", 0.0f);
-		m_vertexBaseParameter = createParameter("vertexBase", QPoint(0, 0));
 		Pickable* pickable = new Pickable(this);
 		pickable->setNoPrimitive(true);
 		bindPickable(pickable);
@@ -47,13 +45,18 @@ namespace qtuser_3d
 
 	void PickEntity::slotStateChanged(ControlState state)
 	{
-		m_stateParameter->setValue((float)state);
+		onStateChanged(state);
+	}
+
+	void PickEntity::onStateChanged(ControlState state)
+	{
+
 	}
 
 	void PickEntity::slotFaceBaseChanged(int faceBase)
 	{
 		QPoint vertexBase;
-		vertexBase.setX(m_pickable->primitiveNum() * 3);
+		vertexBase.setX(faceBase * 3);
 		vertexBase.setY(m_pickable->noPrimitive() ? 1 : 0);
 		m_vertexBaseParameter->setValue(vertexBase);
 	}
