@@ -16,6 +16,10 @@ namespace qtuser_3d
 		addComponent(m_geometryRenderer);
 
 		m_vertexBaseParameter = createParameter("vertexBase", QPoint(0, 0));
+
+		QMatrix4x4 matrix;
+		matrix.setToIdentity();
+		setPose(matrix);
 	}
 
 	BasicEntity::~BasicEntity()

@@ -123,8 +123,10 @@ namespace qtuser_3d
 				frameGraph->setParent((Qt3DCore::QNode*)nullptr);
 			}
 			if (sceneGraph)
-				sceneGraph->setEnabled(false);
+				sceneGraph->setParent((Qt3DCore::QNode*)nullptr);
 			m_renderGraph->endRender();
+
+			disconnect(m_renderGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 		}
 
 		m_renderGraph = graph;
@@ -140,9 +142,11 @@ namespace qtuser_3d
 				frameGraph->setParent(m_rootFrameGraph);
 			}
 			if (sceneGraph)
-				sceneGraph->setEnabled(true);
+				sceneGraph->setParent(m_rootEntity);
 
 			m_renderGraph->updateRenderSize(m_size);
+
+			connect(m_renderGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 		}
 
 		requestUpdate();

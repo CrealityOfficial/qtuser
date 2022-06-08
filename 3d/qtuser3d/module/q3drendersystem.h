@@ -44,6 +44,7 @@ namespace qtuser_3d
 
 		void setContinousRender();
 		void setCommandRender();
+	public slots:
 		void requestUpdate();
 	protected:
 		void initializeFromRenderThread() override;

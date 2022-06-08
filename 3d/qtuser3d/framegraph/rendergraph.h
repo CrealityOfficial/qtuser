@@ -24,6 +24,8 @@ namespace qtuser_3d
 
 		virtual void onRegistered();
 		virtual void onUnRegistered();
+	signals:
+		void signalUpdate();
 	};
 }
 #endif // QTUSER_3D_RENDERGRAPH_1594441548195_H

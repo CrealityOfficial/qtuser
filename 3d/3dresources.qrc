@@ -70,7 +70,9 @@
 		<file>shaders/modeldlp.vert</file>
 		<file>shaders/modeldlp.frag</file>
 		<file>shaders/zproject.vert</file>
-		<file>shaders/zproject.frag</file>		
+		<file>shaders/zproject.frag</file>
+		<file>shaders/glcomp1.vert</file>
+		<file>shaders/glcomp1.frag</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
