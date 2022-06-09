@@ -41,4 +41,6 @@ list(APPEND SRCS qtusercore/module/commandcenter.cpp
 				 qtusercore/module/quicknativerendersystem.cpp
 				 qtusercore/module/contextbase.h
 				 qtusercore/module/contextbase.cpp
+				 qtusercore/module/glcompatibility.h
+				 qtusercore/module/glcompatibility.cpp
 				 )

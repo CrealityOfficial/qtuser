@@ -8,6 +8,7 @@
 #include <QtCore/QDateTime>
 #include <QSettings>
 
+#include "qtusercore/module/glcompatibility.h"
 #include "qtusercore/string/resourcesfinder.h"
 #include "ccglobal/log.h"
 
@@ -225,9 +226,10 @@ namespace qtuser_core
 	
 	void setDefaultBeforApp()
 	{
-#ifdef Q_OS_WIN32
-		QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
-#elif defined Q_OS_OSX
+		GlCompatibility cap = createCompatibility();
+		QApplication::setAttribute(cap.glAttribute);
+
+#ifdef Q_OS_OSX
 		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
