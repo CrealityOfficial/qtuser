@@ -1,4 +1,4 @@
-#ifndef QTUSER_3D_BASICENTITY_1594569444448_H
+﻿#ifndef QTUSER_3D_BASICENTITY_1594569444448_H
 #define QTUSER_3D_BASICENTITY_1594569444448_H
 #include "qtuser3d/qtuser3dexport.h"
 #include <Qt3DCore/QEntity>
@@ -29,7 +29,7 @@ namespace qtuser_3d
 
 		void setPose(const QMatrix4x4& matrix);
 		QMatrix4x4 pose() const;
-		void setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles);
+		void setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles, int vCountPerPatch = -1);
 		Qt3DRender::QGeometry* geometry();
 		void replaceGeometryRenderer(Qt3DRender::QGeometryRenderer* geometryRenderer);
 

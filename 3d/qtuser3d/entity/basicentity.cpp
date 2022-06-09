@@ -1,4 +1,4 @@
-#include "basicentity.h"
+﻿#include "basicentity.h"
 #include <QThread>
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
@@ -83,7 +83,7 @@ namespace qtuser_3d
 		return m_transform->matrix();
 	}
 
-	void BasicEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type)
+	void BasicEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type, int vCountPerPatch)
 	{
 		Qt3DRender::QGeometry* oldGeometry = m_geometryRenderer->geometry();
 		if (oldGeometry && (oldGeometry->parent() == m_geometryRenderer))
@@ -93,6 +93,9 @@ namespace qtuser_3d
 		}
 
 		m_geometryRenderer->setGeometry(geometry);
+
+		if (type == Qt3DRender::QGeometryRenderer::PrimitiveType::Patches)
+			m_geometryRenderer->setVerticesPerPatch(vCountPerPatch);
 
 		if(geometry)
 			m_geometryRenderer->setPrimitiveType(type);

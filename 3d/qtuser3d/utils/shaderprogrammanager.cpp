@@ -1,4 +1,4 @@
-#include "qtuser3d/utils/shaderprogrammanager.h"
+﻿#include "qtuser3d/utils/shaderprogrammanager.h"
 #include <Qt3DRender/QShaderProgram>
 #include <QtCore/QUrl>
 
@@ -68,19 +68,25 @@ namespace qtuser_3d
 		Qt3DRender::QShaderProgram* shaderProgram = new Qt3DRender::QShaderProgram(m_root);
 
 		const static QString prefix = QString("qrc:/renderhelper/shaders/");
-		const static QString extensions[3] = { ".vert", ".frag", ".geom" };
+		const static QString extensions[5] = { ".vert", ".frag", ".geom", ".tcs", ".tes"};
 
 		QUrl vertexUrl(prefix + name + extensions[0]);
 		QUrl fragmentUrl(prefix + name + extensions[1]);
 		QUrl geometryUrl(prefix + name + extensions[2]);
+		QUrl tessellationControlUrl(prefix + name + extensions[3]);
+		QUrl tessellationEvaluationUrl(prefix + name + extensions[4]);
 
 		QByteArray vertexByteArray = Qt3DRender::QShaderProgram::loadSource(vertexUrl);
 		QByteArray fragmentByteArray = Qt3DRender::QShaderProgram::loadSource(fragmentUrl);
 		QByteArray geometryByteArray = Qt3DRender::QShaderProgram::loadSource(geometryUrl);
+		QByteArray tessellationControlByteArray = Qt3DRender::QShaderProgram::loadSource(tessellationControlUrl);
+		QByteArray tessellationEvaluationByteArray = Qt3DRender::QShaderProgram::loadSource(tessellationEvaluationUrl);
 
 		if (vertexByteArray.size() > 0) shaderProgram->setVertexShaderCode(vertexByteArray);
 		if (fragmentByteArray.size() > 0) shaderProgram->setFragmentShaderCode(fragmentByteArray);
 		if (geometryByteArray.size() > 0) shaderProgram->setGeometryShaderCode(geometryByteArray);
+		if (tessellationControlByteArray.size() > 0) shaderProgram->setTessellationControlShaderCode(tessellationControlByteArray);
+		if (tessellationEvaluationByteArray.size() > 0) shaderProgram->setTessellationEvaluationShaderCode(tessellationEvaluationByteArray);
 
 		return shaderProgram;
 	}
