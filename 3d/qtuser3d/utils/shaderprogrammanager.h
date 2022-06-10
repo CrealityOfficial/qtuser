@@ -3,14 +3,22 @@
 #include "qtuser3d/qtuser3dexport.h"
 #include <Qt3DCore/QNode>
 #include <QtCore/QMap>
-
-namespace Qt3DRender
-{
-	class QShaderProgram;
-}
+#include <Qt3DRender/QShaderProgram>
 
 namespace qtuser_3d
 {
+	struct ShaderCode
+	{
+		QString name;
+		QByteArray source[5];
+	};
+
+	struct ShaderMeta
+	{
+		Qt3DRender::QShaderProgram::ShaderType type;
+		std::vector<std::string> extensions;
+	};
+
 	class QTUSER_3D_API ShaderProgramManager : QObject
 	{
 		ShaderProgramManager(QObject* parent = nullptr);
@@ -24,6 +32,13 @@ namespace qtuser_3d
 		Qt3DCore::QNode* root();
 	protected:
 		Qt3DRender::QShaderProgram* loadShaderProgram(const QString& name);
+
+		Qt3DRender::QShaderProgram* LoadLocal(const QString& name);
+		Qt3DRender::QShaderProgram* LoadFromShaderSource(const QString& name);
+
+		Qt3DRender::QShaderProgram* buildFromShaderCode(const ShaderCode& code);
+		//std::string loadCode(const std::string& name);
+
 		void releaseShaderPrograms();
 	private:
 		static ShaderProgramManager m_shaderProgramManager;

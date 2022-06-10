@@ -1,9 +1,30 @@
 #include "qtuser3d/utils/shaderprogrammanager.h"
 #include <Qt3DRender/QShaderProgram>
 #include <QtCore/QUrl>
+#include <QtCore/QDebug>
+#include <QtCore/QCoreApplication>
+
+#include "../../buildinfo.h"
+
+#if QT_USE_GLES
+QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gles/3/";
+#include "../../shaders/GLES3.code"
+#else
+QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gl/3.3/";
+#include "../../shaders/GL3.code"
+#endif
 
 namespace qtuser_3d
 {
+	ShaderMeta typeOrder[5] =
+	{
+		{ Qt3DRender::QShaderProgram::ShaderType::Vertex, {".vert"}} ,
+		{ Qt3DRender::QShaderProgram::ShaderType::TessellationControl, {".tcs"}} ,
+		{ Qt3DRender::QShaderProgram::ShaderType::TessellationEvaluation, {".tes"}} ,
+		{ Qt3DRender::QShaderProgram::ShaderType::Geometry, {".geom"} },
+		{ Qt3DRender::QShaderProgram::ShaderType::Fragment, {".frag", ".fragment"} },
+	};
+
 	ShaderProgramManager ShaderProgramManager::m_shaderProgramManager;
 	ShaderProgramManager::ShaderProgramManager(QObject* parent)
 		:QObject(parent)
@@ -29,7 +50,8 @@ namespace qtuser_3d
 	Qt3DRender::QShaderProgram* ShaderProgramManager::Get(const QString& name)
 	{
 		QMap<QString, Qt3DRender::QShaderProgram*>::iterator it = m_shaderPrograms.find(name);
-		if (it != m_shaderPrograms.end()) return (*it);
+		if (it != m_shaderPrograms.end())
+			return (*it);
 
 		Qt3DRender::QShaderProgram* shaderProgram = loadShaderProgram(name);
 
@@ -41,48 +63,97 @@ namespace qtuser_3d
 				delete shaderProgram;
 				shaderProgram = nullptr;
 			}
+
+			if (shaderProgram)
+				shaderProgram->setParent(m_root);
 		}
 		return shaderProgram;
 	}
 
 	void ShaderProgramManager::cache(const QString& name)
 	{
-		QMap<QString, Qt3DRender::QShaderProgram*>::iterator it = m_shaderPrograms.find(name);
-		if (it != m_shaderPrograms.end()) return;
-
-		Qt3DRender::QShaderProgram* shaderProgram = loadShaderProgram(name);
-
-		if (shaderProgram)
-		{
-			it = m_shaderPrograms.insert(name, shaderProgram);
-			if (it == m_shaderPrograms.end())
-			{//insert error
-				delete shaderProgram;
-				shaderProgram = nullptr;
-			}
-		}
+		Get(name);
 	}
 
 	Qt3DRender::QShaderProgram* ShaderProgramManager::loadShaderProgram(const QString& name)
 	{
-		Qt3DRender::QShaderProgram* shaderProgram = new Qt3DRender::QShaderProgram(m_root);
+		Qt3DRender::QShaderProgram* program  = LoadLocal(name);
+		if (!program)
+			program = LoadFromShaderSource(name);
 
-		const static QString prefix = QString("qrc:/renderhelper/shaders/");
-		const static QString extensions[3] = { ".vert", ".frag", ".geom" };
+		return program;
+	}
 
-		QUrl vertexUrl(prefix + name + extensions[0]);
-		QUrl fragmentUrl(prefix + name + extensions[1]);
-		QUrl geometryUrl(prefix + name + extensions[2]);
+	Qt3DRender::QShaderProgram* ShaderProgramManager::LoadLocal(const QString& name)
+	{
+		return nullptr;
+#if (_WIN32 || __APPLE__) && _DEBUG
+		ShaderCode code;
+		code.name = name;
 
-		QByteArray vertexByteArray = Qt3DRender::QShaderProgram::loadSource(vertexUrl);
-		QByteArray fragmentByteArray = Qt3DRender::QShaderProgram::loadSource(fragmentUrl);
-		QByteArray geometryByteArray = Qt3DRender::QShaderProgram::loadSource(geometryUrl);
+		QString rootDir = QCoreApplication::testAttribute(Qt::AA_UseOpenGLES) ? rootSourceDir : rootSourceDir;
+		for (int i = 0; i < 5; ++i)
+		{
+			QByteArray source;
+			for (int j = 0; j < typeOrder[i].extensions.size(); j++)
+			{
+				QUrl url = QUrl::fromLocalFile(rootDir + name + QString(typeOrder[i].extensions[j].c_str()));
+				source = Qt3DRender::QShaderProgram::loadSource(url);
+				if (source.size() > 0)
+					break;
+			}
+			code.source[i] = source;
+		}
 
-		if (vertexByteArray.size() > 0) shaderProgram->setVertexShaderCode(vertexByteArray);
-		if (fragmentByteArray.size() > 0) shaderProgram->setFragmentShaderCode(fragmentByteArray);
-		if (geometryByteArray.size() > 0) shaderProgram->setGeometryShaderCode(geometryByteArray);
+		return buildFromShaderCode(code);
+#else
+		return nullptr;
+#endif
+	}
 
-		return shaderProgram;
+	Qt3DRender::QShaderProgram* ShaderProgramManager::buildFromShaderCode(const ShaderCode& code)
+	{
+		if (code.source[0].size() == 0 && code.source[4].size() == 0)
+			return nullptr;
+	
+		Qt3DRender::QShaderProgram* program = new Qt3DRender::QShaderProgram();
+		if (code.source[0].size() > 0)
+			program->setVertexShaderCode(code.source[0]);
+		if (code.source[1].size() > 0)
+			program->setTessellationControlShaderCode(code.source[1]);
+		if (code.source[2].size() > 0)
+			program->setTessellationEvaluationShaderCode(code.source[2]);
+		if (code.source[3].size() > 0)
+			program->setGeometryShaderCode(code.source[3]);
+		if (code.source[4].size() > 0)
+			program->setFragmentShaderCode(code.source[4]);
+
+		qDebug() << QString("Program name [%1]").arg(code.name);
+		return program;
+	}
+
+	Qt3DRender::QShaderProgram* ShaderProgramManager::LoadFromShaderSource(const QString& name)
+	{
+		ShaderCode code;
+		ProgramDef* def = nullptr;
+		for (int i = 0; i < programs_meta_size; ++i)
+		{
+			if (!strcmp(programs_meta[i].name, name.toStdString().c_str()))
+			{
+				def = &programs_meta[i];
+				break;
+			}
+		}
+		if (def)
+		{
+			code.source[0] = def->vIndex >= 0 ? shader_code_array[def->vIndex] : "";
+			code.source[1] = def->tcsIndex >= 0 ? shader_code_array[def->tcsIndex] : "";
+			code.source[2] = def->tesIndex >= 0 ? shader_code_array[def->tesIndex] : "";
+			code.source[3] = def->gIndex >= 0 ? shader_code_array[def->gIndex] : "";
+			code.source[4] = def->fIndex >= 0 ? shader_code_array[def->fIndex] : "";
+		}
+		
+		return buildFromShaderCode(code);
 	}
 
 	void ShaderProgramManager::releaseShaderPrograms()
