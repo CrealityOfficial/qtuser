@@ -4,6 +4,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QCoreApplication>
 
+#include "qtusercore/module/glcompatibility.h"
 #include "../../buildinfo.h"
 
 #if QT_USE_GLES
@@ -86,7 +87,6 @@ namespace qtuser_3d
 
 	Qt3DRender::QShaderProgram* ShaderProgramManager::LoadLocal(const QString& name)
 	{
-		return nullptr;
 #if (_WIN32 || __APPLE__) && _DEBUG
 		ShaderCode code;
 		code.name = name;

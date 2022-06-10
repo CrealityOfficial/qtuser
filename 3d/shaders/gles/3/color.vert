@@ -1,13 +1,16 @@
-#version 150 core
+#version 300 es
 
-in vec3 vertexPosition;
-in vec4 vertexColor;
+layout(location = 0) in vec3 vertexPosition;
+layout(location = 1) in vec4 vertexColor;
 
-uniform mat4 modelViewProjection;
+uniform mat4 model_matrix;
+uniform mat4 view_matrix;
+uniform mat4 projection_matrix;
+
 out vec4 fcolor;
 
 void main() 
 {
-   gl_Position = modelViewProjection * vec4(vertexPosition, 1.0);
-   fcolor = vertexColor;
+	gl_Position = projection_matrix * view_matrix * model_matrix * vec4(ver_attribute_position, 1.0);
+	fcolor = vertexColor;
 }

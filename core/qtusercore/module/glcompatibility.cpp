@@ -7,8 +7,9 @@ namespace qtuser_core
 	{
 		GlCompatibility bility;
 		
-		if (QCoreApplication::testAttribute(Qt::AA_UseDesktopOpenGL))
-			qDebug() << "GlCompatibility AA_UseDesktopOpenGL.";
+#if QT_USE_GLES
+		bility.glAttribute = Qt::AA_UseOpenGLES;
+#endif 
 		return bility;
 	}
 }
