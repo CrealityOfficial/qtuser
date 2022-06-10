@@ -500,7 +500,7 @@ const char* glcomp1_fragment =
                              "\n"
                              "	vec3 freflection      = reflect(-light_dir, fnormal);\n"
                              "	vec3 fViewDirection   = normalize(viewDirection);\n"
-                             "	float RdotV           = max(0.0, dot(freflection, fViewDirection)); \n"
+                             "	float RdotV           = max(0.0, dot(freflection, fViewDirection));\n"
                              "	\n"
                              "	diffuse_color		  = NdotL * diffuse_color * core_color;\n"
                              "	specular_color        = specular_color * pow( RdotV, specularPower) * core_color;\n"

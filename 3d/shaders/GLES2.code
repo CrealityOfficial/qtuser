@@ -238,7 +238,8 @@ const char* chunk_vert =
                              "}\n"
 ;
 const char* color_fragment = 
-                             "#version 150 core \n"
+                             "#version 300 es \n"
+                             "precision mediump float; \n"
                              "\n"
                              "out vec4 fragColor;\n"
                              "\n"
@@ -249,18 +250,21 @@ const char* color_fragment =
                              "}\n"
 ;
 const char* color_vert = 
-                             "#version 150 core\n"
+                             "#version 300 es\n"
                              "\n"
-                             "in vec3 vertexPosition;\n"
-                             "in vec4 vertexColor;\n"
+                             "layout(location = 0) in vec3 vertexPosition;\n"
+                             "layout(location = 1) in vec4 vertexColor;\n"
                              "\n"
-                             "uniform mat4 modelViewProjection;\n"
+                             "uniform mat4 model_matrix;\n"
+                             "uniform mat4 view_matrix;\n"
+                             "uniform mat4 projection_matrix;\n"
+                             "\n"
                              "out vec4 fcolor;\n"
                              "\n"
                              "void main() \n"
                              "{\n"
-                             "   gl_Position = modelViewProjection * vec4(vertexPosition, 1.0);\n"
-                             "   fcolor = vertexColor;\n"
+                             "	gl_Position = projection_matrix * view_matrix * model_matrix * vec4(ver_attribute_position, 1.0);\n"
+                             "	fcolor = vertexColor;\n"
                              "}\n"
 ;
 const char* dlpsupportindicator_fragment = 

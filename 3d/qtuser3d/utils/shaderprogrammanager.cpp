@@ -8,8 +8,8 @@
 #include "../../buildinfo.h"
 
 #if QT_USE_GLES
-QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gles/3/";
-#include "../../shaders/GLES3.code"
+QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gles/2/";
+#include "../../shaders/GLES2.code"
 #else
 QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gl/3.3/";
 #include "../../shaders/GL3.code"

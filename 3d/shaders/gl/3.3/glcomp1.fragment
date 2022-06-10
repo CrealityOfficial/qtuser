@@ -20,7 +20,7 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_col
 
 	vec3 freflection      = reflect(-light_dir, fnormal);
 	vec3 fViewDirection   = normalize(viewDirection);
-	float RdotV           = max(0.0, dot(freflection, fViewDirection)); 
+	float RdotV           = max(0.0, dot(freflection, fViewDirection));
 	
 	diffuse_color		  = NdotL * diffuse_color * core_color;
 	specular_color        = specular_color * pow( RdotV, specularPower) * core_color;
