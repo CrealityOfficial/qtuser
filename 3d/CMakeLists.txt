@@ -16,4 +16,6 @@ if(INSTALL_QTUSER)
 	INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/qtuser3d DESTINATION include/ FILES_MATCHING PATTERN "*.h")
 endif()
 
-add_subdirectory(tools)
+if(CC_BC_WIN)
+	add_subdirectory(tools)
+endif()
