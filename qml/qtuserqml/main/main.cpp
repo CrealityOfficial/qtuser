@@ -126,7 +126,7 @@ namespace qtuser_qml
         int ret = 0;
         {
 #ifndef __APPLE__
-            QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+            //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
             preSetDynamicLoadPath();
             QApplication app(argc, argv);
