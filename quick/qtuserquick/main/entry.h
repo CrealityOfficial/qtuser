@@ -19,6 +19,7 @@ namespace qtuser_quick
 	};
 
 	QTUSER_QUICK_API int qmlAppMain(int argc, char* argv[], QmlAppModule& app);
+	QTUSER_QUICK_API int wQmlAppMain(int argc, wchar_t* argv[], QmlAppModule& app);
 }
 
 #endif // QTUSER_QUICK_MAIN_1601388211209_H

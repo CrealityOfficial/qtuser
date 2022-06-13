@@ -69,4 +69,10 @@ namespace qtuser_quick
 		qtuser_core::uninitializeLog();
 		return ret;
 	}
+
+	int wQmlAppMain(int argc, wchar_t* argv[], QmlAppModule& app)
+	{
+		std::vector<char*> wargv(argc);
+		return qmlAppMain(argc, &wargv[0], app);
+	}
 }
