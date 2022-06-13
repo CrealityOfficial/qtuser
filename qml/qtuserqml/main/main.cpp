@@ -33,7 +33,7 @@ namespace qtuser_qml
 	int qmlAppMain(int argc, char* argv[], const QString& dll)
 	{
 #ifndef __APPLE__
-        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
         QApplication app(argc, argv);
 
