@@ -1,16 +1,16 @@
-#version 150 core 
-out vec4 fragmentColor;
+/* DlpSupportIndicator Fragment*/
+precision mediump float; 
 
-in vec3 viewDirection;
-in vec3 normal;
-in vec3 worldPosition;
+varying vec3 viewDirection;
+varying vec3 normal;
+varying vec3 worldPosition;
 
-uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 1.0);
-uniform vec4 diffuse = vec4(1.0, 1.0, 1.0, 1.0);
-uniform vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
-uniform float specularPower = 12.0;
+const vec4 ambient = vec4(0.0, 0.0, 0.0, 1.0);
+const vec4 diffuse = vec4(1.0, 1.0, 1.0, 1.0);
+const vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
+const float specularPower = 12.0;
 
-uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
+const vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
 uniform vec4 color;
 
@@ -28,6 +28,6 @@ void main( void )
 	vec4 specularColor    = specular * pow( RdotV, specularPower);
 	vec4 coreColor = ambientColor + diffuseColor + specularColor;	
 	
-    fragmentColor = vec4(coreColor.rgb, color.a);
+    gl_FragColor = vec4(coreColor.rgb, color.a);
 }
 

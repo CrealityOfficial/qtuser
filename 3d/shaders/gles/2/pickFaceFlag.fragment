@@ -1,14 +1,12 @@
-#version 150 core 
+/* PickFaceFlag Fragment*/
+precision mediump float; 
 
-flat in vec4 passColor;
-in vec3 passVert;
-in float flag;
-
-out vec4 fragColor;
+varying vec4 passColor;
+varying float flag;
 
 void main()
 {
 	if(flag == 0.0)
 		discard;
-	fragColor = passColor;
+	gl_FragColor = passColor;
 }

@@ -1,14 +1,14 @@
-#version 150 core
+/* BottomFace Vertex*/
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
+varying vec3 vertexPosition;
+varying vec3 vertexNormal;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec2 texcoord;
-out vec3 normal;
+varying vec2 texcoord;
+varying vec3 normal;
 
 void main() 
 {

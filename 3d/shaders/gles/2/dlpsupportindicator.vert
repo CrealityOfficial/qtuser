@@ -1,15 +1,15 @@
-#version 150 core
+/* DlpSupportIndicator Vertex*/
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 viewDirection;
-out vec3 normal;
-out vec3 worldPosition;
+varying vec3 viewDirection;
+varying vec3 normal;
+varying vec3 worldPosition;
 
 void main( void )
 {

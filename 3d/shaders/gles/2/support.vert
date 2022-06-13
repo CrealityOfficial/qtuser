@@ -1,17 +1,17 @@
-#version 150 core
+/* Support Vertex*/
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
-in float vertexFlag;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
+attribute float vertexFlag;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 viewDirection;
-out vec3 normal;
-out vec3 worldPosition;
-flat out float flag;
+varying vec3 viewDirection;
+varying vec3 normal;
+varying vec3 worldPosition;
+varying float flag;
 
 void main( void )
 {

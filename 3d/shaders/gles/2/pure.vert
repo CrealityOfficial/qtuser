@@ -1,6 +1,4 @@
-#version 150 core
-
-in vec3 vertexPosition;
+attribute vec3 vertexPosition;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;

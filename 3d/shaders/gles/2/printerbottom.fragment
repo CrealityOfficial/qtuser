@@ -1,9 +1,9 @@
-#version 150 core 
+/* PrinterBottom Fragment*/
 
-out vec4 fragColor;
+precision mediump float; 
 
-in vec2 texcoord;
-in vec3 normal;
+varying vec2 texcoord;
+varying vec3 normal;
 
 uniform vec2 imageshape;
 uniform vec2 imagebili;
@@ -19,7 +19,6 @@ void main()
 {
 	vec4 coloruse = color;
 	vec4 finalcolor = color;
-	fragColor = color;
 
 	if(visible == 1)
 	{
@@ -50,6 +49,6 @@ void main()
 	{
 		finalcolor.a = 0.0;
 	}
-	fragColor = finalcolor;
+	gl_FragColor = finalcolor;
 	
 }

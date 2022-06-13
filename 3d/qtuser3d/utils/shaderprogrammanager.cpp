@@ -66,7 +66,10 @@ namespace qtuser_3d
 			}
 
 			if (shaderProgram)
+			{
+				shaderProgram->setObjectName(name);
 				shaderProgram->setParent(m_root);
+			}
 		}
 		return shaderProgram;
 	}

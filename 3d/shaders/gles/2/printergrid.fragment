@@ -1,7 +1,8 @@
-#version 150 core
- 
-out vec4 fragColor;
-flat in vec2 flag;
+/* PrinterGrid Fragment*/
+
+precision mediump float; 
+
+varying vec2 flag;
 uniform float visible;
 uniform vec4 xshowcolor;
 uniform vec4 yshowcolor;
@@ -11,18 +12,18 @@ void main()
 {
 	if(int(flag.x) == 0)
 	{
-		fragColor = yshowcolor;
+		gl_FragColor = yshowcolor;
 	}
 	else if(int(flag.y) == 0)
 	{
-		fragColor = xshowcolor;
+		gl_FragColor = xshowcolor;
 	}
 	else
 	{
-		if((((int(flag.x/10.0))%4 > 0) || ((int(flag.y/10.0))%4 > 0)) && (visible == 0.0))
-			discard;
+		//if((((int(flag.x/10.0))%4 > 0) || ((int(flag.y/10.0))%4 > 0)) && (visible == 0.0))
+		//	discard;
 		
-		fragColor = linecolor;
+		gl_FragColor = linecolor;
 	}
 	
 
@@ -34,10 +35,10 @@ void main()
 	else
 	{
 		if(((int(flag.x/10.0))%4 > 0) || ((int(flag.y/10.0))%4 > 0))
-			//fragColor = showcolor;
+			//gl_FragColor = showcolor;
 			discard;
 		else	
-			fragColor = linecolor;
+			gl_FragColor = linecolor;
 	}
 	*/
 }

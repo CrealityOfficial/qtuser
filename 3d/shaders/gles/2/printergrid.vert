@@ -1,11 +1,11 @@
-#version 150 core
+/* PrinterGrid Vertex*/
 
-in vec3 vertexPosition;
-in vec2 vertexFlag;
+attribute vec3 vertexPosition;
+attribute vec2 vertexFlag;
 
 uniform mat4 modelViewProjection;
 
-flat out vec2 flag;
+varying vec2 flag;
 void main() 
 {
    gl_Position = modelViewProjection * vec4(vertexPosition, 1.0);

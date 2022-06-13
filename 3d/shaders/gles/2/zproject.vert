@@ -1,11 +1,10 @@
-#version 150 core
-
-in vec3 vertexPosition;
+/* ZProject Vertex*/
+attribute vec3 vertexPosition;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform float projectZ = 0.01;
+const float projectZ = 0.01;
 
 void main( void )
 {

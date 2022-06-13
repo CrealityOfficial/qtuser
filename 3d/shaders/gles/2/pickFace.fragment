@@ -1,11 +1,9 @@
-#version 150 core 
+/* PickFace Fragment*/
+precision mediump float; 
 
-flat in vec4 passColor;
-in vec3 passVert;
-
-out vec4 fragColor;
+varying vec4 passColor;
 
 void main()
 {
-	fragColor = passColor;
+	gl_FragColor = passColor;
 }
