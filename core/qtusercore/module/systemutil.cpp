@@ -305,7 +305,7 @@ namespace qtuser_core
 	{
 #ifdef QT_NO_DEBUG
 		QFileInfo info(argv[0]);
-		QString name = QString("Creality/%1/Log/").arg(info.baseName());
+		QString name = QString("/%1/Log/").arg(info.baseName());
 		QString logDirectory = qtuser_core::getOrCreateAppDataLocation(name);
 		qDebug() << logDirectory;
 
@@ -326,11 +326,9 @@ namespace qtuser_core
 
 		qDebug() << QString("----------> START LOG <-----------");
 	}
-	void initializeConfig(int argc, char* argv[])
+	void initializeConfig()
 	{
-		QFileInfo info(argv[0]);
-		QString name = QString("Creality/%1/sliceconfig/").arg(info.baseName());
-		QString configDir = qtuser_core::getOrCreateAppDataLocation(name);
+		QString configDir = qtuser_core::getOrCreateAppDataLocation("sliceconfig");
 		qDebug() << configDir;
 
 		//copy config ´æÔÚ²»¿½±´
@@ -343,12 +341,10 @@ namespace qtuser_core
 
 		#if defined (__APPLE__)
 				int index = QCoreApplication::applicationDirPath().lastIndexOf("/");
-				QFileInfo info(QCoreApplication::applicationDirPath().left(index) + "/Resources/resources/sliceconfig/");
+			   QString srcDir = (QCoreApplication::applicationDirPath().left(index) + "/Resources/resources/sliceconfig/");
 		#else
-				QFileInfo info(QCoreApplication::applicationDirPath() + "/resources/sliceconfig/");
+		       QString srcDir = (QCoreApplication::applicationDirPath() + "/resources/sliceconfig/");
 		#endif
-				QString srcDir = info.path() + "/default/";
-				//copyDir(srcDir, configDirectory, true);
 #else
 		QString srcDir = QString(SOURCE_ROOT) + "/resources/sliceconfig";
 #endif

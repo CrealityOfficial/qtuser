@@ -122,8 +122,6 @@ namespace qtuser_qml
     int qmlAppMain(int argc, char* argv[], appFunc func)
     {
         qtuser_core::initializeLog(argc, argv);
-        qtuser_core::initializeConfig(argc, argv);
-
         int ret = 0;
         {
 #ifndef __APPLE__
@@ -131,8 +129,8 @@ namespace qtuser_qml
 #endif
             preSetDynamicLoadPath();
             QApplication app(argc, argv);
-
             QQmlApplicationEngine* engine = new QQmlApplicationEngine();
+
 
             setDynamicLoadPath(*engine);
             specifyOpenGL();
