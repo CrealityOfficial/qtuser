@@ -6,6 +6,7 @@
 #include <io.h>
 
 #include <fstream>
+#include <sstream>
 #include <set>
 #include <map>
 
@@ -22,6 +23,20 @@ std::wstring convert(const char* name)
 	std::wstring result(wstr);
 	free(wstr);
 	return result;
+}
+
+std::string convert(const wchar_t* name, char dfault = '?',
+	const std::locale& loc = std::locale())
+{
+	std::string file;
+
+	std::ostringstream stm;
+
+	const wchar_t* s = name;
+	while (*s != L'\0') {
+		stm << std::use_facet< std::ctype<wchar_t> >(loc).narrow(*s++, dfault);
+	}
+	return stm.str();
 }
 
 struct file_info
@@ -214,7 +229,11 @@ bool Check(FILETIME t1, FILETIME t2)
 	return uli1.QuadPart > uli2.QuadPart;
 }
 
+#if _WIN32
+int wmain(int argc, wchar_t* argv[])
+#else
 int main(int argc, char* argv[])
+#endif
 {
 	std::string inputs[2] = {
 		"gl/3.3/",
@@ -229,9 +248,9 @@ int main(int argc, char* argv[])
 	std::string inputDirRoot = std::string(CMAKE_MODULE) + "/../qtuser/3d/shaders/";
 	std::string outputDirRoot = std::string(CMAKE_MODULE) + "/../qtuser/3d/shaders/";
 	if (argc >= 2)
-		inputDirRoot = argv[1];
+		inputDirRoot = convert(argv[1]);
 	if (argc >= 3)
-		outputDirRoot = argv[2];
+		outputDirRoot = convert(argv[2]);
 
 	for (int i = 0; i < 2; ++i)
 	{

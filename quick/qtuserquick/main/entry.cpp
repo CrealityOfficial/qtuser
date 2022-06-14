@@ -6,6 +6,7 @@
 #include <QtQml/QQmlContext>
 #include <QFont>
 #include "qtusercore/module/systemutil.h"
+#include "stringutil/util.h"
 
 namespace qtuser_quick
 {
@@ -72,7 +73,13 @@ namespace qtuser_quick
 
 	int wQmlAppMain(int argc, wchar_t* argv[], QmlAppModule& app)
 	{
-		std::vector<char*> wargv(argc);
-		return qmlAppMain(argc, &wargv[0], app);
+		std::vector<std::string> 	argv_narrow;
+		std::vector<char*>	argv_ptrs(argc + 1, nullptr);
+		for (size_t i = 0; i < argc; ++i)
+			argv_narrow.emplace_back(stringutil::wchar2char(argv[i]));
+		for (size_t i = 0; i < argc; ++i)
+			argv_ptrs[i] = (char*)argv_narrow[i].data();
+
+		return qmlAppMain(argc, argv_ptrs.data(), app);
 	}
 }
