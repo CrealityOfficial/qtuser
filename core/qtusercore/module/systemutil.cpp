@@ -305,7 +305,7 @@ namespace qtuser_core
 	{
 #ifdef QT_NO_DEBUG
 		QFileInfo info(argv[0]);
-		QString name = QString("/%1/Log/").arg(info.baseName());
+		QString name = QString("Creality/%1/Log/").arg(info.baseName());
 		QString logDirectory = qtuser_core::getOrCreateAppDataLocation(name);
 		qDebug() << logDirectory;
 
@@ -329,8 +329,8 @@ namespace qtuser_core
 	void initializeConfig(int argc, char* argv[])
 	{
 		QFileInfo info(argv[0]);
-		QString name = QString("/%1/sliceconfig/").arg(info.baseName());
-		configDir = qtuser_core::getOrCreateAppDataLocation(name);
+		QString name = QString("Creality/%1/sliceconfig/").arg(info.baseName());
+		QString configDir = qtuser_core::getOrCreateAppDataLocation(name);
 		qDebug() << configDir;
 
 		//copy config ´æÔÚ²»¿½±´
