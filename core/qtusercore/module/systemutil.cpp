@@ -350,7 +350,7 @@ namespace qtuser_core
 #endif
 		if (!copyDir(srcDir, configDir, true))
 		{
-			LOGE("initializeConfig failed ! please check access right ! configDirectory:[%s],wordPath:[%s]", configDir, srcDir);
+			LOGE("initializeConfig failed ! please check access right ! configDirectory:[%s],wordPath:[%s]", configDir.toStdString().c_str(), srcDir.toStdString().c_str());
 			return;
 		}
 	}
