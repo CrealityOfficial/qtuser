@@ -122,6 +122,7 @@ namespace qtuser_qml
     int qmlAppMain(int argc, char* argv[], appFunc func)
     {
         qtuser_core::initializeLog(argc, argv);
+        qtuser_core::initializeConfig(argc, argv);
 
         int ret = 0;
         {
