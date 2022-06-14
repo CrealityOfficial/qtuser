@@ -21,5 +21,7 @@ namespace qtuser_core
 	QTUSER_CORE_API void initializeConfig(int argc, char* argv[]);
 
 	QTUSER_CORE_API void uninitializeLog();
+
+	static QString configDir = "";
 }
 #endif // creative_kernel_MATRIX_UTIL_H

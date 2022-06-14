@@ -330,11 +330,11 @@ namespace qtuser_core
 	{
 		QFileInfo info(argv[0]);
 		QString name = QString("/%1/sliceconfig/").arg(info.baseName());
-		QString configDirectory = qtuser_core::getOrCreateAppDataLocation(name);
-		qDebug() << configDirectory;
+		configDir = qtuser_core::getOrCreateAppDataLocation(name);
+		qDebug() << configDir;
 
 		//copy config ´æÔÚ²»¿½±´
-		QDir directory(configDirectory+"default/");
+		QDir directory(configDir +"default/");
 		if (directory.exists())
 		{
 			return;
@@ -348,11 +348,15 @@ namespace qtuser_core
 				QFileInfo info(QCoreApplication::applicationDirPath() + "/resources/sliceconfig/");
 		#endif
 				QString srcDir = info.path() + "/default/";
-				copyDir(srcDir, configDirectory, true);
+				//copyDir(srcDir, configDirectory, true);
 #else
-		QString workPath = QString(SOURCE_ROOT) + "/resources/sliceconfig";
-		copyDir(workPath, configDirectory, true);
+		QString srcDir = QString(SOURCE_ROOT) + "/resources/sliceconfig";
 #endif
+		if (!copyDir(srcDir, configDir, true))
+		{
+			LOGE("initializeConfig failed ! please check access right ! configDirectory:[%s],wordPath:[%s]", configDir, srcDir);
+			return;
+		}
 	}
 	void uninitializeLog()
 	{
