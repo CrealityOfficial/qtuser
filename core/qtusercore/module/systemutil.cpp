@@ -332,7 +332,7 @@ namespace qtuser_core
 		qDebug() << configDir;
 
 		//copy config ´æÔÚ²»¿½±´
-		QDir directory(configDir +"default/");
+		QDir directory(configDir +"/default/");
 		if (directory.exists())
 		{
 			return;
