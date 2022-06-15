@@ -18,7 +18,6 @@ QTUSER_CORE_API QString getUrlAddress(QString type);
 namespace qtuser_core
 {
 	QTUSER_CORE_API void initializeLog(int argc, char* argv[]);
-	QTUSER_CORE_API void initializeConfig();
 
 	QTUSER_CORE_API void uninitializeLog();
 }

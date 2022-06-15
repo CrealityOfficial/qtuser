@@ -258,49 +258,7 @@ void outputMessage(QtMsgType type, const QMessageLogContext& context, const QStr
 
 namespace qtuser_core
 {
-	//source源文件目录路径，destination目的文件目录，override文件存在是否覆盖
-	bool copyDir(const QString& source, const QString& destination, bool override)
-	{
-		QDir directory(source);
-		if (!directory.exists())
-		{
-			qDebug() << "不存在";
-			return false;
-		}
-		QString srcPath = QDir::toNativeSeparators(source);
-		if (!srcPath.endsWith(QDir::separator()))
-			srcPath += QDir::separator();
-		QString dstPath = QDir::toNativeSeparators(destination);
-		if (!dstPath.endsWith(QDir::separator()))
-			dstPath += QDir::separator();
-		bool error = false;
-		QStringList fileNames = directory.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden);
-		for (QStringList::size_type i = 0; i != fileNames.size(); ++i)
-		{
-			QString fileName = fileNames.at(i);
-			QString srcFilePath = srcPath + fileName;
-			QString dstFilePath = dstPath + fileName;
-			QFileInfo fileInfo(srcFilePath);
-			if (fileInfo.isFile() || fileInfo.isSymLink())
-			{
-				if (override)
-				{
-					QFile::setPermissions(dstFilePath, QFile::WriteOwner);
-				}
-				QFile::copy(srcFilePath, dstFilePath);
-			}
-			else if (fileInfo.isDir())
-			{
-				QDir dstDir(dstFilePath);
-				dstDir.mkpath(dstFilePath);
-				if (!copyDir(srcFilePath, dstFilePath, override))
-				{
-					error = true;
-				}
-			}
-		}
-		return !error;
-}
+
 	void initializeLog(int argc, char* argv[])
 	{
 #ifdef QT_NO_DEBUG
@@ -326,34 +284,7 @@ namespace qtuser_core
 
 		qDebug() << QString("----------> START LOG <-----------");
 	}
-	void initializeConfig()
-	{
-		QString configDir = qtuser_core::getOrCreateAppDataLocation("sliceconfig");
-		qDebug() << configDir;
 
-		//copy config 存在不拷贝
-		QDir directory(configDir +"/default/");
-		if (directory.exists())
-		{
-			return;
-		}
-#ifdef QT_NO_DEBUG
-
-		#if defined (__APPLE__)
-				int index = QCoreApplication::applicationDirPath().lastIndexOf("/");
-			   QString srcDir = (QCoreApplication::applicationDirPath().left(index) + "/Resources/resources/sliceconfig/");
-		#else
-		       QString srcDir = (QCoreApplication::applicationDirPath() + "/resources/sliceconfig/");
-		#endif
-#else
-		QString srcDir = QString(SOURCE_ROOT) + "/resources/sliceconfig";
-#endif
-		if (!copyDir(srcDir, configDir, true))
-		{
-			LOGE("initializeConfig failed ! please check access right ! configDirectory:[%s],wordPath:[%s]", configDir.toStdString().c_str(), srcDir.toStdString().c_str());
-			return;
-		}
-	}
 	void uninitializeLog()
 	{
 		qDebug() << QString("----------> END LOG <-----------");
