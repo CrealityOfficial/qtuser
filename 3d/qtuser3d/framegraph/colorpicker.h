@@ -16,7 +16,6 @@
 namespace qtuser_3d
 {
 	class ColorPicker;
-	typedef std::function<void(ColorPicker*)> selfPickerFunc;
 	typedef std::function<void(QImage& image)> requestCallFunc;
 
 	class TextureRenderTarget;
@@ -37,10 +36,6 @@ namespace qtuser_3d
 		bool pick(int x, int y, int* faceID) override;
 		bool pick(const QPoint& point, int* faceID) override;
 		void sourceMayChanged() override;
-
-		void setUseDelay(bool delay);
-
-		void setPickerFunc(selfPickerFunc func);
 		void setRequestCallback(requestCallFunc func);
 
 		void useSelfCameraSelector(bool use);
@@ -48,15 +43,10 @@ namespace qtuser_3d
 
 		void setDebugName(const QString& name);
 
-		bool getImageFinished();
-
 		Qt3DRender::QTexture2D* colorTexture();
 		void setTextureRenderTarget(TextureRenderTarget* textureRenderTarget);
 	public slots:
 		void captureCompleted();
-		void delayCapture();
-	signals:
-		void signalUpdate();
 	protected:
 		Qt3DRender::QClearBuffers* m_clearBuffer;
 		Qt3DRender::QRenderTargetSelector* m_renderTargetSelector;
@@ -71,13 +61,8 @@ namespace qtuser_3d
 		QScopedPointer<Qt3DRender::QRenderCaptureReply> m_captureReply;
 		QImage m_colorPickerImage;
 
-		QTimer* m_updateTimer;
-		QTimer* m_delayTimer;
-		bool    m_useDelay;
+		bool m_capturing;
 
-		bool m_createImageFinished;
-
-		selfPickerFunc m_pickerFunc;
 		requestCallFunc m_requestCallback;
 #ifdef _DEBUG
 		QString m_debugName;

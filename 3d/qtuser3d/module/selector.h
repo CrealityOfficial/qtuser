@@ -33,7 +33,8 @@ namespace qtuser_3d
 		void selectGroup(qtuser_3d::Pickable* pickable);
 		void updateFaceBases();
 
-		void selectPickables(QList<qtuser_3d::Pickable*>& onList, QList<qtuser_3d::Pickable*>& offList);
+		void selectMore(const QList<qtuser_3d::Pickable*>& pickables);
+		void selectPickables(const QList<qtuser_3d::Pickable*>& onList, const QList<qtuser_3d::Pickable*>& offList);
 		
 		Q_INVOKABLE void selectAll();
 		Q_INVOKABLE void selectNone();

@@ -6,6 +6,13 @@
 
 namespace qtuser_core
 {
+	class QuickNativeUpdater
+	{
+	public:
+		virtual ~QuickNativeUpdater() {}
+		virtual void invokeUpdate() = 0;   //from gui thread
+	};
+
 	class QTUSER_CORE_API QuickNativeRenderSystem : public QObject
 	{
 		Q_OBJECT
@@ -13,14 +20,17 @@ namespace qtuser_core
 		QuickNativeRenderSystem(QObject* parent = nullptr);
 		virtual ~QuickNativeRenderSystem() {}
 
+
 		virtual void initializeFromRenderThread() = 0;
 		virtual void unitializeFromRenderThread() = 0;
-		virtual void render() = 0;   // called from render thread
+		virtual bool render() = 0;   // called from render thread, true need update
 		virtual void synchronize() = 0;
 		virtual void updateContextSize(const QSize& size) = 0;
 
-	signals:
-		void signalUpdate();
+		void setQuickNativeUpdater(QuickNativeUpdater* updater);
+		void invokeUpdate();
+	protected:
+		QuickNativeUpdater* m_updater;
 	};
 }
 

@@ -31,7 +31,8 @@ public:
 	{
 		{
 			qtuser_core::OpenGLContextSaver saver;
-			m_item->_render();
+			if (m_item->_render())
+				update();
 			//qInfo() << "NativeRenderSystemWrapper render. thread " << QThread::currentThreadId();
 		}
 		m_item->window()->resetOpenGLState();
@@ -83,11 +84,11 @@ void QuickNativeRenderItem::setQuickNativeEventDispacher(qtuser_core::QuickNativ
 
 void QuickNativeRenderItem::setQuickNativeRenderSystem(qtuser_core::QuickNativeRenderSystem* renderSystem)
 {
-	if(m_renderSystem)
-		disconnect(m_renderSystem, SIGNAL(signalUpdate()), this, SLOT(update()));
+	if (m_renderSystem)
+		m_renderSystem->setQuickNativeUpdater(nullptr);
 	m_renderSystem = renderSystem;
-	if(m_renderSystem)
-		connect(m_renderSystem, SIGNAL(signalUpdate()), this, SLOT(update()));
+	if (m_renderSystem)
+		m_renderSystem->setQuickNativeUpdater(this);
 }
 
 void QuickNativeRenderItem::handleWindowChanged(QQuickWindow* win)
@@ -217,6 +218,11 @@ void QuickNativeRenderItem::keyReleaseEvent(QKeyEvent* event)
 		m_dispacher->keyReleaseEvent(event);
 }
 
+void QuickNativeRenderItem::invokeUpdate()
+{
+	update();
+}
+
 void QuickNativeRenderItem::_initialize()
 {
 	if (m_renderSystem)
@@ -229,10 +235,11 @@ void QuickNativeRenderItem::_uninitialize()
 		m_renderSystem->unitializeFromRenderThread();
 }
 
-void QuickNativeRenderItem::_render()
+bool QuickNativeRenderItem::_render()
 {
 	if (m_renderSystem)
-		m_renderSystem->render();
+		return m_renderSystem->render();
+	return false;
 }
 
 void QuickNativeRenderItem::_synchronize()

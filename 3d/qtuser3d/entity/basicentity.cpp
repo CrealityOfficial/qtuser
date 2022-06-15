@@ -66,6 +66,14 @@ namespace qtuser_3d
 		m_vertexBaseParameter->setValue(vertexBase);
 	}
 
+	void BasicEntity::setVisible(Qt3DCore::QNode* parent)
+	{
+		if (parent)
+			setParent(parent);
+		else
+			setParent((Qt3DCore::QNode*)nullptr);
+	}
+
 	void BasicEntity::setEffect(Qt3DRender::QEffect* effect)
 	{
 		Qt3DRender::QEffect* oldEffect = m_material->effect();

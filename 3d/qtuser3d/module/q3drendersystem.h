@@ -33,11 +33,7 @@ namespace qtuser_3d
 		void registerResidentNode(Qt3DCore::QNode* node);
 		void unRegisterResidentNode(Qt3DCore::QNode* node);
 		void renderRenderGraph(qtuser_3d::RenderGraph* graph);
-		void registerRenderGraph(qtuser_3d::RenderGraph* graph);
-		void unRegisterRenderGraph(qtuser_3d::RenderGraph* graph);
 		void unRegisterAll();
-
-		bool isRenderRenderGraph(qtuser_3d::RenderGraph* graph);
 
 		QOpenGLContext* sharedContext();
 		qtuser_core::RawOGL* rawOGL();
@@ -49,10 +45,11 @@ namespace qtuser_3d
 	protected:
 		void initializeFromRenderThread() override;
 		void unitializeFromRenderThread() override;
-		void render() override;
+		bool render() override;
 		void synchronize() override;
 		void updateContextSize(const QSize& size) override;
 
+		void bindRenderGraph();
 	public slots:
 		void applyRootEntity();
 	protected:
@@ -76,6 +73,7 @@ namespace qtuser_3d
 		qtuser_core::RawOGL* m_raw;
 		QOpenGLContext* m_sharedContext;
 		int m_times;
+		bool m_continous;
 	};
 }
 

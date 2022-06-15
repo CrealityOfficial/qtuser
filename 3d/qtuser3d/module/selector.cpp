@@ -272,7 +272,13 @@ namespace qtuser_3d
 		selectPickable(nullptr);
 	}
 
-	void Selector::selectPickables(QList<Pickable*>& onList, QList<Pickable*>& offList)
+	void Selector::selectMore(const QList<qtuser_3d::Pickable*>& pickables)
+	{
+		QList<qtuser_3d::Pickable*> offLists = selectionmPickables();
+		selectPickables(pickables, offLists);
+	}
+
+	void Selector::selectPickables(const QList<Pickable*>& onList, const QList<Pickable*>& offList)
 	{
 		if (selectNotifying)
 			return;
@@ -304,9 +310,9 @@ namespace qtuser_3d
 		}
 		else
 		{
-			for (SelectorTracer* tracer : m_selectorTracers)
+			for (SelectorTracer* tracer1 : m_selectorTracers)
 			{
-				tracer->onSelectionsChanged();
+				tracer1->onSelectionsChanged();
 			}
 		}
 

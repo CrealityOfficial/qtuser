@@ -22,6 +22,7 @@ namespace qtuser_3d
 }
 
 class QTUSER_QUICK_API QuickNativeRenderItem : public QQuickFramebufferObject
+	, public qtuser_core::QuickNativeUpdater
 {
 	friend class NativeFrameBufferObjectRenderer;
 	friend class NativeRenderSystemWrapper;
@@ -48,10 +49,11 @@ protected:
 	void hoverLeaveEvent(QHoverEvent* event) Q_DECL_OVERRIDE;
 	void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 	void keyReleaseEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
+	void invokeUpdate() Q_DECL_OVERRIDE;
 
 	void _initialize(); // called from renderer ctr
 	void _uninitialize(); // called from renderer ctr
-	void _render(); // called from Renderer
+	bool _render(); // called from Renderer
 	void _synchronize();
 protected:
 	qtuser_core::QuickNativeEventDispacher* m_dispacher;
