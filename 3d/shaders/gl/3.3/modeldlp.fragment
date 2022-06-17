@@ -27,7 +27,7 @@ uniform float supportCos = 0.5;
 uniform int hoverState = 0;
 uniform int waterState = 0;
 
-const float zcha = 0.01;
+const float zcha = 0.1;
 
 uniform vec4 stateColors[6];
 uniform vec3 water;
