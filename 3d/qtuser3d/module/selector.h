@@ -16,6 +16,7 @@ namespace qtuser_3d
 
 		void setPickerSource(qtuser_3d::FacePicker* picker);
 		void disableReverseSelect(bool disable);
+		void setEnabled(bool enabled);
 
 		void addPickable(qtuser_3d::Pickable* pickable);
 		void removePickable(qtuser_3d::Pickable* pickable);
@@ -59,6 +60,7 @@ namespace qtuser_3d
 		bool selectNotifying;
 
 		bool m_disableReverseSelect;
+		bool m_enabled;
 	};
 }
 

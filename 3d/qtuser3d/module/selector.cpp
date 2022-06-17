@@ -9,6 +9,7 @@ namespace qtuser_3d
 		, m_currentFaceBase(0)
 		, selectNotifying(false)
 		, m_disableReverseSelect(false)
+		, m_enabled(true)
 	{
 	}
 
@@ -24,6 +25,11 @@ namespace qtuser_3d
 	void Selector::disableReverseSelect(bool disable)
 	{
 		m_disableReverseSelect = disable;
+	}
+
+	void Selector::setEnabled(bool enabled)
+	{
+		m_enabled = enabled;
 	}
 
 	void Selector::changed(qtuser_3d::Pickable* pickable)
@@ -157,13 +163,13 @@ namespace qtuser_3d
 
 	bool Selector::hover(const QPoint& p)
 	{
+		if (!m_enabled)
+			return false;
+
 		Pickable* hoverEntity = nullptr;
 		int primitiveID = -1;
 		hoverEntity = check(p, &primitiveID);
 		
-		if (hoverEntity && hoverEntity->selected())
-			return false;
-
 		if (m_hoverPickable == hoverEntity)
 		{
 			if (hoverEntity && hoverEntity->isGroup())
@@ -189,6 +195,9 @@ namespace qtuser_3d
 			}
 		}
 
+		if (hoverEntity && hoverEntity->selected())
+			return true;
+
 		m_hoverPickable = hoverEntity;
 
 		if (m_hoverPickable && !m_hoverPickable->isGroup())
@@ -200,6 +209,9 @@ namespace qtuser_3d
 
 	void Selector::select(const QPoint& p, bool sGroup)
 	{
+		if (!m_enabled)
+			return;
+
 		if (selectNotifying)
 			return;
 
@@ -211,6 +223,9 @@ namespace qtuser_3d
 
 	void Selector::selectGroup(qtuser_3d::Pickable* pickable)
 	{
+		if (!m_enabled)
+			return;
+
 		QList<Pickable*> offList;
 		QList<Pickable*> onList = m_selectedPickables;
 		for (size_t i = 0; i < onList.size(); i++)
@@ -229,8 +244,12 @@ namespace qtuser_3d
 
 	void Selector::selectPickable(Pickable* pickable)
 	{
+		if (!m_enabled)
+			return;
+
 		if (selectNotifying)
 			return;
+		
 		QList<Pickable*> offList = m_selectedPickables;
 		QList<Pickable*> onList;
 		if (m_disableReverseSelect && !pickable)
@@ -242,6 +261,9 @@ namespace qtuser_3d
 
 	void Selector::appendSelect(qtuser_3d::Pickable* pickable)
 	{
+		if (!m_enabled)
+			return;
+
 		if (selectNotifying)
 			return;
 
@@ -255,6 +277,9 @@ namespace qtuser_3d
 
 	void Selector::selectAll()
 	{
+		if (!m_enabled)
+			return;
+
 		if (selectNotifying)
 			return;
 
@@ -280,6 +305,9 @@ namespace qtuser_3d
 
 	void Selector::selectPickables(const QList<Pickable*>& onList, const QList<Pickable*>& offList)
 	{
+		if (!m_enabled)
+			return;
+
 		if (selectNotifying)
 			return;
 
