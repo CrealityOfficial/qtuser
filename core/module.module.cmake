@@ -43,4 +43,6 @@ list(APPEND SRCS qtusercore/module/commandcenter.cpp
 				 qtusercore/module/contextbase.cpp
 				 qtusercore/module/glcompatibility.h
 				 qtusercore/module/glcompatibility.cpp
+				 qtusercore/module/cyclejob.h
+				 qtusercore/module/cyclejob.cpp
 				 )
