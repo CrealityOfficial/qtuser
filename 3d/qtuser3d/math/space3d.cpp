@@ -98,4 +98,14 @@ namespace qtuser_3d
 
 		return true;
 	}
+
+	Qt3DExtras::QTorusMesh* torusMesh()
+	{
+		Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(nullptr);
+		torusMesh->setRadius(2.0);
+		torusMesh->setMinorRadius(0.02);
+		torusMesh->setRings(100);
+		return torusMesh;
+	}
+
 }

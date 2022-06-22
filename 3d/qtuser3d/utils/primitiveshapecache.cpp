@@ -71,9 +71,9 @@ namespace qtuser_3d
 	{
 		if (name == "cylinder")
 			return BasicShapeCreateHelper::createCylinder();
-		else if ("arrow")
+		else if (name == "arrow")
 			return BasicShapeCreateHelper::createInstructions(0.02f, 0.8f, 0.08f, 0.3f);
-		else if ("scaleindicator")
+		else if (name == "scaleindicator")
 			return BasicShapeCreateHelper::createScaleIndicator(0.02f, 0.8f, 18.0f, 0.15f);
 		else
 			return nullptr;
