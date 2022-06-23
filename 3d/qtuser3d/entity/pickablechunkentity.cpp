@@ -1,7 +1,8 @@
 #include "pickablechunkentity.h"
 #include "qtuser3d/math/space3d.h"
 #include "qtuser3d/module/chunkbufferuser.h"
-#include <QThread>
+#include "qtuser3d/geometry/bufferhelper.h"
+#include "qtusercore/module/glcompatibility.h"
 
 namespace qtuser_3d
 {
@@ -14,13 +15,9 @@ namespace qtuser_3d
 		setObjectName("PickableChunkEntity");
 		m_geometry = new Qt3DRender::QGeometry(m_geometryRenderer);
 
-		m_positionBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
-		m_normalBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
-		m_flagBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
-
-		m_positionAttribute = new Qt3DRender::QAttribute(m_positionBuffer, Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, 3, 0);
-		m_normalAttribute = new Qt3DRender::QAttribute(m_normalBuffer, Qt3DRender::QAttribute::defaultNormalAttributeName(), Qt3DRender::QAttribute::Float, 3, 0);
-		m_flagAttribute = new Qt3DRender::QAttribute(m_flagBuffer, "vertexFlag", Qt3DRender::QAttribute::Float, 1, 0);
+		m_positionAttribute = BufferHelper::createDefaultVertexAttribute();
+		m_normalAttribute = BufferHelper::createDefaultNormalAttribute();
+		m_flagAttribute = BufferHelper::createAttribute("vertexFlag", Qt3DRender::QAttribute::Float, 1);
 
 		m_geometry->addAttribute(m_positionAttribute);
 		m_geometry->addAttribute(m_normalAttribute);
@@ -41,22 +38,12 @@ namespace qtuser_3d
 		if (m_chunkFaces <= 0) m_chunkFaces = 100;
 		if (m_chunks <= 0) m_chunks = 50;
 		m_chunkBytes = 3 * m_chunkFaces * sizeof(float);
-		int size = m_chunkBytes * m_chunks;
+		int vertexSize = 3 * m_chunkFaces * m_chunks;
 
-		m_positionByteArray.resize(size * 3);
-		m_positionByteArray.fill(0);
-		m_normalByteArray.resize(size * 3);
-		m_normalByteArray.fill(0);
-		m_flagByteArray.resize(size);
-		m_flagByteArray.fill(0);
-
-		m_positionBuffer->setData(m_positionByteArray);
-		m_normalBuffer->setData(m_normalByteArray);
-		m_flagBuffer->setData(m_flagByteArray);
-		m_positionAttribute->setCount(3 * m_chunkFaces * m_chunks);
-		m_normalAttribute->setCount(3 * m_chunkFaces * m_chunks);
-		m_flagAttribute->setCount(3 * m_chunkFaces * m_chunks);
-
+		BufferHelper::setAttributeCount(m_positionAttribute, vertexSize);
+		BufferHelper::setAttributeCount(m_normalAttribute, vertexSize);
+		BufferHelper::setAttributeCount(m_flagAttribute, vertexSize);
+		 
 		m_freeList.reserve(m_chunks);
 		for (int i = 0; i < m_chunks; ++i)
 			m_freeList << i;
@@ -85,49 +72,40 @@ namespace qtuser_3d
 	{
 		if (chunk < 0 || chunk >= m_chunks)
 			return;
-#ifdef TEST_TEST
-		qDebug() << "PickableChunkEntity update start";
 
-		QNode* pNode = (QNode*)parent();
-		setParent((QNode*)nullptr);
-		QThread::usleep(20);
-#endif
-		
-
-		int baseIndex = m_chunkBytes * chunk;
-		if (positionBytes)
-		{
-			m_positionBuffer->updateData(baseIndex * 3, *positionBytes);
-			m_positionByteArray.replace(baseIndex * 3, positionBytes->size(), *positionBytes);
-
-			QVector3D* position = (QVector3D*)positionBytes->data();
-			QByteArray normalBytes(positionBytes->size(), 0);
-			QVector3D* normal = (QVector3D*)normalBytes.data();
-
-			int n = positionBytes->size() / (3 * 3 * sizeof(float));
-
-			for (int i = 0; i < n; ++i)
-			{
-				QVector3D v0 = *(position + 3 * i);
-				QVector3D v1 = *(position + 3 * i + 1);
-				QVector3D v2 = *(position + 3 * i + 2);
-				QVector3D v01 = v1 - v0;
-				QVector3D v02 = v2 - v0;
-				QVector3D n = QVector3D::crossProduct(v01, v02);
-				n.normalize();
-				*normal++ = n;
-				*normal++ = n;
-				*normal++ = n;
-			}
-			m_normalBuffer->updateData(baseIndex * 3, normalBytes);
-			m_normalByteArray.replace(baseIndex * 3, normalBytes.size(), normalBytes);
-		}
+		int start = 3 * m_chunkFaces * chunk;
+		int end = 3 * m_chunkFaces * (chunk + 1);
+		qtuser_3d::BufferHelper::updatePositionNormalAttributes(m_positionAttribute,
+			positionBytes, m_normalAttribute, start, end);
+		///int baseIndex = m_chunkBytes * chunk;
+		///if (positionBytes)
+		///{
+		///	m_positionAttribute->buffer()->updateData(baseIndex * 3, *positionBytes);
+		///
+		///	QVector3D* position = (QVector3D*)positionBytes->data();
+		///	QByteArray normalBytes(positionBytes->size(), 0);
+		///	QVector3D* normal = (QVector3D*)normalBytes.data();
+		///
+		///	int n = positionBytes->size() / (3 * 3 * sizeof(float));
+		///
+		///	for (int i = 0; i < n; ++i)
+		///	{
+		///		QVector3D v0 = *(position + 3 * i);
+		///		QVector3D v1 = *(position + 3 * i + 1);
+		///		QVector3D v2 = *(position + 3 * i + 2);
+		///		QVector3D v01 = v1 - v0;
+		///		QVector3D v02 = v2 - v0;
+		///		QVector3D n = QVector3D::crossProduct(v01, v02);
+		///		n.normalize();
+		///		*normal++ = n;
+		///		*normal++ = n;
+		///		*normal++ = n;
+		///	}
+		///	m_normalAttribute->buffer()->updateData(baseIndex * 3, normalBytes);
+		///}
 
 		if (flagsBytes)
-		{
-			m_flagBuffer->updateData(baseIndex, *flagsBytes);
-			m_flagByteArray.replace(baseIndex, flagsBytes->size(), *flagsBytes);
-		}
+			m_flagAttribute->buffer()->updateData(m_chunkBytes * chunk, *flagsBytes);
 	}
 
 	void PickableChunkEntity::setFaceBase(QPoint faceBase)
@@ -185,9 +163,8 @@ namespace qtuser_3d
 		for (int i = 0; i < m_chunks; ++i)
 			m_freeList << i;
 
-		m_flagByteArray.fill(0);
 		m_users.fill(nullptr, m_chunks);
-		m_flagBuffer->updateData(0, m_flagByteArray);
+		qtuser_3d::BufferHelper::clearAttributeBuffer(m_flagAttribute);
 	}
 
 	void PickableChunkEntity::check(int faceID, Ray& ray, QVector3D& position, QVector3D& normal)
@@ -196,8 +173,8 @@ namespace qtuser_3d
 
 		if (index >= 0 && index < m_chunkFaces * m_chunks)
 		{
-			QVector3D* positionBuffer = (QVector3D*)m_positionBuffer->data().constData();
-			QVector3D* normalBuffer = (QVector3D*)m_normalBuffer->data().constData();
+			QVector3D* positionBuffer = (QVector3D*)m_positionAttribute->buffer()->data().constData();
+			QVector3D* normalBuffer = (QVector3D*)m_normalAttribute->buffer()->data().constData();
 			positionBuffer += 3 * index;
 			normalBuffer += 3 * index;
 

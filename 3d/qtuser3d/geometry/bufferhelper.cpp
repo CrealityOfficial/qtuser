@@ -1,4 +1,5 @@
 #include "qtuser3d/geometry/bufferhelper.h"
+#include "qtusercore/module/glcompatibility.h"
 
 namespace qtuser_3d
 {
@@ -50,5 +51,119 @@ namespace qtuser_3d
 		Qt3DRender::QAttribute* indexAttribute = new Qt3DRender::QAttribute(indexBuffer, Qt3DRender::QAttribute::UnsignedInt, 1, count);
 		indexAttribute->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
 		return indexAttribute;
+	}
+
+	Qt3DRender::QAttribute* BufferHelper::createAttribute(const QString& name, Qt3DRender::QAttribute::VertexBaseType vertexBaseType, uint vertexSize)
+	{
+		Qt3DRender::QBuffer* buffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+		return new Qt3DRender::QAttribute(buffer, name, vertexBaseType, vertexSize, 0);
+	}
+
+	Qt3DRender::QAttribute* BufferHelper::createDefaultVertexAttribute()
+	{
+		uint vertexSize = 3;
+#if QT_USE_GLES
+		//vertexSize = 4;
+#endif
+		return createAttribute(Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, vertexSize);
+	}
+
+	Qt3DRender::QAttribute* BufferHelper::createDefaultNormalAttribute()
+	{
+		return createAttribute(Qt3DRender::QAttribute::defaultNormalAttributeName(), Qt3DRender::QAttribute::Float, 3);
+	}
+
+	void BufferHelper::setAttributeCount(Qt3DRender::QAttribute* attribute, int count)
+	{
+		if (!attribute || count < 0)
+			return;
+
+		int bytesSizeNeed = attribute->vertexSize() * sizeof(float) * count;
+		QByteArray bytes = attribute->buffer()->data();
+		if (bytes.size() < bytesSizeNeed)
+		{
+			bytes.resize(bytesSizeNeed);
+			bytes.fill(0);
+		}
+
+		attribute->buffer()->setData(bytes);
+		attribute->setCount(count);
+	}
+
+	void BufferHelper::clearAttributeBuffer(Qt3DRender::QAttribute* attribute)
+	{
+		if (!attribute)
+			return;
+
+		QByteArray bytes = attribute->buffer()->data();
+		bytes.fill(0);
+		attribute->buffer()->updateData(0, bytes);
+	}
+
+	qtuser_3d::Box3D BufferHelper::calculateVertexAttributeBox(Qt3DRender::QAttribute* attribute, int start, int end, const QMatrix4x4& matrix)
+	{
+		qtuser_3d::Box3D box;
+		if (attribute)
+		{
+			int count = attribute->count();
+			if(start >= 0 && start <end && end < count)
+			{
+				QByteArray bytes = attribute->buffer()->data();
+				int vertexSize = attribute->vertexSize();
+
+				for (int i = start; i < end; ++i)
+				{
+					QVector3D* position = reinterpret_cast<QVector3D*>(bytes.data() + i * vertexSize * sizeof(float));
+					box += matrix * *position;
+				}
+			}
+		}
+		return box;
+	}
+
+	void BufferHelper::updatePositionNormalAttributes(Qt3DRender::QAttribute* positionAttribute, QByteArray* positionBytes, Qt3DRender::QAttribute* normalAttribute, int start, int end)
+	{
+		if (!positionAttribute || !normalAttribute)
+			return;
+
+		int count = positionAttribute->count();
+		int ncount = normalAttribute->count();
+
+		if (count != ncount)
+			return;
+
+		if (start >= 0 && start < end && end < count)
+		{
+			int vertexCount = end - start;
+			if (positionBytes)
+			{
+				int byteSizes = positionBytes->size();
+				assert(byteSizes == vertexCount * positionAttribute->vertexSize() * sizeof(float));
+				int positionOffset = start * positionAttribute->vertexSize() * sizeof(float);
+				positionAttribute->buffer()->updateData(positionOffset, *positionBytes);
+
+				int normalOffset = start * 3 * sizeof(float);
+				QByteArray normalBytes(3 * vertexCount * sizeof(float), 0);
+				QVector3D* normal = (QVector3D*)normalBytes.data();
+
+				char* position = positionBytes->data();
+
+				int n = vertexCount / 3;
+				for (int i = 0; i < n; ++i)
+				{
+					QVector3D* v0 = (QVector3D*)(position + sizeof(float) * (positionAttribute->vertexSize() * i));
+					QVector3D* v1 = (QVector3D*)(position + sizeof(float) * (positionAttribute->vertexSize() * i + 1));
+					QVector3D* v2 = (QVector3D*)(position + sizeof(float) * (positionAttribute->vertexSize() * i + 2));
+					QVector3D v01 = *v1 - *v0;
+					QVector3D v02 = *v2 - *v0;
+					QVector3D norm = QVector3D::crossProduct(v01, v02);
+					norm.normalize();
+					*normal++ = norm;
+					*normal++ = norm;
+					*normal++ = norm;
+				}
+				normalAttribute->buffer()->updateData(normalOffset, normalBytes);
+			}
+		}
 	}
 }

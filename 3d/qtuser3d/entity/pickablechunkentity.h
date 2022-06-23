@@ -43,14 +43,6 @@ namespace qtuser_3d
 		Qt3DRender::QAttribute* m_normalAttribute;
 		Qt3DRender::QAttribute* m_flagAttribute;
 
-		Qt3DRender::QBuffer* m_positionBuffer;
-		Qt3DRender::QBuffer* m_normalBuffer;
-		Qt3DRender::QBuffer* m_flagBuffer;
-
-		QByteArray m_positionByteArray;
-		QByteArray m_normalByteArray;
-		QByteArray m_flagByteArray;
-
 		QList<int> m_freeList;
 		int m_chunkFaces;
 		int m_chunkBytes;
