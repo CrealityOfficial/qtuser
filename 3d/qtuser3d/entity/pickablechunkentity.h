@@ -17,8 +17,6 @@ namespace qtuser_3d
 		virtual ~PickableChunkEntity();
 
 		void create(int chunkFaces, int chunks);
-		void getPositionNormal(int chunk, QVector3D* position, QVector3D* normal);
-
 		void setFaceBase(QPoint faceBase);
 
 		int freeChunk() override;
@@ -29,7 +27,7 @@ namespace qtuser_3d
 		void releaseChunk(int chunk) override;
 		void updateChunk(int chunk, QByteArray* positionBytes, QByteArray* flagsBytes) override;
 		void releaseAllChunks();
-		void check(int faceID, Ray& ray, QVector3D& position, QVector3D& normal) override;
+		void check(int faceID, const Ray& ray, QVector3D& position, QVector3D& normal) override;
 		void setChunkUser(int chunk, ChunkBufferUser* user) override;
 		ChunkBufferUser* chunkUser(int chunk) override;
 		bool faceIDIn(int faceID);

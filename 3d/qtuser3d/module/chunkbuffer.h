@@ -20,7 +20,7 @@ namespace qtuser_3d
 		virtual void setChunkUser(int chunk, ChunkBufferUser* user) = 0;
 		virtual ChunkBufferUser* chunkUser(int chunk) = 0;
 		virtual void updateChunk(int chunk, QByteArray* positionArray, QByteArray* flagArray) = 0;
-		virtual void check(int faceID, Ray& ray, QVector3D& position, QVector3D& normal) = 0;
+		virtual void check(int faceID, const Ray& ray, QVector3D& position, QVector3D& normal) = 0;
 	};
 }
 #endif // CHUNKBUFFER_1595811337905_H

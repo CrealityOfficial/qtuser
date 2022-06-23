@@ -1,5 +1,6 @@
 #include "qtuser3d/geometry/bufferhelper.h"
 #include "qtusercore/module/glcompatibility.h"
+#include "qtuser3d/math/space3d.h"
 
 namespace qtuser_3d
 {
@@ -151,9 +152,9 @@ namespace qtuser_3d
 				int n = vertexCount / 3;
 				for (int i = 0; i < n; ++i)
 				{
-					QVector3D* v0 = (QVector3D*)(position + sizeof(float) * (positionAttribute->vertexSize() * i));
-					QVector3D* v1 = (QVector3D*)(position + sizeof(float) * (positionAttribute->vertexSize() * i + 1));
-					QVector3D* v2 = (QVector3D*)(position + sizeof(float) * (positionAttribute->vertexSize() * i + 2));
+					QVector3D* v0 = (QVector3D*)(position + sizeof(float) * positionAttribute->vertexSize() * (3 * i));
+					QVector3D* v1 = (QVector3D*)(position + sizeof(float) * positionAttribute->vertexSize() * (3 * i + 1));
+					QVector3D* v2 = (QVector3D*)(position + sizeof(float) * positionAttribute->vertexSize() * (3 * i + 2));
 					QVector3D v01 = *v1 - *v0;
 					QVector3D v02 = *v2 - *v0;
 					QVector3D norm = QVector3D::crossProduct(v01, v02);
@@ -164,6 +165,69 @@ namespace qtuser_3d
 				}
 				normalAttribute->buffer()->updateData(normalOffset, normalBytes);
 			}
+		}
+	}
+
+	void BufferHelper::updateOneStrideAttributes(Qt3DRender::QAttribute* attribute, QByteArray* flagsBytes, int start, int end)
+	{
+		if (!attribute || !flagsBytes)
+			return;
+
+		int count = attribute->count();
+		if (start >= 0 && start < end && end < count)
+		{
+			int vertexCount = end - start;
+			int byteSizes = flagsBytes->size();
+			assert(byteSizes == vertexCount * attribute->vertexSize() * sizeof(float));
+			int offset = start * attribute->vertexSize() * sizeof(float);
+			attribute->buffer()->updateData(offset, *flagsBytes);
+		}
+	}
+
+	void BufferHelper::releaseAttributes(QList<Qt3DRender::QAttribute*>& attributes, int start, int end)
+	{
+		for (Qt3DRender::QAttribute* attribute : attributes)
+			releaseAttribute(attribute, start, end);
+	}
+
+	void BufferHelper::releaseAttribute(Qt3DRender::QAttribute* attribute, int start, int end)
+	{
+		if (!attribute)
+			return;
+
+		int count = attribute->count();
+		if (start >= 0 && start < end && end < count)
+		{
+			int vertexCount = end - start;
+			QByteArray bytes;
+			bytes.resize(vertexCount * attribute->vertexSize() * sizeof(float));
+			bytes.fill(0);
+			int offset = start * attribute->vertexSize() * sizeof(float);
+			attribute->buffer()->updateData(offset, bytes);
+		}
+	}
+
+	void BufferHelper::attributeRayCheck(Qt3DRender::QAttribute* positionAttribute, Qt3DRender::QAttribute* normalAttribute, int faceIndex,
+		const Ray& ray, QVector3D& position, QVector3D& normal)
+	{
+		if (!positionAttribute || !normalAttribute)
+			return;
+
+		int count = positionAttribute->count();
+		int ncount = normalAttribute->count();
+
+		if (count != ncount)
+			return;
+
+		int vertexIndex = 3 * faceIndex;
+		if (vertexIndex >= 0 && vertexIndex < count)
+		{
+			QVector3D* positionPtr = (QVector3D*)(positionAttribute->buffer()->data().data() + sizeof(float) * positionAttribute->vertexSize() * vertexIndex);
+			QVector3D* normalPtr = (QVector3D*)(normalAttribute->buffer()->data().data() + sizeof(float) * positionAttribute->vertexSize() * vertexIndex);
+
+			normal = *normalPtr;
+			QVector3D v0 = *(positionPtr);
+			lineCollidePlane(v0, normal, ray, position);
 		}
 	}
 }
