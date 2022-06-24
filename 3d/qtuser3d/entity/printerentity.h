@@ -27,6 +27,9 @@ namespace qtuser_3d
 
 		virtual void visibleBottomColor(int type)=0;
 
+		virtual void drawBedFaces(int faceNum) =0;
+
+		virtual void onCheckBed(QList<Box3D>& boxes)=0;
 	};
 }
 #endif // _RENDERHELPER_PRINTERENTITY_1588651416007_H
