@@ -229,11 +229,7 @@ bool Check(FILETIME t1, FILETIME t2)
 	return uli1.QuadPart > uli2.QuadPart;
 }
 
-#if _WIN32
-int wmain(int argc, wchar_t* argv[])
-#else
 int main(int argc, char* argv[])
-#endif
 {
 	std::string inputs[2] = {
 		"gl/3.3/",
@@ -248,9 +244,9 @@ int main(int argc, char* argv[])
 	std::string inputDirRoot = std::string(CMAKE_MODULE) + "/../qtuser/3d/shaders/";
 	std::string outputDirRoot = std::string(CMAKE_MODULE) + "/../qtuser/3d/shaders/";
 	if (argc >= 2)
-		inputDirRoot = convert(argv[1]);
+		inputDirRoot = argv[1];
 	if (argc >= 3)
-		outputDirRoot = convert(argv[2]);
+		outputDirRoot = argv[2];
 
 	for (int i = 0; i < 2; ++i)
 	{
