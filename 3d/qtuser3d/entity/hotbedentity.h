@@ -17,6 +17,8 @@ namespace qtuser_3d
 		void setVisibility(int faceIndex, bool visibility);
 		void setColor(const QVector4D& color);
 		void setFaceNum(int faceNum);
+		int faceNum();
+		void clearData();
 		void checkBed(QList<Box3D>& boxes);
 	protected:
 		int m_faceNum;
