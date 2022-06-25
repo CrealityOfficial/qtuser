@@ -5,6 +5,8 @@
 #include <QtCore/QDir>
 #include <QtWidgets/QApplication>
 #include <QtCore/QStandardPaths>
+#include <QtGui/QSurface>
+#include <QtGui/QSurfaceFormat>
 #include <QtCore/QDateTime>
 #include <QSettings>
 
