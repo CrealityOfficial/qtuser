@@ -1,5 +1,6 @@
 #include "pickable.h"
 #include "qtuser3d/module/facepicker.h"
+#include <QtCore/QDebug>
 
 namespace qtuser_3d
 {
@@ -162,7 +163,8 @@ namespace qtuser_3d
 				*primitiveID = _primitiveID;
 
 #ifdef _DEBUG
-			//qDebug() << "Face ID "<< faceID <<" Primitive ID " << _primitiveID;
+			if(pickable)
+				qDebug() << "Face ID "<< faceID <<" Primitive ID " << _primitiveID;
 #endif
 		}
 
