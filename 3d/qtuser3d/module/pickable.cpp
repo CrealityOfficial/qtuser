@@ -175,10 +175,7 @@ namespace qtuser_3d
 	{
 		bool check = false;
 		if (picker)
-		{
-			int faceID = -1;
-			check = picker->pick(point, &faceID);	
-		}
+			check = picker->pick(point, faceID);	
 
 		return check;
 	}
