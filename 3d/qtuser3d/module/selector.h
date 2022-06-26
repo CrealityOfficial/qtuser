@@ -24,6 +24,7 @@ namespace qtuser_3d
 		void removeTracer(qtuser_3d::SelectorTracer* tracer);
 		QList<qtuser_3d::Pickable*> selectionmPickables();
 
+		bool facePick(const QPoint& p, int* faceID);
 		qtuser_3d::Pickable* check(const QPoint& p, int* primitiveID = nullptr);
 
 		void clearHover();

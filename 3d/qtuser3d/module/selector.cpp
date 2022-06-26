@@ -92,6 +92,11 @@ namespace qtuser_3d
 		return m_selectedPickables;
 	}
 
+	bool Selector::facePick(const QPoint& p, int* faceID)
+	{
+		return checkPickerColor(m_pickSource, p, faceID);
+	}
+
 	Pickable* Selector::check(const QPoint& p, int* primitiveID)
 	{
 		Pickable* pickable = checkPickableFromList(m_pickSource, p, m_pickables, primitiveID);

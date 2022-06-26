@@ -58,5 +58,6 @@ namespace qtuser_3d
 
 	class FacePicker;
 	QTUSER_3D_API Pickable* checkPickableFromList(FacePicker* picker, QPoint point, QList<Pickable*>& list, int* primitiveID);
+	QTUSER_3D_API bool checkPickerColor(FacePicker* picker, QPoint point, int* faceID);
 }
 #endif // QTUSER_3D_PICKABLE_1595165203011_H
