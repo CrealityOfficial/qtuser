@@ -171,10 +171,4 @@ namespace qtuser_3d
 		}
 		return nullptr;
 	}
-
-	int PickableChunkEntity::chunkIndex(int chunkID)
-	{
-		int index = -1;
-		return index;
-	}
 }
