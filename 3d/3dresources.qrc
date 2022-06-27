@@ -25,10 +25,8 @@
         <file>shaders/pickFaceFlag.vert</file>
 		<file>shaders/pickFaceChunk.frag</file>
         <file>shaders/pickFaceChunk.vert</file>
-        <file>shaders/slicepreview.vert</file>
-        <file>shaders/slicepreview.tcs</file>
-        <file>shaders/slicepreview.tes</file>             
-        <file>shaders/slicepreview.frag</file>
+        <file>shaders/slicepreviewNoTess.vert</file>     
+        <file>shaders/slicepreviewNoTess.frag</file>                          
         <file>shaders/slicepreviewAD.vert</file>
         <file>shaders/slicepreviewAD.frag</file>
         <file>shaders/printergrid.vert</file>
