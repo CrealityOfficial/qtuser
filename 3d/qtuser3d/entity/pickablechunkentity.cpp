@@ -1,6 +1,5 @@
 #include "pickablechunkentity.h"
 #include "qtuser3d/math/space3d.h"
-#include "qtuser3d/module/chunkbufferuser.h"
 #include "qtuser3d/geometry/bufferhelper.h"
 #include "qtusercore/module/glcompatibility.h"
 
@@ -47,8 +46,6 @@ namespace qtuser_3d
 		m_freeList.reserve(m_chunks);
 		for (int i = 0; i < m_chunks; ++i)
 			m_freeList << i;
-
-		m_users.fill(nullptr, m_chunks);
 	}
 
 	int PickableChunkEntity::freeChunk()
@@ -122,7 +119,6 @@ namespace qtuser_3d
 		BufferHelper::releaseAttribute(m_flagAttribute, start, end);
 
 		m_freeList << chunk;
-		m_users[chunk] = nullptr;
 	}
 
 	void PickableChunkEntity::releaseAllChunks()
@@ -132,43 +128,11 @@ namespace qtuser_3d
 		for (int i = 0; i < m_chunks; ++i)
 			m_freeList << i;
 
-		m_users.fill(nullptr, m_chunks);
 		BufferHelper::clearAttributeBuffer(m_flagAttribute);
 	}
 
 	void PickableChunkEntity::check(int faceID, const Ray& ray, QVector3D& position, QVector3D& normal)
 	{
-		int index = faceID - m_faceRange.x();
-		if (index >= 0 && index < m_chunkFaces * m_chunks)
-			BufferHelper::attributeRayCheck(m_positionAttribute, m_normalAttribute, index,
-				ray, position, normal);
-	}
 
-	void PickableChunkEntity::setChunkUser(int chunk, ChunkBufferUser* user)
-	{
-		if (chunk >= 0 && chunk < m_chunks)
-			m_users[chunk] = user;
-	}
-
-	ChunkBufferUser* PickableChunkEntity::chunkUser(int chunk)
-	{
-		if (chunk >= 0 && chunk < m_chunks)
-			return m_users[chunk];
-	
-		return nullptr;
-	}
-
-	ChunkBufferUser* PickableChunkEntity::chunkUserFromFaceID(int faceID)
-	{
-		if (faceID >= m_faceRange.x() && faceID < m_faceRange.y())
-		{
-			int chunk = (faceID - m_faceRange.x()) / m_chunkFaces;
-			ChunkBufferUser* user = chunkUser(chunk);
-
-			if (user && !user->tracked())
-				user = nullptr;
-			return user;
-		}
-		return nullptr;
 	}
 }
