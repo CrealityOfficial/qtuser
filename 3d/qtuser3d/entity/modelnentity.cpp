@@ -48,6 +48,7 @@ namespace qtuser_3d
 	void ModelNEntity::setBoxVisibility(bool visible)
 	{
 		m_boxEntity->setParent(visible ? (Qt3DCore::QNode*)this->parent() : nullptr);
+		m_convexXYEntity->setParent(visible ? (Qt3DCore::QNode*)this->parent() : nullptr);
 	}
 
 	void ModelNEntity::updateBoxLocal(const Box3D& box, const QMatrix4x4& parentMatrix)
@@ -63,7 +64,10 @@ namespace qtuser_3d
 	void ModelNEntity::updateConvex(QVector<QVector3D>& points, QMatrix4x4& matrix, bool loop)
 	{
 		m_convexXYEntity->updateGeometry(points, loop);
-		m_convexXYEntity->setPose(matrix);
+		//m_convexXYEntity->setPose(matrix);
+		QMatrix4x4 matrix2;
+		matrix2.setToIdentity();
+		m_convexXYEntity->setPose(matrix2);
 	}
 
 	void ModelNEntity::enterSupportStatus()
