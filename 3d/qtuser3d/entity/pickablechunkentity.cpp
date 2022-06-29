@@ -133,6 +133,18 @@ namespace qtuser_3d
 
 	void PickableChunkEntity::check(int faceID, const Ray& ray, QVector3D& position, QVector3D& normal)
 	{
+		int index = faceID - m_faceRange.x();
 
+		if (index >= 0 && index < m_chunkFaces * m_chunks)
+		{
+			///QVector3D* positionBuffer = (QVector3D*)m_positionBuffer->data().constData();
+			///QVector3D* normalBuffer = (QVector3D*)m_normalBuffer->data().constData();
+			///positionBuffer += 3 * index;
+			///normalBuffer += 3 * index;
+			///
+			///normal = *normalBuffer;
+			///QVector3D v0 = *(positionBuffer);
+			///lineCollidePlane(v0, normal, ray, position);
+		}
 	}
 }
