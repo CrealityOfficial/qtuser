@@ -4,7 +4,7 @@
 #include <Qt3DCore/QEntity>
 #include "qtuser3d/camera/screencamera.h"
 #include "qtuser3d/math/box3d.h"
-
+#include "qtuser3d/entity/hotbedentity.h"
 
 namespace qtuser_3d
 {
@@ -27,7 +27,7 @@ namespace qtuser_3d
 
 		virtual void visibleBottomColor(int type)=0;
 
-		virtual void drawBedFaces(int faceNum) =0;
+		virtual void drawBedFaces(bedType _bedType) =0;
 
 		virtual void onCheckBed(QList<Box3D>& boxes)=0;
 	};

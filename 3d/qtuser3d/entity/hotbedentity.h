@@ -5,23 +5,32 @@
 
 namespace qtuser_3d
 {
+	enum class bedType
+	{
+		CR_10_Inspire_Pro,
+		CR_GX,
+		CR_GX01,
+		None
+	};
+
+
 	class Faces;
 	class QTUSER_3D_API HotbedEntity : public BasicEntity
 	{
 		Q_OBJECT
 	public:
-		HotbedEntity(Qt3DCore::QNode* parent = nullptr, int faceNum=0);
+		HotbedEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~HotbedEntity();
 
-		void drawFace(int faceNum);
+		void drawFace(bedType _bedType);
 		void setVisibility(int faceIndex, bool visibility);
 		void setColor(const QVector4D& color);
-		void setFaceNum(int faceNum);
-		int faceNum();
+		//void setBedType(bedType _bedType);
+		//int faceNum();
 		void clearData();
 		void checkBed(QList<Box3D>& boxes);
 	protected:
-		int m_faceNum;
+		bedType m_bedType;
 		std::vector<Faces*> m_bedFaces;
 		std::vector<Box3D> m_hotZone;
 		std::vector<bool> m_isHots;
