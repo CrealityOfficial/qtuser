@@ -276,7 +276,8 @@ namespace qtuser_core
 		QString applicationDir = QCoreApplication::applicationDirPath();
 		qDebug() << "applicationDir: " << applicationDir;
 
-		dynamicPathList << applicationDir;
+		if(!dynamicPathList.contains(applicationDir))
+			dynamicPathList << applicationDir;
 #ifdef Q_OS_OSX
 		qDebug() << "OS OSX setDynamicLoadPath";
 		dynamicPathList << QCoreApplication::applicationDirPath() + "/../Frameworks";
