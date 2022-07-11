@@ -388,6 +388,9 @@ namespace qtuser_3d
 		{
 			setVisibility(n, false);
 		}
+		m_bedFaces.clear();
+		m_isHots.clear();
+		m_hotZone.clear();
 		//setFaceNum(0);
 	}
 
