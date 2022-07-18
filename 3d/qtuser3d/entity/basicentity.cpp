@@ -1,7 +1,7 @@
 #include "basicentity.h"
-#include <QThread>
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
+#include "qtuser3d/geometry/geometrycreatehelper.h"
 
 namespace qtuser_3d
 {
@@ -113,6 +113,14 @@ namespace qtuser_3d
 
 		if(geometry)
 			m_geometryRenderer->setPrimitiveType(type);
+	}
+
+	void BasicEntity::setAttribute(AttributeShade* attribute1, AttributeShade* attribute2,
+		AttributeShade* attribute3, AttributeShade* attribute4, AttributeShade* attribute5,
+		Qt3DRender::QGeometryRenderer::PrimitiveType type)
+	{
+		setGeometry(GeometryCreateHelper::create(this, attribute1, attribute2, attribute3,
+			attribute4, attribute5), type);
 	}
 
 	Qt3DRender::QGeometry* BasicEntity::geometry()

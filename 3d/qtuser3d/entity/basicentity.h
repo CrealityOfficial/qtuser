@@ -10,6 +10,7 @@
 #include <Qt3DRender/QEffect>
 
 #include <Qt3DRender/QBlendEquationArguments>
+#include "qtuser3d/geometry/attribute.h"
 
 namespace qtuser_3d
 {
@@ -32,6 +33,11 @@ namespace qtuser_3d
 		void setPose(const QMatrix4x4& matrix);
 		QMatrix4x4 pose() const;
 		void setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles);
+		void setAttribute(AttributeShade* attribute1 = nullptr,
+			AttributeShade* attribute2 = nullptr, AttributeShade* attribute3 = nullptr,
+			AttributeShade* attribute4 = nullptr, AttributeShade* attribute5 = nullptr,
+			Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles);
+
 		Qt3DRender::QGeometry* geometry();
 		void replaceGeometryRenderer(Qt3DRender::QGeometryRenderer* geometryRenderer);
 
