@@ -66,7 +66,8 @@ namespace qtuser_core
 			break;
 		case OpenSaveState::oss_external_open:
 		case OpenSaveState::oss_external_save:
-			filterList = generateFilters(m_externalFilterList);
+			if(m_externalHandler)
+				filterList = generateFilters(m_externalHandler->suffixesFromFilter());
 			break;
 		default:
 			break;
@@ -103,7 +104,7 @@ namespace qtuser_core
 		QString allSuffix;
 		for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin(); it != handlers.end(); ++it)
 		{
-			QStringList enableFilters = it.value()->enableFilters();
+			QStringList enableFilters = it.value()->suffixesFromFilter();
 			for (const QString& ext : enableFilters)
 			{
 				QString suffix = QString("*.%1 ").arg(ext);
@@ -121,32 +122,21 @@ namespace qtuser_core
 	QString CXFileOpenAndSaveManager::generateFilterFromHandlers(bool saveState)
 	{
 		QMap<QString, CXHandleBase*>& handlers = saveState ? m_saveHandlers : m_openHandlers;
-		QString filter;
-		QStringList extensions;
-		QStringList enableFilters;
-		filter += "FILES (";
-		if (m_externalHandler)
-		{
-			enableFilters = m_externalFilterList;
-		}
-		else
-		{
-			for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin(); it != handlers.end(); ++it)
-			{
-				enableFilters << it.value()->enableFilters();
-			}
-		}
-		for (const QString& ext : enableFilters)
-		{
-			if (!extensions.contains(ext))
-			{
-				QString suffix = QString("*.%1 ").arg(ext);
-				filter += suffix;
-				extensions << ext;
-			}
-		}
 
-		filter += ")";
+		QList<CXHandleBase*> uniqueHandlers;
+		for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin();
+			it != handlers.end(); ++it)
+		{
+			if (!uniqueHandlers.contains(it.value()))
+				uniqueHandlers.append(it.value());
+		}
+		QString filter;
+		for (CXHandleBase* handle : uniqueHandlers)
+		{
+			filter += handle->filter();
+			if (handle != uniqueHandlers.back())
+				filter += ";;";
+		}
 
 		return filter;
 	}
@@ -205,15 +195,12 @@ namespace qtuser_core
 		save(handle);
 	}
 
-	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver, const QStringList& filters)
+	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver)
 	{
 		m_State = OpenSaveState::oss_open;
 		if (receiver)
 		{
 			m_externalHandler = receiver;
-			m_externalFilterList = filters;
-			if (m_externalFilterList.empty())
-				m_externalFilterList = receiver->supportFilters();
 			m_State = OpenSaveState::oss_external_open;
 		}
 
@@ -233,15 +220,12 @@ namespace qtuser_core
 		}
 	}
 
-	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver, const QStringList& filters)
+	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver)
 	{
 		m_State = OpenSaveState::oss_save;
 		if (receiver)
 		{
 			m_externalHandler = receiver;
-			m_externalFilterList = filters;
-			if (m_externalFilterList.empty())
-				m_externalFilterList = receiver->supportFilters();
 			m_State = OpenSaveState::oss_external_save;
 		}
 
@@ -442,7 +426,7 @@ namespace qtuser_core
 	void CXFileOpenAndSaveManager::registerOpenHandler(CXHandleBase* handler)
 	{
 		if (handler)
-			registerOpenHandler(handler->supportFilters(), handler);
+			registerOpenHandler(handler->suffixesFromFilter(), handler);
 	}
 
 	void CXFileOpenAndSaveManager::registerOpenHandler(const QStringList& suffixes, CXHandleBase* handler)
@@ -472,7 +456,7 @@ namespace qtuser_core
 	void CXFileOpenAndSaveManager::registerSaveHandler(CXHandleBase* handler)
 	{
 		if (handler)
-			registerSaveHandler(handler->supportFilters(), handler);
+			registerSaveHandler(handler->suffixesFromFilter(), handler);
 	}
 
 	void CXFileOpenAndSaveManager::registerSaveHandler(const QStringList& suffixes, CXHandleBase* handler)
@@ -617,7 +601,7 @@ void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
 			return;
 
 		QString fileName = QFileDialog::getSaveFileName(
-			nullptr, QObject::tr("OpenFile"),
+			nullptr, QObject::tr("SaveFile"),
 			QString(), filter);
 
 		if (fileName.isEmpty())

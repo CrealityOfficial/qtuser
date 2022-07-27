@@ -46,8 +46,8 @@ namespace qtuser_core
 		void addCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback);
 		void removeCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback);
 	public:
-		void open(CXHandleBase* receiver = nullptr, const QStringList& filters = QStringList());
-		void save(CXHandleBase* receiver = nullptr, const QStringList& filters = QStringList());
+		void open(CXHandleBase* receiver = nullptr);
+		void save(CXHandleBase* receiver = nullptr);
 
 		Q_INVOKABLE void qOpen(QObject* receiver);
 		Q_INVOKABLE void qSave(QObject* receiver);
@@ -107,7 +107,6 @@ namespace qtuser_core
 		QMap<QString, CXHandleBase*> m_saveHandlers;
 		QStringList m_saveFilterList;
 
-		QStringList m_externalFilterList;
 		CXHandleBase* m_externalHandler;
 
 		QString m_lastSaveFile;
