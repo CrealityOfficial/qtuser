@@ -124,12 +124,20 @@ namespace qtuser_core
 		QMap<QString, CXHandleBase*>& handlers = saveState ? m_saveHandlers : m_openHandlers;
 
 		QList<CXHandleBase*> uniqueHandlers;
-		for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin();
-			it != handlers.end(); ++it)
+		if (m_externalHandler)
 		{
-			if (!uniqueHandlers.contains(it.value()))
-				uniqueHandlers.append(it.value());
+			uniqueHandlers.append(m_externalHandler);
 		}
+		else
+		{
+			for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin();
+				it != handlers.end(); ++it)
+			{
+				if (!uniqueHandlers.contains(it.value()))
+					uniqueHandlers.append(it.value());
+			}
+		}
+
 		QString filter;
 		for (CXHandleBase* handle : uniqueHandlers)
 		{
@@ -217,6 +225,8 @@ namespace qtuser_core
 
 			QString filter = generateFilterFromHandlers(false);
 			dialogOpenFiles(filter, f);
+
+			m_externalHandler = nullptr;
 		}
 	}
 
