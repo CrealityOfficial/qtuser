@@ -147,7 +147,7 @@ void redirectIo()
 QString mkMutiDir(const QString& path)
 {
 	QDir dir(path);
-	if (dir.exists(path)) {
+	if (dir.exists(path) || path.isEmpty()) {
 		return path;
 	}
 	QString parentDir = mkMutiDir(path.mid(0, path.lastIndexOf('/')));
