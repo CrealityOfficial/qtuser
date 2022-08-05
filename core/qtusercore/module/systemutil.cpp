@@ -151,11 +151,24 @@ QString mkMutiDir(const QString& path)
 		return path;
 	}
 	QString parentDir = mkMutiDir(path.mid(0, path.lastIndexOf('/')));
-	QString dirname = path.mid(path.lastIndexOf('/') + 1);
+	QString dirName = path.mid(path.lastIndexOf('/') + 1);
 	QDir parentPath(parentDir);
-	if (!dirname.isEmpty())
-		parentPath.mkpath(dirname);
-	return parentDir + "/" + dirname;
+	if (!dirName.isEmpty())
+		parentPath.mkpath(dirName);
+	return parentDir + "/" + dirName;
+}
+
+void mkMutiDirFromFileName(const QString& fileName)
+{
+	if (fileName.isEmpty())
+		return;
+
+	int index = fileName.lastIndexOf('/');
+	if (index >= 0)
+	{
+		QString path = fileName.mid(0, index);
+		mkMutiDir(path);
+	}
 }
 
 void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg)
