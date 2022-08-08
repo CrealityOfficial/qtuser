@@ -63,6 +63,8 @@
 		<file>shaders/moon.frag</file>
 		<file>shaders/photo.vert</file>
 		<file>shaders/photo.frag</file>
+		<file>shaders/zproject.vert</file>
+		<file>shaders/zproject.frag</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
