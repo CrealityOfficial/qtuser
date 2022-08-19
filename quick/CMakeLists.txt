@@ -1,3 +1,5 @@
+__cc_find(StringUtil)
+
 set(SRCS qtuserquick/interface.h
 		 qtuserquick/main/entry.h
 		 qtuserquick/main/entry.cpp
