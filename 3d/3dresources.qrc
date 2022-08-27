@@ -4,14 +4,14 @@
         <file>shaders/manipulate.vert</file>
         <file>shaders/model.frag</file>
         <file>shaders/model.vert</file>
-		<file>shaders/modelwireframe.frag</file>
-		<file>shaders/modelwireframe.vert</file>
-		<file>shaders/modelwireframe.geom</file>
+        <file>shaders/modelwireframe.frag</file>
+        <file>shaders/modelwireframe.vert</file>
+        <file>shaders/modelwireframe.geom</file>
         <file>shaders/modelline.frag</file>
         <file>shaders/modelline.vert</file>
         <file>shaders/support.frag</file>
         <file>shaders/support.vert</file>
-		<file>shaders/supportshow.frag</file>
+        <file>shaders/supportshow.frag</file>
         <file>shaders/supportshow.vert</file>
         <file>shaders/finephong.frag</file>
         <file>shaders/finephong.vert</file>
@@ -23,10 +23,10 @@
         <file>shaders/pickFace.vert</file>
         <file>shaders/pickFaceFlag.frag</file>
         <file>shaders/pickFaceFlag.vert</file>
-		<file>shaders/pickFaceChunk.frag</file>
+        <file>shaders/pickFaceChunk.frag</file>
         <file>shaders/pickFaceChunk.vert</file>
-        <file>shaders/slicepreviewNoTess.vert</file>     
-        <file>shaders/slicepreviewNoTess.frag</file>                          
+        <file>shaders/slicepreviewNoTess.vert</file>
+        <file>shaders/slicepreviewNoTess.frag</file>
         <file>shaders/slicepreviewAD.vert</file>
         <file>shaders/slicepreviewAD.frag</file>
         <file>shaders/printergrid.vert</file>
@@ -49,22 +49,21 @@
         <file>shaders/supportpos.vert</file>
         <file>shaders/printerbottom.frag</file>
         <file>shaders/printerbottom.vert</file>
-		<file>shaders/slicepreviewpath.vert</file>
-		<file>shaders/slicepreviewpath.frag</file>
-		<file>shaders/admodel.vert</file>
-		<file>shaders/admodel.frag</file>
-		<file>shaders/bottomface.vert</file>
-		<file>shaders/bottomface.frag</file>
-		<file>shaders/chunk.vert</file>
-		<file>shaders/chunk.frag</file>
-		<file>shaders/finephongtex.vert</file>
-		<file>shaders/finephongtex.frag</file>
-		<file>shaders/moon.vert</file>
-		<file>shaders/moon.frag</file>
-		<file>shaders/photo.vert</file>
-		<file>shaders/photo.frag</file>
-		<file>shaders/zproject.vert</file>
-		<file>shaders/zproject.frag</file>
+        <file>shaders/slicepreviewpath.vert</file>
+        <file>shaders/slicepreviewpath.frag</file>
+        <file>shaders/admodel.vert</file>
+        <file>shaders/admodel.frag</file>
+        <file>shaders/bottomface.vert</file>
+        <file>shaders/bottomface.frag</file>
+        <file>shaders/chunk.vert</file>
+        <file>shaders/chunk.frag</file>
+        <file>shaders/finephongtex.vert</file>
+        <file>shaders/finephongtex.frag</file>
+        <file>shaders/moon.vert</file>
+        <file>shaders/moon.frag</file>
+        <file>shaders/photo.vert</file>
+        <file>shaders/photo.frag</file>
+        <file>shaders/zproject.fragment</file>
+        <file>shaders/zproject.vert</file>
     </qresource>
-    <qresource prefix="/"/>
 </RCC>
