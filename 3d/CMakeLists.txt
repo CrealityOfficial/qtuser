@@ -1,5 +1,6 @@
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/qtuser3d/ SRCS)
 
+__cc_find(glew)
 __assert_target(glew)
 #qt5_add_resources(RCC_SRC 3dresources.qrc)
 #list(APPEND SRCS ${RCC_SRC})
