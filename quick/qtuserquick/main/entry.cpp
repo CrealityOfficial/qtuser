@@ -6,6 +6,7 @@
 #include <QtQml/QQmlContext>
 #include <QFont>
 #include "qtusercore/module/systemutil.h"
+#include "qtuser3d/module/glcompatibility.h"
 #include "stringutil/util.h"
 
 namespace qtuser_quick
@@ -48,6 +49,7 @@ namespace qtuser_quick
 		int ret = 0;
 		{
 			qtuser_core::setDefaultBeforApp();
+			qtuser_3d::setBeforeApplication();
 			setDefaultQmlBeforeApp();
 
 			QApplication app(argc, argv);

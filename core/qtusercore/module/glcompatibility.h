@@ -3,8 +3,6 @@
 #include "qtusercore/qtusercoreexport.h"
 #include <QtCore/QCoreApplication>
 
-#define QT_USE_GLES 0
-
 namespace qtuser_core
 {
 	struct GlCompatibility

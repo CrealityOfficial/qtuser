@@ -241,9 +241,6 @@ namespace qtuser_core
 	
 	void setDefaultBeforApp()
 	{
-		GlCompatibility cap = createCompatibility();
-		QApplication::setAttribute(cap.glAttribute);
-
 #ifdef Q_OS_OSX
 		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
