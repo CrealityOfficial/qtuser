@@ -9,7 +9,7 @@
 #include <QtCore/QProcess>
 #include <QtWidgets/QFileDialog>
 #include <QtCore/QOperatingSystemVersion>
-
+#include <QtCore/QSettings>
 #include "ccglobal/platform.h"
 
 namespace qtuser_core
@@ -594,14 +594,17 @@ void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
 	{
 		if (!func)
 			return;
-
+		QSettings setting;
+		QString lastPath = setting.value("dialogLastPath", "").toString();
 		QStringList fileName = QFileDialog::getOpenFileNames(
 			nullptr, QObject::tr("OpenFile"),
-			QString(), filter);
+			lastPath, filter);
 
 		if (fileName.isEmpty())
 			return;
-
+		QFileInfo fileinfo = QFileInfo(fileName.first());
+		lastPath = fileinfo.path();
+		setting.setValue("dialogLastPath", lastPath);
 		func(fileName);
 	}
 
@@ -609,14 +612,17 @@ void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
 	{
 		if (!func)
 			return;
-
+		QSettings setting;
+		QString lastPath = setting.value("dialogLastPath", "").toString();
 		QString fileName = QFileDialog::getSaveFileName(
 			nullptr, QObject::tr("SaveFile"),
-			QString(), filter);
+			lastPath, filter);
 
 		if (fileName.isEmpty())
 			return;
-
+		QFileInfo fileinfo = QFileInfo(fileName);
+		lastPath = fileinfo.path();
+		setting.setValue("dialogLastPath", lastPath);
 		func(fileName);
 	}
 }
