@@ -41,6 +41,13 @@ uniform vec3 wireframeColor = vec3(0.1);
 uniform vec3 clearColor = vec3(0.27);
 uniform int renderModel = 1;
 
+uniform sampler2D textureDiffuse;
+uniform sampler2D textureAmbient;
+uniform sampler2D textureSpecular;
+uniform sampler2D textureNormal;
+
+in vec2 varyUV;
+
 bool frontFacing()
 {
         vec3 fdx = dFdx(worldPosition);
@@ -70,13 +77,29 @@ void main( void )
 
 	int stateInt = int(state);
 	vec4 color;
-	if (stateInt < 5)
-		color = stateColors[stateInt];
-	else
-		color = customColor;
 	
-	if(error == 1.0)
-		color = stateColors[3];	
+	if(varyUV.x<0.0||varyUV.y<0.0)
+	{
+		if (stateInt < 5)
+			color = stateColors[stateInt];
+		else
+			color = customColor;
+		
+		if(error == 1.0)
+			color = stateColors[3];	
+	}
+	else
+	{
+		vec4 textColor = texture2D(textureDiffuse, varyUV);
+		if(textColor.r<0 ||textColor.g<0||textColor.b<0)
+		{
+			textColor=stateColors[0];
+		}
+		color = textColor;
+	}
+		
+		
+		
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 ambient_color 	  = ambient;
