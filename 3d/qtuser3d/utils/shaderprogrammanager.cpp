@@ -4,17 +4,18 @@
 #include <QtCore/QDebug>
 #include <QtCore/QCoreApplication>
 
-#include "qtusercore/module/glcompatibility.h"
+#include "qtuser3d/module/glcompatibility.h"
 #include "../../buildinfo.h"
-
-#if QT_USE_GLES
-QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gles/2/";
-#include "../../shaders/GLES2.code"
-#else
+//
+//#if QT_USE_GLES
+//QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gles/2/";
+//#include "../../shaders/GLES2.code"
+//#else
+//QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gl/3.3/";
+//#include "../../shaders/GL3.code"
+//#endif
 QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gl/3.3/";
-#include "../../shaders/GL3.code"
-#endif
-
+#include "../../shaders/GL.code"
 namespace qtuser_3d
 {
 	ShaderMeta typeOrder[5] =
@@ -93,7 +94,10 @@ namespace qtuser_3d
 #if (_WIN32 || __APPLE__) && _DEBUG
 		ShaderCode code;
 		code.name = name;
-
+		if (qtuser_3d::isGles())
+		{
+			rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gles/2/";
+		}
 		QString rootDir = QCoreApplication::testAttribute(Qt::AA_UseOpenGLES) ? rootSourceDir : rootSourceDir;
 		for (int i = 0; i < 5; ++i)
 		{
@@ -149,11 +153,22 @@ namespace qtuser_3d
 		}
 		if (def)
 		{
-			code.source[0] = def->vIndex >= 0 ? shader_code_array[def->vIndex] : "";
-			code.source[1] = def->tcsIndex >= 0 ? shader_code_array[def->tcsIndex] : "";
-			code.source[2] = def->tesIndex >= 0 ? shader_code_array[def->tesIndex] : "";
-			code.source[3] = def->gIndex >= 0 ? shader_code_array[def->gIndex] : "";
-			code.source[4] = def->fIndex >= 0 ? shader_code_array[def->fIndex] : "";
+			if (qtuser_3d::isGles())
+			{
+				code.source[0] = def->vIndex >= 0 ? shader_code_array[def->vIndex] : "";
+				code.source[1] = def->tcsIndex >= 0 ? shader_code_array[def->tcsIndex] : "";
+				code.source[2] = def->tesIndex >= 0 ? shader_code_array[def->tesIndex] : "";
+				code.source[3] = def->gIndex >= 0 ? shader_code_array[def->gIndex] : "";
+				code.source[4] = def->fIndex >= 0 ? shader_code_array[def->fIndex] : "";
+			}
+			else
+			{
+				code.source[0] = def->vIndex >= 0 ? gles_shader_code_array[def->vIndex] : "";
+				code.source[1] = def->tcsIndex >= 0 ? gles_shader_code_array[def->tcsIndex] : "";
+				code.source[2] = def->tesIndex >= 0 ? gles_shader_code_array[def->tesIndex] : "";
+				code.source[3] = def->gIndex >= 0 ? gles_shader_code_array[def->gIndex] : "";
+				code.source[4] = def->fIndex >= 0 ? gles_shader_code_array[def->fIndex] : "";
+			}
 		}
 		
 		return buildFromShaderCode(code);

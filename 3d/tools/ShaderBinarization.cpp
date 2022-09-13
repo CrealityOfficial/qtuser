@@ -215,6 +215,200 @@ bool write_shader_string(const std::string& shader_string_file, std::vector<file
 	out.close();
 	return true;
 }
+/// <summary>
+/// 
+/// </summary>
+/// <param name="shader_string_file">写入源</param>
+/// <param name="gles_files">gles数据</param>
+/// <param name="gl_files">gl数据</param>
+/// <returns></returns>
+bool write_shader_string_gl_gles(const std::string& shader_string_file, std::vector<file_info>& gles_files, std::vector<file_info>& gl_files)
+{
+	std::ofstream out;
+	out.open(shader_string_file, std::ios::out | std::ios::trunc);
+	if (!out.is_open())
+	{
+		out.close();
+		return false;
+	}
+
+	
+
+	/// <summary>
+	/// ---- start gles code
+	/// </summary>
+	/// 
+	int gles_size = (int)gles_files.size();
+	out << "//------------ gles code\n";
+	for (size_t i = 0; i < gles_size; ++i)
+	{
+		file_info& info = gles_files[i];
+		info.index = (int)i;
+		std::ifstream in;
+		in.open(info.path, std::ios::in);
+		if (in.is_open())
+		{
+			out << "const char* "
+				<< "gles_"
+				<< info.name.c_str()
+				<< "_"
+				<< info.ext.c_str()
+				<< " = ""\n";
+
+			info.var = info.name + "_" + info.ext;
+
+			char line[256];
+			while (in.getline(line, 256))
+			{
+				out << "                             \""
+					<< line;
+
+				out << "\\n"
+					<< "\"\n";
+			}
+			out << """;\n";
+		}
+		in.close();
+	}
+
+	out << "//-----------gles code array.\n";
+	out << "const char* " << "gles_" << "shader_code_array[" << gles_size << "] = {\n";
+	for (size_t i = 0; i < gles_size; ++i)
+	{
+		file_info& info = gles_files[i];
+		out << "	" << "gles_" << info.var;
+		if (i < gles_size - 1) out << ",";
+		out << "\n";
+	}
+	out << "};\n";
+
+	/// ---end gles code
+
+	/// -- start gl code
+	int size = (int)gl_files.size();
+	out << "//------------ gl3.0 code\n";
+	for (size_t i = 0; i < size; ++i)
+	{
+		file_info& info = gl_files[i];
+		info.index = (int)i;
+		std::ifstream in;
+		in.open(info.path, std::ios::in);
+		if (in.is_open())
+		{
+			out << "const char* "
+				<< info.name.c_str()
+				<< "_"
+				<< info.ext.c_str()
+				<< " = ""\n";
+
+			info.var = info.name + "_" + info.ext;
+
+			char line[256];
+			while (in.getline(line, 256))
+			{
+				out << "                             \""
+					<< line;
+
+				out << "\\n"
+					<< "\"\n";
+			}
+			out << """;\n";
+		}
+		in.close();
+	}
+
+	out << "//-----------gl3.0 code array.\n";
+	out << "const char* shader_code_array[" << size << "] = {\n";
+	for (size_t i = 0; i < size; ++i)
+	{
+		file_info& info = gl_files[i];
+		out << "	"  << info.var;
+		if (i < size - 1) out << ",";
+		out << "\n";
+	}
+	out << "};\n";
+	/// ---end gl code
+	/// --start common struct
+	out << "//-------------programs!\n";
+	struct program_def
+	{
+		file_info* vert;
+		file_info* tcs;
+		file_info* tes;
+		file_info* geom;
+		file_info* frag;
+	};
+
+	auto f = [](program_def& def, file_info& info) {
+		if (info.ext == "vert") def.vert = &info;
+		if (info.ext == "tcs") def.tcs = &info;
+		if (info.ext == "tes") def.tes = &info;
+		if (info.ext == "geom") def.geom = &info;
+		if (info.ext == "frag" || info.ext == "fragment") def.frag = &info;
+	};
+	std::map<std::string, program_def> programs;
+	for (size_t i = 0; i < gl_files.size(); ++i)
+	{
+		file_info& info = gl_files[i];
+		std::map<std::string, program_def>::iterator it = programs.find(info.name);
+		if (it != programs.end())
+		{
+			f((*it).second, info);
+		}
+		else
+		{
+			program_def def;
+			def.frag = 0;
+			def.vert = 0;
+			def.geom = 0;
+			def.tcs = 0;
+			def.tes = 0;
+			std::pair<std::map<std::string, program_def>::iterator, bool> result = programs.insert(std::pair<std::string, program_def>(info.name, def));
+			if (result.second)
+				f((*(result.first)).second, info);
+		}
+	}
+
+	auto g = [&out](file_info* info) {
+		if (info)
+		{
+			out << info->index;
+		}
+		else
+			out << " -1 ";
+	};
+
+	out << "struct ProgramDef\n";
+	out << "{\n";
+	out << "	const char* name;\n";
+	out << "	int vIndex;\n";
+	out << "    int tcsIndex;\n";
+	out << "    int tesIndex;\n";
+	out << "	int gIndex;\n";
+	out << "	int fIndex;\n";
+	out << "};\n";
+	out << "int programs_meta_size = " << programs.size() << ";\n";
+	out << "ProgramDef programs_meta[" << programs.size() << "] = {\n";
+	for (std::map<std::string, program_def>::iterator it = programs.begin(); it != programs.end(); ++it)
+	{
+		program_def& def = (*it).second;
+		out << "  { \"" << (*it).first.c_str() << "\" , ";
+		g(def.vert);
+		out << "  , ";
+		g(def.tcs);
+		out << "  , ";
+		g(def.tes);
+		out << "  , ";
+		g(def.geom);
+		out << "  , ";
+		g(def.frag);
+		out << "  },\n ";
+	}
+	out << "};\n";
+	/// --end common struct
+	out.close();
+	return true;
+}
 
 bool Check(FILETIME t1, FILETIME t2)
 {
@@ -248,16 +442,27 @@ int main(int argc, char* argv[])
 	if (argc >= 3)
 		outputDirRoot = argv[2];
 
-	for (int i = 0; i < 2; ++i)
-	{
-		std::string inputDir = inputDirRoot + inputs[i];
-		std::string outputFile = outputDirRoot + outputs[i];
+	//for (int i = 0; i < 2; ++i)
+	//{
+	//	std::string inputDir = inputDirRoot + inputs[i];
+	//	std::string outputFile = outputDirRoot + outputs[i];
 
-		std::vector<file_info> files;
-		get_files(inputDir.c_str(), files);
+	//	std::vector<file_info> files;
+	//	get_files(inputDir.c_str(), files);
 
-		write_shader_string(outputFile, files);
-	}
+	//	write_shader_string(outputFile, files);
+	//}
+	std::string inputDirGL = inputDirRoot + inputs[0];
+	std::string inputDirGLES = inputDirRoot + inputs[1];
+
+	std::vector<file_info> gl_files;
+	get_files(inputDirGL.c_str(), gl_files);
+
+	std::vector<file_info> gles_files;
+	get_files(inputDirGLES.c_str(), gles_files);
+
+	std::string outputFile = outputDirRoot + "GL.code";
+	write_shader_string_gl_gles(outputFile, gles_files, gl_files);
 
 	return EXIT_SUCCESS;
 }
