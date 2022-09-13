@@ -127,54 +127,6 @@ namespace qtuser_3d
 		m_fanzhuanParameter->setValue(fz);
 	}
 
-	//void ModelNEntity::setTexture(int buffsize[], unsigned char* buffs[])
-	//{
-		//int maptype = trimesh::Material::MapType::DIFFUSE;
-		//int bufferSize = m_mesh->map_bufferSize[maptype];
-		//enchase::ImageDataFormat formattype = enchase::ImageDataFormat::FORMAT_RGBA_8888;
-		//unsigned char* imagedata = m_mesh->map_buffers[maptype];
-		//if (imagedata)
-		//{
-		//	imgproc::ImageData bufferData;
-		//	bufferData.format = imgproc::ImageDataFormat::FORMAT_RGBA_8888;
-		//	imgproc::loadImageFromMem_freeImage(imagedata, bufferSize, bufferData);
-		//	updateTextTexture(m_textureDiffuse, bufferData.width, bufferData.height, bufferData.data, formattype);
-		//}
-
-		//maptype = trimesh::Material::MapType::SPECULAR;
-		//bufferSize = m_mesh->map_bufferSize[maptype];
-		//imagedata = m_mesh->map_buffers[maptype];
-		//if (imagedata)
-		//{
-		//	imgproc::ImageData specularData;
-		//	specularData.format = imgproc::ImageDataFormat::FORMAT_RGBA_8888;
-		//	imgproc::loadImageFromMem_freeImage(imagedata, bufferSize, specularData);
-		//	updateTextTexture(m_textureSpecular, specularData.width, specularData.height, specularData.data, formattype);
-		//}
-
-		//maptype = trimesh::Material::MapType::AMBIENT;
-		//bufferSize = m_mesh->map_bufferSize[maptype];
-		//imagedata = m_mesh->map_buffers[maptype];
-		//if (imagedata)
-		//{
-		//	imgproc::ImageData ambientData;
-		//	ambientData.format = imgproc::ImageDataFormat::FORMAT_RGBA_8888;
-		//	imgproc::loadImageFromMem_freeImage(imagedata, bufferSize, ambientData);
-		//	updateTextTexture(m_textureAmbient, ambientData.width, ambientData.height, ambientData.data, formattype);
-		//}
-
-		//maptype = trimesh::Material::MapType::NORMAL;
-		//bufferSize = m_mesh->map_bufferSize[maptype];
-		//imagedata = m_mesh->map_buffers[maptype];
-		//if (imagedata)
-		//{
-		//	imgproc::ImageData normalData;
-		//	normalData.format = imgproc::ImageDataFormat::FORMAT_RGBA_8888;
-		//	imgproc::loadImageFromMem_freeImage(imagedata, bufferSize, normalData);
-		//	updateTextTexture(m_textureNormal, normalData.width, normalData.height, normalData.data, formattype);
-		//}
-	//}
-
 	void ModelNEntity::setCustomColor(QColor color)
 	{
 		m_customColorParameter->setValue(color);
@@ -235,36 +187,4 @@ namespace qtuser_3d
 	{
 		m_textureNormal->setValue(QVariant::fromValue(aNormal));
 	}
-
-	Qt3DRender::QTexture2D* ModelNEntity::updateTextTexture(int width, int height, unsigned char* data)
-	{
-		if (width < 1
-			|| height < 1
-			|| data == nullptr)
-		{
-			return nullptr;
-		}
-
-		QImage pTextImage;
-		int size = width * height;
-		//unsigned char* inData = new unsigned char[size];
-		//memcpy(inData, data, size * sizeof(unsigned char));
-		pTextImage.loadFromData(data, size);
-
-		//QImage anew("C:\\Users\\cx0689\\Desktop\\cube_twoface\\cura-icon.png");
-		Qt3DRender::QTexture2D* atexture = qtuser_3d::createFromImage(pTextImage);
-		//atexture->setFormat(Qt3DRender::QTexture2D::RGBA8_SNorm);
-		return atexture;
-	}
-
-	//bool ModelNEntity::updateTextTexture(Qt3DRender::QTexture2D* texture, int width, int height, unsigned char* data)
-	//{
-
-	//}
-
-	//bool ModelNEntity::updateTexture(Qt3DRender::QTexture2D* textTex)
-	//{
-
-	//}
-
 }

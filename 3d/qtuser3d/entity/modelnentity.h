@@ -53,15 +53,10 @@ namespace qtuser_3d
 
 		void setRenderMode(int mode);
 
-		//void setTexture(int buffsize[], unsigned char* buffs[]);
-		//bool updateTextTexture(Qt3DRender::QTexture2D* texture, int width, int height, unsigned char* data);
-		//bool updateTexture(Qt3DRender::QTexture2D* textTex);
 		void setTDiffuse(Qt3DRender::QTexture2D* aDiffuse);
 		void setTAmbient(Qt3DRender::QTexture2D* aAmbient);
 		void setTSpecular(Qt3DRender::QTexture2D* aSpecular);
 		void setTNormal(Qt3DRender::QTexture2D* aNormal);
-
-		Qt3DRender::QTexture2D* updateTextTexture(int width, int height, unsigned char* data);
 	protected:
 		qtuser_3d::BoxEntity* m_boxEntity;
 		qtuser_3d::LineEntity* m_convexXYEntity;
