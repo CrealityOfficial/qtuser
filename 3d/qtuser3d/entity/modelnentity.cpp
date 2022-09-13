@@ -1,7 +1,6 @@
 #include "modelnentity.h"
 #include "qtuser3d/entity/boxentity.h"
 #include "qtuser3d/entity/lineentity.h"
-#include "qtuser3d/effect/texturecreator.h"
 
 namespace qtuser_3d
 {
@@ -34,7 +33,7 @@ namespace qtuser_3d
 
 		m_renderModeParameter = createParameter("renderModel", 1);
 
-		m_textureDiffuse= createParameter("textureDiffuse", QVariant::fromValue(nullptr));
+		m_textureDiffuse = createParameter("textureDiffuse", QVariant::fromValue(nullptr));
 		m_textureAmbient = createParameter("textureAmbient", QVariant::fromValue(nullptr));
 		m_textureSpecular = createParameter("textureSpecular", QVariant::fromValue(nullptr));
 		m_textureNormal = createParameter("textureNormal", QVariant::fromValue(nullptr));

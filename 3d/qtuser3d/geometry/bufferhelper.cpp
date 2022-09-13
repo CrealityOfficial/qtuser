@@ -21,7 +21,7 @@ namespace qtuser_3d
 			vertexSize = 4;
 			break;
 		case AttribueSlot::Texcoord:
-			attributeName = "vertexTexcoord"; // Qt3DRender::QAttribute::defaultTextureCoordinate1AttributeName();
+			attributeName = Qt3DRender::QAttribute::defaultTextureCoordinate1AttributeName();//  "vertexTexcoord"; 
 			vertexSize = 2;
 			break;
 		default:
