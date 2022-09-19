@@ -1,6 +1,7 @@
-#version 150 core
+/*ManiPulate Vertix*/
 
-in vec3 vertexPosition;
+
+attribute vec3 vertexPosition;
 
 uniform mat4 modelViewProjection;
 

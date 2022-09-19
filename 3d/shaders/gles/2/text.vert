@@ -1,6 +1,6 @@
-#version 150 core
+/* Text Vertex*/
 
-in vec3 vertexPosition;
+attribute vec3 vertexPosition;
 
 uniform mat4 modelViewProjection;
 

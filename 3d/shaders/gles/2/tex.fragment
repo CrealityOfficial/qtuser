@@ -1,4 +1,4 @@
-/* PickFaceFlag Fragment*/
+/* Tex Fragment*/
 precision mediump float; 
 
 uniform sampler2D shapeTexture;
@@ -6,7 +6,7 @@ uniform sampler2D shapeTexture;
 varying vec2 texcoord;
 void main() 
 {
-	vec4 color = texture(shapeTexture, texcoord);
+	vec4 color = texture2D(shapeTexture, texcoord);
 	if(color.w == 1.0) 
 		discard;
 	

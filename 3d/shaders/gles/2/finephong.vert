@@ -1,14 +1,14 @@
-#version 150 core
+/*FinePhong Vertix*/
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 viewDirection;
-out vec3 normal;
+varying vec3 viewDirection;
+varying vec3 normal;
 
 void main( void )
 {

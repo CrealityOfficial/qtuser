@@ -1,7 +1,7 @@
-#version 150 core
-out vec4 fragmentColor; 
+/* ModelLine Fragment*/
+precision mediump float; 
 
-in vec3 worldPosition;
+varying vec3 worldPosition;
 
 uniform vec3 machineCube;
 uniform float topVisibleHeight = 100000.0;
@@ -22,5 +22,5 @@ void main( void )
 	if(error == 1.0)
 		color = stateColors[3];
 	
-	fragmentColor = vec4(0.1, 0.1, 0.1, 1.0);
+	gl_FragColor = vec4(0.1, 0.1, 0.1, 1.0);
 }

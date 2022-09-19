@@ -7,9 +7,9 @@ varying vec3 normal;
 varying vec3 worldPosition;
 varying float flag;
 
-const vec4 ambient = vec4(0.0, 0.0, 0.0, 1.0);
-const vec4 diffuse = vec4(1.0, 1.0, 1.0, 1.0);
-const vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
+uniform vec4 ambient ;//= vec4(0.0, 0.0, 0.0, 1.0);
+uniform vec4 diffuse ;//= vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 specular;// = vec4(0.125, 0.125, 0.125, 1.0);
 const float specularPower = 12.0;
 const vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
@@ -19,11 +19,12 @@ uniform vec3 minSpace;
 uniform vec3 maxSpace;
 uniform float bottom; 
 const float topVisibleHeight = 100000.0;
-const float bottomVisibleHeight = -10000.0;
+const float bottomVisibleHeight = -1000.0;
 
 void main( void )
 {
-    vec4 color = stateColors[int(flag)];
+	int xxx = int(flag);
+    vec4 color = stateColors[int(1.0)];
 //    color.a = flag;
 
 	if(worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight)
@@ -39,7 +40,7 @@ void main( void )
 	float RdotV           = max(0.0, dot(freflection, fViewDirection)); 
 	vec4 diffuseColor     = NdotL * diffuse * color;
 	vec4 specularColor    = specular * pow( RdotV, specularPower);
-	vec4 coreColor = ambientColor + diffuseColor + specularColor;
+	vec4 coreColor = ambientColor + specularColor + diffuseColor;
 	
     if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
 	{
@@ -52,5 +53,6 @@ void main( void )
 //                coreColor.g += 0.4;
 //        }
 	
-        gl_FragColor = vec4(coreColor.rgb, color.a);
+	//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+   gl_FragColor = vec4(coreColor.rgb, 1.0);
 }

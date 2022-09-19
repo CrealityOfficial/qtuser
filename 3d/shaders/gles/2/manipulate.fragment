@@ -1,6 +1,6 @@
-#version 150 core
+/*Manipulate Fragment*/
  
-out vec4 fragColor;
+precision mediump float; 
 
 uniform vec4 color;
 uniform vec4 changecolor;
@@ -11,11 +11,11 @@ void main()
 {
 	if(mt == 0)
 	{
-		fragColor = color * state;
+		gl_FragColor = color * state;
 	}
 	else if(mt == 1)
 	{
-		fragColor = color + changecolor * state;
+		gl_FragColor = color + changecolor * state;
 	}
 	
 }

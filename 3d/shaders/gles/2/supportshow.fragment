@@ -1,25 +1,25 @@
-#version 150 core 
-out vec4 fragmentColor;
+/* SupportShow Fragment*/
+precision mediump float;
 
-in vec3 viewDirection;
-in vec3 normal;
-in vec3 worldPosition;
-flat in float flag;
+varying  vec3 viewDirection;
+varying  vec3 normal;
+varying  vec3 worldPosition;
+varying float flag;
 
-uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 1.0);
-uniform vec4 diffuse = vec4(1.0, 1.0, 1.0, 1.0);
-uniform vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
-uniform float specularPower = 12.0;
+uniform vec4 ambient ;//= vec4(0.0, 0.0, 0.0, 1.0);
+uniform vec4 diffuse ;//= vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 specular ;//= vec4(0.125, 0.125, 0.125, 1.0);
+const float specularPower = 12.0;
 
-uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
+const vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
 uniform vec4 stateColors[6];
 
 uniform vec3 minSpace;
 uniform vec3 maxSpace;
 uniform float bottom; 
-uniform float topVisibleHeight = 100000.0;
-uniform float bottomVisibleHeight = -10000.0;
+const float topVisibleHeight = 100000.0;
+const float bottomVisibleHeight = -10000.0;
 
 void main( void )
 {
@@ -51,6 +51,6 @@ void main( void )
 //                coreColor.g += 0.4;
 //        }
 	
-        fragmentColor = vec4(coreColor.rgb, color.a);
+        gl_FragColor = vec4(coreColor.rgb, color.a);
 }
 

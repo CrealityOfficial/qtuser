@@ -1,5 +1,6 @@
 #include "qtuser3d/geometry/bufferhelper.h"
 #include "qtusercore/module/glcompatibility.h"
+#include "qtuser3d/module/glcompatibility.h"
 #include "qtuser3d/math/space3d.h"
 
 namespace qtuser_3d
@@ -63,9 +64,8 @@ namespace qtuser_3d
 	Qt3DRender::QAttribute* BufferHelper::createDefaultVertexAttribute()
 	{
 		uint vertexSize = 3;
-#if QT_USE_GLES
-		//vertexSize = 4;
-#endif
+		if (qtuser_3d::isGles())
+			vertexSize = 4;
 		return createAttribute(Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, vertexSize);
 	}
 
@@ -107,7 +107,7 @@ namespace qtuser_3d
 		if (attribute)
 		{
 			int count = attribute->count();
-			if(start >= 0 && start <end && end < count)
+			if (start >= 0 && start < end && end < count)
 			{
 				QByteArray bytes = attribute->buffer()->data();
 				int vertexSize = attribute->vertexSize();

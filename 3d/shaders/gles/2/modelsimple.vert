@@ -1,14 +1,14 @@
-#version 150 core
+/* ModelSimple Vertex*/
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-noperspective out vec3 viewDirection;
-noperspective out vec3 normal;
+/*noperspective*/ varying vec3 viewDirection;
+/*noperspective*/ varying vec3 normal;
 
 void main( void )
 {

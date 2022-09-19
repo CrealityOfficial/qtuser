@@ -1,13 +1,13 @@
-#version 150 core
+/* ModelLine Vertex*/
 
-in vec3 vertexPosition;
+attribute vec3 vertexPosition;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 viewDirection;
-out vec3 worldPosition;
+varying vec3 viewDirection;
+varying vec3 worldPosition;
 
 void main( void )
 {

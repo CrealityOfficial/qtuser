@@ -10,6 +10,6 @@ varying vec2 texcoord;
 
 void main() 
 {
-   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vertexPosition;
+   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition,1.0);
    texcoord = vertexTexcoord;
 }

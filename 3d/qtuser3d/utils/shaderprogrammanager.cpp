@@ -155,19 +155,19 @@ namespace qtuser_3d
 		{
 			if (qtuser_3d::isGles())
 			{
-				code.source[0] = def->vIndex >= 0 ? shader_code_array[def->vIndex] : "";
-				code.source[1] = def->tcsIndex >= 0 ? shader_code_array[def->tcsIndex] : "";
-				code.source[2] = def->tesIndex >= 0 ? shader_code_array[def->tesIndex] : "";
-				code.source[3] = def->gIndex >= 0 ? shader_code_array[def->gIndex] : "";
-				code.source[4] = def->fIndex >= 0 ? shader_code_array[def->fIndex] : "";
-			}
-			else
-			{
 				code.source[0] = def->vIndex >= 0 ? gles_shader_code_array[def->vIndex] : "";
 				code.source[1] = def->tcsIndex >= 0 ? gles_shader_code_array[def->tcsIndex] : "";
 				code.source[2] = def->tesIndex >= 0 ? gles_shader_code_array[def->tesIndex] : "";
 				code.source[3] = def->gIndex >= 0 ? gles_shader_code_array[def->gIndex] : "";
 				code.source[4] = def->fIndex >= 0 ? gles_shader_code_array[def->fIndex] : "";
+			}
+			else
+			{
+				code.source[0] = def->vIndex >= 0 ? shader_code_array[def->vIndex] : "";
+				code.source[1] = def->tcsIndex >= 0 ? shader_code_array[def->tcsIndex] : "";
+				code.source[2] = def->tesIndex >= 0 ? shader_code_array[def->tesIndex] : "";
+				code.source[3] = def->gIndex >= 0 ? shader_code_array[def->gIndex] : "";
+				code.source[4] = def->fIndex >= 0 ? shader_code_array[def->fIndex] : "";
 			}
 		}
 		

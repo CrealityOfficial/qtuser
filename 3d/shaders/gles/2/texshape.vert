@@ -1,10 +1,10 @@
-#version 150 core
+/*TextShape vertix*/
 
-in vec3 vertexPosition;
-in vec2 vertexTexcoord;
+attribute vec3 vertexPosition;
+attribute vec2 vertexTexcoord;
 
 uniform mat4 modelViewProjection;
-out vec2 texcoord;
+varying vec2 texcoord;
 
 void main() 
 {
