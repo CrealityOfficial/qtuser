@@ -2,6 +2,7 @@
 #define _NULLSPACE_TOOLCOMMANDCENTER_1589421179475_H
 #include "qtuserqml/qtuserqmlexport.h"
 #include <QtCore/QAbstractListModel>
+#include <QMap>
 #include "qtuserqml/plugin/toolcommand.h"
 
 namespace qtuser_qml
@@ -28,6 +29,7 @@ namespace qtuser_qml
 
 	protected:
 		QList<ToolCommand*> m_toolCommands;
+        QMap<int, ToolCommand*> m_toolCommandsMap;
 
 		QHash<int, QByteArray> m_rolesName;
 	};
