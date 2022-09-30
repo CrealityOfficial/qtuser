@@ -2,7 +2,6 @@
 
 in vec3 vertexPosition;
 in vec2 vertexFlag;
-
 uniform mat4 modelViewProjection;
 
 flat out vec2 flag;

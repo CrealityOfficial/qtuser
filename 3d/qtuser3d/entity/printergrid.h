@@ -16,9 +16,11 @@ namespace qtuser_3d
 		virtual ~PrinterGrid();
 
 		void updateBounding(Box3D& box, int createtype = 0);
+		void updateXYIndex(Box3D& box);
 		void visibleSubGrid(bool visible);
 		void setShowColor(QVector4D clr, int xy = 0);
 		void setLineColor(QVector4D clr);
+		void setXYIndexColor(QVector4D clr);
 		void setGap(float gap);
 	protected:
 		Qt3DRender::QParameter* m_visible;
@@ -31,6 +33,10 @@ namespace qtuser_3d
 		Qt3DRender::QParameter* m_lineColorParam;
 		Qt3DRender::QParameter* m_xshowColorParam;
 		Qt3DRender::QParameter* m_yshowColorParam;
+
+		Qt3DRender::QParameter* m_xIndexParam;
+		Qt3DRender::QParameter* m_yIndexParam;
+		Qt3DRender::QParameter* m_yIndexColorParam;
 	};
 }
 #endif // _QTUSER_3D_PRINTERGRID_1590674912369_H
