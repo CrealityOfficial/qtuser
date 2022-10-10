@@ -23,7 +23,7 @@ namespace qtuser_3d
 		m_waterShowParameter = createParameter("waterState", 0);
 		m_fanzhuanParameter = createParameter("fanzhuan", 0);
 
-		m_customColorParameter = createParameter("customColor", QColor::fromRgb(0.0, 0.0, 0.0));
+		m_customColorParameter = createParameter("customColor", QVector4D(0.0f, 0.0f, 0.0f, 1.0f));
 		m_transparencyParameter = createParameter("transparency", 1.0f);
 		m_lightingFlagParameter = createParameter("lightingEnable", 1);
 
