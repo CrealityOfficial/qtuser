@@ -1,8 +1,10 @@
 /* ZProject Fragment*/
 
 precision mediump float; 
-
+uniform int cameraDir;
 void main( void )
 {
+	if(cameraDir == 0)
+		discard;
 	gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
 }
