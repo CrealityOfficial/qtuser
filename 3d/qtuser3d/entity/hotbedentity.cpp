@@ -157,7 +157,7 @@ namespace qtuser_3d
 			m_hotZone.push_back(Box3D(QVector3D(small_unit + unit, small_unit, -1.0), QVector3D(small_unit * 2 + unit, small_unit + unit, 250.0)));//D1
 			m_hotZone.push_back(Box3D(QVector3D(small_unit + unit, small_unit + unit, -1.0), QVector3D(small_unit * 2 + unit, small_unit * 2 + unit, 250.0)));//D8
 		}
-		else if (_bedType == bedType::CR_GX01)
+		else if (_bedType == bedType::CR_10H1)
 		{
 			for (int n = 0; n < 9; n++)
 			{
@@ -168,8 +168,8 @@ namespace qtuser_3d
 
 			int vertexNum = 4;
 			int triangleNum = 2;
-			signed long long unit = 42.50; 
-			signed long long unit2 = 72.50;
+			signed long long unit = 17.5;// 42.50;
+			signed long long unit2 = 47.5;//72.50;
 
 			QVector<QVector3D> positions0;
 			QVector<unsigned> indices0;
@@ -223,8 +223,8 @@ namespace qtuser_3d
 			QVector<QVector3D> positions4;
 			QVector<unsigned> indices4;
 			positions4.push_back(QVector3D(unit,  unit, 0.0));//2
-			positions4.push_back(QVector3D(72.50, unit, 0.0));//6
-			positions4.push_back(QVector3D(72.50, 235.0-unit, 0.0));//7
+			positions4.push_back(QVector3D(unit2, unit, 0.0));//6
+			positions4.push_back(QVector3D(unit2, 235.0-unit, 0.0));//7
 			positions4.push_back(QVector3D(unit, 235.0 - unit, 0.0));//3
 			indices4.push_back(0); indices4.push_back(1); indices4.push_back(2);//D6
 			indices4.push_back(0); indices4.push_back(2); indices4.push_back(3);
@@ -234,10 +234,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions5;
 			QVector<unsigned> indices5;
-			positions5.push_back(QVector3D(72.50, unit, 0.0));//2
+			positions5.push_back(QVector3D(unit2, unit, 0.0));//2
 			positions5.push_back(QVector3D(235.0-unit, unit, 0.0));//6
-			positions5.push_back(QVector3D(235.0 - unit, 72.50, 0.0));//7
-			positions5.push_back(QVector3D(72.50, 72.50, 0.0));//3
+			positions5.push_back(QVector3D(235.0 - unit, unit2, 0.0));//7
+			positions5.push_back(QVector3D(unit2, unit2, 0.0));//3
 			indices5.push_back(0); indices5.push_back(1); indices5.push_back(2);//D6
 			indices5.push_back(0); indices5.push_back(2); indices5.push_back(3);
 			Qt3DRender::QGeometry* geometry5 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions5.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices5.at(0));
@@ -246,10 +246,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions6;
 			QVector<unsigned> indices6;
-			positions6.push_back(QVector3D(235.0-72.5, 72.5, 0.0));//2
-			positions6.push_back(QVector3D(235.0- unit, 72.5, 0.0));//6
+			positions6.push_back(QVector3D(235.0- unit2, unit2, 0.0));//2
+			positions6.push_back(QVector3D(235.0- unit, unit2, 0.0));//6
 			positions6.push_back(QVector3D(235.0- unit, 235.0 - unit, 0.0));//7
-			positions6.push_back(QVector3D(235.0-72.5, 235.0 - unit, 0.0));//3
+			positions6.push_back(QVector3D(235.0- unit2, 235.0 - unit, 0.0));//3
 			indices6.push_back(0); indices6.push_back(1); indices6.push_back(2);//D6
 			indices6.push_back(0); indices6.push_back(2); indices6.push_back(3);
 			Qt3DRender::QGeometry* geometry6 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions6.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices6.at(0));
@@ -258,10 +258,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions7;
 			QVector<unsigned> indices7;
-			positions7.push_back(QVector3D(72.5, 235.0 - 72.5, 0.0));//2
-			positions7.push_back(QVector3D(235.0 - 72.5, 235.0 - 72.5, 0.0));//6
-			positions7.push_back(QVector3D(235.0 - 72.5, 235.0- unit, 0.0));//7
-			positions7.push_back(QVector3D(72.5, 235.0- unit, 0.0));//3
+			positions7.push_back(QVector3D(unit2, 235.0 - unit2, 0.0));//2
+			positions7.push_back(QVector3D(235.0 - unit2, 235.0 - unit2, 0.0));//6
+			positions7.push_back(QVector3D(235.0 - unit2, 235.0- unit, 0.0));//7
+			positions7.push_back(QVector3D(unit2, 235.0- unit, 0.0));//3
 			indices7.push_back(0); indices7.push_back(1); indices7.push_back(2);//D6
 			indices7.push_back(0); indices7.push_back(2); indices7.push_back(3);
 			Qt3DRender::QGeometry* geometry7 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions7.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices7.at(0));
@@ -270,10 +270,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions8;//center
 			QVector<unsigned> indices8;
-			positions8.push_back(QVector3D(72.5, 72.5, minZ));
-			positions8.push_back(QVector3D(235-72.5, 72.5, minZ));
-			positions8.push_back(QVector3D(235-72.5, 235 - 72.5, minZ));
-			positions8.push_back(QVector3D(72.5, 235 - 72.5, minZ));
+			positions8.push_back(QVector3D(unit2, unit2, minZ));
+			positions8.push_back(QVector3D(235- unit2, unit2, minZ));
+			positions8.push_back(QVector3D(235- unit2, 235 - unit2, minZ));
+			positions8.push_back(QVector3D(unit2, 235 - unit2, minZ));
 			indices8.push_back(0); indices8.push_back(1); indices8.push_back(2);//D6
 			indices8.push_back(0); indices8.push_back(2); indices8.push_back(3);
 			Qt3DRender::QGeometry* geometry8 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions8.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices8.at(0));
@@ -285,11 +285,11 @@ namespace qtuser_3d
 			m_hotZone.push_back(Box3D(QVector3D(unit, 0.0, -1.0), QVector3D(235.0, unit, 230)));//D1
 			m_hotZone.push_back(Box3D(QVector3D(235.0 - unit, unit, -1.0), QVector3D(235.0, 235.0, 230)));//D2
 			m_hotZone.push_back(Box3D(QVector3D(unit, 235.0 - unit, -1.0), QVector3D(235.0 - unit, 235.0, 230)));//D3
-			m_hotZone.push_back(Box3D(QVector3D(unit, unit, -1.0), QVector3D(72.50, 235.0 - unit, 230)));//D4
-			m_hotZone.push_back(Box3D(QVector3D(72.5, unit, -1.0), QVector3D(235.0 - unit, 72.5, 230)));//D5
-			m_hotZone.push_back(Box3D(QVector3D(235.0 - 72.5, 72.5, -1.0), QVector3D(235.0 - 42.5, 235.0 - 42.5, 230)));//D6
-			m_hotZone.push_back(Box3D(QVector3D(72.5, 235.0 - 72.5, -1.0), QVector3D(235.0 - 72.5, 235.0 - 42.50, 230)));//D7
-			m_hotZone.push_back(Box3D(QVector3D(30.0 + unit, 30.0 + unit, -1.0), QVector3D(30.0 + unit + 90.0, 30.0 + unit + 90.0, 230)));//D8
+			m_hotZone.push_back(Box3D(QVector3D(unit, unit, -1.0), QVector3D(unit2, 235.0 - unit, 230)));//D4
+			m_hotZone.push_back(Box3D(QVector3D(unit2, unit, -1.0), QVector3D(235.0 - unit, unit2, 230)));//D5
+			m_hotZone.push_back(Box3D(QVector3D(235.0 - unit2, unit2, -1.0), QVector3D(235.0 - unit, 235.0 - unit, 230)));//D6
+			m_hotZone.push_back(Box3D(QVector3D(unit2, 235.0 - unit2, -1.0), QVector3D(235.0 - unit2, 235.0 - unit, 230)));//D7
+			m_hotZone.push_back(Box3D(QVector3D(unit2, unit2, -1.0), QVector3D(235.0-unit2, 235.0 - unit2, 230)));//D8
 		}
 	}
 
@@ -319,7 +319,7 @@ namespace qtuser_3d
 				setVisibility(n, m_isHots[n]);
 			}
 		}
-		else if (m_bedType == bedType::CR_GX01)
+		else if (m_bedType == bedType::CR_10H1)
 		{
 			for (int n = 0; n < m_isHots.size(); n++)
 			{
@@ -396,12 +396,16 @@ namespace qtuser_3d
 
 	void HotbedEntity::setVisibility(int faceIndex, bool visibility)
 	{
-		for (int n=0;n< m_bedFaces.size();n++)
+		//for (int n=0;n< m_bedFaces.size();n++)
+		//{
+		//	if (n == faceIndex)
+		//	{
+		//		m_bedFaces[n]->setEnabled(visibility ? true : false);
+		//	}
+		//}
+		if (faceIndex< m_bedFaces.size())
 		{
-			if (n == faceIndex)
-			{
-				m_bedFaces[n]->setEnabled(visibility ? true : false);
-			}
+			m_bedFaces[faceIndex]->setEnabled(visibility);
 		}
 	}
 

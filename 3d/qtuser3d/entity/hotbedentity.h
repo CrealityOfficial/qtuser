@@ -9,7 +9,7 @@ namespace qtuser_3d
 	{
 		CR_10_Inspire_Pro,
 		CR_GX,
-		CR_GX01,
+		CR_10H1,
 		None
 	};
 
