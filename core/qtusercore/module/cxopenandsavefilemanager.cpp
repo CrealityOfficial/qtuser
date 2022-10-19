@@ -295,6 +295,7 @@ namespace qtuser_core
 		QFileInfo info(fileName);
 		QString suffix = info.suffix();
 		suffix = suffix.toLower();
+		m_lastOpenFile = info.fileName();
 		return openWithNameSuffix(fileName, suffix);
 	}
 
@@ -313,6 +314,7 @@ namespace qtuser_core
 			QFileInfo info(fileNames.at(0));
 			QString suffix = info.suffix();
 			suffix = suffix.toLower();
+			m_lastOpenFile = info.fileName();
 			CXHandleBase* handler = findHandler(suffix, m_openHandlers);
 			if (!handler)
 			{
