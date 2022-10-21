@@ -1,4 +1,4 @@
-﻿#include <QQmlApplicationEngine>
+#include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include<QString>
 #include <QVariantMap>
@@ -8,14 +8,42 @@
 #pragma execution_character_set("utf-8")
 namespace qtuser_qml
 {
-//CusModelListModel::CusModelListModel()
-//{
-//
-//}
+CusModelListModel::CusModelListModel(QObject* parent)
+    :QAbstractListModel(parent)
+{
+
+}
+
+CusModelListModel::CusModelListModel(const CusModelListModel& model)
+{
+
+}
 
 void CusModelListModel::addItem(QObject *item)
 {
+    m_Items.push_back(item);
     FileInfo* fi = new FileInfo(item);
+}
+
+void CusModelListModel::delItem(QObject *item)
+{
+
+}
+
+QObject* CusModelListModel::getItem(int row)
+{
+    return new QObject();
+}
+
+QModelIndex CusModelListModel::getRowIndex(QObject *obj)
+{
+    int row = 0;
+    return createIndex(row, 0);
+}
+
+int CusModelListModel::itemCount()
+{
+    return m_Items.count();
 }
 
 int CusModelListModel::rowCount(const QModelIndex &parent) const

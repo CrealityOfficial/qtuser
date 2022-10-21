@@ -1,4 +1,4 @@
-﻿#ifndef CUSWIFILISTMODEL_H
+#ifndef CUSWIFILISTMODEL_H
 #define CUSWIFILISTMODEL_H
 
 #include <QAbstractListModel>
@@ -26,7 +26,6 @@ private:
     QString m_FileName;
 };
 
-class QQmlApplicationEngine;
 class QTUSER_QML_API CusModelListModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -36,9 +35,16 @@ public:
         File_Size
     };
 
+    CusModelListModel(QObject* parent = nullptr);
+    CusModelListModel(const CusModelListModel& model);
     //CusModelListModel();
     void addItem(QObject* item);
-
+    void delItem(QObject* item);
+    QObject* getItem(int row);
+    QModelIndex getRowIndex(QObject* obj);
+    int itemCount();
+    void addModelData(const FileInfo& info);         //新增表数据
+    void refreshItem(int row, int column); //刷新单项数据
 public slots:
 signals:
 
@@ -49,10 +55,8 @@ protected:
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
 private:
-    void addModelData(const FileInfo& info);         //新增表数据
-    void refreshItem(int row, int column); //刷新单项数据
+    QList<QObject*> m_Items;
     QList<FileInfo> m_FileInfoList;
-    QQmlApplicationEngine*  m_Engine;
 };
 }
 #endif // CUSWIFILISTMODEL_H
