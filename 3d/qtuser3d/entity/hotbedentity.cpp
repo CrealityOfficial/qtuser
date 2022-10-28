@@ -294,7 +294,7 @@ namespace qtuser_3d
 			m_isHots.resize(9);
 			m_hotZone.push_back(Box3D(QVector3D(0.0, 0.0, -1.0), QVector3D(unit - 0.001, 235.0, 230)));//D0
 			m_hotZone.push_back(Box3D(QVector3D(unit - 0.001, 0.0,-1.0), QVector3D(235.0, unit - 0.001, 230)));//D1
-			m_hotZone.push_back(Box3D(QVector3D(235.0 - unit - 0.001, unit - 0.001,-1.0), QVector3D(235.0, 235.0, 230)));//D2
+			m_hotZone.push_back(Box3D(QVector3D(235.0 - unit + 0.001, unit - 0.001,-1.0), QVector3D(235.0, 235.0, 230)));//D2
 			m_hotZone.push_back(Box3D(QVector3D(unit - 0.001, 235.0 - unit + 0.001, -1.0), QVector3D(235.0 - unit + 0.001, 235.0, 230)));//D3
 			m_hotZone.push_back(Box3D(QVector3D(unit, unit, -1.0), QVector3D(unit2 - 0.001, 235.0 - unit, 230)));//D4
 			m_hotZone.push_back(Box3D(QVector3D(unit2 - 0.001, unit, -1.0), QVector3D(235.0 - unit, unit2 - 0.001, 230)));//D5
