@@ -53,6 +53,7 @@ namespace qtuser_3d
 			{
 				selectPickable(pickable);
 			}
+			notifyTracers();
 		}
 	}
 
