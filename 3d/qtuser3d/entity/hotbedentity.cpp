@@ -22,7 +22,7 @@ namespace qtuser_3d
 		m_bedType = _bedType;
 		float minX = 0;
 		float minY = 0;
-		float minZ = 0;
+		float minZ = 0.01;
 		if (_bedType == bedType::CR_GX)
 		{
 			for (int n = 0; n < 9; n++)
@@ -173,10 +173,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions0;
 			QVector<unsigned> indices0;
-			positions0.push_back(QVector3D(0.0, 0.0, 0.0));//2
-			positions0.push_back(QVector3D(unit-0.001, 0.0, 0.0));//6
-			positions0.push_back(QVector3D(unit - 0.001, 235.0, 0.0));//7
-			positions0.push_back(QVector3D(0.0, 235.0, 0.0));//3
+			positions0.push_back(QVector3D(0.0, 0.0, minZ));//2
+			positions0.push_back(QVector3D(unit-0.001, 0.0, minZ));//6
+			positions0.push_back(QVector3D(unit - 0.001, 235.0, minZ));//7
+			positions0.push_back(QVector3D(0.0, 235.0, minZ));//3
 			indices0.push_back(0); indices0.push_back(1); indices0.push_back(2);//D0
 			indices0.push_back(0); indices0.push_back(2); indices0.push_back(3);
 			Qt3DRender::QGeometry* geometry0 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions0.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices0.at(0));
@@ -185,10 +185,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions1;
 			QVector<unsigned> indices1;
-			positions1.push_back(QVector3D(unit - 0.001, 0.0, 0.0));
-			positions1.push_back(QVector3D(235.0, 0.0, 0.0));
-			positions1.push_back(QVector3D(235.0, unit - 0.001, 0.0));
-			positions1.push_back(QVector3D(unit - 0.001, unit - 0.001, 0.0));
+			positions1.push_back(QVector3D(unit - 0.001, 0.0, minZ));
+			positions1.push_back(QVector3D(235.0, 0.0, minZ));
+			positions1.push_back(QVector3D(235.0, unit - 0.001, minZ));
+			positions1.push_back(QVector3D(unit - 0.001, unit - 0.001, minZ));
 			indices1.push_back(0); indices1.push_back(1); indices1.push_back(2);//D1
 			indices1.push_back(0); indices1.push_back(2); indices1.push_back(3);
 			Qt3DRender::QGeometry* geometry1 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions1.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices1.at(0));
@@ -197,10 +197,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions2;
 			QVector<unsigned> indices2;
-			positions2.push_back(QVector3D(235.0- unit+0.001, unit- 0.001, 0.0));
-			positions2.push_back(QVector3D(235.0, unit-0.001, 0.0));
-			positions2.push_back(QVector3D(235.0, 235.0, 0.0));
-			positions2.push_back(QVector3D(235.0 - unit+ 0.001, 235.00, 0.0));
+			positions2.push_back(QVector3D(235.0- unit+0.001, unit- 0.001, minZ));
+			positions2.push_back(QVector3D(235.0, unit-0.001, minZ));
+			positions2.push_back(QVector3D(235.0, 235.0, minZ));
+			positions2.push_back(QVector3D(235.0 - unit+ 0.001, 235.00, minZ));
 			indices2.push_back(0); indices2.push_back(1); indices2.push_back(2);//D2
 			indices2.push_back(0); indices2.push_back(2); indices2.push_back(3);
 			Qt3DRender::QGeometry* geometry2 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions2.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices2.at(0));
@@ -209,10 +209,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions3;
 			QVector<unsigned> indices3;
-			positions3.push_back(QVector3D(unit- 0.001, 235.0-unit+ 0.001, 0.0));//2
-			positions3.push_back(QVector3D(235.0 - unit+ 0.001, 235.0 - unit+ 0.001, 0.0));//6
-			positions3.push_back(QVector3D(235.0 - unit+ 0.001, 235.0, 0.0));//7
-			positions3.push_back(QVector3D(unit-0.001, 235.0, 0.0));//3
+			positions3.push_back(QVector3D(unit- 0.001, 235.0-unit+ 0.001, minZ));//2
+			positions3.push_back(QVector3D(235.0 - unit+ 0.001, 235.0 - unit+ 0.001, minZ));//6
+			positions3.push_back(QVector3D(235.0 - unit+ 0.001, 235.0, minZ));//7
+			positions3.push_back(QVector3D(unit-0.001, 235.0, minZ));//3
 			indices3.push_back(0); indices3.push_back(1); indices3.push_back(2);//D3
 			indices3.push_back(0); indices3.push_back(2); indices3.push_back(3);
 			Qt3DRender::QGeometry* geometry3 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions3.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices3.at(0));
@@ -222,10 +222,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions4;
 			QVector<unsigned> indices4;
-			positions4.push_back(QVector3D(unit,  unit, 0.0));//2
-			positions4.push_back(QVector3D(unit2- 0.001, unit, 0.0));//6
-			positions4.push_back(QVector3D(unit2- 0.001, 235.0-unit, 0.0));//7
-			positions4.push_back(QVector3D(unit, 235.0 - unit, 0.0));//3
+			positions4.push_back(QVector3D(unit,  unit, minZ));//2
+			positions4.push_back(QVector3D(unit2- 0.001, unit, minZ));//6
+			positions4.push_back(QVector3D(unit2- 0.001, 235.0-unit, minZ));//7
+			positions4.push_back(QVector3D(unit, 235.0 - unit, minZ));//3
 			indices4.push_back(0); indices4.push_back(1); indices4.push_back(2);//D4
 			indices4.push_back(0); indices4.push_back(2); indices4.push_back(3);
 			Qt3DRender::QGeometry* geometry4 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions4.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices4.at(0));
@@ -234,10 +234,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions5;
 			QVector<unsigned> indices5;
-			positions5.push_back(QVector3D(unit2- 0.001, unit, 0.0));//2
-			positions5.push_back(QVector3D(235.0-unit, unit, 0.0));//6
-			positions5.push_back(QVector3D(235.0-unit, unit2-0.001, 0.0));//7
-			positions5.push_back(QVector3D(unit2-0.001, unit2-0.001, 0.0));//3
+			positions5.push_back(QVector3D(unit2- 0.001, unit, minZ));//2
+			positions5.push_back(QVector3D(235.0-unit, unit, minZ));//6
+			positions5.push_back(QVector3D(235.0-unit, unit2-0.001, minZ));//7
+			positions5.push_back(QVector3D(unit2-0.001, unit2-0.001, minZ));//3
 			indices5.push_back(0); indices5.push_back(1); indices5.push_back(2);//D5
 			indices5.push_back(0); indices5.push_back(2); indices5.push_back(3);
 			Qt3DRender::QGeometry* geometry5 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions5.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices5.at(0));
@@ -246,10 +246,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions6;
 			QVector<unsigned> indices6;
-			positions6.push_back(QVector3D(235.0- unit2- 0.001, unit2- 0.001, 0.0));//2
-			positions6.push_back(QVector3D(235.0- unit, unit2- 0.001, 0.0));//6
-			positions6.push_back(QVector3D(235.0- unit, 235.0 - unit, 0.0));//7
-			positions6.push_back(QVector3D(235.0- unit2- 0.001, 235.0 - unit, 0.0));//3
+			positions6.push_back(QVector3D(235.0- unit2- 0.001, unit2- 0.001, minZ));//2
+			positions6.push_back(QVector3D(235.0- unit, unit2- 0.001, minZ));//6
+			positions6.push_back(QVector3D(235.0- unit, 235.0 - unit, minZ));//7
+			positions6.push_back(QVector3D(235.0- unit2- 0.001, 235.0 - unit, minZ));//3
 			indices6.push_back(0); indices6.push_back(1); indices6.push_back(2);//D6
 			indices6.push_back(0); indices6.push_back(2); indices6.push_back(3);
 			Qt3DRender::QGeometry* geometry6 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions6.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices6.at(0));
@@ -258,10 +258,10 @@ namespace qtuser_3d
 
 			QVector<QVector3D> positions7;
 			QVector<unsigned> indices7;
-			positions7.push_back(QVector3D(unit2- 0.001, 235.0 - unit2+ 0.001, 0.0));//2
-			positions7.push_back(QVector3D(235.0 - unit2+ 0.001, 235.0 - unit2+ 0.001, 0.0));//6
-			positions7.push_back(QVector3D(235.0 - unit2+ 0.001, 235.0- unit, 0.0));//7
-			positions7.push_back(QVector3D(unit2- 0.001, 235.0- unit, 0.0));//3
+			positions7.push_back(QVector3D(unit2- 0.001, 235.0 - unit2+ 0.001, minZ));//2
+			positions7.push_back(QVector3D(235.0 - unit2+ 0.001, 235.0 - unit2+ 0.001, minZ));//6
+			positions7.push_back(QVector3D(235.0 - unit2+ 0.001, 235.0- unit, minZ));//7
+			positions7.push_back(QVector3D(unit2- 0.001, 235.0- unit, minZ));//3
 			indices7.push_back(0); indices7.push_back(1); indices7.push_back(2);//D7
 			indices7.push_back(0); indices7.push_back(2); indices7.push_back(3);
 			Qt3DRender::QGeometry* geometry7 = qtuser_3d::TrianglesCreateHelper::create(vertexNum, (float*)&positions7.at(0), nullptr, nullptr, triangleNum, (unsigned*)&indices7.at(0));
