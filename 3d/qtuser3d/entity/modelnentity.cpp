@@ -68,11 +68,11 @@ namespace qtuser_3d
 
 	void ModelNEntity::updateConvex(QVector<QVector3D>& points, QMatrix4x4& matrix, bool loop)
 	{
-		m_convexXYEntity->updateGeometry(points, loop);
-		//m_convexXYEntity->setPose(matrix);
-		QMatrix4x4 matrix2;
-		matrix2.setToIdentity();
-		m_convexXYEntity->setPose(matrix2);
+		//m_convexXYEntity->updateGeometry(points, loop);
+		////m_convexXYEntity->setPose(matrix);
+		//QMatrix4x4 matrix2;
+		//matrix2.setToIdentity();
+		//m_convexXYEntity->setPose(matrix2);
 	}
 
 	void ModelNEntity::enterSupportStatus()
