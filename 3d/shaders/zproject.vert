@@ -5,7 +5,7 @@ in vec3 vertexPosition;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform float projectZ = 0.01;
+uniform float projectZ = - 0.01;
 
 void main( void )
 {

@@ -57,9 +57,9 @@ namespace qtuser_3d
 		pass->setObjectName(shaderName);
 
 		//add render state
-		Qt3DRender::QCullFace* cullFace = new Qt3DRender::QCullFace(pass);
-		cullFace->setMode(Qt3DRender::QCullFace::NoCulling);
-		pass->addRenderState(cullFace);
+		//Qt3DRender::QCullFace* cullFace = new Qt3DRender::QCullFace(pass);
+		//cullFace->setMode(Qt3DRender::QCullFace::NoCulling);
+		//pass->addRenderState(cullFace);
 
 		Qt3DRender::QBlendEquationArguments* blendArguments = new Qt3DRender::QBlendEquationArguments(pass);
 		blendArguments->setSourceRgba(Qt3DRender::QBlendEquationArguments::One);

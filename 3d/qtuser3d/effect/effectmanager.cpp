@@ -34,14 +34,18 @@ namespace qtuser_3d
 
 	Qt3DRender::QEffect* EffectManager::create(const QString& name, Qt3DCore::QNode* parent)
 	{
-		Qt3DRender::QEffect* effect = new UEffect(parent);
+		UEffect* effect = new UEffect(parent);
 		Qt3DRender::QTechnique* technique = TechniqueCreator::createOpenGLBase(effect);
 		effect->addTechnique(technique);
 		QStringList renderPasses = name.split("_");
 		for (QString& str : renderPasses)
 		{
 			Qt3DRender::QRenderPass* pass = parent ? RENDERPASSCREATE(str, technique) : RENDERPASS(str);
-			if (pass) technique->addRenderPass(pass);
+			if (pass)
+			{
+				effect->registerRenderPass(str, pass);
+				technique->addRenderPass(pass);
+			}
 		}
 		return effect;
 	}

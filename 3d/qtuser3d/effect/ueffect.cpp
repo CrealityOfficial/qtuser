@@ -46,4 +46,24 @@ namespace qtuser_3d
 			delete (*it);
 		}
 	}
+
+	void UEffect::registerRenderPass(const QString& name, Qt3DRender::QRenderPass* pass)
+	{
+		if (name.isEmpty() || !pass)
+			return;
+
+		m_attachedPasses.insert(name, pass);
+	}
+
+	void UEffect::unregisterRenderPass(const QString& name)
+	{
+		auto it = m_attachedPasses.find(name);
+		if (it != m_attachedPasses.end())
+			m_attachedPasses.erase(it);
+	}
+
+	Qt3DRender::QRenderPass* UEffect::traitRenderPass(const QString& name)
+	{
+		return m_attachedPasses.value(name);
+	}
 }
