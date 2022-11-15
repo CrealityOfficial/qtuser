@@ -86,6 +86,10 @@ namespace qtuser_3d
 	void BasicEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type, int vCountPerPatch)
 	{
 		Qt3DRender::QGeometry* oldGeometry = m_geometryRenderer->geometry();
+
+		if (oldGeometry == geometry)
+			return;
+
 		if (oldGeometry && (oldGeometry->parent() == m_geometryRenderer))
 		{
 			oldGeometry->setParent((Qt3DCore::QNode*)nullptr);
