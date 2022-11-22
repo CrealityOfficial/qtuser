@@ -4,7 +4,8 @@
 #include <Qt3DRender/QEffect>
 #include <Qt3DRender/QParameter>
 #include <Qt3DRender/QRenderPass>
-
+#include <Qt3DRender/QCullFace>
+#include <Qt3DRender/QBlendEquationArguments>
 #include <QtCore/QMap>
 
 namespace qtuser_3d
@@ -25,6 +26,10 @@ namespace qtuser_3d
 		void registerRenderPass(const QString& name, Qt3DRender::QRenderPass* pass);
 		void unregisterRenderPass(const QString& name);
 		Qt3DRender::QRenderPass* traitRenderPass(const QString& name);
+
+		void setPassCullFace(const QString& passName, Qt3DRender::QCullFace::CullingMode cullingMode = Qt3DRender::QCullFace::NoCulling);
+		void setPassBlend(const QString& passName, Qt3DRender::QBlendEquationArguments::Blending source = Qt3DRender::QBlendEquationArguments::SourceAlpha,
+			Qt3DRender::QBlendEquationArguments::Blending destination = Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);
 	protected:
 		QMap<QString, Qt3DRender::QRenderPass*> m_attachedPasses;
 	};

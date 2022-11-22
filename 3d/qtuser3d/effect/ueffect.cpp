@@ -66,4 +66,29 @@ namespace qtuser_3d
 	{
 		return m_attachedPasses.value(name);
 	}
+
+	void UEffect::setPassCullFace(const QString& passName, Qt3DRender::QCullFace::CullingMode cullingMode)
+	{
+		Qt3DRender::QRenderPass* pass = traitRenderPass(passName);
+		if (pass)
+		{
+			//add render state
+			Qt3DRender::QCullFace* cullFace = new Qt3DRender::QCullFace(pass);
+			cullFace->setMode(cullingMode);
+			pass->addRenderState(cullFace);
+		}
+	}
+
+	void UEffect::setPassBlend(const QString& passName, Qt3DRender::QBlendEquationArguments::Blending source,
+		Qt3DRender::QBlendEquationArguments::Blending destination)
+	{
+		Qt3DRender::QRenderPass* pass = traitRenderPass(passName);
+		if (pass)
+		{
+			Qt3DRender::QBlendEquationArguments* blend = new Qt3DRender::QBlendEquationArguments(pass);
+			blend->setSourceRgba(source);
+			blend->setDestinationRgba(destination);
+			pass->addRenderState(blend);
+		}
+	}
 }
