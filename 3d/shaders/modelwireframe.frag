@@ -90,7 +90,7 @@ void main( void )
 	}
 	else
 	{
-		vec4 textColor = texture2D(textureDiffuse, varyUV);
+		vec4 textColor = texture(textureDiffuse, varyUV);
 		if(textColor.r<0 ||textColor.g<0||textColor.b<0)
 		{
 			textColor=stateColors[0];
