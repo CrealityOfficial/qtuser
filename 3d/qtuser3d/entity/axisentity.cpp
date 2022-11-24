@@ -2,6 +2,7 @@
 #include "qtuser3d/entity/purecolorentity.h"
 
 #include "qtuser3d/utils/primitiveshapecache.h"
+#include "qtuser3d/entity/textmeshentity.h"
 namespace qtuser_3d
 {
 	AxisEntity::AxisEntity(Qt3DCore::QNode* parent, int axistype, QVector3D* s_use)
@@ -10,11 +11,12 @@ namespace qtuser_3d
 		setObjectName("AxisEntity");
 		m_xAxis = new qtuser_3d::PureColorEntity(this);
 		m_xAxis->setObjectName("AxisEntity.xAxis");
+		
 		m_yAxis = new qtuser_3d::PureColorEntity(this);
 		m_yAxis->setObjectName("AxisEntity.yAxis");
 		m_zAxis = new qtuser_3d::PureColorEntity(this);
 		m_zAxis->setObjectName("AxisEntity.zAxis");
-
+		
 		Qt3DRender::QGeometry* geometry = nullptr;
 		QVector3D s(50, 50, 50);
 		if (axistype == 0)
@@ -48,9 +50,37 @@ namespace qtuser_3d
 		m_yAxis->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
 		m_zAxis->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
 
-		m_xAxis->setGeometry(geometry);	
+		m_xAxis->setGeometry(geometry);
 		m_yAxis->setGeometry(geometry);
 		m_zAxis->setGeometry(geometry);
+
+
+		QMatrix4x4 x_txtmatrix;
+		TextMeshEntity* textEntity = new TextMeshEntity(this);
+		textEntity->setColor(QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
+		textEntity->setText("X");
+		x_txtmatrix.scale(3);
+		x_txtmatrix.translate(7.0f, 0.0f, 0.0f);
+		x_txtmatrix.rotate(90, 1, 0, 0);
+		textEntity->setPose(x_txtmatrix);
+
+		QMatrix4x4 y_txtmatrix;
+		TextMeshEntity* textEntity2 = new TextMeshEntity(this);
+		textEntity2->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
+		textEntity2->setText("Y");
+		y_txtmatrix.scale(3);
+		y_txtmatrix.translate(-0.1f, 7.0f, 0.0f);
+		y_txtmatrix.rotate(90, 1, 0, 0);
+		textEntity2->setPose(y_txtmatrix);
+
+		QMatrix4x4 z_txtmatrix;
+		TextMeshEntity* textEntity3 = new TextMeshEntity(this);
+		textEntity3->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
+		textEntity3->setText("Z");
+		z_txtmatrix.scale(3);
+		z_txtmatrix.translate(-0.1f, 0.0f, 7.0f);
+		z_txtmatrix.rotate(90, 1, 0, 0);
+		textEntity3->setPose(z_txtmatrix);
 	}
 	
 	AxisEntity::~AxisEntity()
