@@ -141,6 +141,10 @@ void ToolCommandCenter::changeCommand(ToolCommand* command)
     }
 
 }
+QList<ToolCommand*> ToolCommandCenter::getToolCommandList()
+{
+    return m_toolCommands;
+}
 bool ToolCommandCenter::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     return false;

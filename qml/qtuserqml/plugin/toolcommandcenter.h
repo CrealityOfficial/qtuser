@@ -20,6 +20,9 @@ namespace qtuser_qml
 		void removeCommand(ToolCommand* command);
         void changeCommand(ToolCommand* command);
         Q_INVOKABLE QObject* get(int index);
+
+		QList<ToolCommand*> getToolCommandList();
+
 	protected:
 		int rowCount(const QModelIndex& parent) const override;
 		int columnCount(const QModelIndex& parent) const override;
