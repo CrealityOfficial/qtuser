@@ -160,7 +160,9 @@ void main( void )
 	if(showType == 0)
 	{
 		int stype = int(vertexDrawFlag_vs_out.x);
-		core_color = speedcolors[stype];
+		vec4 lastColor = speedcolors[stype];
+		vec4 nextColor = speedcolors[stype + 1];
+		core_color = lastColor + (nextColor - lastColor) * (vertexDrawFlag_vs_out.x - stype);
 	}
 	else if(showType == 1)
 		core_color = typecolors[int(vertexDrawFlag_vs_out.y)];
