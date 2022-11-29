@@ -21,7 +21,7 @@ namespace qtuser_3d
 		QVector3D s(50, 50, 50);
 		if (axistype == 0)
 		{
-			s = QVector3D(50, 50, 50);
+			s = QVector3D(10, 15, 10);
 			geometry = PRIMITIVESHAPE("arrow");
 		}
 		else if (axistype == 1)
@@ -60,7 +60,7 @@ namespace qtuser_3d
 		textEntity->setColor(QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
 		textEntity->setText("X");
 		x_txtmatrix.scale(3);
-		x_txtmatrix.translate(7.0f, 0.0f, 0.0f);
+		x_txtmatrix.translate(6.0f, 0.0f, 0.0f);
 		x_txtmatrix.rotate(90, 1, 0, 0);
 		textEntity->setPose(x_txtmatrix);
 
@@ -69,7 +69,7 @@ namespace qtuser_3d
 		textEntity2->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
 		textEntity2->setText("Y");
 		y_txtmatrix.scale(3);
-		y_txtmatrix.translate(-0.1f, 7.0f, 0.0f);
+		y_txtmatrix.translate(-0.1f, 6.0f, 0.0f);
 		y_txtmatrix.rotate(90, 1, 0, 0);
 		textEntity2->setPose(y_txtmatrix);
 
@@ -78,7 +78,7 @@ namespace qtuser_3d
 		textEntity3->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
 		textEntity3->setText("Z");
 		z_txtmatrix.scale(3);
-		z_txtmatrix.translate(-0.1f, 0.0f, 7.0f);
+		z_txtmatrix.translate(-0.1f, 0.0f, 6.0f);
 		z_txtmatrix.rotate(90, 1, 0, 0);
 		textEntity3->setPose(z_txtmatrix);
 	}
