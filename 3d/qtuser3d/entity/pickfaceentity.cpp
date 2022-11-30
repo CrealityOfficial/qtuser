@@ -1,6 +1,7 @@
 #include "pickfaceentity.h"
 #include "qtuser3d/geometry/trianglescreatehelper.h"
 #include "qtuser3d/effect/effectmanager.h"
+#include "qtuser3d/effect/ueffect.h"
 #include <Qt3DRender/QBuffer>
 
 #include <Qt3DRender/QBlendEquationArguments>
@@ -16,13 +17,10 @@ namespace qtuser_3d
 		m_stateParameter = createParameter("state", 0.0f);
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 1.0f, 1.0f, 0.2f));
 		m_vertexBaseParameter = createParameter("vertexBase", QPoint(0, 0));
-		Qt3DRender::QEffect* effect = EFFECTCREATE("pure.alpha.rt_pickFace.pick", this);
-		Qt3DRender::QBlendEquationArguments* blend = blendArguments();
-		if (blend)
-		{
-			blend->setSourceRgba(Qt3DRender::QBlendEquationArguments::SourceAlpha);
-			blend->setDestinationRgba(Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);
-		}
+		qtuser_3d::UEffect* effect = (qtuser_3d::UEffect*)EFFECTCREATE("pure.alpha.rt_pickFace.pick", this);
+		effect->setPassBlend("pure.alpha.rt");
+		effect->setPassCullFace("pure.alpha.rt");
+
 		Qt3DRender::QNoDepthMask* mask = new Qt3DRender::QNoDepthMask(this);
 		QList<Qt3DRender::QRenderPass*> passes
 			= effect->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
