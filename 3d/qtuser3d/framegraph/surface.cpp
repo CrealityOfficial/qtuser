@@ -17,7 +17,8 @@ namespace qtuser_3d
 
 		m_clearBuffer = new Qt3DRender::QClearBuffers(m_cameraSelector);
 		m_clearBuffer->setClearColor(QColor(120, 120, 120, 255));
-		m_clearBuffer->setBuffers(Qt3DRender::QClearBuffers::BufferType::ColorDepthBuffer);
+		m_clearBuffer->setClearStencilValue(0x0);
+		m_clearBuffer->setBuffers(Qt3DRender::QClearBuffers::BufferType::ColorDepthStencilBuffer);
 
 		m_renderPassFilter = new Qt3DRender::QRenderPassFilter(m_clearBuffer);
 		Qt3DRender::QFilterKey* filterKey = new Qt3DRender::QFilterKey();
