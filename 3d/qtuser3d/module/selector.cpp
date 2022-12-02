@@ -227,6 +227,18 @@ namespace qtuser_3d
 		else selectPickable(pickable);
 	}
 
+	void Selector::selectCtrl(const QPoint& p, bool sGroup)
+	{
+		if (!m_enabled)
+			return;
+
+		if (selectNotifying)
+			return;
+		Pickable* pickable = check(p, nullptr);
+		selectGroup(pickable);
+		
+
+	}
 	void Selector::selectGroup(qtuser_3d::Pickable* pickable)
 	{
 		if (!m_enabled)

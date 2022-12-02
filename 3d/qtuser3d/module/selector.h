@@ -30,6 +30,7 @@ namespace qtuser_3d
 		void clearHover();
 		bool hover(const QPoint& p);
 		virtual void select(const QPoint& p, bool sGroup = false);
+		virtual void selectCtrl(const QPoint& p, bool sGroup = false);
 		void selectPickable(qtuser_3d::Pickable* pickable);
 		void appendSelect(qtuser_3d::Pickable* pickable);
 		void selectGroup(qtuser_3d::Pickable* pickable);
