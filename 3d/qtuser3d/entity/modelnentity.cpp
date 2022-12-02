@@ -90,6 +90,11 @@ namespace qtuser_3d
 		m_stateParameter->setValue(state);
 	}
 
+	float ModelNEntity::getState()
+	{
+		return m_stateParameter->value().toFloat();
+	}
+
 	void ModelNEntity::setNozzle(float nozzle)
 	{
 		m_nozzleParameter->setValue(nozzle);

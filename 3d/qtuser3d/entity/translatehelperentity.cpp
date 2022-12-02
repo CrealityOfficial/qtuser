@@ -121,6 +121,7 @@ namespace qtuser_3d
 		if(m_zArrowEntity)
 			visibility ? m_zArrowEntity->setParent(this) : m_zArrowEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
+
 	void TranslateHelperEntity::setDirColor(QVector4D v4, int nDir)
 	{
 		if (nDir == 0 && m_xArrowEntity)
@@ -138,6 +139,12 @@ namespace qtuser_3d
 
 		}
 	}
+
+	void TranslateHelperEntity::setScale(float scaleRate)
+	{
+		m_transform->setScale(scaleRate);
+	}
+
 	void TranslateHelperEntity::updateBox(const Box3D& box)
 	{
 		QVector3D center = box.center();

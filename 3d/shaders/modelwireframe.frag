@@ -9,10 +9,10 @@ in vec3 worldWater;
 in vec3 barycentric;
 
 uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);
-uniform vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
+uniform vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);
 uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);
-uniform float specularPower = 12.0;
-uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
+uniform float specularPower = 10.5;
+uniform vec3 lightDirection = vec3(1.0, 0.0, 1.0);
 
 uniform int lightingEnable = 1;
 uniform float transparency = 1.0;
@@ -97,34 +97,19 @@ void main( void )
 		}
 		color = textColor;
 	}
-		
-		
-		
-	
-	vec3 fnormal 		  =	normalize(normal);
-	vec4 ambient_color 	  = ambient;
-	vec4 diffuse_color    = diffuse;
-	vec4 specular_color   = specular;
-	
-	vec3 lightDir = normalize(lightDirection);
-	vec4 coreColor = directLight(lightDir, fnormal, color, ambient_color, diffuse_color, specular_color);
-	
-	vec3 fgnormal 		  =	normalize(gnormal);
+
+	vec4 coreColor = color;
+	vec3 fgnormal =	normalize(gnormal);
 	
 	if(checkscope > 0)
 	{
-		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
+		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z 
+		|| worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z
+		|| abs(worldPosition.z - bottom) < 0.05 )
 		{
-			coreColor *= 0.3;
-			coreColor.r += 0.6;
-		}
-		if( abs(worldPosition.z - bottom) < 0.05 )
-		{
-			coreColor *= 0.3;
-			coreColor.r += 0.6;
+			coreColor = vec4(0.639, 0.106, 0.106, 1.0);
 		}
 	}
-	
 	
 	if(hoverState > 0)
 	{
@@ -144,6 +129,15 @@ void main( void )
 	}
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
+
+	vec3 fnormal 		  =	normalize(normal);
+	vec4 ambient_color 	  = ambient;
+	vec4 diffuse_color    = diffuse;
+	vec4 specular_color   = specular;
+	
+	vec3 lightDir = normalize(lightDirection);
+	coreColor = directLight(lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
+
 
 	if(!frontFacing())
 	{

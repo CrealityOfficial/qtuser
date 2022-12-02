@@ -25,6 +25,7 @@ namespace qtuser_3d
 		void setYVisibility(bool visibility);
 		void setZVisibility(bool visibility);
 
+		void setScale(float scaleRate);
 		void updateBox(const Box3D& box);
 		void setFixSize(int fixSize);
 		QVector3D center();

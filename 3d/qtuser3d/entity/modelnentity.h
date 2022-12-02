@@ -25,6 +25,7 @@ namespace qtuser_3d
 		void updateConvex(QVector<QVector3D>& points, QMatrix4x4& matrix, bool loop);
 
 		void setState(float state);
+		float getState();
 		void setErrorState(bool error);
 		void setVertexBase(QPoint vertexBase);
 		void setSupportCos(float supportCos);

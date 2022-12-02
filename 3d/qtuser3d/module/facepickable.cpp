@@ -59,7 +59,7 @@ namespace qtuser_3d
 			m_face->setState((float)state);
 			if (state == ControlState::hover)
 			{
-				m_face->setColor(QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
+				m_face->setColor(QVector4D(1.0f, 0.824f, 0.0f, 1.0f));
 			}
 			else
 			{
