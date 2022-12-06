@@ -157,4 +157,13 @@ namespace qtuser_3d
 
 		return pickable;
 	}
+
+	bool checkPickerColor(FacePicker* picker, QPoint point, int* faceID)
+	{
+		bool check = false;
+		if (picker)
+			check = picker->pick(point, faceID);
+
+		return check;
+	}
 }
