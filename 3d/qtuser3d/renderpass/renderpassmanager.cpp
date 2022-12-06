@@ -61,10 +61,10 @@ namespace qtuser_3d
 		//cullFace->setMode(Qt3DRender::QCullFace::NoCulling);
 		//pass->addRenderState(cullFace);
 
-		Qt3DRender::QBlendEquationArguments* blendArguments = new Qt3DRender::QBlendEquationArguments(pass);
-		blendArguments->setSourceRgba(Qt3DRender::QBlendEquationArguments::One);
-		blendArguments->setDestinationRgba(Qt3DRender::QBlendEquationArguments::Zero);
-		pass->addRenderState(blendArguments);
+		//Qt3DRender::QBlendEquationArguments* blendArguments = new Qt3DRender::QBlendEquationArguments(pass);
+		//blendArguments->setSourceRgba(Qt3DRender::QBlendEquationArguments::One);
+		//blendArguments->setDestinationRgba(Qt3DRender::QBlendEquationArguments::Zero);
+		//pass->addRenderState(blendArguments);
 
 		//Qt3DRender::QMultiSampleAntiAliasing* antiAliasing = new Qt3DRender::QMultiSampleAntiAliasing(pass);
 		//pass->addRenderState(antiAliasing);
@@ -72,14 +72,13 @@ namespace qtuser_3d
 		//Qt3DRender::QDithering* dithering = new Qt3DRender::QDithering(pass);
 		//pass->addRenderState(dithering);
 
-		Qt3DRender::QFrontFace* frontface = new Qt3DRender::QFrontFace(pass);
-		frontface->setDirection(Qt3DRender::QFrontFace::CounterClockWise);
-		pass->addRenderState(frontface);
+		//Qt3DRender::QFrontFace* frontface = new Qt3DRender::QFrontFace(pass);
+		//frontface->setDirection(Qt3DRender::QFrontFace::CounterClockWise);
+		//pass->addRenderState(frontface);
 
-		Qt3DRender::QDepthTest* depthTest = new Qt3DRender::QDepthTest(pass);
-		depthTest->setDepthFunction(Qt3DRender::QDepthTest::Less);
-
-		pass->addRenderState(depthTest);
+		//Qt3DRender::QDepthTest* depthTest = new Qt3DRender::QDepthTest(pass);
+		//depthTest->setDepthFunction(Qt3DRender::QDepthTest::Less);
+		//pass->addRenderState(depthTest);
 
 		pass->setShaderProgram(SHADERS(shaderName));
 		return pass;

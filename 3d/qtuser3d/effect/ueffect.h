@@ -7,8 +7,9 @@
 #include <Qt3DRender/QCullFace>
 #include <Qt3DRender/QBlendEquationArguments>
 #include <QtCore/QMap>
-#include <QStencilOperationArguments>
-#include <QStencilTestArguments>
+#include <Qt3DRender/QStencilOperationArguments>
+#include <Qt3DRender/QStencilTestArguments>
+#include <Qt3DRender/QDepthTest>
 
 namespace qtuser_3d
 {
@@ -41,6 +42,7 @@ namespace qtuser_3d
 			Qt3DRender::QStencilOperationArguments::Operation allPass);
 		void setPassStencilFunction(const QString& passName, Qt3DRender::QStencilTestArguments::StencilFunction func, int reference, int comparisonMask);
 
+		void setPassDepthTest(const QString& passName, Qt3DRender::QDepthTest::DepthFunction depthFunc);
 	protected:
 		QMap<QString, Qt3DRender::QRenderPass*> m_attachedPasses;
 	};

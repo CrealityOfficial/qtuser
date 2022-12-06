@@ -1,10 +1,9 @@
 #include "ueffect.h"
 #include "qtuser3d/renderpass/renderpassmanager.h"
 #include <Qt3DRender/QTechnique>
-#include <qstencilmask>
-#include <qstenciloperation>
-#include <QStencilTest>
-
+#include <Qt3DRender/QStencilMask>
+#include <Qt3DRender/QStencilOperation>
+#include <Qt3DRender/QStencilTest>
 
 namespace qtuser_3d
 {
@@ -156,6 +155,18 @@ namespace qtuser_3d
 			arg->setComparisonMask(comparisonMask);
 			arg->setReferenceValue(reference);
 			arg->setStencilFunction(func);
+
+			pass->addRenderState(state);
+		}
+	}
+
+	void UEffect::setPassDepthTest(const QString& passName, Qt3DRender::QDepthTest::DepthFunction depthFunc)
+	{
+		Qt3DRender::QRenderPass* pass = traitRenderPass(passName);
+		if (pass)
+		{
+			Qt3DRender::QDepthTest* state = new Qt3DRender::QDepthTest(pass);
+			state->setDepthFunction(depthFunc);
 
 			pass->addRenderState(state);
 		}

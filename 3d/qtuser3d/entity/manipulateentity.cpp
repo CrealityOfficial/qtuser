@@ -17,14 +17,16 @@ namespace qtuser_3d
 		{
 			shader_type = "pickFace.pick";
 		}
-		setEffect(EFFECTCREATE(shader_type, m_material));
+
+		qtuser_3d::UEffect* effect = (qtuser_3d::UEffect*)EFFECTCREATE(shader_type, m_material);
+		setEffect(effect);
+
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 		m_changeColorParameter = createParameter("changecolor", QVector4D(0.0f, 0.0f, 0.0f, 0.0f));
 		m_methodParameter = createParameter("mt", 0);
 
-		QList<Qt3DRender::QDepthTest*> tests = m_material->findChildren<Qt3DRender::QDepthTest*>(QString(), Qt::FindChildrenRecursively);
-		for(Qt3DRender::QDepthTest* test : tests)
-			test->setDepthFunction(Qt3DRender::QDepthTest::Always);
+		effect->setPassDepthTest("manipulate.alpha", Qt3DRender::QDepthTest::Always);
+		effect->setPassDepthTest("pickFace.pick", Qt3DRender::QDepthTest::Always);
 	}
 
 	ManipulateEntity::~ManipulateEntity()
