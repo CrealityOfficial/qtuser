@@ -5,6 +5,7 @@
 #include "qtuser3d/math/ray.h"
 #include <QtGui/QVector2D>
 #include <QtGui/QMatrix4x4>
+#include <Qt3DExtras/QTorusMesh>
 
 namespace qtuser_3d
 {
@@ -17,5 +18,7 @@ namespace qtuser_3d
 	QTUSER_3D_API Box3D transformBox(const QMatrix4x4& matrix, const Box3D& box);
 
 	QTUSER_3D_API bool lineCollidePlane(const QVector3D& planeCenter, const QVector3D& planeDir, const Ray& ray, QVector3D& collide);
+
+	QTUSER_3D_API Qt3DExtras::QTorusMesh* torusMesh();
 }
 #endif // _qtuser_3d_SPACE3D_1588841647525_H

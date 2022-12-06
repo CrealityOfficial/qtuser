@@ -35,4 +35,14 @@ list(APPEND SRCS qtusercore/module/commandcenter.cpp
 				 qtusercore/module/creativeinterface.h
 				 qtusercore/module/creativeplugincenter.h
 				 qtusercore/module/creativeplugincenter.cpp
+				 qtusercore/module/openglcontextsaver.h
+				 qtusercore/module/openglcontextsaver.cpp
+				 qtusercore/module/quicknativerendersystem.h
+				 qtusercore/module/quicknativerendersystem.cpp
+				 qtusercore/module/contextbase.h
+				 qtusercore/module/contextbase.cpp
+				 qtusercore/module/glcompatibility.h
+				 qtusercore/module/glcompatibility.cpp
+				 qtusercore/module/cyclejob.h
+				 qtusercore/module/cyclejob.cpp
 				 )

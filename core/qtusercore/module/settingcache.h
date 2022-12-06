@@ -9,7 +9,7 @@ namespace qtuser_core
 	QTUSER_CORE_API QString traitString(const QString& groupName, const QString& key, const QString& defaultStr = QString(""));
 
 	QTUSER_CORE_API void cacheStrings(const QString& key, const QStringList& values);
-	QTUSER_CORE_API QStringList traitString(const QString& key);
+	QTUSER_CORE_API QStringList traitStrings(const QString& key);
 
 	QTUSER_CORE_API void cacheInt(const QString& groupName, const QString& key, int value);
 	QTUSER_CORE_API int traitInt(const QString& groupName, const QString& key, int value = -1);

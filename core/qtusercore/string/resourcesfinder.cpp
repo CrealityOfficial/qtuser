@@ -2,6 +2,7 @@
 #include "qtusercore/module/systemutil.h"
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
+#include <QtCore/QCoreApplication>
 
 namespace qtuser_core
 {
@@ -55,5 +56,18 @@ namespace qtuser_core
 		QString folderDirectory = directory + QString("/") + folder;
 		folderDirectory = mkMutiDir(folderDirectory);
 		return folderDirectory;
+	}
+
+	QString getResourcesFolder(const QString& folder)
+	{
+		QString rFolder;
+#ifdef Q_OS_OSX
+		rFolder = QCoreApplication::applicationDirPath() + "/../Resources/resources/";
+#else
+		rFolder = QCoreApplication::applicationDirPath() + "/resources/";
+#endif
+
+		rFolder += folder;
+		return rFolder;
 	}
 }

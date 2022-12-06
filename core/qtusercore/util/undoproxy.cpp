@@ -8,14 +8,14 @@ UndoProxy::UndoProxy(QObject* parent)
 
 UndoProxy::~UndoProxy()
 {
-
 }
 
 void UndoProxy::setUndoStack(QUndoStack* undoStack)
 {
-	if (m_undoStack == undoStack) return;
-	m_undoStack = undoStack;
+	if (m_undoStack == undoStack)
+		return;
 
+	m_undoStack = undoStack;
 	if (m_undoStack)
 	{
 		connect(m_undoStack, SIGNAL(canRedoChanged(bool)), this, SIGNAL(canRedoChanged()));
@@ -32,34 +32,40 @@ void UndoProxy::setUndoStack(QUndoStack* undoStack)
 
 void UndoProxy::undo()
 {
-	if (m_undoStack) m_undoStack->undo();
+	if (m_undoStack)
+		m_undoStack->undo();
 }
 
 void UndoProxy::redo()
 {
-	if (m_undoStack) m_undoStack->redo();
+	if (m_undoStack)
+		m_undoStack->redo();
 }
 
 bool UndoProxy::canRedo() const
 {
-	if (m_undoStack) return m_undoStack->canRedo();
+	if (m_undoStack)
+		return m_undoStack->canRedo();
 	return false;
 }
 
 bool UndoProxy::canUndo() const
 {
-	if (m_undoStack) return m_undoStack->canUndo();
+	if (m_undoStack)
+		return m_undoStack->canUndo();
 	return false;
 }
 
 QString UndoProxy::redoText() const
 {
-	if (m_undoStack) return m_undoStack->redoText();
+	if (m_undoStack)
+		return m_undoStack->redoText();
 	return QString();
 }
 
 QString UndoProxy::undoText() const
 {
-	if (m_undoStack) return m_undoStack->undoText();
+	if (m_undoStack)
+		return m_undoStack->undoText();
 	return QString();
 }

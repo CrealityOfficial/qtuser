@@ -30,6 +30,8 @@ namespace qtuser_3d
 		void updateNearFar(const qtuser_3d::Box3D& box);
 		void updateNearFar();
 
+		bool checkUpState();
+
 		qtuser_3d::Ray screenRay(const QPoint& point);
 		qtuser_3d::Ray screenRay(const QPointF& point);
 		qtuser_3d::Ray screenRayOrthographic(const QPointF& point);

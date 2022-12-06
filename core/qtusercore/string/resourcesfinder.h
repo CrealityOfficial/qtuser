@@ -20,6 +20,7 @@ namespace qtuser_core
 	
 	QTUSER_CORE_API QStringList dynamicLoadFilters(const QString& prefix = "plugin");
 	QTUSER_CORE_API QString getOrCreateAppDataLocation(const QString& folder = "");
+	QTUSER_CORE_API QString getResourcesFolder(const QString& folder);
 }
 
 #define APP_RESOURCES qtuser_core::ResourcesFinder::instance()

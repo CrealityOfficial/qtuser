@@ -57,34 +57,33 @@ namespace qtuser_core
 
 		QSettings settings;
 		settings.remove(key);
-		qDebug() << "QSettings -------------cacheStrings/key"<< key;
 		settings.beginWriteArray(key);
 		for (int i = 0; i < values.size(); ++i)
 		{
 			settings.setArrayIndex(i);
 			settings.setValue("name", values[i]);
-			qDebug() << i << "name" << values[i];
 		}
 		settings.endArray();
+
+		qDebug() << "cacheStrings key : " << key << " values :" << values;
 	}
 
-	QStringList traitString(const QString& key)
+	QStringList traitStrings(const QString& key)
 	{
 		QStringList values;
 
 		QSettings settings;
-		qDebug() << "QSettings -------------traitString/name" << key;
 		int size = settings.beginReadArray(key);
 		for (int i = 0; i < size; ++i)
 		{
 			settings.setArrayIndex(i);
 			QString machine = settings.value("name").toString();
-			qDebug() << machine;
 			if (!machine.isEmpty())
 				values.append(machine);
 		}
 		settings.endArray();
 
+		qDebug() << "traitStrings key : " << key << " values :" << values;
 		return values;
 	}
 

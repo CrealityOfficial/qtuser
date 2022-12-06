@@ -3,14 +3,16 @@
 #include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
-#include <QCoreApplication>
+#include <QtWidgets/QApplication>
 #include <QtCore/QStandardPaths>
+#include <QtGui/QSurface>
+#include <QtGui/QSurfaceFormat>
 #include <QtCore/QDateTime>
 #include <QSettings>
 
+#include "qtusercore/module/glcompatibility.h"
 #include "qtusercore/string/resourcesfinder.h"
 #include "ccglobal/log.h"
-#include"../../buildinfo.h"
 
 #ifdef _WINDOWS
 
@@ -26,6 +28,8 @@
 #pragma comment(lib, "dbghelp.lib")
 
 #endif
+
+#define DEBUG_FUNCTION 0
 
 enum SYSTEM_TYPE
 {
@@ -50,7 +54,7 @@ void initSystemUtil()
 
 void showDetailSystemInfo()
 {
-	qDebug() << "--------------------------------";
+	qDebug() << "--------------------------------showDetailSystemInfo----------------------------";
 	qDebug() << "buildAbi: " << QSysInfo::buildAbi();
 	qDebug() << "buildCpuArchitecture: " << QSysInfo::buildCpuArchitecture();
 	qDebug() << "currentCpuArchitecture: " << QSysInfo::currentCpuArchitecture();
@@ -64,10 +68,10 @@ void showDetailSystemInfo()
 	QOperatingSystemVersion version = QOperatingSystemVersion::current();
 	qDebug() << version.name() << version.majorVersion() << version.minorVersion() << version.microVersion();
 	showSysMemory();
-	qDebug() << "--------------------------------\n";
 
-	QString write_folder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-	qDebug() << "write_folder = " << write_folder;
+	QString appLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	qDebug() << "WriteAppData: " << appLocation;
+	qDebug() << "--------------------------------showDetailSystemInfo----------------------------";
 }
 
 
@@ -80,7 +84,7 @@ void showSysMemory()
 
 	int msize = 1024 * 1024;
 
-	qDebug() << "memory use: " << pmc.WorkingSetSize / msize << "M/" << pmc.PeakWorkingSetSize / msize << "M + "
+	qDebug() << "Memory Use: " << pmc.WorkingSetSize / msize << "M/" << pmc.PeakWorkingSetSize / msize << "M + "
 		<< pmc.PagefileUsage / msize << "M/" << pmc.PeakPagefileUsage / msize << "M";
 
 #else
@@ -110,7 +114,7 @@ void printCallStack()
 	{
 		SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
 
-		printf("%i: %s - 0x%0X\n", frames - i - 1, symbol->Name, symbol->Address);
+		printf("%d: %s - 0x%zd\n", (int)(frames - i - 1), symbol->Name, (size_t)symbol->Address); 
 	}
 
 	free(symbol);
@@ -123,8 +127,6 @@ QString getCanWriteFolder()
 {
 	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 }
-
-
 
 void redirectIo()
 {
@@ -142,88 +144,31 @@ void redirectIo()
 #endif
 }
 
-QString mkMutiDir(const QString path)
+QString mkMutiDir(const QString& path)
 {
 	QDir dir(path);
-	if (dir.exists(path)) {
+	if (dir.exists(path) || path.isEmpty()) {
 		return path;
 	}
 	QString parentDir = mkMutiDir(path.mid(0, path.lastIndexOf('/')));
-	QString dirname = path.mid(path.lastIndexOf('/') + 1);
+	QString dirName = path.mid(path.lastIndexOf('/') + 1);
 	QDir parentPath(parentDir);
-	if (!dirname.isEmpty())
-		parentPath.mkpath(dirname);
-	return parentDir + "/" + dirname;
+	if (!dirName.isEmpty())
+		parentPath.mkpath(dirName);
+	return parentDir + "/" + dirName;
 }
 
-/**
-* 自动对区分不同区域的可获取的网络地址
-* key, 网络地址类型
-* return:   返回网络地址
-*/
-QString getUrlAddress(QString type)
+void mkMutiDirFromFileName(const QString& fileName)
 {
-	QSettings setting;
-	setting.beginGroup("language_perfer_config");
-	QString strLanguageType = setting.value("language_type", "en.ts").toString();
-	setting.endGroup();
+	if (fileName.isEmpty())
+		return;
 
-	QString qurl;
-	const char* url = nullptr;
-
-	bool isCN = false;
-	if (strLanguageType == "zh_CN.ts")
+	int index = fileName.lastIndexOf('/');
+	if (index >= 0)
 	{
-		isCN = true;
+		QString path = fileName.mid(0, index);
+		mkMutiDir(path);
 	}
-
-	if (type == "modelStore")
-	{
-		if (isCN)
-		{
-			url = "https://www.crealitycloud.cn/model";
-		}
-		else
-		{
-			url = "https://www.crealitycloud.com/model";
-		}
-	}
-	else if (type == "updateVersionCheck")
-	{
-		if (isCN)
-		{
-			url = "https://file-cdn.creality.com/ota-sz/";
-		}
-		else
-		{
-			url = "https://file2-cdn.creality.com/ota-sz/";
-		}
-	}
-	else if (type == "feedBack")
-	{
-		if (isCN)
-		{
-			url = "https://support.qq.com/product/317172";
-		}
-		else
-		{
-			url = "https://www.crealitycloud.com/group-detail/61372a382685eb12cd004154";
-		}
-	}
-	else if (type == "homePage")
-	{
-		if (isCN)
-		{
-			url = "https://www.cxsw3d.cn/";
-		}
-		else
-		{
-			url = "https://www.cxsw3d.com/";
-		}
-	}
-
-	qurl = QString::fromLatin1(url);
-	return qurl;
 }
 
 void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg)
@@ -231,7 +176,11 @@ void outputMessage(QtMsgType type, const QMessageLogContext& context, const QStr
 #ifdef QT_NO_DEBUG
 	QString text = QString("[%3]").arg(msg);
 #else
-	QString text = QString("[FILE %1, FUNCTION %2]\n[%3]").arg(context.file).arg(context.function).arg(msg);
+	#if DEBUG_FUNCTION
+		QString text = QString("[FILE %1, FUNCTION %2][%3]").arg(context.file).arg(context.function).arg(msg);
+	#else
+		QString text = QString("[%3]").arg(msg);
+	#endif
 #endif
 	switch (type)//log 信息类型
 	{
@@ -258,7 +207,6 @@ void outputMessage(QtMsgType type, const QMessageLogContext& context, const QStr
 
 namespace qtuser_core
 {
-
 	void initializeLog(int argc, char* argv[])
 	{
 #ifdef QT_NO_DEBUG
@@ -273,10 +221,10 @@ namespace qtuser_core
 			return dataTime.toLocal8Bit().data();
 		};
 
-		cxlog::CXLog::Instance().setNameFunc(func);
+		LOGNAMEFUNC(func);
 		LOGDIR(logDirectory.toLocal8Bit().data());
 #else
-		cxlog::CXLog::Instance().setColorConsole();
+		LOGCONSOLE();
 #endif
 		LOGLEVEL(1);
 
@@ -288,6 +236,97 @@ namespace qtuser_core
 	void uninitializeLog()
 	{
 		qDebug() << QString("----------> END LOG <-----------");
-		cxlog::CXLog::Instance().EndLog();
+		LOGEND();
+	}
+	
+	void setDefaultBeforApp()
+	{
+#ifdef Q_OS_OSX
+		QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+
+		//dynamic plugin
+		QStringList dynamicPathList = QCoreApplication::libraryPaths();
+
+#ifdef Q_OS_OSX
+		qDebug() << "OS OSX pre setDynamicLoadPath";
+#elif defined Q_OS_WIN32
+		qDebug() << "OS WIN32 pre setDynamicLoadPath";
+#elif defined Q_OS_LINUX
+		qDebug() << "OS LINUX pre setDynamicLoadPath";
+
+		if (qEnvironmentVariableIsSet("APPDIR"))
+		{
+			QString appdir = qEnvironmentVariable("APPDIR");
+			qDebug() << "Linux get the APPDIR : " << appdir;
+			dynamicPathList << appdir + "/plugins";
+		}
+#endif
+
+		qDebug() << "Pre Dynamic import paths:";
+		qDebug() << dynamicPathList;
+		QCoreApplication::setLibraryPaths(dynamicPathList);
+	}
+
+	void setDefaultAfterApp()
+	{
+#ifdef Q_OS_OSX
+		QSurfaceFormat format;
+		format.setVersion(3, 2);
+		format.setProfile(QSurfaceFormat::CoreProfile);
+		format.setDepthBufferSize(24);
+		format.setStencilBufferSize(8);
+		format.setSamples(4);
+		QSurfaceFormat::setDefaultFormat(format);
+#endif
+
+		//dynamic plugin
+		QStringList dynamicPathList = QCoreApplication::libraryPaths();
+
+		QString applicationDir = QCoreApplication::applicationDirPath();
+		qDebug() << "applicationDir: " << applicationDir;
+
+		if(!dynamicPathList.contains(applicationDir))
+			dynamicPathList << applicationDir;
+#ifdef Q_OS_OSX
+		qDebug() << "OS OSX setDynamicLoadPath";
+		dynamicPathList << QCoreApplication::applicationDirPath() + "/../Frameworks";
+#elif defined Q_OS_WIN32
+		qDebug() << "OS WIN32 setDynamicLoadPath";
+#elif defined Q_OS_LINUX
+		qDebug() << "OS LINUX setDynamicLoadPath";
+		dynamicPathList << applicationDir + "/lib/";
+#endif
+
+		qDebug() << "Dynamic import paths:";
+		qDebug() << dynamicPathList;
+		QCoreApplication::setLibraryPaths(dynamicPathList);
+	}
+
+	void removeFile(const QString& fileName)
+	{
+		QFile file(fileName);
+		if (file.exists())
+			file.remove();
+	}
+
+	SystemUtil::SystemUtil(QObject* parent)
+	{
+
+	}
+
+	SystemUtil::~SystemUtil()
+	{
+
+	}
+
+	int SystemUtil::getDiskTotalSpace(const QString& driver)
+	{
+		return 4096;
+	}
+
+	int SystemUtil::getDiskFreeSpace(const QString& driver)
+	{
+		return 4096;
 	}
 }

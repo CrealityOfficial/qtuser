@@ -24,6 +24,25 @@ namespace qtuser_3d
 		return parameter;
 	}
 
+	void UEffect::setParameter(const QString& name, const QVariant& value)
+	{
+		QVector<Qt3DRender::QParameter*> params = parameters();
+
+		bool have = false;
+		for (Qt3DRender::QParameter* param : params)
+		{
+			if (name == param->name())
+			{
+				param->setValue(value);
+				have = true;
+				break;
+			}
+		}
+
+		if (!have)
+			createParameter(name, value);
+	}
+
 	void UEffect::destroyParameter(Qt3DRender::QParameter* parameter)
 	{
 		if (parameter)

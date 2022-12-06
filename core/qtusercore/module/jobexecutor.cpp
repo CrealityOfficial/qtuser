@@ -36,10 +36,22 @@ namespace qtuser_core
 		m_tracers.removeOne(tracer);
 	}
 
-	bool JobExecutor::execute(QList<JobPtr> jobs)
+	bool JobExecutor::execute(QList<JobPtr> jobs, bool front)
 	{
-		if (m_running || (jobs.size() == 0) || m_runThread->isRunning())
+		if (jobs.size() == 0)
 			return false;
+
+		if (m_running || m_runThread->isRunning())
+		{
+			if (front)
+			{
+				for(JobPtr job : jobs)
+					m_exsitJobs.push_front(job);
+			}
+			else
+				m_exsitJobs.append(jobs);
+			return false;
+		}
 
 		m_running = true;
 
@@ -53,11 +65,11 @@ namespace qtuser_core
 		return true;
 	}
 
-	bool JobExecutor::execute(JobPtr job)
+	bool JobExecutor::execute(JobPtr job, bool front)
 	{
 		QList<JobPtr> jobs;
 		jobs.push_back(job);
-		return execute(jobs);
+		return execute(jobs, front);
 	}
 
 	void JobExecutor::onJobFinished()
