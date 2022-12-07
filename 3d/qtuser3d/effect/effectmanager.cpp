@@ -49,6 +49,7 @@ namespace qtuser_3d
 					effect->setPassBlend(str, Qt3DRender::QBlendEquationArguments::One, Qt3DRender::QBlendEquationArguments::Zero);
 					effect->setPassCullFace(str);
 				}
+
 				technique->addRenderPass(pass);
 			}
 		}
