@@ -16,7 +16,9 @@ namespace qtuser_3d
 		virtual ~SelectEntity();
 
 		void updateData(const std::vector<QVector3D>& vertexData);
-	protected:
+		void setColor(QVector4D color);
+	private:
+		Qt3DRender::QParameter* m_pColorParam;
 	};
 }
 #endif // QTUSER_3D_BASICENTITY_1594569444448_H

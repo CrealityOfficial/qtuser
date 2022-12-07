@@ -11,7 +11,7 @@ in vec3 barycentric;
 uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);
 uniform vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);
 uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);
-uniform float specularPower = 10.5;
+uniform float specularPower = 4.5;
 uniform vec3 lightDirection = vec3(1.0, 0.0, 1.0);
 
 uniform int lightingEnable = 1;
@@ -107,7 +107,8 @@ void main( void )
 		|| worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z
 		|| abs(worldPosition.z - bottom) < 0.05 )
 		{
-			coreColor = vec4(0.639, 0.106, 0.106, 1.0);
+			// coreColor = vec4(0.649, 0.516, 0.504, 1.0);
+			coreColor = stateColors[4];
 		}
 	}
 	

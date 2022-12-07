@@ -9,7 +9,7 @@ namespace qtuser_3d
 		:BasicEntity(parent)
 	{
 		setEffect(EFFECT("pure"));
-		createParameter("color", QVector4D(0.6f, 0.6f, 0.0f, 1.0f));
+		m_pColorParam = createParameter("color", QVector4D(0.6f, 0.6f, 0.0f, 1.0f));
 	}
 
 	SelectEntity::~SelectEntity()
@@ -23,6 +23,11 @@ namespace qtuser_3d
 			Qt3DRender::QGeometry* geometry = TrianglesCreateHelper::create((int)vertexData.size(), (float*)&vertexData.at(0), nullptr, nullptr, 0, nullptr);
 			setGeometry(geometry);
 		}
+	}
+
+	void SelectEntity::setColor(QVector4D color)
+	{
+		m_pColorParam->setValue(color);
 	}
 
 }

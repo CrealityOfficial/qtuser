@@ -37,7 +37,8 @@ uniform vec2 layershow;
 uniform int layerstartflag_show;
 
 uniform vec4 typecolors[18];
-uniform vec4 speedcolors[13];
+uniform float speedcolorSize = 11;
+uniform vec4 speedcolors[11];
 uniform vec4 nozzlecolors[6];
 
 uniform int typecolorsshow[18];
@@ -159,10 +160,11 @@ void main( void )
 	
 	if(showType == 0)
 	{
-		int stype = int(vertexDrawFlag_vs_out.x);
+		float speedFlag = vertexDrawFlag_vs_out.x * speedcolorSize;
+		int stype = int(speedFlag);
 		vec4 lastColor = speedcolors[stype];
 		vec4 nextColor = speedcolors[stype + 1];
-		core_color = lastColor + (nextColor - lastColor) * (vertexDrawFlag_vs_out.x - stype);
+		core_color = lastColor + (nextColor - lastColor) * (speedFlag - stype);
 	}
 	else if(showType == 1)
 		core_color = typecolors[int(vertexDrawFlag_vs_out.y)];
