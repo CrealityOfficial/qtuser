@@ -8,5 +8,7 @@ list(APPEND SRCS qtusercore/util/projectinformation.h
 				 qtusercore/util/stringhistory.cpp
 				 qtusercore/util/undoproxy.h
 				 qtusercore/util/undoproxy.cpp
+				 qtusercore/util/configbundle.h
+				 qtusercore/util/configbundle.cpp
 				 )
 				 
