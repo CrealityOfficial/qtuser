@@ -38,12 +38,17 @@ namespace qtuser_3d
 		Qt3DRender::QTechnique* technique = TechniqueCreator::createOpenGLBase(effect);
 		effect->addTechnique(technique);
 		QStringList renderPasses = name.split("_");
-		for (QString& str : renderPasses)
+		for (const QString& str : renderPasses)
 		{
 			Qt3DRender::QRenderPass* pass = parent ? RENDERPASSCREATE(str, technique) : RENDERPASS(str);
 			if (pass)
 			{
 				effect->registerRenderPass(str, pass);
+				if (str.contains("pick"))
+				{
+					effect->setPassBlend(str, Qt3DRender::QBlendEquationArguments::One, Qt3DRender::QBlendEquationArguments::Zero);
+					effect->setPassCullFace(str);
+				}
 				technique->addRenderPass(pass);
 			}
 		}
