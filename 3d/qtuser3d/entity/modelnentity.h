@@ -50,7 +50,6 @@ namespace qtuser_3d
 		void setNeedCheckScope(int checkscope);
 
 		void setNozzle(float nozzle);
-		void setZLift(float z);
 
 		void setRenderMode(int mode);
 
