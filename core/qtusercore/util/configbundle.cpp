@@ -5,8 +5,9 @@
 using namespace qtuser_core;
 
 
-ConfigBundle::ConfigBundle(QString bundleName, QString bundleType)
-	: m_bundleDir("")
+ConfigBundle::ConfigBundle(QObject* parent, QString bundleName, QString bundleType)
+	: QObject(parent)
+	, m_bundleDir("")
 {
 #if defined (__APPLE__)
 	int index = QCoreApplication::applicationDirPath().lastIndexOf("/");
@@ -19,7 +20,7 @@ ConfigBundle::ConfigBundle(QString bundleName, QString bundleType)
 	m_bundleType = bundleType.isEmpty() ? "" : bundleType + "/";
 	QString iniPath = m_bundleDir + m_bundleType + m_bundleName + ".ini";
 
-	m_pConfigSettings = new QSettings(iniPath, QSettings::Format::IniFormat);
+	m_pConfigSettings = new QSettings(iniPath, QSettings::Format::IniFormat, this);
 	m_pConfigSettings->setIniCodec("UTF-8");
 }
 

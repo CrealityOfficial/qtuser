@@ -2,8 +2,7 @@
 #define CORE_CONFIGBUNDLE_H
 
 #include "qtusercore/qtusercoreexport.h"
-
-#include <QSettings>
+#include <QtCore/QSettings>
 
 #define DEFAULT_BUNDLE_NAME "cxsw_config"
 
@@ -16,10 +15,10 @@
 
 namespace qtuser_core
 {
-    class QTUSER_CORE_API ConfigBundle
+    class QTUSER_CORE_API ConfigBundle : public QObject
     {
     public:
-        ConfigBundle(QString bundleName = DEFAULT_BUNDLE_NAME, QString bundleType = "");
+        ConfigBundle(QObject* parent = nullptr, QString bundleName = DEFAULT_BUNDLE_NAME, QString bundleType = "");
         ~ConfigBundle();
 
         void setValue(const QString key, const QVariant value, QString group = "");
