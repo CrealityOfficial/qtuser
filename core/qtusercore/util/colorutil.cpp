@@ -21,11 +21,13 @@ namespace qtuser_core
 
 		return ((r << 16) & 0xff0000) | ((g << 8) & 0x00ff00) | (b & 0xff);
 	}
-	QTUSER_CORE_API QString qvector4DColor2StrColor(QVector4D color)
+
+	QString qvector4DColor2StrColor(QVector4D color)
 	{
 		return QString("%1,%2,%3,%4").arg(color.x()).arg(color.y()).arg(color.z()).arg(color.w());
 	}
-	QTUSER_CORE_API QVector4D strColor2QVector4DColor(QString colorStr)
+
+	QVector4D strColor2QVector4DColor(QString colorStr)
 	{
 		QVector4D color;
 
