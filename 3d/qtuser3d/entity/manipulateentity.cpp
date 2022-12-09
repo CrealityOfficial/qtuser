@@ -26,6 +26,7 @@ namespace qtuser_3d
 		m_methodParameter = createParameter("mt", 0);
 
 		effect->setPassDepthTest("manipulate.alpha", Qt3DRender::QDepthTest::Always);
+		effect->setPassDepthTest("pickFace.pick", Qt3DRender::QDepthTest::Always);
 	}
 
 	ManipulateEntity::~ManipulateEntity()
