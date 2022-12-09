@@ -5,7 +5,7 @@
 using namespace qtuser_core;
 
 
-ConfigBundle::ConfigBundle(QObject* parent, QString bundleName, QString bundleType)
+ConfigBundle::ConfigBundle(QString bundleName, QString bundleType, QObject* parent)
 	: QObject(parent)
 	, m_bundleDir("")
 {
