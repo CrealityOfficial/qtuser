@@ -18,7 +18,7 @@ namespace qtuser_core
     class QTUSER_CORE_API ConfigBundle : public QObject
     {
     public:
-        ConfigBundle(QString bundleName = DEFAULT_BUNDLE_NAME, QString bundleType = "", QObject* parent = nullptr);
+        ConfigBundle(QObject* parent = nullptr, QString bundleName = DEFAULT_BUNDLE_NAME, QString bundleType = "");
         ~ConfigBundle();
 
         void setValue(const QString key, const QVariant value, QString group = "");
