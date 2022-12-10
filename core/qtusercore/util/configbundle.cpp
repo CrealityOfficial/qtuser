@@ -2,18 +2,26 @@
 
 #include <QtCore/QCoreApplication>
 
+#if _DEBUG
+#include "../../buildinfo.h"
+#endif 
+
 using namespace qtuser_core;
 
 
-ConfigBundle::ConfigBundle(QObject* parent, QString bundleName, QString bundleType)
+ConfigBundle::ConfigBundle(QObject* parent, const QString& bundleName, const QString& bundleType)
 	: QObject(parent)
 	, m_bundleDir("")
 {
-#if defined (__APPLE__)
-	int index = QCoreApplication::applicationDirPath().lastIndexOf("/");
-	m_bundleDir = QCoreApplication::applicationDirPath().left(index) + "/Resources/resources/config/";
+#if _DEBUG
+	m_bundleDir = SOURCE_ROOT + QString("/resources/config/");
 #else
-	m_bundleDir = QCoreApplication::applicationDirPath() + "/resources/config/";
+	#if defined (__APPLE__)
+		int index = QCoreApplication::applicationDirPath().lastIndexOf("/");
+		m_bundleDir = QCoreApplication::applicationDirPath().left(index) + "/Resources/resources/config/";
+	#else
+		m_bundleDir = QCoreApplication::applicationDirPath() + "/resources/config/";
+	#endif
 #endif
 
 	m_bundleName = bundleName.isEmpty() ? DEFAULT_BUNDLE_NAME : bundleName;
@@ -28,7 +36,7 @@ ConfigBundle::~ConfigBundle()
 {
 }
 
-void ConfigBundle::setValue(const QString key, const QVariant value, QString group)
+void ConfigBundle::setValue(const QString& key, const QVariant& value, const QString& group)
 {
 	if (!group.isEmpty())
 		m_pConfigSettings->beginGroup(group);
@@ -39,7 +47,7 @@ void ConfigBundle::setValue(const QString key, const QVariant value, QString gro
 		m_pConfigSettings->endGroup();
 }
 
-void ConfigBundle::removeValue(const QString key, QString group)
+void ConfigBundle::removeValue(const QString& key, const QString& group)
 {
 	if (!group.isEmpty())
 		m_pConfigSettings->beginGroup(group);
@@ -55,7 +63,7 @@ void ConfigBundle::clear()
 	m_pConfigSettings->clear();
 }
 
-QStringList ConfigBundle::keys(QString group)
+QStringList ConfigBundle::keys(const QString& group)
 {
 	if (!group.isEmpty())
 		m_pConfigSettings->beginGroup(group);
@@ -68,7 +76,7 @@ QStringList ConfigBundle::keys(QString group)
 	return keys;
 }
 
-bool ConfigBundle::hasKey(const QString key, QString group)
+bool ConfigBundle::hasKey(const QString& key, const QString& group)
 {
 	if (!group.isEmpty())
 		m_pConfigSettings->beginGroup(group);
@@ -81,7 +89,7 @@ bool ConfigBundle::hasKey(const QString key, QString group)
 	return hasKey;
 }
 
-QVariant qtuser_core::ConfigBundle::value(QString key, QString group)
+QVariant qtuser_core::ConfigBundle::value(const QString& key, const QString& group)
 {
 	if (!group.isEmpty())
 		m_pConfigSettings->beginGroup(group);

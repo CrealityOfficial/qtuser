@@ -18,16 +18,16 @@ namespace qtuser_core
     class QTUSER_CORE_API ConfigBundle : public QObject
     {
     public:
-        ConfigBundle(QObject* parent = nullptr, QString bundleName = DEFAULT_BUNDLE_NAME, QString bundleType = "");
+        ConfigBundle(QObject* parent = nullptr, const QString& bundleName = DEFAULT_BUNDLE_NAME, const QString& bundleType = "");
         ~ConfigBundle();
 
-        void setValue(const QString key, const QVariant value, QString group = "");
-        void removeValue(const QString key, QString group = "");
+        void setValue(const QString& key, const QVariant& value, const QString& group = "");
+        void removeValue(const QString& key, const QString& group = "");
         void clear();
 
-        QStringList keys(QString group = "");
-        bool hasKey(const QString key, QString group = "");
-        QVariant value(QString key, QString group = "");
+        QStringList keys(const QString& group = "");
+        bool hasKey(const QString& key, const QString& group = "");
+        QVariant value(const QString& key, const QString& group = "");
 
         QString bundleName() { return m_bundleName; }
         QString bundleType() { return m_bundleType; }
