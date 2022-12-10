@@ -10,5 +10,7 @@ list(APPEND SRCS qtusercore/util/projectinformation.h
 				 qtusercore/util/undoproxy.cpp
 				 qtusercore/util/configbundle.h
 				 qtusercore/util/configbundle.cpp
+				 qtusercore/util/applicationconfiguration.h
+				 qtusercore/util/applicationconfiguration.cpp
 				 )
 				 
