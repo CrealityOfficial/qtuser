@@ -36,7 +36,7 @@ namespace qtuser_3d
 
 		if (m_chunkFaces <= 0) m_chunkFaces = 100;
 		if (m_chunks <= 0) m_chunks = 50;
-		m_chunkBytes = 3 * m_chunkFaces * sizeof(float);
+		m_chunkBytes = 9 * m_chunkFaces * sizeof(float);
 		int vertexSize = 3 * m_chunkFaces * m_chunks;
 
 		BufferHelper::setAttributeCount(m_positionAttribute, vertexSize);
@@ -44,6 +44,7 @@ namespace qtuser_3d
 		BufferHelper::setAttributeCount(m_flagAttribute, vertexSize);
 		 
 		m_freeList.reserve(m_chunks);
+		m_fillList.clear();
 		for (int i = 0; i < m_chunks; ++i)
 			m_freeList << i;
 	}
@@ -55,7 +56,35 @@ namespace qtuser_3d
 
 		int freeIndex = m_freeList.front();
 		m_freeList.pop_front();
+		m_fillList.push_back(freeIndex);
 		return freeIndex;
+	}
+
+	int PickableChunkEntity::fillChunkCount()
+	{
+		return m_fillList.count();
+	}
+
+	int PickableChunkEntity::fillVertexSize() const
+	{
+		int total = m_chunkFaces * m_fillList.size();
+		return total * 3;
+	}
+
+	int PickableChunkEntity::fillBytesSize() const
+	{
+		int bytes = sizeof(float) * 3;
+		return bytes * fillVertexSize();
+	}
+
+	int PickableChunkEntity::chunkBytes() const
+	{
+		return m_chunkBytes;
+	}
+
+	int PickableChunkEntity::freeChunkCount()
+	{
+		return m_freeList.count();
 	}
 
 	bool PickableChunkEntity::full()
@@ -106,25 +135,60 @@ namespace qtuser_3d
 		return faceID >= m_faceRange.x() && faceID < m_faceRange.y();
 	}
 
+	int PickableChunkEntity::fillDatas(char* buffer)
+	{
+		int size = 0;
+		char* tbuffer = buffer;
+		for (int i : m_fillList)
+		{
+			size += fillChunkDatas(tbuffer, i);
+			tbuffer += chunkBytes();
+		}
+		return size;
+	}
+
+	bool PickableChunkEntity::haveDatas() const
+	{
+		return !(m_freeList.size() == m_chunks);
+	}
+
+	int PickableChunkEntity::fillChunkDatas(char* buffer, int chunk)
+	{
+		if (!testChunkValid(chunk))
+			return 0;
+
+		int start = chunkVertexHead(chunk);
+		int end = chunkVertexHead(chunk + 1);
+		BufferHelper::copyAttribute(buffer, m_positionAttribute, start, end);
+		return end - start;
+	}
+
+	int PickableChunkEntity::chunkVertexHead(int chunk)
+	{
+		return 3 * m_chunkFaces * chunk;
+	}
+
 	void PickableChunkEntity::releaseChunk(int chunk)
 	{
 		qDebug() << "PickableChunkEntity releaseChunk " << chunk;
 		if (chunk < 0 || chunk >= m_chunks)
 			return;
 
-		int start = 3 * m_chunkFaces * chunk;
-		int end = 3 * m_chunkFaces * (chunk + 1);
+		int start = chunkVertexHead(chunk);
+		int end = chunkVertexHead(chunk + 1);
 		BufferHelper::releaseAttribute(m_positionAttribute, start, end);
 		BufferHelper::releaseAttribute(m_normalAttribute, start, end);
 		BufferHelper::releaseAttribute(m_flagAttribute, start, end);
 
 		m_freeList << chunk;
+		m_fillList.removeOne(chunk);
 	}
 
 	void PickableChunkEntity::releaseAllChunks()
 	{
 		qDebug() << "PickableChunkEntity::releaseAllChunks";
 		m_freeList.clear();
+		m_fillList.clear();
 		for (int i = 0; i < m_chunks; ++i)
 			m_freeList << i;
 

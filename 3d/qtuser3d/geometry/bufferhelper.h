@@ -39,6 +39,8 @@ namespace qtuser_3d
 
 		static void attributeRayCheck(Qt3DRender::QAttribute* positionAttribute, Qt3DRender::QAttribute* normalAttribute, int faceIndex,
 			const Ray& ray, QVector3D& position, QVector3D& normal);
+
+		static void copyAttribute(char* buffer, Qt3DRender::QAttribute* attribute, int start, int end);
 	};
 }
 #endif // _QTUSER_3D_BUFFERHELPER_1588133045652_H

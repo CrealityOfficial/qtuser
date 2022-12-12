@@ -19,6 +19,12 @@ namespace qtuser_3d
 		void setFaceBase(QPoint faceBase);
 
 		int freeChunk();
+		int fillChunkCount();
+		int fillVertexSize() const;
+		int fillBytesSize() const;
+		int chunkBytes() const;
+
+		int freeChunkCount();
 		bool full();
 		bool checkFace(int chunk, int faceID);
 		int relativeFaceID(int chunk, int faceID);
@@ -28,6 +34,16 @@ namespace qtuser_3d
 		void releaseAllChunks();
 		void check(int faceID, const Ray& ray, QVector3D& position, QVector3D& normal);
 		bool faceIDIn(int faceID);
+		int fillDatas(char* buffer);   // return vertex count
+		bool haveDatas() const;
+	protected:
+		int fillChunkDatas(char* buffer, int chunk);  // return vertex count
+		int chunkVertexHead(int chunk);
+
+		inline bool testChunkValid(int chunk)
+		{
+			return chunk >= 0 && chunk < m_chunks;
+		}
 	protected:
 		Qt3DRender::QGeometry* m_geometry;
 
@@ -36,6 +52,7 @@ namespace qtuser_3d
 		Qt3DRender::QAttribute* m_flagAttribute;
 
 		QList<int> m_freeList;
+		QList<int> m_fillList;
 		int m_chunkFaces;
 		int m_chunkBytes;
 		int m_chunks;

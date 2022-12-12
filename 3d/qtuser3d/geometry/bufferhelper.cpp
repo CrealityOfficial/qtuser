@@ -230,4 +230,18 @@ namespace qtuser_3d
 			lineCollidePlane(v0, normal, ray, position);
 		}
 	}
+
+	void BufferHelper::copyAttribute(char* buffer, Qt3DRender::QAttribute* attribute, int start, int end)
+	{
+		if (!attribute)
+			return;
+
+		int count = attribute->count();
+		if (start >= 0 && start < end && end < count)
+		{
+			int offset = start * attribute->vertexSize() * sizeof(float);
+			int offset1 = end * attribute->vertexSize() * sizeof(float);
+			memcpy(buffer, attribute->buffer()->data().data() + offset, offset1 - offset);
+		}
+	}
 }
