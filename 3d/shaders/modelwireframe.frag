@@ -26,11 +26,8 @@ uniform float error;
 uniform float supportCos = 0.5;
 
 uniform int hoverState = 0;
-uniform int waterState = 0;
 uniform int fanzhuan = 0;
 uniform int checkscope = 1;
-
-uniform float zcha = 0.01;
 
 uniform float state;
 uniform float nozzle;
@@ -119,14 +116,6 @@ void main( void )
 		{
 			coreColor.r += 0.8 * v;
 		}
-		
-		if(waterState == 1)
-		{
-			if(abs(worldPosition.z - worldWater.z) < zcha)
-			{
-				coreColor = vec4(0.1, 0.1, 0.1, 1.0);
-			}
-		}
 	}
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
@@ -150,25 +139,6 @@ void main( void )
 		vec4 specular_color_t   = specular;
 		coreColor = directLight(lightDir, fbnormal, color, ambient_color_t, diffuse_color_t, specular_color_t);
 	}
-
-    //int fz = fanzhuan % 2;
-    //   
-    //if(fz == 0)
-    //{
-    //    if(! frontFacing())
-    //    {
-    //        //coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-	//		coreColor.a = 1.0;
-    //    }
-    //}
-    //else
-    //{
-    //    if(frontFacing())
-    //    {
-    //        //coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-	//		coreColor.a = 1.0;
-    //    }
-    //}
 
 	if (renderModel != 1) {
 		vec3 baryDelta = fwidth(barycentric);
