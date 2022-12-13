@@ -25,7 +25,7 @@ namespace qtuser_core
 
         Q_INVOKABLE QString getDescription();
 		bool isRunning();
-		bool execute(QList<JobPtr> jobs, bool front = false);
+		bool execute(const QList<JobPtr>& jobs, bool front = false);
 		bool execute(JobPtr job, bool front = false);
 		void addJobTracer(JobTracer* tracer);
 		void removeJobTracer(JobTracer* tracer);

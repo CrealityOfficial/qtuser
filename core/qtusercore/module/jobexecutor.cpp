@@ -36,7 +36,7 @@ namespace qtuser_core
 		m_tracers.removeOne(tracer);
 	}
 
-	bool JobExecutor::execute(QList<JobPtr> jobs, bool front)
+	bool JobExecutor::execute(const QList<JobPtr>& jobs, bool front)
 	{
 		if (jobs.size() == 0)
 			return false;
