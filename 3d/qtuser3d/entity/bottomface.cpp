@@ -75,7 +75,6 @@ namespace qtuser_3d
 		float minY = box.min.y();
 		float maxY = box.max.y();
 		float minZ = box.min.z();
-		float maxZ = box.max.z();
 //		minZ -= 0.001;
 		positions.push_back(QVector3D(minX, minY, minZ));
 		positions.push_back(QVector3D(maxX, minY, minZ));

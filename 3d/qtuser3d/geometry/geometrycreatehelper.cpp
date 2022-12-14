@@ -62,4 +62,28 @@ namespace qtuser_3d
 		Qt3DRender::QAttribute* qAttribute5 = f(attribute5);
 		return createEx(parent, qAttribute1, qAttribute2, qAttribute3, qAttribute4, qAttribute5);
 	}
+
+	Qt3DRender::QGeometry* GeometryCreateHelper::create(const GeometryData& data, Qt3DCore::QNode* parent)
+	{
+		if (data.position.size() == 0 || data.position.size() == 0)
+			return nullptr;
+		
+		Qt3DRender::QBuffer* positionBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+		Qt3DRender::QBuffer* normalBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+		positionBuffer->setData(data.position);
+		normalBuffer->setData(data.normal);
+
+		Qt3DRender::QAttribute* positionAttribute = new Qt3DRender::QAttribute(positionBuffer, Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, 3, data.count);
+		Qt3DRender::QAttribute* normalAttribute = new Qt3DRender::QAttribute(normalBuffer, Qt3DRender::QAttribute::defaultNormalAttributeName(), Qt3DRender::QAttribute::Float, 3, data.count);
+
+		Qt3DRender::QAttribute* texcoordAttribute = nullptr;
+		if (data.texcoord.size() > 0)
+		{
+			Qt3DRender::QBuffer* texcoordBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+			texcoordBuffer->setData(data.texcoord);
+			texcoordAttribute = new Qt3DRender::QAttribute(texcoordBuffer, Qt3DRender::QAttribute::defaultTextureCoordinateAttributeName(), Qt3DRender::QAttribute::Float, 2, data.count);
+		}
+
+		return qtuser_3d::GeometryCreateHelper::create(parent, positionAttribute, normalAttribute, texcoordAttribute);
+	}
 }

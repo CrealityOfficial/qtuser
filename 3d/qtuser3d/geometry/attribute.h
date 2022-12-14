@@ -19,13 +19,27 @@ namespace qtuser_3d
 			, stride(_stride)
 			, bytes(_bytes)
 		{
-
 		}
 
 		int count;
 		int stride;
 		QByteArray bytes;
 		QString name;
+	};
+
+	class QTUSER_3D_API GeometryData
+	{
+	public:
+		GeometryData();
+		virtual ~GeometryData();
+
+	public:
+		QByteArray position;
+		QByteArray normal;
+		QByteArray texcoord;
+
+		int fcount;
+		int count;
 	};
 }
 
