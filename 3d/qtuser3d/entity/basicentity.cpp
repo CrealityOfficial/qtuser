@@ -144,6 +144,64 @@ namespace qtuser_3d
 		return nullptr;
 	}
 
+	void BasicEntity::setPassCullFace(const QString& passName, Qt3DRender::QCullFace::CullingMode cullingMode)
+	{
+		UEffect* eff = _effect();
+		if (eff)
+			eff->setPassCullFace(passName, cullingMode);
+	}
+
+	void BasicEntity::setPassBlend(const QString& passName, Qt3DRender::QBlendEquationArguments::Blending source,
+		Qt3DRender::QBlendEquationArguments::Blending destination)
+	{
+		UEffect* eff = _effect();
+		if (eff)
+			eff->setPassBlend(passName, source, destination);
+	}
+
+	void BasicEntity::setPassStencilMask(const QString& passName, int mask)
+	{
+		UEffect* eff = _effect();
+		if (eff)
+			eff->setPassStencilMask(passName, mask);
+	}
+
+	void BasicEntity::setPassStencilOperation(const QString& passName,
+		Qt3DRender::QStencilOperationArguments::Operation depthFail,
+		Qt3DRender::QStencilOperationArguments::Operation stencilFail,
+		Qt3DRender::QStencilOperationArguments::Operation allPass)
+	{
+		UEffect* eff = _effect();
+		if (eff)
+			eff->setPassStencilOperation(passName, depthFail, stencilFail, allPass);
+	}
+
+	void BasicEntity::setPassStencilFunction(const QString& passName, Qt3DRender::QStencilTestArguments::StencilFunction func, int reference, int comparisonMask)
+	{
+		UEffect* eff = _effect();
+		if (eff)
+			eff->setPassStencilFunction(passName, func, reference, comparisonMask);
+	}
+
+	void BasicEntity::setPassDepthTest(const QString& passName, Qt3DRender::QDepthTest::DepthFunction depthFunc)
+	{
+		UEffect* eff = _effect();
+		if (eff)
+			eff->setPassDepthTest(passName, depthFunc);
+	}
+
+	void BasicEntity::setPassNoDepthMask(const QString& passName)
+	{
+		UEffect* eff = _effect();
+		if (eff)
+			eff->setPassNoDepthMask(passName);
+	}
+
+	UEffect* BasicEntity::_effect()
+	{
+		return qobject_cast<UEffect*>(m_material->effect());
+	}
+
 	Qt3DRender::QAttribute* BasicEntity::positionAttribute()
 	{
 		Qt3DRender::QGeometry* geom = geometry();

@@ -8,10 +8,10 @@ namespace qtuser_3d
 {
 	PrinterGrid::PrinterGrid(Qt3DCore::QNode* parent, float lw)
 		: BasicEntity(parent)
-		, m_lineColor(0.32f, 0.32f, 0.32f, 1.0)
-		, m_xshowColor(0.65, 0.23, 0.23, 1.0)
-		, m_yshowColor(0.65, 0.23, 0.23, 1.0)
-		, m_gap(10.0)
+		, m_lineColor(0.32f, 0.32f, 0.32f, 1.0f)
+		, m_xshowColor(0.65f, 0.23f, 0.23f, 1.0f)
+		, m_yshowColor(0.65f, 0.23f, 0.23f, 1.0f)
+		, m_gap(10.0f)
 	{
 		UEffect* useEffect = qobject_cast<UEffect*>( EFFECTCREATE("printergrid", m_material));
 		m_xshowColorParam = useEffect->createParameter("xshowcolor", m_xshowColor);

@@ -10,6 +10,7 @@
 #include <Qt3DRender/QStencilOperationArguments>
 #include <Qt3DRender/QStencilTestArguments>
 #include <Qt3DRender/QDepthTest>
+#include <Qt3DRender/QNoDepthMask>
 
 namespace qtuser_3d
 {
@@ -43,6 +44,7 @@ namespace qtuser_3d
 		void setPassStencilFunction(const QString& passName, Qt3DRender::QStencilTestArguments::StencilFunction func, int reference, int comparisonMask);
 
 		void setPassDepthTest(const QString& passName, Qt3DRender::QDepthTest::DepthFunction depthFunc = Qt3DRender::QDepthTest::Less);
+		void setPassNoDepthMask(const QString& passName);
 	protected:
 		QMap<QString, Qt3DRender::QRenderPass*> m_attachedPasses;
 	};

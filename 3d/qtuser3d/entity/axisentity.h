@@ -5,7 +5,7 @@
 namespace qtuser_3d
 {
 	class PureColorEntity;
-	class QTUSER_3D_API AxisEntity : public Qt3DCore::QEntity
+	class QTUSER_3D_API AxisEntity : public BasicEntity
 	{
 		Q_OBJECT
 	public:

@@ -22,7 +22,7 @@ namespace qtuser_3d
 		m_bedType = _bedType;
 		float minX = 0;
 		float minY = 0;
-		float minZ = 0.01;
+		float minZ = 0.01f;
 		if (_bedType == bedType::CR_GX)
 		{
 			for (int n = 0; n < 9; n++)

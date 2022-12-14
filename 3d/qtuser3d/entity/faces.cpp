@@ -11,23 +11,8 @@ namespace qtuser_3d
 		:BasicEntity(parent)
 	{
 		m_colorParameter = createParameter("color", QVector4D(0.180f, 0.541f, 0.968f, 0.3f));
-		Qt3DRender::QEffect* effect = EFFECTCREATE("pure", m_material);
+		Qt3DRender::QEffect* effect = EFFECTCREATE("pure.alpha", m_material);
 
-		Qt3DRender::QBlendEquationArguments* blend = blendArguments();
-		if (blend)
-		{
-			blend->setSourceRgba(Qt3DRender::QBlendEquationArguments::SourceAlpha);
-			blend->setDestinationRgba(Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);
-		}
-
-
-		Qt3DRender::QNoDepthMask* mask = new Qt3DRender::QNoDepthMask(this);
-		QList<Qt3DRender::QRenderPass*> passes
-			= effect->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
-		if (passes.size() > 0)
-		{
-			passes.at(0)->addRenderState(mask);
-		}
 		setEffect(effect);
 	}
 	

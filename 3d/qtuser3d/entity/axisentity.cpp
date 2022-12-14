@@ -6,7 +6,7 @@
 namespace qtuser_3d
 {
 	AxisEntity::AxisEntity(Qt3DCore::QNode* parent, int axistype, QVector3D* s_use)
-		:QEntity(parent)
+		:BasicEntity(parent)
 	{
 		setObjectName("AxisEntity");
 		m_xAxis = new qtuser_3d::PureColorEntity(this);
@@ -18,15 +18,15 @@ namespace qtuser_3d
 		m_zAxis->setObjectName("AxisEntity.zAxis");
 		
 		Qt3DRender::QGeometry* geometry = nullptr;
-		QVector3D s(50, 50, 50);
+		QVector3D s(50.0f, 50.0f, 50.0f);
 		if (axistype == 0)
 		{
-			s = QVector3D(10, 15, 10);
+			s = QVector3D(10.0f, 15.0f, 10.0f);
 			geometry = PRIMITIVESHAPE("arrow");
 		}
 		else if (axistype == 1)
 		{
-			s = QVector3D(2, 3.3, 2);
+			s = QVector3D(2.0f, 3.3f, 2.0f);
 			geometry = PRIMITIVESHAPE("cylinder");
 		}
 		if (s_use != nullptr)
@@ -81,6 +81,13 @@ namespace qtuser_3d
 		z_txtmatrix.translate(-0.1f, 0.0f, 6.0f);
 		z_txtmatrix.rotate(90, 1, 0, 0);
 		textEntity3->setPose(z_txtmatrix);
+
+		//m_xAxis->setPassDepthTest("pure", Qt3DRender::QDepthTest::Always);
+		//m_yAxis->setPassDepthTest("pure", Qt3DRender::QDepthTest::Always);
+		//m_zAxis->setPassDepthTest("pure", Qt3DRender::QDepthTest::Always);
+		//textEntity->setPassDepthTest("pure", Qt3DRender::QDepthTest::Always);
+		//textEntity2->setPassDepthTest("pure", Qt3DRender::QDepthTest::Always);
+		//textEntity3->setPassDepthTest("pure", Qt3DRender::QDepthTest::Always);
 	}
 	
 	AxisEntity::~AxisEntity()

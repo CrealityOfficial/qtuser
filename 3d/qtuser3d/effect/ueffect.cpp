@@ -171,4 +171,14 @@ namespace qtuser_3d
 			pass->addRenderState(state);
 		}
 	}
+
+	void UEffect::setPassNoDepthMask(const QString& passName)
+	{
+		Qt3DRender::QRenderPass* pass = traitRenderPass(passName);
+		if (pass)
+		{
+			Qt3DRender::QNoDepthMask* state = new Qt3DRender::QNoDepthMask(pass);
+			pass->addRenderState(state);
+		}
+	}
 }

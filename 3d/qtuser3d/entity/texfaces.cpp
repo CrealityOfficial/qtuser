@@ -45,30 +45,30 @@ namespace qtuser_3d
 		
 		m_platformsizeParameter = createParameter("platformsize", QVector2D(1.0f, 1.0f));
 
-		Qt3DRender::QBlendEquationArguments* blend = blendArguments();
-		if (blend)
-		{
-			blend->setSourceRgba(Qt3DRender::QBlendEquationArguments::SourceAlpha);
-			blend->setDestinationRgba(Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);    // OneMinusSourceAlpha
-		}
-
-		Qt3DRender::QDithering* dither = new Qt3DRender::QDithering(this);
-		Qt3DRender::QMultiSampleAntiAliasing* antiAlias = new Qt3DRender::QMultiSampleAntiAliasing(this);
-		Qt3DRender::QNoDepthMask* mask = new Qt3DRender::QNoDepthMask(this);
-		Qt3DRender::QLineWidth* lineWidth = new Qt3DRender::QLineWidth(this);
-		lineWidth->setSmooth(true);
-		Qt3DRender::QPolygonOffset* polygonOffset = new Qt3DRender::QPolygonOffset(this);
-		polygonOffset->setScaleFactor(3.0);
-
-		QList<Qt3DRender::QRenderPass*> passes = effect->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
-		for (Qt3DRender::QRenderPass* pass : passes)
-		{
-			pass->addRenderState(mask);
-			pass->addRenderState(antiAlias);
-			pass->addRenderState(dither);
-			pass->addRenderState(lineWidth);
-			pass->addRenderState(polygonOffset);
-		}
+		//Qt3DRender::QBlendEquationArguments* blend = blendArguments();
+		//if (blend)
+		//{
+		//	blend->setSourceRgba(Qt3DRender::QBlendEquationArguments::SourceAlpha);
+		//	blend->setDestinationRgba(Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);    // OneMinusSourceAlpha
+		//}
+		//
+		//Qt3DRender::QDithering* dither = new Qt3DRender::QDithering(this);
+		//Qt3DRender::QMultiSampleAntiAliasing* antiAlias = new Qt3DRender::QMultiSampleAntiAliasing(this);
+		//Qt3DRender::QNoDepthMask* mask = new Qt3DRender::QNoDepthMask(this);
+		//Qt3DRender::QLineWidth* lineWidth = new Qt3DRender::QLineWidth(this);
+		//lineWidth->setSmooth(true);
+		//Qt3DRender::QPolygonOffset* polygonOffset = new Qt3DRender::QPolygonOffset(this);
+		//polygonOffset->setScaleFactor(3.0);
+		//
+		//QList<Qt3DRender::QRenderPass*> passes = effect->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
+		//for (Qt3DRender::QRenderPass* pass : passes)
+		//{
+		//	pass->addRenderState(mask);
+		//	pass->addRenderState(antiAlias);
+		//	pass->addRenderState(dither);
+		//	pass->addRenderState(lineWidth);
+		//	pass->addRenderState(polygonOffset);
+		//}
 		setEffect(effect);
 	}
 	

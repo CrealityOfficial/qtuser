@@ -64,7 +64,7 @@ namespace qtuser_3d
 			xMatrix.rotate(90.0f, 0.0f, 1.0f, 0.0f);
 
 			m_xAxis->setPose(xMatrix);
-			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2, sz.x() + extendlen, 1, 8);
+			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2f, sz.x() + extendlen, 1, 8);
 			m_xAxis->setGeometry(geometry);
 		}
 		if (m_yAxis)
@@ -74,7 +74,7 @@ namespace qtuser_3d
 			yMatrix.rotate(-90.0f, 1.0f, 0.0f, 0.0f);
 
 			m_yAxis->setPose(yMatrix);
-			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2, sz.y() + extendlen, 1, 8);
+			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2f, sz.y() + extendlen, 1, 8);
 			m_yAxis->setGeometry(geometry);
 		}
 		if (m_zAxis)
@@ -83,7 +83,7 @@ namespace qtuser_3d
 			zMatrix.translate(sz.x() / 2.0, sz.y() / 2.0);
 
 			m_zAxis->setPose(zMatrix);
-			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2, sz.z() + extendlen, 1, 8);
+			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2f, sz.z() + extendlen, 1, 8);
 			m_zAxis->setGeometry(geometry);
 		}
 	}
@@ -99,7 +99,7 @@ namespace qtuser_3d
 			xMatrix.rotate(-90.0f, 0.0f, 0.0f, 1.0f);
 
 			m_xAxis->setPose(xMatrix);
-			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2, sz.x() + extendlen, 1, 8);
+			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2f, sz.x() + extendlen, 1, 8);
 			m_xAxis->setGeometry(geometry);
 		}
 		if (m_yAxis)
@@ -108,7 +108,7 @@ namespace qtuser_3d
 			yMatrix.translate(sz.x() / 2.0, 0);
 
 			m_yAxis->setPose(yMatrix);
-			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2, sz.y() + extendlen, 1, 8);
+			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2f, sz.y() + extendlen, 1, 8);
 			m_yAxis->setGeometry(geometry);
 		}
 		if (m_zAxis)
@@ -118,7 +118,7 @@ namespace qtuser_3d
 			zMatrix.rotate(90.0f, 1.0f, 0.0f, 1.0f);
 
 			m_zAxis->setPose(zMatrix);
-			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2, sz.z() + extendlen, 1, 8);
+			Qt3DRender::QGeometry* geometry = BasicShapeCreateHelper::createInstructions(0.2f, sz.z() + extendlen, 1, 8);
 			m_zAxis->setGeometry(geometry);
 		}
 	}

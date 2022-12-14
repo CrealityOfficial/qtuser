@@ -53,7 +53,6 @@ namespace qtuser_3d
 		float minX = box.min.x();
 		float maxX = box.max.x();
 		float minY = box.min.y();
-		float maxY = box.max.y();
 		float woffset = -(maxX - minX) / 8.0 * 3.0;
 		float hoffset = 2 / 220.0 * (maxX - minX);
 		float h = 8.0 / 220.0 * (maxX - minX);

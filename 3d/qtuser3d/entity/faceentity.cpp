@@ -6,27 +6,36 @@
 
 namespace qtuser_3d
 {
-	FaceEntity::FaceEntity(Qt3DCore::QNode* parent, int facetype)
+	FaceEntity::FaceEntity(Qt3DCore::QNode* parent)
 		: BasicEntity(parent)
-		, m_faceFront(nullptr)
-		, m_faceBack(nullptr)
-		, m_faceLeft(nullptr)
-		, m_faceRight(nullptr)
-		, m_faceTop(nullptr)
-		, m_faceBottom(nullptr)
 	{
-		if (facetype & 0x01)
-			m_faceFront = new Faces(this);
-		if (facetype & 0x02)
-			m_faceBack = new Faces(this);
-		if (facetype & 0x04)
-			m_faceLeft = new Faces(this);
-		if (facetype & 0x08)
-			m_faceRight = new Faces(this);
-		if (facetype & 0x10)
-			m_faceTop = new Faces(this);
-		if (facetype & 0x20)
-			m_faceBottom = new Faces(this);
+		m_faceFront = new Faces(this);
+		m_faceBack = new Faces(this);
+		m_faceLeft = new Faces(this);
+		m_faceRight = new Faces(this);
+		m_faceTop = new Faces(this);
+		m_faceBottom = new Faces(this);
+
+		m_faceFront->setPassBlend("pure.alpha");
+		m_faceBack->setPassBlend("pure.alpha");
+		m_faceLeft->setPassBlend("pure.alpha");
+		m_faceRight->setPassBlend("pure.alpha");
+		m_faceTop->setPassBlend("pure.alpha");
+		m_faceBottom->setPassBlend("pure.alpha");
+
+		m_faceFront->setPassNoDepthMask("pure.alpha");
+		m_faceBack->setPassNoDepthMask("pure.alpha");
+		m_faceLeft->setPassNoDepthMask("pure.alpha");
+		m_faceRight->setPassNoDepthMask("pure.alpha");
+		m_faceTop->setPassNoDepthMask("pure.alpha");
+		m_faceBottom->setPassNoDepthMask("pure.alpha");
+
+		m_faceFront->setPassCullFace("pure.alpha");
+		m_faceBack->setPassCullFace("pure.alpha");
+		m_faceLeft->setPassCullFace("pure.alpha");
+		m_faceRight->setPassCullFace("pure.alpha");
+		m_faceTop->setPassCullFace("pure.alpha");
+		m_faceBottom->setPassCullFace("pure.alpha");
 	}
 
 	FaceEntity::~FaceEntity()
@@ -90,7 +99,6 @@ namespace qtuser_3d
 			QVector<QVector3D> positions;
 			QVector<unsigned> indices;
 			float minX = box.min.x();
-			float maxX = box.max.x();
 			float minY = box.min.y();
 			float maxY = box.max.y();
 			float minZ = box.min.z();
@@ -116,7 +124,6 @@ namespace qtuser_3d
 			float minX = box.min.x();
 			float maxX = box.max.x();
 			float minY = box.min.y();
-			float maxY = box.max.y();
 			float minZ = box.min.z();
 			float maxZ = box.max.z();
 			positions.push_back(QVector3D(minX, minY, minZ));
@@ -137,7 +144,7 @@ namespace qtuser_3d
 			int triangleNum = 2;
 			QVector<QVector3D> positions;
 			QVector<unsigned> indices;
-			float minX = box.min.x();
+
 			float maxX = box.max.x();
 			float minY = box.min.y();
 			float maxY = box.max.y();
@@ -163,7 +170,6 @@ namespace qtuser_3d
 			QVector<unsigned> indices;
 			float minX = box.min.x();
 			float maxX = box.max.x();
-			float minY = box.min.y();
 			float maxY = box.max.y();
 			float minZ = box.min.z();
 			float maxZ = box.max.z();
@@ -189,7 +195,6 @@ namespace qtuser_3d
 			float maxX = box.max.x();
 			float minY = box.min.y();
 			float maxY = box.max.y();
-			float minZ = box.min.z();
 			float maxZ = box.max.z();
 			positions.push_back(QVector3D(minX, minY, maxZ));
 			positions.push_back(QVector3D(maxX, minY, maxZ));
@@ -214,7 +219,6 @@ namespace qtuser_3d
 			float minY = box.min.y();
 			float maxY = box.max.y();
 			float minZ = box.min.z();
-			float maxZ = box.max.z();
 			positions.push_back(QVector3D(minX, minY, minZ));
 			positions.push_back(QVector3D(maxX, minY, minZ));
 			positions.push_back(QVector3D(minX, maxY, minZ));

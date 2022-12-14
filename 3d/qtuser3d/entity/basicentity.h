@@ -11,6 +11,7 @@
 
 #include <Qt3DRender/QBlendEquationArguments>
 #include "qtuser3d/geometry/attribute.h"
+#include "qtuser3d/effect/ueffect.h"
 
 namespace qtuser_3d
 {
@@ -44,8 +45,23 @@ namespace qtuser_3d
 
 		int traitPositionCount();
 		void fillPositionData(char* buffer, int len);
+
+		void setPassCullFace(const QString& passName, Qt3DRender::QCullFace::CullingMode cullingMode = Qt3DRender::QCullFace::NoCulling);
+		void setPassBlend(const QString& passName, Qt3DRender::QBlendEquationArguments::Blending source = Qt3DRender::QBlendEquationArguments::SourceAlpha,
+			Qt3DRender::QBlendEquationArguments::Blending destination = Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);
+
+		void setPassStencilMask(const QString& passName, int mask);
+		void setPassStencilOperation(const QString& passName,
+			Qt3DRender::QStencilOperationArguments::Operation depthFail,
+			Qt3DRender::QStencilOperationArguments::Operation stencilFail,
+			Qt3DRender::QStencilOperationArguments::Operation allPass);
+		void setPassStencilFunction(const QString& passName, Qt3DRender::QStencilTestArguments::StencilFunction func, int reference, int comparisonMask);
+
+		void setPassDepthTest(const QString& passName, Qt3DRender::QDepthTest::DepthFunction depthFunc = Qt3DRender::QDepthTest::Less);
+		void setPassNoDepthMask(const QString& passName);
 	protected:
 		Qt3DRender::QAttribute* positionAttribute();
+		UEffect* _effect();
 	protected:
 		Qt3DRender::QMaterial* m_material;
 		Qt3DCore::QTransform* m_transform;

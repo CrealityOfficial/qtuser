@@ -15,7 +15,7 @@ namespace qtuser_3d
 	{
 		Q_OBJECT
 	public:
-		FaceEntity(Qt3DCore::QNode* parent = nullptr, int facetype = 0x3f);
+		FaceEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~FaceEntity();
 
 		void drawFace(Box3D& box);
