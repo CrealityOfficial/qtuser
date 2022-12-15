@@ -249,9 +249,9 @@ namespace qtuser_core
 			auto f = [this](const QString& file) {
 				saveWithName(file);
 			};
-
+			qDebug() << "last open" << m_lastOpenFile;
 			QString filter = generateFilterFromHandlers(true);
-			dialogSave(filter, f);
+			dialogSave(filter, m_lastOpenFile, f);
 
 			m_externalHandler = nullptr;
 		}
@@ -295,7 +295,7 @@ namespace qtuser_core
 		QFileInfo info(fileName);
 		QString suffix = info.suffix();
 		suffix = suffix.toLower();
-		m_lastOpenFile = info.fileName();
+		m_lastOpenFile = info.baseName();
 		return openWithNameSuffix(fileName, suffix);
 	}
 
@@ -314,7 +314,7 @@ namespace qtuser_core
 			QFileInfo info(fileNames.at(0));
 			QString suffix = info.suffix();
 			suffix = suffix.toLower();
-			m_lastOpenFile = info.fileName();
+			m_lastOpenFile = info.baseName();
 			CXHandleBase* handler = findHandler(suffix, m_openHandlers);
 			if (!handler)
 			{
@@ -610,12 +610,12 @@ void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
 		func(fileName);
 	}
 
-	void dialogSave(const QString& filter, saveFunc func)
+	void dialogSave(const QString& filter, const QString& defaultName, saveFunc func)
 	{
 		if (!func)
 			return;
 		QSettings setting;
-		QString lastPath = setting.value("dialogLastPath", "").toString();
+		QString lastPath = setting.value("dialogLastPath", "").toString() + "/" + defaultName;
 		QString fileName = QFileDialog::getSaveFileName(
 			nullptr, QObject::tr("SaveFile"),
 			lastPath, filter);
