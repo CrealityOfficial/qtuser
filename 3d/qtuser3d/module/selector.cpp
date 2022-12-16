@@ -49,7 +49,7 @@ namespace qtuser_3d
 		{
 			_add(pickable);
 
-			if (m_pickables.size() == 1)
+			if (m_pickables.size() == 1 && pickable->enableSelect())
 			{
 				selectPickable(pickable);
 			}
@@ -70,7 +70,9 @@ namespace qtuser_3d
 			}
 
 			m_selectedPickables.removeOne(pickable);
-			notifyTracers();
+
+			if (pickable->enableSelect())
+				notifyTracers();
 		}
 	}
 
@@ -256,7 +258,8 @@ namespace qtuser_3d
 				return;
 			}
 		}
-		if (pickable) onList << pickable;
+		if (pickable && pickable->enableSelect())
+			onList << pickable;
 		selectPickables(onList, offList);
 	}
 
@@ -273,7 +276,9 @@ namespace qtuser_3d
 		if (m_disableReverseSelect && !pickable)
 			return;
 
-		if (pickable) onList << pickable;
+		if (pickable && pickable->enableSelect())
+			onList << pickable;
+
 		selectPickables(onList, offList);
 	}
 
@@ -285,7 +290,7 @@ namespace qtuser_3d
 		if (selectNotifying)
 			return;
 
-		if (pickable && !pickable->selected())
+		if (pickable && !pickable->selected() && pickable->enableSelect())
 		{
 			pickable->setSelected(true);
 			m_selectedPickables << pickable;

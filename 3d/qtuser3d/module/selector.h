@@ -43,7 +43,7 @@ namespace qtuser_3d
 		Q_INVOKABLE void selectNone();
 
 		void changed(qtuser_3d::Pickable* pickable);
-	private:
+	protected:
 		void _add(qtuser_3d::Pickable* pickable);
 		void _remove(qtuser_3d::Pickable* pickable);
 
