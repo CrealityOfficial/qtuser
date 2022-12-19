@@ -28,6 +28,7 @@
 #pragma comment(lib, "dbghelp.lib")
 
 #endif
+#include <buildinfo.h>
 
 #define DEBUG_FUNCTION 0
 
@@ -210,10 +211,17 @@ namespace qtuser_core
 	void initializeLog(int argc, char* argv[])
 	{
 #ifdef QT_NO_DEBUG
-		QFileInfo info(argv[0]);
-		QString name = QString("/%1/Log/").arg(info.baseName());
-		QString logDirectory = qtuser_core::getOrCreateAppDataLocation(name);
-		qDebug() << logDirectory;
+		//QFileInfo info(argv[0]);
+		//QString name = QString("/%1/Log/").arg(info.baseName());
+		//QString logDirectory = qtuser_core::getOrCreateAppDataLocation(name);
+		//qDebug() << logDirectory;
+
+		qApp->setOrganizationName(ORGANIZATION);
+		qApp->setOrganizationDomain("FDM");
+		qApp->setApplicationName(PROJECT_NAME);//by TCJ "Creative3D"
+
+		QString Directory = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+		QString logDirectory = Directory + "/Log/";
 
 		auto func = [](const char* name)->std::string {
 			QString  dataTime = QDateTime::currentDateTime().toString("yyyy-MM-dd");
