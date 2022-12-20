@@ -404,10 +404,10 @@ namespace qtuser_3d
 		float angdesSpan = 360.0 / seg;
 
 		float halflen = squarelen / 2.0;
-		float extraLen = 0.05;
+		float extraLen = 0.00;
 
         float axisR = 0.08;
-        float axisLen = 0.3;
+        float axisLen = 0.25;
 
         float disLen = cylinderLen + axisLen + 0.05;
 		QVector3D vs[8] = {

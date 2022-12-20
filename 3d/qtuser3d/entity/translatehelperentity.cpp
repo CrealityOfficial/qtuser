@@ -32,7 +32,7 @@ namespace qtuser_3d
 		{
 			QMatrix4x4 xMatrix;
 			xMatrix.rotate(-90.0f * dir.x(), 0.0f, 0.0f, 1.0f);
-			xMatrix.scale(40.0f, 40.0f, 40.0f);
+			xMatrix.scale(80.0f, 80.0f, 80.0f);
 			//xMatrix.scale(15.0f, 15.0f, 15.0f);
 
 			m_xArrowEntity = new qtuser_3d::ManipulateEntity(this);
@@ -51,7 +51,7 @@ namespace qtuser_3d
 			{
 				yMatrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
 			}
-			yMatrix.scale(40.0f, 40.0f, 40.0f);
+			yMatrix.scale(80.0f, 80.0f, 80.0f);
 			//yMatrix.scale(15.0f, 15.0f, 15.0f);
 			m_yArrowEntity = new qtuser_3d::ManipulateEntity(this);
 			m_yArrowEntity->setObjectName("TranslateHelperEntity.yArrowEntity");
@@ -66,7 +66,7 @@ namespace qtuser_3d
 		{
 			QMatrix4x4 zMatrix;
 			zMatrix.rotate(90.0f * dir.z(), 1.0f, 0.0f, 0.0f);
-			zMatrix.scale(40.0f, 40.0f, 40.0f);
+			zMatrix.scale(80.0f, 80.0f, 80.0f);
 			//zMatrix.scale(15.0f, 15.0f, 15.0f);
 			m_zArrowEntity = new qtuser_3d::ManipulateEntity(this);
 			m_zArrowEntity->setObjectName("TranslateHelperEntity.zArrowEntity");
