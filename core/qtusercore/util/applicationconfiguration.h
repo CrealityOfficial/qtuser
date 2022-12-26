@@ -23,6 +23,7 @@ namespace qtuser_core
 		QColor color(const QString& name, const QString& key, const QString& group);
 		QVector4D vector4(const QString& name, const QString& key, const QString& group);
 		QVariantList varlist(const QString& name, const QString& key, const QString& group);
+		QString string(const QString& name, const QString& key, const QString& group);
 	protected:
 		qtuser_core::ConfigBundle* findBundle(const QString& bundle);
 		QStringList parseKey(const QString& key);

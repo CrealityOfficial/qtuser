@@ -106,4 +106,9 @@ namespace qtuser_core
         }
         return vars;
     }
+
+    QString ApplicationConfiguration::string(const QString& name, const QString& key, const QString& group)
+    {
+        return value(name, key, group).toString();
+    }
 }
