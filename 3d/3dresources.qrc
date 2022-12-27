@@ -73,6 +73,8 @@
 		<file>shaders/zproject.frag</file>
 		<file>shaders/glcomp1.vert</file>
 		<file>shaders/glcomp1.frag</file>
+        <file>shaders/overlay.fragment</file>
+        <file>shaders/overlay.vert</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

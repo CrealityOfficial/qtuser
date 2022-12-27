@@ -2880,14 +2880,30 @@ const char* boxclippure_fragment =
                              "uniform vec4 color;\n"
                              "uniform vec3 clip[2];\n"
                              "\n"
+                             "uniform float intensity = 5.0;\n"
+                             "\n"
                              "void main() \n"
                              "{\n"
-                             "	if(worldPosition.z < clip[0].z || worldPosition.z > clip[1].z\n"
-                             "		|| worldPosition.x < clip[0].x || worldPosition.x > clip[1].x\n"
-                             "		|| worldPosition.y < clip[0].y || worldPosition.y > clip[1].y)\n"
-                             "		discard;\n"
-                             "		\n"
                              "	fragColor = color;\n"
+                             "	#if 0\n"
+                             "	if ( worldPosition.z < clip[0].z || worldPosition.z > clip[1].z\n"
+                             "        || worldPosition.x < clip[0].x || worldPosition.x > clip[1].x\n"
+                             "        || worldPosition.y < clip[0].y || worldPosition.y > clip[1].y) \n"
+                             "	{\n"
+                             "		discard;\n"
+                             "	} else {\n"
+                             "	\n"
+                             "		float x = min( abs(worldPosition.x - clip[0].x), abs(worldPosition.x - clip[1].x) );\n"
+                             "		float y = min( abs(worldPosition.y - clip[0].y), abs(worldPosition.y - clip[1].y) );\n"
+                             "		float z = min( abs(worldPosition.z - clip[0].z), abs(worldPosition.z - clip[1].z) );\n"
+                             "		\n"
+                             "		x = min(x, y);\n"
+                             "		x = min(x, z);\n"
+                             "\n"
+                             "		float k = clamp(x * intensity, 0.0, 1.0);\n"
+                             "		fragColor = vec4(color.rgb, color.a * k);\n"
+                             "	}\n"
+                             "	#endif\n"
                              "}\n"
 ;
 const char* boxclippure_vert = 
@@ -4217,6 +4233,33 @@ const char* moon_vert =
                              "	radius = length(vertexPosition);\n"
                              "}\n"
 ;
+const char* overlay_fragment = 
+                             "#version 150 core\n"
+                             " \n"
+                             "out vec4 fragColor;\n"
+                             "uniform vec4 color;\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "	fragColor = color;\n"
+                             "}\n"
+;
+const char* overlay_vert = 
+                             "#version 150 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "   vec4 pos =  projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
+                             "   pos.z = -pos.w;\n"
+                             "   gl_Position = pos;\n"
+                             "}\n"
+;
 const char* photo_fragment = 
                              " #version 150 core\n"
                              "\n"
@@ -5347,7 +5390,7 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
-const char* shader_code_array[73] = {
+const char* shader_code_array[75] = {
 	admodel_fragment,
 	admodel_vert,
 	bottomface_fragment,
@@ -5385,6 +5428,8 @@ const char* shader_code_array[73] = {
 	modelwireframe_vert,
 	moon_fragment,
 	moon_vert,
+	overlay_fragment,
+	overlay_vert,
 	photo_fragment,
 	photo_vert,
 	pickFace_fragment,
@@ -5432,8 +5477,8 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
-int programs_meta_size = 36;
-ProgramDef programs_meta[36] = {
+int programs_meta_size = 37;
+ProgramDef programs_meta[37] = {
   { "admodel" , 1  ,  -1   ,  -1   ,  -1   , 0  },
    { "bottomface" , 3  ,  -1   ,  -1   ,  -1   , 2  },
    { "boxclippure" , 5  ,  -1   ,  -1   ,  -1   , 4  },
@@ -5452,22 +5497,23 @@ ProgramDef programs_meta[36] = {
    { "modelsimple" , 29  ,  -1   ,  -1   ,  -1   , 28  },
    { "modelwireframe" , 34  ,  -1   ,  -1   , 33  , 32  },
    { "moon" , 36  ,  -1   ,  -1   ,  -1   , 35  },
-   { "photo" , 38  ,  -1   ,  -1   ,  -1   , 37  },
-   { "pickFace" , 40  ,  -1   ,  -1   ,  -1   , 39  },
-   { "pickFaceChunk" , 42  ,  -1   ,  -1   ,  -1   , 41  },
-   { "pickFaceFlag" , 44  ,  -1   ,  -1   ,  -1   , 43  },
-   { "printerbottom" , 46  ,  -1   ,  -1   ,  -1   , 45  },
-   { "printergrid" , 48  ,  -1   ,  -1   ,  -1   , 47  },
-   { "pure" , 50  ,  -1   ,  -1   ,  -1   , 49  },
-   { "slicepreview" , 52  ,  -1   ,  -1   ,  -1   , 51  },
-   { "slicepreviewAD" , 54  ,  -1   ,  -1   ,  -1   , 53  },
-   { "slicepreviewpath" , 56  ,  -1   ,  -1   ,  -1   , 55  },
-   { "splitplane" , 58  ,  -1   ,  -1   ,  -1   , 57  },
-   { "support" , 60  ,  -1   ,  -1   ,  -1   , 59  },
-   { "supportpos" , 62  ,  -1   ,  -1   ,  -1   , 61  },
-   { "supportshow" , 64  ,  -1   ,  -1   ,  -1   , 63  },
-   { "tex" , 66  ,  -1   ,  -1   ,  -1   , 65  },
-   { "texshape" , 68  ,  -1   ,  -1   ,  -1   , 67  },
-   { "text" , 70  ,  -1   ,  -1   ,  -1   , 69  },
-   { "zproject" , 72  ,  -1   ,  -1   ,  -1   , 71  },
+   { "overlay" , 38  ,  -1   ,  -1   ,  -1   , 37  },
+   { "photo" , 40  ,  -1   ,  -1   ,  -1   , 39  },
+   { "pickFace" , 42  ,  -1   ,  -1   ,  -1   , 41  },
+   { "pickFaceChunk" , 44  ,  -1   ,  -1   ,  -1   , 43  },
+   { "pickFaceFlag" , 46  ,  -1   ,  -1   ,  -1   , 45  },
+   { "printerbottom" , 48  ,  -1   ,  -1   ,  -1   , 47  },
+   { "printergrid" , 50  ,  -1   ,  -1   ,  -1   , 49  },
+   { "pure" , 52  ,  -1   ,  -1   ,  -1   , 51  },
+   { "slicepreview" , 54  ,  -1   ,  -1   ,  -1   , 53  },
+   { "slicepreviewAD" , 56  ,  -1   ,  -1   ,  -1   , 55  },
+   { "slicepreviewpath" , 58  ,  -1   ,  -1   ,  -1   , 57  },
+   { "splitplane" , 60  ,  -1   ,  -1   ,  -1   , 59  },
+   { "support" , 62  ,  -1   ,  -1   ,  -1   , 61  },
+   { "supportpos" , 64  ,  -1   ,  -1   ,  -1   , 63  },
+   { "supportshow" , 66  ,  -1   ,  -1   ,  -1   , 65  },
+   { "tex" , 68  ,  -1   ,  -1   ,  -1   , 67  },
+   { "texshape" , 70  ,  -1   ,  -1   ,  -1   , 69  },
+   { "text" , 72  ,  -1   ,  -1   ,  -1   , 71  },
+   { "zproject" , 74  ,  -1   ,  -1   ,  -1   , 73  },
  };
