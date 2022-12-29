@@ -126,7 +126,11 @@ void main( void )
 	vec4 specular_color   = specular;
 	
 	vec3 lightDir = normalize(lightDirection);
-	coreColor = directLight(lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
+	float normalCos = dot(fnormal, lightDir);
+	if (normalCos >= 0)
+		coreColor = directLight(lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
+	else
+		coreColor = directLight(-lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
 
 
 	if(!frontFacing())
