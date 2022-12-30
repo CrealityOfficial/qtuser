@@ -132,7 +132,6 @@ void main( void )
 	else
 		coreColor = directLight(-lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
 
-
 	if(!frontFacing())
 	{
 		color = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;

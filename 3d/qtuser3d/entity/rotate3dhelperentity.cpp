@@ -1,0 +1,178 @@
+#include "qtuser3d/entity/rotate3dhelperentity.h"
+
+#include "qtuser3d/entity/manipulateentity.h"
+#include "qtuser3d/module/manipulatepickable.h"
+
+#include "qtuser3d/module/facepicker.h"
+#include "qtuser3d/camera/screencamera.h"
+#include "qtuser3d/math/angles.h"
+
+#include "rotatehelperentity_T.h"
+
+#include <Qt3DExtras/QTorusMesh>
+#include <QtCore/qmath.h>
+
+
+namespace qtuser_3d
+{
+	Rotate3DHelperEntity::Rotate3DHelperEntity(Qt3DCore::QNode* parent)
+		: QEntity(parent)
+		, m_pXRotHelper(nullptr)
+		, m_pYRotHelper(nullptr)
+		, m_pZRotHelper(nullptr)
+		, m_pRotateCallback(nullptr)
+	{
+		m_pXRotHelper = new RotateHelperEntity_T(this);
+		m_pXRotHelper->setColor(QVector4D(1.0, 0.0, 0.0, 1.0));
+		m_pXRotHelper->setRotateAxis(QVector3D(0.0, 1.0, 0.0));
+		m_pXRotHelper->setRotateCallback(this);
+
+		m_pYRotHelper = new RotateHelperEntity_T(this);
+		m_pYRotHelper->setColor(QVector4D(0.0, 1.0, 0.0, 1.0));
+		m_pYRotHelper->setRotateAxis(QVector3D(1.0, 0.0, 0.0));
+		//m_pYRotHelper->setRotateInitAngle(90);
+		m_pYRotHelper->setRotateCallback(this);
+
+		m_pZRotHelper = new RotateHelperEntity_T(this);
+		m_pZRotHelper->setColor(QVector4D(0.0, 0.0, 1.0, 1.0));
+		m_pZRotHelper->setRotateAxis(QVector3D(0.0, 0.0, 1.0), 0.0);
+		//m_pZRotHelper->setRotateInitAngle(90);
+		m_pZRotHelper->setRotateCallback(this);
+	}
+
+	Rotate3DHelperEntity::~Rotate3DHelperEntity()
+	{
+	}
+
+	QList<Pickable*> Rotate3DHelperEntity::getPickables()
+	{
+		QList<Pickable*> pickables;
+		if (m_pXRotHelper)
+			pickables << m_pXRotHelper->getPickable();
+
+		if (m_pYRotHelper)
+			pickables << m_pYRotHelper->getPickable();
+
+		if (m_pZRotHelper)
+			pickables << m_pZRotHelper->getPickable();
+		
+		return pickables;
+	}
+
+	QList<LeftMouseEventHandler*> Rotate3DHelperEntity::getLeftMouseEventHandlers()
+	{
+		QList<LeftMouseEventHandler*> handlers;
+
+		if (m_pXRotHelper)
+			handlers << m_pXRotHelper;
+
+		if (m_pYRotHelper)
+			handlers << m_pYRotHelper;
+
+		if (m_pZRotHelper)
+			handlers << m_pZRotHelper;
+
+		return handlers;
+	}
+
+	void Rotate3DHelperEntity::setPickSource(FacePicker* pickSource)
+	{
+		if (m_pXRotHelper)
+			m_pXRotHelper->setPickSource(pickSource);
+
+		if (m_pYRotHelper)
+			m_pYRotHelper->setPickSource(pickSource);
+
+		if (m_pZRotHelper)
+			m_pZRotHelper->setPickSource(pickSource);
+	}
+
+	void Rotate3DHelperEntity::setScreenCamera(ScreenCamera* camera)
+	{
+		if (m_pXRotHelper)
+			m_pXRotHelper->setScreenCamera(camera);
+
+		if (m_pYRotHelper)
+			m_pYRotHelper->setScreenCamera(camera);
+
+		if (m_pZRotHelper)
+			m_pZRotHelper->setScreenCamera(camera);
+	}
+
+	void Rotate3DHelperEntity::setRotateCallback(RotateCallback* callback)
+	{
+		m_pRotateCallback = callback;
+	}
+
+	void Rotate3DHelperEntity::setXVisibility(bool visibility)
+	{
+		if (m_pXRotHelper)
+			m_pXRotHelper->setVisibility(visibility);
+	}
+
+	void Rotate3DHelperEntity::setYVisibility(bool visibility)
+	{
+		if (m_pYRotHelper)
+			m_pYRotHelper->setVisibility(visibility);
+	}
+
+	void Rotate3DHelperEntity::setZVisibility(bool visibility)
+	{
+		if (m_pZRotHelper)
+			m_pZRotHelper->setVisibility(visibility);
+	}
+
+	void Rotate3DHelperEntity::onBoxChanged(Box3D box)
+	{
+		if (m_pXRotHelper)
+			m_pXRotHelper->onBoxChanged(box);
+
+		if (m_pYRotHelper)
+			m_pYRotHelper->onBoxChanged(box);
+
+		if (m_pZRotHelper)
+			m_pZRotHelper->onBoxChanged(box);
+	}
+
+	void Rotate3DHelperEntity::onStartRotate()
+	{
+		if (m_pRotateCallback)
+			m_pRotateCallback->onStartRotate();
+
+		if (m_pXRotHelper)
+			m_pXRotHelper->setVisibility(m_pXRotHelper->isRotating());
+
+		if (m_pYRotHelper)
+			m_pYRotHelper->setVisibility(m_pYRotHelper->isRotating());
+
+		if (m_pZRotHelper)
+			m_pZRotHelper->setVisibility(m_pZRotHelper->isRotating());
+	}
+
+	void Rotate3DHelperEntity::onRotate(QQuaternion q)
+	{
+		if (m_pRotateCallback)
+			m_pRotateCallback->onRotate(q);
+	}
+
+	void Rotate3DHelperEntity::onEndRotate(QQuaternion q)
+	{
+		if (m_pRotateCallback)
+			m_pRotateCallback->onEndRotate(q);
+
+		if (m_pXRotHelper)
+			m_pXRotHelper->setVisibility(!m_pXRotHelper->isRotating());
+
+		if (m_pYRotHelper)
+			m_pYRotHelper->setVisibility(!m_pYRotHelper->isRotating());
+
+		if (m_pZRotHelper)
+			m_pZRotHelper->setVisibility(!m_pZRotHelper->isRotating());
+	}
+
+	void Rotate3DHelperEntity::setRotateAngle(QVector3D axis, float angle)
+	{
+		if (m_pRotateCallback)
+			m_pRotateCallback->setRotateAngle(axis, angle);
+	}
+}

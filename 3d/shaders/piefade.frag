@@ -4,16 +4,24 @@ out vec4 fragColor;
 
 in vec3 normal;
 in vec3 viewDirection;
+in vec3 world_position;
 
 uniform vec4 color;
 uniform vec4 changecolor;
 uniform int mt;
 
+uniform int rotMode;
+uniform float rotRadians;
+uniform vec3 rotCenter;
+uniform vec3 rotInitDir;
+uniform vec3 rotAxis;
+
+uniform int lightEnable = 0;
+uniform vec3 lightDirection = vec3(1.0, 0.0, 1.0);
 uniform vec4 ambient = vec4(0.6, 0.6, 0.6, 1.0);
 uniform vec4 diffuse = vec4(0.6, 0.6, 0.6, 1.0);
 uniform vec4 specular = vec4(0.6, 0.6, 0.6, 1.0);
 uniform float specularPower = 4.5;
-uniform vec3 lightDirection = vec3(1.0, 0.0, 1.0);
 
 uniform float state;
 
@@ -34,6 +42,26 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_col
 
 void main() 
 {
+	if (rotMode > 0)
+	{
+		if (rotRadians == 0.0)
+			discard;
+		else
+		{
+			vec3 curDir = normalize(world_position - rotCenter);
+			float curRadians = acos(dot(curDir, rotInitDir));
+			vec3 curAxis = cross(rotInitDir, curDir);
+			float axisInvertCos = dot(rotAxis, curAxis);
+			if (axisInvertCos < 0.0)
+				curRadians = 2 * 3.14159265357 - curRadians;
+		
+			if (rotRadians > 0 && curRadians > rotRadians)
+				discard;
+			else if (rotRadians < 0 && curRadians - 2 * 3.14159265357 < rotRadians)
+				discard;
+		}
+	}
+
 	vec4 coreColor;
 	if(mt == 0)
 	{
@@ -44,14 +72,17 @@ void main()
 		coreColor = color + changecolor * state;
 	}
 
-	vec3 fnormal = normalize(normal);
-	vec4 ambient_color = ambient;
-	vec4 diffuse_color = diffuse;
-	vec4 specular_color = specular;
+	if (lightEnable > 0)
+	{
+		vec3 fnormal = normalize(normal);
+		vec4 ambient_color = ambient;
+		vec4 diffuse_color = diffuse;
+		vec4 specular_color = specular;
 
-	vec3 lightDir = normalize(lightDirection);
-	float normalCos = dot(fnormal, lightDir);
-	coreColor = directLight(lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
+		vec3 lightDir = normalize(lightDirection);
+		float normalCos = dot(fnormal, lightDir);
+		coreColor = directLight(lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
+	}
 		
 	fragColor = coreColor;
 }

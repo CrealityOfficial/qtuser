@@ -75,5 +75,7 @@
         <file>shaders/zproject.frag</file>
 		<file>shaders/glcomp1.vert</file>
 		<file>shaders/glcomp1.fragment</file>
+      <file>shaders/piefade.vert</file>
+      <file>shaders/piefade.frag</file>
     </qresource>
 </RCC>

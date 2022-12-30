@@ -27,6 +27,9 @@ namespace qtuser_3d
 
 		effect->setPassDepthTest("manipulate.alpha", Qt3DRender::QDepthTest::Always);
 		effect->setPassDepthTest("pickFace.pick", Qt3DRender::QDepthTest::Always);
+
+		setPassCullFace("manipulate.alpha", Qt3DRender::QCullFace::NoCulling);
+		setPassCullFace("pickFace.pick", Qt3DRender::QCullFace::NoCulling);
 	}
 
 	ManipulateEntity::~ManipulateEntity()
