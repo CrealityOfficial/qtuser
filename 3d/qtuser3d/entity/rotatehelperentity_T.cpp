@@ -17,6 +17,7 @@
 #include <Qt3DExtras/QConeMesh>
 #include <QtCore/qmath.h>
 #include <Qt3DCore/QTransform>
+#include <QtGui/QTransform>
 
 
 namespace qtuser_3d
@@ -45,6 +46,7 @@ namespace qtuser_3d
 		, m_originInitRotateDir(-1.0, 0.0, 0.0)
 		, m_ringColor(1.0f, 0.0f, 0.0f, 1.0f)
 		, m_dialColor(1.0f, 0.0f, 0.0f, 0.2f)
+		, m_degreeColor(1.0f, 1.0f, 1.0f, 1.0f)
 		, m_handlerColor(1.0f, 0.0f, 0.0f, 1.0f)
 		, m_handlerPickedColor(-0.2f, 0.3f, 0.2f, 0.0f)
 		, m_pickSource(nullptr)
@@ -54,6 +56,8 @@ namespace qtuser_3d
 		, m_ringRadius(2)
 		, m_ringMinorRadius(0.02)
 		, m_dialRadius(2)
+		, m_degreeRadius(1.5)
+		, m_markOffset(0.2)
 		, m_handlerOffset(2.16)
 		, m_fixSize(false)
 	{
@@ -265,7 +269,7 @@ namespace qtuser_3d
 		m.scale(m_scale);
 
 		// 刻度盘初始化
-		m_pDialEntity = new PieFadeEntity(this, 0);
+		m_pDialEntity = new PieFadeEntity(nullptr, 0);
 		m_pDialEntity->setObjectName("RotateHelperEntity_T.dialEntity");
 		m_pDialEntity->setPose(m);
 		m_pDialEntity->setColor(m_dialColor);
@@ -278,7 +282,6 @@ namespace qtuser_3d
 
 		// 构建刻度盘模型数据
 		double radius = m_dialRadius;
-		QVector3D origin(0.0, 0.0, 0.0);
 
 		int split = 20;
 		double roundDeltaRadians = 360 / split;
@@ -291,40 +294,119 @@ namespace qtuser_3d
 			roundDir = roundDeltaQ * roundDir;
 		}
 
-		std::vector<vec3d> positions;
-		std::vector<vec3d> normals;
-		std::vector<vec3i> indices;
+		std::vector<float> positions;
+		std::vector<float> normals;
+		std::vector<int> indices;
 
 		// 圆盘
 		{
-			int centerIndex = positions.size();
+			int centerIndex = positions.size() / 3;
 			QVector3D roundCenter(0.0, 0.0, 0.0);
-			positions.push_back({ 0.0f, 0.0f, 0.0 });
-			normals.push_back({ 0.0f, 0.0f, 1.0f });
+			positions.push_back(0.0f);
+			positions.push_back(0.0f);
+			positions.push_back(0.0f);
+			normals.push_back(0.0f);
+			normals.push_back(0.0f);
+			normals.push_back(1.0f);
 
 			std::vector<int> roundEdgeVIndices;
 			for (int i = 0; i < roundDirs.size(); i++)
 			{
-				roundEdgeVIndices.push_back(positions.size());
+				roundEdgeVIndices.push_back(positions.size() / 3);
 				QVector3D edgeVertex = roundCenter + roundDirs[i] * radius;
-				positions.push_back({ edgeVertex.x(), edgeVertex.y(), edgeVertex.z() });
-				normals.push_back({ 0.0f, 0.0f, 1.0f });
+				positions.push_back(edgeVertex.x());
+				positions.push_back(edgeVertex.y());
+				positions.push_back(edgeVertex.z());
+				normals.push_back(0.0f);
+				normals.push_back(0.0f);
+				normals.push_back(1.0f);
 			}
 
 			for (int i = 0; i < roundEdgeVIndices.size(); i++)
 			{
 				int iNext = i < roundEdgeVIndices.size() - 1 ? i + 1 : 0;
-				indices.push_back({ roundEdgeVIndices[i], centerIndex, roundEdgeVIndices[iNext] });
-				indices.push_back({ roundEdgeVIndices[i], roundEdgeVIndices[iNext], centerIndex });
+				indices.push_back(roundEdgeVIndices[i]);
+				indices.push_back(centerIndex);
+				indices.push_back(roundEdgeVIndices[iNext]);
+
+				indices.push_back(roundEdgeVIndices[i]);
+				indices.push_back(roundEdgeVIndices[iNext]);
+				indices.push_back(centerIndex);
 			}
 		}
 
-		Qt3DRender::QAttribute* positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&positions[0], qtuser_3d::AttribueSlot::Position, 3 * positions.size());
-		Qt3DRender::QAttribute* normalAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&normals[0], qtuser_3d::AttribueSlot::Normal, 3 * normals.size());
-		Qt3DRender::QAttribute* indexAttribute = qtuser_3d::BufferHelper::CreateIndexAttribute((const char*)&indices[0], 3 * indices.size());
-		Qt3DRender::QGeometry* handlerGeo = qtuser_3d::GeometryCreateHelper::createEx(nullptr, positionAttribute, normalAttribute, indexAttribute);
-		m_pDialEntity->setGeometry(handlerGeo);
+		Qt3DRender::QAttribute* positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&positions[0], qtuser_3d::AttribueSlot::Position, positions.size());
+		Qt3DRender::QAttribute* normalAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&normals[0], qtuser_3d::AttribueSlot::Normal, normals.size());
+		Qt3DRender::QAttribute* indexAttribute = qtuser_3d::BufferHelper::CreateIndexAttribute((const char*)&indices[0], indices.size());
+		Qt3DRender::QGeometry* dialGeo = qtuser_3d::GeometryCreateHelper::createEx(nullptr, positionAttribute, normalAttribute, indexAttribute);
+		m_pDialEntity->setGeometry(dialGeo);
 
+
+		// 刻度初始化
+		m_pDegreeEntity = new ManipulateEntity(nullptr, 0);
+		m_pDegreeEntity->setObjectName("RotateHelperEntity_T.degreeEntity");
+		m_pDegreeEntity->setPose(m);
+		m_pDegreeEntity->setColor(m_degreeColor);
+		m_pDegreeEntity->setChangeColor(m_degreeColor);
+		m_pDegreeEntity->setMethod(1);
+
+		// 构建刻度模型数据
+		double degreeRadius = m_degreeRadius;
+		double markOffset = m_markOffset;
+
+		split = 60;
+		roundDeltaRadians = 360 / split;
+		roundDir = m_initRotateDir;
+		roundDeltaQ = QQuaternion::fromAxisAndAngle(QVector3D(0.0, 0.0, 1.0), roundDeltaRadians);
+		roundDirs.clear();
+		for (int i = 0; i < split; i++)
+		{
+			roundDirs.push_back(roundDir);
+			roundDir = roundDeltaQ * roundDir;
+		}
+
+		positions.clear();
+		//normals.clear();
+		indices.clear();
+
+		{
+			QVector3D roundCenter(0.0, 0.0, 0.0);
+			std::vector<int> roundEdgeVIndices;
+			for (int i = 0; i < roundDirs.size(); i++)
+			{
+				QVector3D edgeVertex = roundCenter + roundDirs[i] * degreeRadius;
+				QVector3D markVertex = roundCenter + roundDirs[i] * (degreeRadius + (i % 5 == 0 ? 2 * markOffset : markOffset));
+
+				roundEdgeVIndices.push_back(positions.size() / 3);
+				positions.push_back(edgeVertex.x());
+				positions.push_back(edgeVertex.y());
+				positions.push_back(edgeVertex.z());
+
+				roundEdgeVIndices.push_back(positions.size() / 3);
+				positions.push_back(markVertex.x());
+				positions.push_back(markVertex.y());
+				positions.push_back(markVertex.z());
+
+				indices.push_back(roundEdgeVIndices[i * 2]);
+				indices.push_back(roundEdgeVIndices[i * 2 + 1]);
+			}
+
+			for (int i = 0; i < roundEdgeVIndices.size(); i = i + 2)
+			{
+				int iNext = i < roundEdgeVIndices.size() - 2 ? i + 2 : 0;
+				indices.push_back(roundEdgeVIndices[i]);
+				indices.push_back(roundEdgeVIndices[iNext]);
+			}
+		}
+
+		positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&positions[0], qtuser_3d::AttribueSlot::Position, positions.size());
+		//normalAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&normals[0], qtuser_3d::AttribueSlot::Normal, 3 * normals.size());
+		indexAttribute = qtuser_3d::BufferHelper::CreateIndexAttribute((const char*)&indices[0], indices.size());
+		Qt3DRender::QGeometry* degreeGeo = qtuser_3d::GeometryCreateHelper::createEx(nullptr, positionAttribute, /*normalAttribute, */indexAttribute);
+		m_pDegreeEntity->setGeometry(degreeGeo, Qt3DRender::QGeometryRenderer::Lines);
+
+
+		// 拾取器初始化
 		//m_pDialPickable = new ManipulatePickable(this);
 		//m_pDialPickable->setPickableEntity(m_pHandleEntity);
 		//m_pDialPickable->setShowEntity(m_pHandleEntity);
@@ -334,6 +416,20 @@ namespace qtuser_3d
 	{
 		visibility ? m_pRingEntity->setParent(this) : m_pRingEntity->setParent((Qt3DCore::QNode*)nullptr);
 		visibility ? m_pHandlerEntity->setParent(this) : m_pHandlerEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pDialEntity->setParent(this) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pDegreeEntity->setParent(this) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
+	void RotateHelperEntity_T::setHandlerVisibility(bool visibility)
+	{
+		visibility ? m_pRingEntity->setParent(this) : m_pRingEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pHandlerEntity->setParent(this) : m_pHandlerEntity->setParent((Qt3DCore::QNode*)nullptr);
+	}
+
+	void RotateHelperEntity_T::setDialVisibility(bool visibility)
+	{
+		visibility ? m_pDialEntity->setParent(this) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pDegreeEntity->setParent(this) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void RotateHelperEntity_T::setColor(QVector4D v4)
@@ -473,6 +569,11 @@ namespace qtuser_3d
 		matrix.rotate(m_initQuaternion);
 		m_transform->setMatrix(matrix);
 
+		//// 刻度不旋转
+		//QMatrix4x4 mt;
+		//mt.scale(m_scale);
+		//m_pDegreeEntity->setPose(mt);
+
 		m_pRingEntity->setRotCenter(m_center);
 		m_pDialEntity->setRotCenter(m_center);
 	}
@@ -592,6 +693,11 @@ namespace qtuser_3d
 		QQuaternion q = process(point);
 
 		m_transform->setRotation(q * m_initQuaternion);
+
+		//// 刻度不旋转
+		//QMatrix4x4 mt = m_pDegreeEntity->pose();
+		//mt.rotate(m_initQuaternion.inverted() * q.inverted() * m_initQuaternion);
+		//m_pDegreeEntity->setPose(mt);
 
 		if (m_rotateCallback)
 		{

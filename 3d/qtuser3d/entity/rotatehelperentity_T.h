@@ -34,6 +34,8 @@ namespace qtuser_3d
 		void setRotateCallback(RotateCallback* callback);
 
 		void setVisibility(bool visibility);
+		void setHandlerVisibility(bool visibility);
+		void setDialVisibility(bool visibility);
 		void setColor(QVector4D v4);
 		void setRingColor(QVector4D color);
 		void setDialColor(QVector4D color);
@@ -90,8 +92,12 @@ namespace qtuser_3d
 		ManipulatePickable* m_pHandlerPickable;
 
 		double m_dialRadius;
+		double m_degreeRadius;
+		double m_markOffset;
 		QVector4D m_dialColor;
+		QVector4D m_degreeColor;
 		PieFadeEntity* m_pDialEntity;
+		ManipulateEntity* m_pDegreeEntity;
 		//ManipulatePickable* m_pDialPickable;
 
 		Qt3DCore::QTransform* m_transform;

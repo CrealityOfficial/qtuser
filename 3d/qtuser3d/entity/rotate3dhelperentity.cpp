@@ -35,7 +35,7 @@ namespace qtuser_3d
 
 		m_pZRotHelper = new RotateHelperEntity_T(this);
 		m_pZRotHelper->setColor(QVector4D(0.0, 0.0, 1.0, 1.0));
-		m_pZRotHelper->setRotateAxis(QVector3D(0.0, 0.0, 1.0), 0.0);
+		m_pZRotHelper->setRotateAxis(QVector3D(0.0, 0.0, 1.0), 90.0);
 		//m_pZRotHelper->setRotateInitAngle(90);
 		m_pZRotHelper->setRotateCallback(this);
 	}
@@ -140,13 +140,22 @@ namespace qtuser_3d
 			m_pRotateCallback->onStartRotate();
 
 		if (m_pXRotHelper)
-			m_pXRotHelper->setVisibility(m_pXRotHelper->isRotating());
+		{
+			m_pXRotHelper->setHandlerVisibility(m_pXRotHelper->isRotating());
+			m_pXRotHelper->setDialVisibility(m_pXRotHelper->isRotating());
+		}
 
 		if (m_pYRotHelper)
-			m_pYRotHelper->setVisibility(m_pYRotHelper->isRotating());
+		{
+			m_pYRotHelper->setHandlerVisibility(m_pYRotHelper->isRotating());
+			m_pYRotHelper->setDialVisibility(m_pYRotHelper->isRotating());
+		}
 
 		if (m_pZRotHelper)
-			m_pZRotHelper->setVisibility(m_pZRotHelper->isRotating());
+		{
+			m_pZRotHelper->setHandlerVisibility(m_pZRotHelper->isRotating());
+			m_pZRotHelper->setDialVisibility(m_pZRotHelper->isRotating());
+		}
 	}
 
 	void Rotate3DHelperEntity::onRotate(QQuaternion q)
@@ -161,13 +170,22 @@ namespace qtuser_3d
 			m_pRotateCallback->onEndRotate(q);
 
 		if (m_pXRotHelper)
-			m_pXRotHelper->setVisibility(!m_pXRotHelper->isRotating());
+		{
+			m_pXRotHelper->setHandlerVisibility(true);
+			m_pXRotHelper->setDialVisibility(false);
+		}
 
 		if (m_pYRotHelper)
-			m_pYRotHelper->setVisibility(!m_pYRotHelper->isRotating());
+		{
+			m_pYRotHelper->setHandlerVisibility(true);
+			m_pYRotHelper->setDialVisibility(false);
+		}
 
 		if (m_pZRotHelper)
-			m_pZRotHelper->setVisibility(!m_pZRotHelper->isRotating());
+		{
+			m_pZRotHelper->setHandlerVisibility(true);
+			m_pZRotHelper->setDialVisibility(false);
+		}
 	}
 
 	void Rotate3DHelperEntity::setRotateAngle(QVector3D axis, float angle)
