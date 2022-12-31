@@ -19,7 +19,7 @@
 #include <Qt3DCore/QTransform>
 #include <QtGui/QTransform>
 
-
+#include "qtuser3d/module/pickable.h"
 namespace qtuser_3d
 {
 	struct vec3d
@@ -94,7 +94,7 @@ namespace qtuser_3d
 		QMatrix4x4 m;
 		m.scale(m_scale);
 
-		// Ðý×ª¹ì³õÊ¼»¯
+		// ï¿½ï¿½×ªï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 		m_pRingEntity = new PieFadeEntity(this, 1);
 		m_pRingEntity->setObjectName("RotateHelperEntity_T.ringEntity");
 		m_pRingEntity->setPose(m);
@@ -129,7 +129,7 @@ namespace qtuser_3d
 		m.translate(m_handlerOffset * m_initRotateDir);
 		m.rotate(90.0, m_initRotateDir);
 
-		// Ðý×ªÊÖ±ú³õÊ¼»¯
+		// ï¿½ï¿½×ªï¿½Ö±ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 		m_pHandlerEntity = new ManipulateEntity(this, 0);
 		m_pHandlerEntity->setObjectName("RotateHelperEntity_T.handleEntity");
 		m_pHandlerEntity->setPose(m);
@@ -137,7 +137,7 @@ namespace qtuser_3d
 		m_pHandlerEntity->setChangeColor(m_handlerPickedColor);
 		m_pHandlerEntity->setMethod(1);
 
-		// ¹¹½¨ÊÖ±úÄ£ÐÍÊý¾Ý
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		double bottomRadius = m_ringRadius / 30.0;
 		double coneHeight = m_ringRadius * 3.0 / 25.0;
 		double cylinderHeight = m_ringRadius * 3.0 / 25.0;
@@ -159,7 +159,7 @@ namespace qtuser_3d
 		std::vector<vec3d> normals;
 		std::vector<vec3i> indices;
 
-		// ÖÐ¼äÔ²Öù
+		// ï¿½Ð¼ï¿½Ô²ï¿½ï¿½
 		{
 			int topCenterIndex = positions.size();
 			QVector3D topCenter(0.0f, 0.0f, (float)(cylinderHeight / 2.0));
@@ -198,7 +198,7 @@ namespace qtuser_3d
 			}
 		}
 
-		// ÉÏÔ²×¶
+		// ï¿½ï¿½Ô²×¶
 		{
 			int topCenterIndex = positions.size();
 			positions.push_back({ 0.0f, 0.0f, (float)(coneHeight + gapLength + cylinderHeight / 2.0) });
@@ -225,7 +225,7 @@ namespace qtuser_3d
 			}
 		}
 
-		// ÏÂÔ²×¶
+		// ï¿½ï¿½Ô²×¶
 		{
 			int topCenterIndex = positions.size();
 			positions.push_back({ 0.0f, 0.0f, - (float)(coneHeight + gapLength + cylinderHeight / 2.0) });
@@ -268,7 +268,7 @@ namespace qtuser_3d
 		QMatrix4x4 m;
 		m.scale(m_scale);
 
-		// ¿Ì¶ÈÅÌ³õÊ¼»¯
+		// ï¿½Ì¶ï¿½ï¿½Ì³ï¿½Ê¼ï¿½ï¿½
 		m_pDialEntity = new PieFadeEntity(nullptr, 0);
 		m_pDialEntity->setObjectName("RotateHelperEntity_T.dialEntity");
 		m_pDialEntity->setPose(m);
@@ -280,7 +280,7 @@ namespace qtuser_3d
 		m_pDialEntity->setRotInitDir(m_initRotateDir);
 		m_pDialEntity->setRotAxis(m_rotateAxis);
 
-		// ¹¹½¨¿Ì¶ÈÅÌÄ£ÐÍÊý¾Ý
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		double radius = m_dialRadius;
 
 		int split = 20;
@@ -298,7 +298,7 @@ namespace qtuser_3d
 		std::vector<float> normals;
 		std::vector<int> indices;
 
-		// Ô²ÅÌ
+		// Ô²ï¿½ï¿½
 		{
 			int centerIndex = positions.size() / 3;
 			QVector3D roundCenter(0.0, 0.0, 0.0);
@@ -342,7 +342,7 @@ namespace qtuser_3d
 		m_pDialEntity->setGeometry(dialGeo);
 
 
-		// ¿Ì¶È³õÊ¼»¯
+		// ï¿½Ì¶È³ï¿½Ê¼ï¿½ï¿½
 		m_pDegreeEntity = new ManipulateEntity(nullptr, 0);
 		m_pDegreeEntity->setObjectName("RotateHelperEntity_T.degreeEntity");
 		m_pDegreeEntity->setPose(m);
@@ -350,7 +350,7 @@ namespace qtuser_3d
 		m_pDegreeEntity->setChangeColor(m_degreeColor);
 		m_pDegreeEntity->setMethod(1);
 
-		// ¹¹½¨¿Ì¶ÈÄ£ÐÍÊý¾Ý
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		double degreeRadius = m_degreeRadius;
 		double markOffset = m_markOffset;
 
@@ -406,7 +406,7 @@ namespace qtuser_3d
 		m_pDegreeEntity->setGeometry(degreeGeo, Qt3DRender::QGeometryRenderer::Lines);
 
 
-		// Ê°È¡Æ÷³õÊ¼»¯
+		// Ê°È¡ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 		//m_pDialPickable = new ManipulatePickable(this);
 		//m_pDialPickable->setPickableEntity(m_pHandleEntity);
 		//m_pDialPickable->setShowEntity(m_pHandleEntity);
@@ -569,7 +569,7 @@ namespace qtuser_3d
 		matrix.rotate(m_initQuaternion);
 		m_transform->setMatrix(matrix);
 
-		//// ¿Ì¶È²»Ðý×ª
+		//// ï¿½Ì¶È²ï¿½ï¿½ï¿½×ª
 		//QMatrix4x4 mt;
 		//mt.scale(m_scale);
 		//m_pDegreeEntity->setPose(mt);
@@ -580,7 +580,8 @@ namespace qtuser_3d
 
 	void RotateHelperEntity_T::onLeftMouseButtonPress(QMouseEvent* event)
 	{
-		Pickable* pickable = checkPickableFromList(m_pickSource, event->pos(), QList<Pickable*>({m_pHandlerPickable/*m_pRingPickable*/}), nullptr);
+		 QList<Pickable*> list = QList<Pickable*>({m_pHandlerPickable});
+		Pickable* pickable = checkPickableFromList(m_pickSource, event->pos(), list , nullptr);
 
 		if (pickable == m_pHandlerPickable)
 		{
@@ -694,7 +695,7 @@ namespace qtuser_3d
 
 		m_transform->setRotation(q * m_initQuaternion);
 
-		//// ¿Ì¶È²»Ðý×ª
+		//// ï¿½Ì¶È²ï¿½ï¿½ï¿½×ª
 		//QMatrix4x4 mt = m_pDegreeEntity->pose();
 		//mt.rotate(m_initQuaternion.inverted() * q.inverted() * m_initQuaternion);
 		//m_pDegreeEntity->setPose(mt);

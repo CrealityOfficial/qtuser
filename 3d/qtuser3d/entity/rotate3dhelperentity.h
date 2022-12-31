@@ -25,12 +25,12 @@ namespace qtuser_3d
 		Rotate3DHelperEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~Rotate3DHelperEntity();
 
-		inline QList<Pickable*> getPickables();
-		inline QList<LeftMouseEventHandler*> getLeftMouseEventHandlers();
+		QList<Pickable*> getPickables();
+		QList<LeftMouseEventHandler*> getLeftMouseEventHandlers();
 
-		inline void setPickSource(FacePicker* pickSource);
-		inline void setScreenCamera(ScreenCamera* camera);
-		inline void setRotateCallback(RotateCallback* callback);
+		void setPickSource(FacePicker* pickSource);
+		void setScreenCamera(ScreenCamera* camera);
+		void setRotateCallback(RotateCallback* callback);
 
 		inline void setXVisibility(bool visibility);
 		inline void setYVisibility(bool visibility);
