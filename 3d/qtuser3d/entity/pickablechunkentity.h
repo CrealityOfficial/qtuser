@@ -36,6 +36,18 @@ namespace qtuser_3d
 		bool faceIDIn(int faceID);
 		int fillDatas(char* buffer);   // return vertex count
 		bool haveDatas() const;
+
+		int findChunkById(long id);
+		int findChunkByFaceId(long faceid);
+		long findIdByFaceId(long faceid);
+		long findIdByChunk(int chunk);
+
+		int allFaces();
+		bool matchChunkFaces(int chunk_faces);
+
+		bool containId(long id);
+
+		int freeChunkEx();
 	protected:
 		int fillChunkDatas(char* buffer, int chunk);  // return vertex count
 		int chunkVertexHead(int chunk);

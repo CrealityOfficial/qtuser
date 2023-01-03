@@ -152,6 +152,58 @@ namespace qtuser_3d
 		return !(m_freeList.size() == m_chunks);
 	}
 
+	int PickableChunkEntity::findChunkById(long id)
+	{
+		return -1;
+	}
+
+	int PickableChunkEntity::findChunkByFaceId(long faceid)
+	{
+		if (faceid >= m_faceRange.x() && faceid < m_faceRange.y())
+		{
+			int chunk = (faceid - m_faceRange.x()) / m_chunkFaces;
+			return chunk;
+		}
+		return -1;
+	}
+
+	long PickableChunkEntity::findIdByFaceId(long faceid)
+	{
+		int index = findChunkByFaceId(faceid);
+		return -1;
+	}
+
+	long PickableChunkEntity::findIdByChunk(int chunk)
+	{
+		return 0;
+	}
+
+	int PickableChunkEntity::allFaces()
+	{
+		return m_chunkFaces * m_chunks;
+	}
+
+	bool PickableChunkEntity::matchChunkFaces(int chunk_faces)
+	{
+		return m_chunkFaces == chunk_faces;
+	}
+
+	bool PickableChunkEntity::containId(long id)
+	{
+		return false;
+	}
+
+	int PickableChunkEntity::freeChunkEx()
+	{
+		int chunk = freeChunk();
+		if (chunk < 0)
+		{
+			return -1;
+		}
+
+		return chunk;
+	}
+
 	int PickableChunkEntity::fillChunkDatas(char* buffer, int chunk)
 	{
 		if (!testChunkValid(chunk))
