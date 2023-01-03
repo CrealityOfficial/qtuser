@@ -122,6 +122,42 @@ namespace qtuser_3d
 			m_pZRotHelper->setVisibility(visibility);
 	}
 
+	QVector3D Rotate3DHelperEntity::getCurrentRotateAxis()
+	{
+		if (m_pXRotHelper->isRotating())
+		{
+			return m_pXRotHelper->getRotateAxis();
+		}
+		else if (m_pYRotHelper->isRotating())
+		{
+			return m_pYRotHelper->getRotateAxis();
+		}
+		else if (m_pZRotHelper->isRotating())
+		{
+			return m_pZRotHelper->getRotateAxis();
+		}
+
+		return QVector3D();
+	}
+
+	double Rotate3DHelperEntity::getCurrentRotAngle()
+	{
+		if (m_pXRotHelper->isRotating())
+		{
+			return m_pXRotHelper->getLastestRotAngle();
+		}
+		else if (m_pYRotHelper->isRotating())
+		{
+			return m_pYRotHelper->getLastestRotAngle();
+		}
+		else if (m_pZRotHelper->isRotating())
+		{
+			return m_pZRotHelper->getLastestRotAngle();
+		}
+
+		return 0.0;
+	}
+
 	void Rotate3DHelperEntity::onBoxChanged(Box3D box)
 	{
 		if (m_pXRotHelper)

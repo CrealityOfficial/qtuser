@@ -27,7 +27,10 @@ namespace qtuser_3d
 		Pickable* getPickable();
 
 		void setRotateAxis(QVector3D axis, double initAngle = 0);
+		QVector3D getRotateAxis() { return m_rotateAxis; }
 		void setRotateInitAngle(double angle);
+
+		double getLastestRotAngle() { return m_lastestRotAngles; }
 
 		void setPickSource(FacePicker* pickSource);
 		void setScreenCamera(ScreenCamera* camera);
@@ -100,11 +103,15 @@ namespace qtuser_3d
 		ManipulateEntity* m_pDegreeEntity;
 		//ManipulatePickable* m_pDialPickable;
 
-		Qt3DCore::QTransform* m_transform;
+		Qt3DCore::QTransform* m_pGlobalTransform;
+		Qt3DCore::QTransform* m_pRotateTransform;
+		Qt3DCore::QTransform* m_pNoRotateTransform;
+		QEntity* m_pRotateGroup;
+		QEntity* m_pNoRotateGroup;
 
-		FacePicker* m_pickSource;
-		ScreenCamera* m_screenCamera;
-		RotateCallback* m_rotateCallback;
+		FacePicker* m_pPickSource;
+		ScreenCamera* m_pScreenCamera;
+		RotateCallback* m_pRotateCallback;
 	};
 }
 

@@ -49,9 +49,9 @@ namespace qtuser_3d
 		, m_degreeColor(1.0f, 1.0f, 1.0f, 1.0f)
 		, m_handlerColor(1.0f, 0.0f, 0.0f, 1.0f)
 		, m_handlerPickedColor(-0.2f, 0.3f, 0.2f, 0.0f)
-		, m_pickSource(nullptr)
-		, m_screenCamera(nullptr)
-		, m_rotateCallback(nullptr)
+		, m_pPickSource(nullptr)
+		, m_pScreenCamera(nullptr)
+		, m_pRotateCallback(nullptr)
 		, m_scale(25.0f, 25.0f, 25.0f)
 		, m_ringRadius(2)
 		, m_ringMinorRadius(0.02)
@@ -61,8 +61,16 @@ namespace qtuser_3d
 		, m_handlerOffset(2.16)
 		, m_fixSize(false)
 	{
-		m_transform = new Qt3DCore::QTransform(this);
-		addComponent(m_transform);
+		m_pGlobalTransform = new Qt3DCore::QTransform(this);
+		addComponent(m_pGlobalTransform);
+
+		m_pRotateGroup = new QEntity(this);
+		m_pRotateTransform = new Qt3DCore::QTransform(m_pRotateGroup);
+		m_pRotateGroup->addComponent(m_pRotateTransform);
+
+		m_pNoRotateGroup = new QEntity(this);
+		m_pNoRotateTransform = new Qt3DCore::QTransform(m_pNoRotateGroup);
+		m_pNoRotateGroup->addComponent(m_pNoRotateTransform);
 
 		m_initQuaternion = QQuaternion::rotationTo(m_originRotateAxis, m_rotateAxis);
 
@@ -94,8 +102,8 @@ namespace qtuser_3d
 		QMatrix4x4 m;
 		m.scale(m_scale);
 
-		// ï¿½ï¿½×ªï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
-		m_pRingEntity = new PieFadeEntity(this, 1);
+		// Ðý×ª¹ì³õÊ¼»¯
+		m_pRingEntity = new PieFadeEntity(m_pRotateGroup, 1);
 		m_pRingEntity->setObjectName("RotateHelperEntity_T.ringEntity");
 		m_pRingEntity->setPose(m);
 		m_pRingEntity->setColor(m_ringColor);
@@ -129,15 +137,15 @@ namespace qtuser_3d
 		m.translate(m_handlerOffset * m_initRotateDir);
 		m.rotate(90.0, m_initRotateDir);
 
-		// ï¿½ï¿½×ªï¿½Ö±ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
-		m_pHandlerEntity = new ManipulateEntity(this, 0);
+		// Ðý×ªÊÖ±ú³õÊ¼»¯
+		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, 0);
 		m_pHandlerEntity->setObjectName("RotateHelperEntity_T.handleEntity");
 		m_pHandlerEntity->setPose(m);
 		m_pHandlerEntity->setColor(m_handlerColor);
 		m_pHandlerEntity->setChangeColor(m_handlerPickedColor);
 		m_pHandlerEntity->setMethod(1);
 
-		// ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ¹¹½¨ÊÖ±úÄ£ÐÍÊý¾Ý
 		double bottomRadius = m_ringRadius / 30.0;
 		double coneHeight = m_ringRadius * 3.0 / 25.0;
 		double cylinderHeight = m_ringRadius * 3.0 / 25.0;
@@ -159,7 +167,7 @@ namespace qtuser_3d
 		std::vector<vec3d> normals;
 		std::vector<vec3i> indices;
 
-		// ï¿½Ð¼ï¿½Ô²ï¿½ï¿½
+		// ÖÐ¼äÔ²Öù
 		{
 			int topCenterIndex = positions.size();
 			QVector3D topCenter(0.0f, 0.0f, (float)(cylinderHeight / 2.0));
@@ -198,7 +206,7 @@ namespace qtuser_3d
 			}
 		}
 
-		// ï¿½ï¿½Ô²×¶
+		// ÉÏÔ²×¶
 		{
 			int topCenterIndex = positions.size();
 			positions.push_back({ 0.0f, 0.0f, (float)(coneHeight + gapLength + cylinderHeight / 2.0) });
@@ -225,7 +233,7 @@ namespace qtuser_3d
 			}
 		}
 
-		// ï¿½ï¿½Ô²×¶
+		// ÏÂÔ²×¶
 		{
 			int topCenterIndex = positions.size();
 			positions.push_back({ 0.0f, 0.0f, - (float)(coneHeight + gapLength + cylinderHeight / 2.0) });
@@ -268,7 +276,7 @@ namespace qtuser_3d
 		QMatrix4x4 m;
 		m.scale(m_scale);
 
-		// ï¿½Ì¶ï¿½ï¿½Ì³ï¿½Ê¼ï¿½ï¿½
+		// ¿Ì¶ÈÅÌ³õÊ¼»¯
 		m_pDialEntity = new PieFadeEntity(nullptr, 0);
 		m_pDialEntity->setObjectName("RotateHelperEntity_T.dialEntity");
 		m_pDialEntity->setPose(m);
@@ -280,7 +288,7 @@ namespace qtuser_3d
 		m_pDialEntity->setRotInitDir(m_initRotateDir);
 		m_pDialEntity->setRotAxis(m_rotateAxis);
 
-		// ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ¹¹½¨¿Ì¶ÈÅÌÄ£ÐÍÊý¾Ý
 		double radius = m_dialRadius;
 
 		int split = 20;
@@ -298,7 +306,7 @@ namespace qtuser_3d
 		std::vector<float> normals;
 		std::vector<int> indices;
 
-		// Ô²ï¿½ï¿½
+		// Ô²ÅÌ
 		{
 			int centerIndex = positions.size() / 3;
 			QVector3D roundCenter(0.0, 0.0, 0.0);
@@ -342,7 +350,7 @@ namespace qtuser_3d
 		m_pDialEntity->setGeometry(dialGeo);
 
 
-		// ï¿½Ì¶È³ï¿½Ê¼ï¿½ï¿½
+		// ¿Ì¶È³õÊ¼»¯
 		m_pDegreeEntity = new ManipulateEntity(nullptr, 0);
 		m_pDegreeEntity->setObjectName("RotateHelperEntity_T.degreeEntity");
 		m_pDegreeEntity->setPose(m);
@@ -350,7 +358,7 @@ namespace qtuser_3d
 		m_pDegreeEntity->setChangeColor(m_degreeColor);
 		m_pDegreeEntity->setMethod(1);
 
-		// ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ¹¹½¨¿Ì¶ÈÄ£ÐÍÊý¾Ý
 		double degreeRadius = m_degreeRadius;
 		double markOffset = m_markOffset;
 
@@ -406,7 +414,7 @@ namespace qtuser_3d
 		m_pDegreeEntity->setGeometry(degreeGeo, Qt3DRender::QGeometryRenderer::Lines);
 
 
-		// Ê°È¡ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
+		// Ê°È¡Æ÷³õÊ¼»¯
 		//m_pDialPickable = new ManipulatePickable(this);
 		//m_pDialPickable->setPickableEntity(m_pHandleEntity);
 		//m_pDialPickable->setShowEntity(m_pHandleEntity);
@@ -414,22 +422,22 @@ namespace qtuser_3d
 
 	void RotateHelperEntity_T::setVisibility(bool visibility)
 	{
-		visibility ? m_pRingEntity->setParent(this) : m_pRingEntity->setParent((Qt3DCore::QNode*)nullptr);
-		visibility ? m_pHandlerEntity->setParent(this) : m_pHandlerEntity->setParent((Qt3DCore::QNode*)nullptr);
-		visibility ? m_pDialEntity->setParent(this) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
-		visibility ? m_pDegreeEntity->setParent(this) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pRingEntity->setParent(m_pRotateGroup) : m_pRingEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pHandlerEntity->setParent(m_pRotateGroup) : m_pHandlerEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pDialEntity->setParent(m_pRotateGroup) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pDegreeEntity->setParent(m_pNoRotateGroup) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void RotateHelperEntity_T::setHandlerVisibility(bool visibility)
 	{
-		visibility ? m_pRingEntity->setParent(this) : m_pRingEntity->setParent((Qt3DCore::QNode*)nullptr);
-		visibility ? m_pHandlerEntity->setParent(this) : m_pHandlerEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pRingEntity->setParent(m_pRotateGroup) : m_pRingEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pHandlerEntity->setParent(m_pRotateGroup) : m_pHandlerEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void RotateHelperEntity_T::setDialVisibility(bool visibility)
 	{
-		visibility ? m_pDialEntity->setParent(this) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
-		visibility ? m_pDegreeEntity->setParent(this) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pDialEntity->setParent(m_pRotateGroup) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pDegreeEntity->setParent(m_pNoRotateGroup) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void RotateHelperEntity_T::setColor(QVector4D v4)
@@ -493,7 +501,8 @@ namespace qtuser_3d
 		QQuaternion initRotDir = QQuaternion::fromAxisAndAngle(m_rotateAxis, m_initRotateDirAngles);
 		QQuaternion initRotation = QQuaternion::rotationTo(m_originRotateAxis, m_rotateAxis);
 		m_initQuaternion = initRotDir * initRotation;
-		m_transform->setRotation(m_initQuaternion);
+		m_pRotateTransform->setRotation(m_initQuaternion);
+		m_pNoRotateTransform->setRotation(m_initQuaternion);
 
 		m_initRotateDir = m_initQuaternion * m_originInitRotateDir;
 
@@ -517,7 +526,8 @@ namespace qtuser_3d
 		QQuaternion initRotDir = QQuaternion::fromAxisAndAngle(m_rotateAxis, m_initRotateDirAngles);
 		QQuaternion initRotation = QQuaternion::rotationTo(m_originRotateAxis, m_rotateAxis);
 		m_initQuaternion = initRotDir * initRotation;
-		m_transform->setRotation(m_initQuaternion);
+		m_pRotateTransform->setRotation(m_initQuaternion);
+		m_pNoRotateTransform->setRotation(m_initQuaternion);
 
 		m_initRotateDir = m_initQuaternion * m_originInitRotateDir;
 
@@ -534,25 +544,23 @@ namespace qtuser_3d
 
 	void RotateHelperEntity_T::setPickSource(FacePicker* pickSource)
 	{
-		m_pickSource = pickSource;
+		m_pPickSource = pickSource;
 	}
 
 	void RotateHelperEntity_T::setScreenCamera(ScreenCamera* camera)
 	{
-		m_screenCamera = camera;
+		m_pScreenCamera = camera;
 	}
 
 	void RotateHelperEntity_T::setRotateCallback(RotateCallback* callback)
 	{
-		m_rotateCallback = callback;
+		m_pRotateCallback = callback;
 	}
 
 	void RotateHelperEntity_T::onBoxChanged(Box3D box)
 	{
 		QVector3D center = box.center();
 		m_center = center;
-		QMatrix4x4 matrix;
-		matrix.translate(center);
 
 		float len = 1.0f;
 		if (m_fixSize)
@@ -565,14 +573,12 @@ namespace qtuser_3d
 				len = maxlen * 1.1 / 50;
 			}
 		}
-		matrix.scale(len);
-		matrix.rotate(m_initQuaternion);
-		m_transform->setMatrix(matrix);
 
-		//// ï¿½Ì¶È²ï¿½ï¿½ï¿½×ª
-		//QMatrix4x4 mt;
-		//mt.scale(m_scale);
-		//m_pDegreeEntity->setPose(mt);
+		m_pRotateTransform->setTranslation(m_center);
+		m_pRotateTransform->setScale(len);
+
+		m_pNoRotateTransform->setTranslation(m_center);
+		m_pNoRotateTransform->setScale(len);
 
 		m_pRingEntity->setRotCenter(m_center);
 		m_pDialEntity->setRotCenter(m_center);
@@ -581,7 +587,7 @@ namespace qtuser_3d
 	void RotateHelperEntity_T::onLeftMouseButtonPress(QMouseEvent* event)
 	{
 		 QList<Pickable*> list = QList<Pickable*>({m_pHandlerPickable});
-		Pickable* pickable = checkPickableFromList(m_pickSource, event->pos(), list , nullptr);
+		Pickable* pickable = checkPickableFromList(m_pPickSource, event->pos(), list , nullptr);
 
 		if (pickable == m_pHandlerPickable)
 		{
@@ -591,8 +597,8 @@ namespace qtuser_3d
 
 			m_spacePoint = calculateSpacePoint(event->pos());
 
-			if (m_rotateCallback)
-				m_rotateCallback->onStartRotate();
+			if (m_pRotateCallback)
+				m_pRotateCallback->onStartRotate();
 		}
 	}
 
@@ -600,8 +606,8 @@ namespace qtuser_3d
 	{
 		if (m_rotatingFlag)
 		{
-			m_rotatingFlag = false;
 			perform(event->pos(), true);
+			m_rotatingFlag = false;
 			m_lastestRotAngles = 0;
 			m_pRingEntity->setRotMode(0);
 			m_pDialEntity->setRotRadians(0);
@@ -620,7 +626,7 @@ namespace qtuser_3d
 		QVector3D planeNormal = m_rotateAxis;
 		QVector3D planePosition = m_center;
 
-		cameraRayPoint(m_screenCamera, point, planePosition, planeNormal, collide);
+		cameraRayPoint(m_pScreenCamera, point, planePosition, planeNormal, collide);
 		return collide;
 	}
 
@@ -681,9 +687,9 @@ namespace qtuser_3d
 			m_pRingEntity->setRotRadians(qDegreesToRadians(m_lastestRotAngles));
 			m_pDialEntity->setRotRadians(qDegreesToRadians(m_lastestRotAngles));
 		}
-		if (m_rotateCallback)
+		if (m_pRotateCallback)
 		{
-			m_rotateCallback->setRotateAngle(axis, angle);
+			m_pRotateCallback->setRotateAngle(axis, angle);
 		}
 
 		return QQuaternion::fromAxisAndAngle(axis, angle);
@@ -693,17 +699,19 @@ namespace qtuser_3d
 	{
 		QQuaternion q = process(point);
 
-		m_transform->setRotation(q * m_initQuaternion);
+		//m_pGlobalTransform->setRotation(q * m_initQuaternion);
+		m_pRotateTransform->setRotation(q * m_initQuaternion);
 
-		//// ï¿½Ì¶È²ï¿½ï¿½ï¿½×ª
-		//QMatrix4x4 mt = m_pDegreeEntity->pose();
-		//mt.rotate(m_initQuaternion.inverted() * q.inverted() * m_initQuaternion);
-		//m_pDegreeEntity->setPose(mt);
-
-		if (m_rotateCallback)
+		if (m_pRotateCallback)
 		{
-			if (release) m_rotateCallback->onEndRotate(q);
-			else m_rotateCallback->onRotate(q);
+			if (release)
+			{
+				m_pRotateCallback->onEndRotate(q);
+
+				m_pRotateTransform->setRotation(m_initQuaternion);
+			}
+			else 
+				m_pRotateCallback->onRotate(q);
 		}
 	}
 }

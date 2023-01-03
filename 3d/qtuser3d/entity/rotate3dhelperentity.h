@@ -35,6 +35,9 @@ namespace qtuser_3d
 		inline void setXVisibility(bool visibility);
 		inline void setYVisibility(bool visibility);
 		inline void setZVisibility(bool visibility);
+
+		QVector3D getCurrentRotateAxis();
+		double getCurrentRotAngle();
 		
 	public slots:
 		void onBoxChanged(Box3D box);
