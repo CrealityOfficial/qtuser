@@ -3,6 +3,14 @@
 #include "qtusercore/qtusercoreexport.h"
 #include <QtWidgets/QUndoStack>
 
+class UndoCallback
+{
+public:
+	virtual ~UndoCallback() {}
+	virtual void onUndo() = 0;
+	virtual void onRedo() = 0;
+};
+
 class QTUSER_CORE_API UndoProxy : public QObject
 {
 	Q_OBJECT
@@ -26,6 +34,9 @@ public:
 	Q_INVOKABLE void redo();
 
 	void setUndoStack(QUndoStack* undoStack);
+
+	void addUndoCallback(UndoCallback* callback);
+	void removeUndoCallback(UndoCallback* callback);
 signals:
 	void canRedoChanged();
 	void canUndoChanged();
@@ -33,6 +44,7 @@ signals:
 	void undoTextChanged();
 protected:
 	QUndoStack* m_undoStack;
+	QList<UndoCallback*> m_callbacks;
 };
 
 #endif // _QTUSER_CORE_UNDOPROXY_1588906890012_H

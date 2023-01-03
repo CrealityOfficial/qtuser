@@ -30,16 +30,38 @@ void UndoProxy::setUndoStack(QUndoStack* undoStack)
 	emit undoTextChanged();
 }
 
+void UndoProxy::addUndoCallback(UndoCallback* callback)
+{
+	if (callback && !m_callbacks.contains(callback))
+		m_callbacks.append(callback);
+}
+
+void UndoProxy::removeUndoCallback(UndoCallback* callback)
+{
+	if (callback && m_callbacks.contains(callback))
+		m_callbacks.removeOne(callback);
+}
+
 void UndoProxy::undo()
 {
 	if (m_undoStack)
+	{
 		m_undoStack->undo();
+
+		for (UndoCallback* callback : m_callbacks)
+			callback->onUndo();
+	}
 }
 
 void UndoProxy::redo()
 {
 	if (m_undoStack)
+	{
 		m_undoStack->redo();
+
+		for (UndoCallback* callback : m_callbacks)
+			callback->onRedo();
+	}
 }
 
 bool UndoProxy::canRedo() const
