@@ -6,6 +6,7 @@
 #include <QtCore/QDebug>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
+#include <QtQuick/QQuickWindow> 
 #include <QtGui/QOpenGLContext>
 #include "qtusercore/module/systemutil.h"
 #include "qtuserqml/interface/qmlapplicationinterface.h"
@@ -131,9 +132,15 @@ namespace qtuser_qml
             QApplication app(argc, argv);
             QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
-
             setDynamicLoadPath(*engine);
             specifyOpenGL();
+
+#ifdef Q_OS_OSX
+            QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
+#endif
+
+            initSystemUtil();
+            showDetailSystemInfo();
 
             func(*engine);
             ret = app.exec();

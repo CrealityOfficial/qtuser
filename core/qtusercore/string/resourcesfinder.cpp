@@ -70,4 +70,46 @@ namespace qtuser_core
 		rFolder += folder;
 		return rFolder;
 	}
+
+	bool copyDir(const QString& source, const QString& destination, bool override)
+	{
+		QDir directory(source);
+		if (!directory.exists())
+		{
+			return false;
+		}
+		QString srcPath = QDir::toNativeSeparators(source);
+		if (!srcPath.endsWith(QDir::separator()))
+			srcPath += QDir::separator();
+		QString dstPath = QDir::toNativeSeparators(destination);
+		if (!dstPath.endsWith(QDir::separator()))
+			dstPath += QDir::separator();
+		bool error = false;
+		QStringList fileNames = directory.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden);
+		for (QStringList::size_type i = 0; i != fileNames.size(); ++i)
+		{
+			QString fileName = fileNames.at(i);
+			QString srcFilePath = srcPath + fileName;
+			QString dstFilePath = dstPath + fileName;
+			QFileInfo fileInfo(srcFilePath);
+			if (fileInfo.isFile() || fileInfo.isSymLink())
+			{
+				if (override)
+				{
+					QFile::setPermissions(dstFilePath, QFile::WriteOwner);
+				}
+				QFile::copy(srcFilePath, dstFilePath);
+			}
+			else if (fileInfo.isDir())
+			{
+				QDir dstDir(dstFilePath);
+				dstDir.mkpath(dstFilePath);
+				if (!copyDir(srcFilePath, dstFilePath, override))
+				{
+					error = true;
+				}
+			}
+		}
+		return !error;
+	}
 }
