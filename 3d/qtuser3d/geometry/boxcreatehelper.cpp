@@ -99,4 +99,27 @@ namespace qtuser_3d
 
 		return GeometryCreateHelper::create(parent, positionAttribute, indexAttribute);
 	}
+
+	Qt3DRender::QGeometry* BoxCreateHelper::createWithTriangle(const Box3D& box, Qt3DCore::QNode* parent)
+	{
+		QVector<QVector3D> positions;
+		positions.resize(8);
+
+		QVector3D bmin = box.min;
+		QVector3D bmax = box.max;
+
+		positions[0] = bmin;
+		positions[1] = QVector3D(bmax.x(), bmin.y(), bmin.z());
+		positions[2] = QVector3D(bmax.x(), bmax.y(), bmin.z());
+		positions[3] = QVector3D(bmin.x(), bmax.y(), bmin.z());
+		positions[4] = QVector3D(bmin.x(), bmin.y(), bmax.z());
+		positions[5] = QVector3D(bmax.x(), bmin.y(), bmax.z());
+		positions[6] = bmax;
+		positions[7] = QVector3D(bmin.x(), bmax.y(), bmax.z());
+
+		Qt3DRender::QAttribute* positionAttribute = BufferHelper::CreateVertexAttribute((const char*)&positions.at(0), AttribueSlot::Position, 8);
+		Qt3DRender::QAttribute* indexAttribute = BufferHelper::CreateIndexAttribute((const char*)static_box_triangles_indices, 36);
+
+		return GeometryCreateHelper::create(parent, positionAttribute, indexAttribute);
+	}
 }
