@@ -74,14 +74,10 @@
         <file>shaders/zproject.vert</file>
         <file>shaders/zproject.frag</file>
 		<file>shaders/glcomp1.vert</file>
-<<<<<<< HEAD
 		<file>shaders/glcomp1.fragment</file>
-      <file>shaders/piefade.vert</file>
-      <file>shaders/piefade.frag</file>
-=======
-		<file>shaders/glcomp1.frag</file>
+		<file>shaders/piefade.vert</file>
+		<file>shaders/piefade.frag</file>
         <file>shaders/overlay.fragment</file>
         <file>shaders/overlay.vert</file>
->>>>>>> e61aae0 (feature[qtuser]:划线的渲染算法)
     </qresource>
 </RCC>
