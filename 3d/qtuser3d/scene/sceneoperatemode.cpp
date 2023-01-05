@@ -101,8 +101,4 @@ namespace qtuser_3d
 	{
 		(void)event;
 	}
-
-	void SceneOperateMode::onMachineSelectChange()
-	{
-	}
 }

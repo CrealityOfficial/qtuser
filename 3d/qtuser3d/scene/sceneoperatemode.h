@@ -45,8 +45,6 @@ namespace qtuser_3d
 
 		void onKeyPress(QKeyEvent* event) override;
 		void onKeyRelease(QKeyEvent* event) override;
-
-		virtual void onMachineSelectChange();
 	};
 }
 #endif // QTUSER_3D_SCENEOPERATEMODE_1592203699385_H
