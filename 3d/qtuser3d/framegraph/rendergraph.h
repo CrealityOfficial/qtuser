@@ -19,8 +19,6 @@ namespace qtuser_3d
 		void setOperateMode(SceneOperateMode* operateMode);
 		void reinOperationMode();
 
-		void onMachineSelectChange();
-
 		virtual Qt3DCore::QEntity* sceneGraph();
 		virtual Qt3DRender::QFrameGraphNode* frameGraph();
 

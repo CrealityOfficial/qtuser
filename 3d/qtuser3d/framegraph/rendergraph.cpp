@@ -74,14 +74,5 @@ namespace qtuser_3d
 			m_operateMode->onAttach();
 		}
 	}
-
-
-	void RenderGraph::onMachineSelectChange()
-	{
-		if (m_operateMode)
-		{
-			m_operateMode->onMachineSelectChange();
-		}
-	}
 }
 
