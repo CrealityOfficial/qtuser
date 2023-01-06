@@ -47,7 +47,10 @@ namespace qtuser_3d
 	{
 		if (pickable)
 		{
-			_add(pickable);
+			if (m_pickables.indexOf(pickable) < 0)
+			{
+				_add(pickable);
+			}
 
 			if (m_pickables.size() == 1)
 			{
