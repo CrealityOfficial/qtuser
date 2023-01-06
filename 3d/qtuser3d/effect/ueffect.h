@@ -45,6 +45,10 @@ namespace qtuser_3d
 
 		void setPassDepthTest(const QString& passName, Qt3DRender::QDepthTest::DepthFunction depthFunc = Qt3DRender::QDepthTest::Less);
 		void setPassNoDepthMask(const QString& passName);
+
+		QVector<Qt3DRender::QRenderPass*> renderPasses();
+		void addRenderState(Qt3DRender::QRenderState* state);
+
 	protected:
 		QMap<QString, Qt3DRender::QRenderPass*> m_attachedPasses;
 	};
