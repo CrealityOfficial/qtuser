@@ -77,7 +77,7 @@
 		<file>shaders/glcomp1.fragment</file>
 		<file>shaders/piefade.vert</file>
 		<file>shaders/piefade.frag</file>
-        <file>shaders/overlay.fragment</file>
         <file>shaders/overlay.vert</file>
+        <file>shaders/overlay.frag</file>
     </qresource>
 </RCC>
