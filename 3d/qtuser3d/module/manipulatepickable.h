@@ -22,7 +22,7 @@ namespace qtuser_3d
 
 	protected:
 
-		float m_stateFactor[3] = { 1.0f, 0.6f, 0.6f };
+		float m_stateFactor[3] = { 1.0f, 0.0, 0.0f };
 		PickableEntity* m_showEntity;
 	};
 }

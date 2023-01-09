@@ -8,6 +8,7 @@
 #include "qtuser3d/math/box3d.h"
 #include "qtuser3d/event/eventhandlers.h"
 #include "qtuser3d/module/manipulatecallback.h"
+#include "qtuser3d/entity/basicentity.h"
 
 
 namespace qtuser_3d
@@ -17,7 +18,8 @@ namespace qtuser_3d
 	class FacePicker;
 	class ScreenCamera;
 	class RotateCallback;
-	class QTUSER_3D_API Rotate3DHelperEntity : public Qt3DCore::QEntity,
+
+	class QTUSER_3D_API Rotate3DHelperEntity : public BasicEntity,
 		public RotateCallback
 	{
 		Q_OBJECT
@@ -35,6 +37,7 @@ namespace qtuser_3d
 		inline void setXVisibility(bool visibility);
 		inline void setYVisibility(bool visibility);
 		inline void setZVisibility(bool visibility);
+		inline void setScale(float scaleRate);
 
 		QVector3D getCurrentRotateAxis();
 		double getCurrentRotAngle();

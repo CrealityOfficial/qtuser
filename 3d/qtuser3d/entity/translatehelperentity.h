@@ -3,6 +3,7 @@
 
 #include "qtuser3d/math/box3d.h"
 #include "qtuser3d/qtuser3dexport.h"
+#include "qtuser3d/entity/basicentity.h"
 #include <Qt3DCore/QTransform>
 #include <Qt3DCore/QEntity>
 
@@ -24,7 +25,7 @@ namespace qtuser_3d
 	class Pickable;
 	class SimplePickable;
 	class ManipulateEntity;
-	class QTUSER_3D_API TranslateHelperEntity : public Qt3DCore::QEntity
+	class QTUSER_3D_API TranslateHelperEntity : public BasicEntity
 	{
 		Q_OBJECT
 	public:
@@ -54,6 +55,8 @@ namespace qtuser_3d
 		void setZVisibility(bool visibility);
 
 		void setScale(float scaleRate);
+		Qt3DCore::QTransform* getTransform() { return m_transform; }
+
 		void updateBox(const Box3D& box);
 		void setFixSize(int fixSize);
 		QVector3D center();

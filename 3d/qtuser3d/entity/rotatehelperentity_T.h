@@ -3,8 +3,11 @@
 #include "qtuser3d/qtuser3dexport.h"
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
+#include <Qt3DExtras/QText2DEntity>
 #include "qtuser3d/math/box3d.h"
 #include "qtuser3d/event/eventhandlers.h"
+#include "qtuser3d/entity/basicentity.h"
+
 
 namespace qtuser_3d
 {
@@ -16,8 +19,8 @@ namespace qtuser_3d
 	class ScreenCamera;
 	class RotateCallback;
 
-	class QTUSER_3D_API RotateHelperEntity_T : public Qt3DCore::QEntity
-		,public LeftMouseEventHandler
+	class QTUSER_3D_API RotateHelperEntity_T : public BasicEntity
+		,public LeftMouseEventHandler, public WheelEventHandler
 	{
 		Q_OBJECT
 	public:
@@ -28,13 +31,14 @@ namespace qtuser_3d
 
 		void setRotateAxis(QVector3D axis, double initAngle = 0);
 		QVector3D getRotateAxis() { return m_rotateAxis; }
-		void setRotateInitAngle(double angle);
 
 		double getLastestRotAngle() { return m_lastestRotAngles; }
 
 		void setPickSource(FacePicker* pickSource);
 		void setScreenCamera(ScreenCamera* camera);
 		void setRotateCallback(RotateCallback* callback);
+
+		void setScale(float scale);
 
 		void setVisibility(bool visibility);
 		void setHandlerVisibility(bool visibility);
@@ -56,12 +60,14 @@ namespace qtuser_3d
 		void initRing();
 		void initHandler();
 		void initDial();
+		void initTip();
 
 	protected:
 		void onLeftMouseButtonClick(QMouseEvent* event) override {}
 		void onLeftMouseButtonPress(QMouseEvent* event) override;
 		void onLeftMouseButtonRelease(QMouseEvent* event) override;
 		void onLeftMouseButtonMove(QMouseEvent* event) override;
+		void onWheelEvent(QWheelEvent* event) override;
 
 		QVector3D calculateSpacePoint(QPoint point);
 		QQuaternion process(QPoint point);
@@ -71,6 +77,7 @@ namespace qtuser_3d
 		bool m_rotatingFlag; 
 		double m_lastestRotAngles; // < 0: Ë³Ê±Õë£¬= 0£º0£¬> 0£ºÄæÊ±Õë
 		double m_initRotateDirAngles;
+		double m_initScaleRate;
 		QVector3D m_rotateAxis;
 		QVector3D m_originRotateAxis;
 		QVector3D m_initRotateDir;
@@ -102,6 +109,8 @@ namespace qtuser_3d
 		PieFadeEntity* m_pDialEntity;
 		ManipulateEntity* m_pDegreeEntity;
 		//ManipulatePickable* m_pDialPickable;
+
+		Qt3DExtras::QText2DEntity* m_pTipEntity;
 
 		Qt3DCore::QTransform* m_pGlobalTransform;
 		Qt3DCore::QTransform* m_pRotateTransform;

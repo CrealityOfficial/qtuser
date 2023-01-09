@@ -22,21 +22,8 @@
 #include "qtuser3d/module/pickable.h"
 namespace qtuser_3d
 {
-	struct vec3d
-	{
-		float x;
-		float y;
-		float z;
-	};
-	struct vec3i
-	{
-		int x;
-		int y;
-		int z;
-	};
-
 	RotateHelperEntity_T::RotateHelperEntity_T(Qt3DCore::QNode* parent)
-		:Qt3DCore::QEntity(parent)
+		: BasicEntity(parent)
 		, m_rotatingFlag(false)
 		, m_lastestRotAngles(0)
 		, m_initRotateDirAngles(0)
@@ -48,10 +35,7 @@ namespace qtuser_3d
 		, m_dialColor(1.0f, 0.0f, 0.0f, 0.2f)
 		, m_degreeColor(1.0f, 1.0f, 1.0f, 1.0f)
 		, m_handlerColor(1.0f, 0.0f, 0.0f, 1.0f)
-		, m_handlerPickedColor(-0.2f, 0.3f, 0.2f, 0.0f)
-		, m_pPickSource(nullptr)
-		, m_pScreenCamera(nullptr)
-		, m_pRotateCallback(nullptr)
+		, m_handlerPickedColor(1.0f, 0.79f, 0.0f, 1.0f)
 		, m_scale(25.0f, 25.0f, 25.0f)
 		, m_ringRadius(2)
 		, m_ringMinorRadius(0.02)
@@ -60,15 +44,29 @@ namespace qtuser_3d
 		, m_markOffset(0.2)
 		, m_handlerOffset(2.16)
 		, m_fixSize(false)
+		, m_pRingEntity(nullptr)
+		, m_pHandlerEntity(nullptr)
+		, m_pHandlerPickable(nullptr)
+		, m_pDialEntity(nullptr)
+		, m_pDegreeEntity(nullptr)
+		, m_pTipEntity(nullptr)
+		, m_pGlobalTransform(nullptr)
+		, m_pRotateTransform(nullptr)
+		, m_pNoRotateTransform(nullptr)
+		, m_pRotateGroup(nullptr)
+		, m_pNoRotateGroup(nullptr)
+		, m_pPickSource(nullptr)
+		, m_pScreenCamera(nullptr)
+		, m_pRotateCallback(nullptr)
 	{
 		m_pGlobalTransform = new Qt3DCore::QTransform(this);
 		addComponent(m_pGlobalTransform);
 
-		m_pRotateGroup = new QEntity(this);
+		m_pRotateGroup = new BasicEntity(this);
 		m_pRotateTransform = new Qt3DCore::QTransform(m_pRotateGroup);
 		m_pRotateGroup->addComponent(m_pRotateTransform);
 
-		m_pNoRotateGroup = new QEntity(this);
+		m_pNoRotateGroup = new BasicEntity(this);
 		m_pNoRotateTransform = new Qt3DCore::QTransform(m_pNoRotateGroup);
 		m_pNoRotateGroup->addComponent(m_pNoRotateTransform);
 
@@ -77,6 +75,7 @@ namespace qtuser_3d
 		initRing();
 		initHandler();
 		initDial();
+		initTip();
 	}
 
 	RotateHelperEntity_T::~RotateHelperEntity_T()
@@ -103,12 +102,10 @@ namespace qtuser_3d
 		m.scale(m_scale);
 
 		// 旋转轨初始化
-		m_pRingEntity = new PieFadeEntity(m_pRotateGroup, 1);
+		m_pRingEntity = new PieFadeEntity(m_pNoRotateGroup, true, false);
 		m_pRingEntity->setObjectName("RotateHelperEntity_T.ringEntity");
 		m_pRingEntity->setPose(m);
 		m_pRingEntity->setColor(m_ringColor);
-		m_pRingEntity->setChangeColor(m_ringColor);
-		m_pRingEntity->setMethod(1);
 		m_pRingEntity->setRotMode(0);
 		m_pRingEntity->setRotInitDir(m_initRotateDir);
 		m_pRingEntity->setRotAxis(m_rotateAxis);
@@ -118,12 +115,6 @@ namespace qtuser_3d
 		torusMesh->setMinorRadius(m_ringMinorRadius);
 		torusMesh->setRings(100);
 		m_pRingEntity->replaceGeometryRenderer(torusMesh);
-
-		//if (type == 1)
-		//{
-		//	float sf[3] = { 0, 1, 2 };
-		//	m_pRingPickable->setStateFactor(sf);
-		//}
 
 		//m_pRingPickable = new ManipulatePickable(this);
 		//m_pRingPickable->setPickableEntity(m_pRingEntity);
@@ -138,12 +129,13 @@ namespace qtuser_3d
 		m.rotate(90.0, m_initRotateDir);
 
 		// 旋转手柄初始化
-		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, 0);
+		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, false, true, true);
 		m_pHandlerEntity->setObjectName("RotateHelperEntity_T.handleEntity");
 		m_pHandlerEntity->setPose(m);
 		m_pHandlerEntity->setColor(m_handlerColor);
 		m_pHandlerEntity->setChangeColor(m_handlerPickedColor);
 		m_pHandlerEntity->setMethod(1);
+		m_pHandlerEntity->setLightEnable(true);
 
 		// 构建手柄模型数据
 		double bottomRadius = m_ringRadius / 30.0;
@@ -163,107 +155,116 @@ namespace qtuser_3d
 			roundDir = roundDeltaQ * roundDir;
 		}
 
-		std::vector<vec3d> positions;
-		std::vector<vec3d> normals;
-		std::vector<vec3i> indices;
+		std::vector<float> positions;
+		std::vector<float> normals;
 
 		// 中间圆柱
 		{
-			int topCenterIndex = positions.size();
 			QVector3D topCenter(0.0f, 0.0f, (float)(cylinderHeight / 2.0));
-			positions.push_back({ topCenter.x(), topCenter.y(), topCenter.z() });
-			normals.push_back({ 0.0f, 0.0f, 1.0f });
-			int bottomCenterIndex = positions.size();
 			QVector3D bottomCenter(0.0f, 0.0f, -(float)(cylinderHeight / 2.0));
-			positions.push_back({ bottomCenter.x(), bottomCenter.y(), bottomCenter.z() });
-			normals.push_back({ 0.0f, 0.0f, -1.0f });
 
-			std::vector<int> topVIndices;
+			// 上下底面
 			for (int i = 0; i < roundDirs.size(); i++)
 			{
-				topVIndices.push_back(positions.size());
+				int iNext = i < roundDirs.size() - 1 ? i + 1 : 0;
+
 				QVector3D topVertex = topCenter + roundDirs[i] * bottomRadius;
-				positions.push_back({ topVertex.x(), topVertex.y(), topVertex.z() });
-				normals.push_back({ roundDirs[i].x(), roundDirs[i].y(), roundDirs[i].z() });
-			}
+				QVector3D topVertexNext = topCenter + roundDirs[iNext] * bottomRadius;
+				positions.push_back(topVertex.x()); positions.push_back(topVertex.y());  positions.push_back(topVertex.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
+				positions.push_back(topCenter.x()); positions.push_back(topCenter.y());  positions.push_back(topCenter.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
+				positions.push_back(topVertexNext.x()); positions.push_back(topVertexNext.y());  positions.push_back(topVertexNext.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
 
-			std::vector<int> bottomVIndices;
-			for (int i = 0; i < roundDirs.size(); i++)
-			{
-				bottomVIndices.push_back(positions.size());
 				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
-				positions.push_back({ bottomVertex.x(), bottomVertex.y(), bottomVertex.z() });
-				normals.push_back({ roundDirs[i].x(), roundDirs[i].y(), roundDirs[i].z() });
-			}
+				QVector3D bottomVertexNext = bottomCenter + roundDirs[iNext] * bottomRadius;
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
+				positions.push_back(bottomCenter.x()); positions.push_back(bottomCenter.y());  positions.push_back(bottomCenter.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
 
-			for (int i = 0; i < bottomVIndices.size(); i++)
-			{
-				int iNext = i < bottomVIndices.size() - 1 ? i + 1 : 0;
-				indices.push_back({ topVIndices[i], topVIndices[iNext], topCenterIndex });
-				indices.push_back({ topVIndices[i], bottomVIndices[i], topVIndices[iNext] });
-				indices.push_back({ bottomVIndices[i], bottomVIndices[iNext], topVIndices[iNext] });
-				indices.push_back({ bottomVIndices[i], bottomCenterIndex, bottomVIndices[iNext] });
+				positions.push_back(topVertex.x()); positions.push_back(topVertex.y());  positions.push_back(topVertex.z());
+				normals.push_back(roundDirs[i].x()); normals.push_back(roundDirs[i].y()); normals.push_back(roundDirs[i].z());
+				positions.push_back(topVertexNext.x()); positions.push_back(topVertexNext.y());  positions.push_back(topVertexNext.z());
+				normals.push_back(roundDirs[iNext].x()); normals.push_back(roundDirs[iNext].y()); normals.push_back(roundDirs[iNext].z());
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(roundDirs[iNext].x()); normals.push_back(roundDirs[iNext].y()); normals.push_back(roundDirs[iNext].z());
+
+				positions.push_back(topVertex.x()); positions.push_back(topVertex.y());  positions.push_back(topVertex.z());
+				normals.push_back(roundDirs[i].x()); normals.push_back(roundDirs[i].y()); normals.push_back(roundDirs[i].z());
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(roundDirs[iNext].x()); normals.push_back(roundDirs[iNext].y()); normals.push_back(roundDirs[iNext].z());
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
+				normals.push_back(roundDirs[i].x()); normals.push_back(roundDirs[i].y()); normals.push_back(roundDirs[i].z());
 			}
 		}
 
 		// 上圆锥
 		{
-			int topCenterIndex = positions.size();
-			positions.push_back({ 0.0f, 0.0f, (float)(coneHeight + gapLength + cylinderHeight / 2.0) });
-			normals.push_back({0.0f, 0.0f, 1.0f});
-			int bottomCenterIndex = positions.size();
+			QVector3D topCenter(0.0f, 0.0f, (float)(coneHeight + gapLength + cylinderHeight / 2.0));
 			QVector3D bottomCenter(0.0f, 0.0f, (float)(gapLength + cylinderHeight / 2.0));
-			positions.push_back({ bottomCenter.x(), bottomCenter.y(), bottomCenter.z() });
-			normals.push_back({0.0f, 0.0f, -1.0f});
 			
-			std::vector<int> bottomVIndices;
 			for (int i = 0; i < roundDirs.size(); i++)
 			{
-				bottomVIndices.push_back(positions.size());
-				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
-				positions.push_back({ bottomVertex.x(), bottomVertex.y(), bottomVertex.z() });
-				normals.push_back({roundDirs[i].x(), roundDirs[i].y(), roundDirs[i].z()});
-			}
+				int iNext = i < roundDirs.size() - 1 ? i + 1 : 0;
 
-			for (int i = 0; i < bottomVIndices.size(); i++)
-			{
-				int iNext = i < bottomVIndices.size() - 1 ? i + 1 : 0;
-				indices.push_back({ bottomVIndices[i], bottomVIndices[iNext], topCenterIndex });
-				indices.push_back({bottomVIndices[i], bottomCenterIndex, bottomVIndices[iNext] });
+				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
+				QVector3D bottomVertexNext = bottomCenter + roundDirs[iNext] * bottomRadius;
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
+				positions.push_back(bottomCenter.x()); positions.push_back(bottomCenter.y());  positions.push_back(bottomCenter.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
+
+				QVector3D sideNormal = ((bottomVertex - bottomCenter) + (topCenter - bottomCenter)).normalized();
+				QVector3D sideNormalNext = ((bottomVertexNext - bottomCenter) + (topCenter - bottomCenter)).normalized();
+				QVector3D topNormal = (sideNormal + sideNormalNext).normalized();
+				positions.push_back(topCenter.x()); positions.push_back(topCenter.y());  positions.push_back(topCenter.z());
+				normals.push_back(topNormal.x()); normals.push_back(topNormal.y()); normals.push_back(topNormal.z());
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
+				normals.push_back(sideNormal.x()); normals.push_back(sideNormal.y()); normals.push_back(sideNormal.z());
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(sideNormalNext.x()); normals.push_back(sideNormalNext.y()); normals.push_back(sideNormalNext.z());
 			}
 		}
 
 		// 下圆锥
 		{
-			int topCenterIndex = positions.size();
-			positions.push_back({ 0.0f, 0.0f, - (float)(coneHeight + gapLength + cylinderHeight / 2.0) });
-			normals.push_back({ 0.0f, 0.0f, -1.0f });
-			int bottomCenterIndex = positions.size();
+			QVector3D topCenter(0.0f, 0.0f, -(float)(coneHeight + gapLength + cylinderHeight / 2.0));
 			QVector3D bottomCenter(0.0f, 0.0f, - (float)(gapLength + cylinderHeight / 2.0));
-			positions.push_back({ bottomCenter.x(), bottomCenter.y(), bottomCenter.z() });
-			normals.push_back({ 0.0f, 0.0f, 1.0f });
 
-			std::vector<int> bottomVIndices;
 			for (int i = 0; i < roundDirs.size(); i++)
 			{
-				bottomVIndices.push_back(positions.size());
-				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
-				positions.push_back({ bottomVertex.x(), bottomVertex.y(), bottomVertex.z() });
-				normals.push_back({ roundDirs[i].x(), roundDirs[i].y(), roundDirs[i].z() });
-			}
+				int iNext = i < roundDirs.size() - 1 ? i + 1 : 0;
 
-			for (int i = 0; i < bottomVIndices.size(); i++)
-			{
-				int iNext = i < bottomVIndices.size() - 1 ? i + 1 : 0;
-				indices.push_back({ bottomVIndices[i], topCenterIndex, bottomVIndices[iNext] });
-				indices.push_back({ bottomVIndices[i], bottomVIndices[iNext], bottomCenterIndex });
+				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
+				QVector3D bottomVertexNext = bottomCenter + roundDirs[iNext] * bottomRadius;
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
+				positions.push_back(bottomCenter.x()); positions.push_back(bottomCenter.y());  positions.push_back(bottomCenter.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
+
+				QVector3D sideNormal = ((bottomVertex - bottomCenter) + (topCenter - bottomCenter)).normalized();
+				QVector3D sideNormalNext = ((bottomVertexNext - bottomCenter) + (topCenter - bottomCenter)).normalized();
+				QVector3D topNormal = (sideNormal + sideNormalNext).normalized();
+				positions.push_back(topCenter.x()); positions.push_back(topCenter.y());  positions.push_back(topCenter.z());
+				normals.push_back(topNormal.x()); normals.push_back(topNormal.y()); normals.push_back(topNormal.z());
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
+				normals.push_back(sideNormal.x()); normals.push_back(sideNormal.y()); normals.push_back(sideNormal.z());
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(sideNormalNext.x()); normals.push_back(sideNormalNext.y()); normals.push_back(sideNormalNext.z());
 			}
 		}
 
-		Qt3DRender::QAttribute* positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&positions[0], qtuser_3d::AttribueSlot::Position, 3 * positions.size());
-		Qt3DRender::QAttribute* normalAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&normals[0], qtuser_3d::AttribueSlot::Normal, 3 * normals.size());
-		Qt3DRender::QAttribute* indexAttribute = qtuser_3d::BufferHelper::CreateIndexAttribute((const char*)&indices[0], 3 * indices.size());
-		Qt3DRender::QGeometry* handlerGeo = qtuser_3d::GeometryCreateHelper::createEx(nullptr, positionAttribute, normalAttribute, indexAttribute);
+		Qt3DRender::QAttribute* positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&positions[0], qtuser_3d::AttribueSlot::Position, positions.size() / 3);
+		Qt3DRender::QAttribute* normalAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&normals[0], qtuser_3d::AttribueSlot::Normal, normals.size() / 3);
+		Qt3DRender::QGeometry* handlerGeo = qtuser_3d::GeometryCreateHelper::createEx(nullptr, positionAttribute, normalAttribute);
 		m_pHandlerEntity->setGeometry(handlerGeo);
 
 		m_pHandlerPickable = new ManipulatePickable(this);
@@ -277,12 +278,10 @@ namespace qtuser_3d
 		m.scale(m_scale);
 
 		// 刻度盘初始化
-		m_pDialEntity = new PieFadeEntity(nullptr, 0);
+		m_pDialEntity = new PieFadeEntity(nullptr, true, false);
 		m_pDialEntity->setObjectName("RotateHelperEntity_T.dialEntity");
 		m_pDialEntity->setPose(m);
 		m_pDialEntity->setColor(m_dialColor);
-		m_pDialEntity->setChangeColor(m_dialColor);
-		m_pDialEntity->setMethod(1);
 		m_pDialEntity->setRotMode(1);
 		m_pDialEntity->setRotRadians(0);
 		m_pDialEntity->setRotInitDir(m_initRotateDir);
@@ -302,61 +301,62 @@ namespace qtuser_3d
 			roundDir = roundDeltaQ * roundDir;
 		}
 
-		std::vector<float> positions;
-		std::vector<float> normals;
-		std::vector<int> indices;
+		std::vector<float> positionsDial;
+		std::vector<float> normalsDial;
+		std::vector<int> indicesDial;
 
 		// 圆盘
 		{
-			int centerIndex = positions.size() / 3;
+			int centerIndex = positionsDial.size() / 3;
 			QVector3D roundCenter(0.0, 0.0, 0.0);
-			positions.push_back(0.0f);
-			positions.push_back(0.0f);
-			positions.push_back(0.0f);
-			normals.push_back(0.0f);
-			normals.push_back(0.0f);
-			normals.push_back(1.0f);
+			positionsDial.push_back(0.0f);
+			positionsDial.push_back(0.0f);
+			positionsDial.push_back(0.0f);
+			normalsDial.push_back(0.0f);
+			normalsDial.push_back(0.0f);
+			normalsDial.push_back(1.0f);
 
 			std::vector<int> roundEdgeVIndices;
 			for (int i = 0; i < roundDirs.size(); i++)
 			{
-				roundEdgeVIndices.push_back(positions.size() / 3);
+				roundEdgeVIndices.push_back(positionsDial.size() / 3);
 				QVector3D edgeVertex = roundCenter + roundDirs[i] * radius;
-				positions.push_back(edgeVertex.x());
-				positions.push_back(edgeVertex.y());
-				positions.push_back(edgeVertex.z());
-				normals.push_back(0.0f);
-				normals.push_back(0.0f);
-				normals.push_back(1.0f);
+				positionsDial.push_back(edgeVertex.x());
+				positionsDial.push_back(edgeVertex.y());
+				positionsDial.push_back(edgeVertex.z());
+				normalsDial.push_back(0.0f);
+				normalsDial.push_back(0.0f);
+				normalsDial.push_back(1.0f);
 			}
 
 			for (int i = 0; i < roundEdgeVIndices.size(); i++)
 			{
 				int iNext = i < roundEdgeVIndices.size() - 1 ? i + 1 : 0;
-				indices.push_back(roundEdgeVIndices[i]);
-				indices.push_back(centerIndex);
-				indices.push_back(roundEdgeVIndices[iNext]);
+				indicesDial.push_back(roundEdgeVIndices[i]);
+				indicesDial.push_back(centerIndex);
+				indicesDial.push_back(roundEdgeVIndices[iNext]);
 
-				indices.push_back(roundEdgeVIndices[i]);
-				indices.push_back(roundEdgeVIndices[iNext]);
-				indices.push_back(centerIndex);
+				indicesDial.push_back(roundEdgeVIndices[i]);
+				indicesDial.push_back(roundEdgeVIndices[iNext]);
+				indicesDial.push_back(centerIndex);
 			}
 		}
 
-		Qt3DRender::QAttribute* positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&positions[0], qtuser_3d::AttribueSlot::Position, positions.size());
-		Qt3DRender::QAttribute* normalAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&normals[0], qtuser_3d::AttribueSlot::Normal, normals.size());
-		Qt3DRender::QAttribute* indexAttribute = qtuser_3d::BufferHelper::CreateIndexAttribute((const char*)&indices[0], indices.size());
+		Qt3DRender::QAttribute* positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&positionsDial[0], qtuser_3d::AttribueSlot::Position, positionsDial.size() / 3);
+		Qt3DRender::QAttribute* normalAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&normalsDial[0], qtuser_3d::AttribueSlot::Normal, normalsDial.size() / 3);
+		Qt3DRender::QAttribute* indexAttribute = qtuser_3d::BufferHelper::CreateIndexAttribute((const char*)&indicesDial[0], indicesDial.size());
 		Qt3DRender::QGeometry* dialGeo = qtuser_3d::GeometryCreateHelper::createEx(nullptr, positionAttribute, normalAttribute, indexAttribute);
 		m_pDialEntity->setGeometry(dialGeo);
 
 
 		// 刻度初始化
-		m_pDegreeEntity = new ManipulateEntity(nullptr, 0);
+		m_pDegreeEntity = new ManipulateEntity(nullptr, true, false);
 		m_pDegreeEntity->setObjectName("RotateHelperEntity_T.degreeEntity");
 		m_pDegreeEntity->setPose(m);
 		m_pDegreeEntity->setColor(m_degreeColor);
 		m_pDegreeEntity->setChangeColor(m_degreeColor);
-		m_pDegreeEntity->setMethod(1);
+		m_pDegreeEntity->setLightEnable(false);
+		m_pDegreeEntity->setMethod(0);
 
 		// 构建刻度模型数据
 		double degreeRadius = m_degreeRadius;
@@ -373,43 +373,44 @@ namespace qtuser_3d
 			roundDir = roundDeltaQ * roundDir;
 		}
 
-		positions.clear();
-		//normals.clear();
-		indices.clear();
+		std::vector<float> positionsDegree;
+		std::vector<float> normalsDegree;
+		std::vector<int> indicesDegree;
 
 		{
-			QVector3D roundCenter(0.0, 0.0, 0.0);
+			// 将刻度和刻度盘轻微的错开，以避免渲染上的相互影响
+			QVector3D roundCenter(0.0, 0.0, 0.001);
 			std::vector<int> roundEdgeVIndices;
 			for (int i = 0; i < roundDirs.size(); i++)
 			{
 				QVector3D edgeVertex = roundCenter + roundDirs[i] * degreeRadius;
 				QVector3D markVertex = roundCenter + roundDirs[i] * (degreeRadius + (i % 5 == 0 ? 2 * markOffset : markOffset));
 
-				roundEdgeVIndices.push_back(positions.size() / 3);
-				positions.push_back(edgeVertex.x());
-				positions.push_back(edgeVertex.y());
-				positions.push_back(edgeVertex.z());
+				roundEdgeVIndices.push_back(positionsDegree.size() / 3);
+				positionsDegree.push_back(edgeVertex.x());
+				positionsDegree.push_back(edgeVertex.y());
+				positionsDegree.push_back(edgeVertex.z());
 
-				roundEdgeVIndices.push_back(positions.size() / 3);
-				positions.push_back(markVertex.x());
-				positions.push_back(markVertex.y());
-				positions.push_back(markVertex.z());
+				roundEdgeVIndices.push_back(positionsDegree.size() / 3);
+				positionsDegree.push_back(markVertex.x());
+				positionsDegree.push_back(markVertex.y());
+				positionsDegree.push_back(markVertex.z());
 
-				indices.push_back(roundEdgeVIndices[i * 2]);
-				indices.push_back(roundEdgeVIndices[i * 2 + 1]);
+				indicesDegree.push_back(roundEdgeVIndices[i * 2]);
+				indicesDegree.push_back(roundEdgeVIndices[i * 2 + 1]);
 			}
 
 			for (int i = 0; i < roundEdgeVIndices.size(); i = i + 2)
 			{
 				int iNext = i < roundEdgeVIndices.size() - 2 ? i + 2 : 0;
-				indices.push_back(roundEdgeVIndices[i]);
-				indices.push_back(roundEdgeVIndices[iNext]);
+				indicesDegree.push_back(roundEdgeVIndices[i]);
+				indicesDegree.push_back(roundEdgeVIndices[iNext]);
 			}
 		}
 
-		positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&positions[0], qtuser_3d::AttribueSlot::Position, positions.size());
-		//normalAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&normals[0], qtuser_3d::AttribueSlot::Normal, 3 * normals.size());
-		indexAttribute = qtuser_3d::BufferHelper::CreateIndexAttribute((const char*)&indices[0], indices.size());
+		positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&positionsDegree[0], qtuser_3d::AttribueSlot::Position, positionsDegree.size() / 3);
+		//normalAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)&normalsDegree[0], qtuser_3d::AttribueSlot::Normal, 3 * normalsDegree.size());
+		indexAttribute = qtuser_3d::BufferHelper::CreateIndexAttribute((const char*)&indicesDegree[0], indicesDegree.size());
 		Qt3DRender::QGeometry* degreeGeo = qtuser_3d::GeometryCreateHelper::createEx(nullptr, positionAttribute, /*normalAttribute, */indexAttribute);
 		m_pDegreeEntity->setGeometry(degreeGeo, Qt3DRender::QGeometryRenderer::Lines);
 
@@ -420,12 +421,26 @@ namespace qtuser_3d
 		//m_pDialPickable->setShowEntity(m_pHandleEntity);
 	}
 
+	void RotateHelperEntity_T::initTip()
+	{
+		m_pTipEntity = new Qt3DExtras::QText2DEntity(this);
+		m_pTipEntity->setFont(QFont("monospace", 5));
+		m_pTipEntity->setText("TEST");
+		m_pTipEntity->setColor(Qt::white);
+		m_pTipEntity->setWidth(300);
+		m_pTipEntity->setHeight(200);
+
+		Qt3DCore::QTransform* trans = new Qt3DCore::QTransform;
+		trans->setTranslation(QVector3D(100.0, 100.0, 100.0));
+		m_pTipEntity->addComponent(trans);
+	}
+
 	void RotateHelperEntity_T::setVisibility(bool visibility)
 	{
 		visibility ? m_pRingEntity->setParent(m_pRotateGroup) : m_pRingEntity->setParent((Qt3DCore::QNode*)nullptr);
 		visibility ? m_pHandlerEntity->setParent(m_pRotateGroup) : m_pHandlerEntity->setParent((Qt3DCore::QNode*)nullptr);
-		visibility ? m_pDialEntity->setParent(m_pRotateGroup) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
 		visibility ? m_pDegreeEntity->setParent(m_pNoRotateGroup) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pDialEntity->setParent(m_pRotateGroup) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void RotateHelperEntity_T::setHandlerVisibility(bool visibility)
@@ -436,8 +451,8 @@ namespace qtuser_3d
 
 	void RotateHelperEntity_T::setDialVisibility(bool visibility)
 	{
-		visibility ? m_pDialEntity->setParent(m_pRotateGroup) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
 		visibility ? m_pDegreeEntity->setParent(m_pNoRotateGroup) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
+		visibility ? m_pDialEntity->setParent(m_pRotateGroup) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void RotateHelperEntity_T::setColor(QVector4D v4)
@@ -519,29 +534,6 @@ namespace qtuser_3d
 		}
 	}
 
-	void RotateHelperEntity_T::setRotateInitAngle(double angle)
-	{
-		m_initRotateDirAngles = angle;
-
-		QQuaternion initRotDir = QQuaternion::fromAxisAndAngle(m_rotateAxis, m_initRotateDirAngles);
-		QQuaternion initRotation = QQuaternion::rotationTo(m_originRotateAxis, m_rotateAxis);
-		m_initQuaternion = initRotDir * initRotation;
-		m_pRotateTransform->setRotation(m_initQuaternion);
-		m_pNoRotateTransform->setRotation(m_initQuaternion);
-
-		m_initRotateDir = m_initQuaternion * m_originInitRotateDir;
-
-		if (m_pRingEntity)
-		{
-			m_pRingEntity->setRotInitDir(m_initRotateDir);
-		}
-
-		if (m_pDialEntity)
-		{
-			m_pDialEntity->setRotInitDir(m_initRotateDir);
-		}
-	}
-
 	void RotateHelperEntity_T::setPickSource(FacePicker* pickSource)
 	{
 		m_pPickSource = pickSource;
@@ -555,6 +547,12 @@ namespace qtuser_3d
 	void RotateHelperEntity_T::setRotateCallback(RotateCallback* callback)
 	{
 		m_pRotateCallback = callback;
+	}
+
+	void RotateHelperEntity_T::setScale(float scale)
+	{
+		m_pRotateTransform->setScale(m_initScaleRate * scale);
+		m_pNoRotateTransform->setScale(m_initScaleRate * scale);
 	}
 
 	void RotateHelperEntity_T::onBoxChanged(Box3D box)
@@ -574,11 +572,13 @@ namespace qtuser_3d
 			}
 		}
 
+		m_initScaleRate = len;
+
 		m_pRotateTransform->setTranslation(m_center);
-		m_pRotateTransform->setScale(len);
+		m_pRotateTransform->setScale(m_initScaleRate);
 
 		m_pNoRotateTransform->setTranslation(m_center);
-		m_pNoRotateTransform->setScale(len);
+		m_pNoRotateTransform->setScale(m_initScaleRate);
 
 		m_pRingEntity->setRotCenter(m_center);
 		m_pDialEntity->setRotCenter(m_center);
@@ -620,6 +620,13 @@ namespace qtuser_3d
 			perform(event->pos(), false);
 	}
 
+	void RotateHelperEntity_T::onWheelEvent(QWheelEvent* event)
+	{
+		//Qt3DRender::QCamera* mainCamera = m_pScreenCamera;
+		//float curFovy = mainCamera->fieldOfView();
+		//m_helperEntity->setScale(curFovy / m_originFovy);
+	}
+
 	QVector3D RotateHelperEntity_T::calculateSpacePoint(QPoint point)
 	{
 		QVector3D collide;
@@ -645,7 +652,7 @@ namespace qtuser_3d
 			oc0.normalize();
 			oc1.normalize();
 
-			double angleCC, angleC;
+			double angleCC = 0.0, angleC = 0.0;
 			if (oc0 == oc1)
 			{
 				angle = 0.0f;
@@ -667,7 +674,7 @@ namespace qtuser_3d
 				angle = angleOfVector3D2(oc0, oc1);
 
 				float axisInvertCos = QVector3D::dotProduct(m_rotateAxis, axis);
-				if (axisInvertCos > 0)
+				if (axisInvertCos >= 0)
 				{
 					angleCC = angle;
 					angleC = -(360 - angle);
@@ -699,7 +706,6 @@ namespace qtuser_3d
 	{
 		QQuaternion q = process(point);
 
-		//m_pGlobalTransform->setRotation(q * m_initQuaternion);
 		m_pRotateTransform->setRotation(q * m_initQuaternion);
 
 		if (m_pRotateCallback)

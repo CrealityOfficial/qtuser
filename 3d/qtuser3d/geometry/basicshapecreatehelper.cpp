@@ -408,6 +408,7 @@ namespace qtuser_3d
 
         float axisR = 0.08;
         float axisLen = 0.25;
+		axisLen = 0.0;
 
         float disLen = cylinderLen + axisLen + 0.05;
 		QVector3D vs[8] = {
@@ -475,30 +476,30 @@ namespace qtuser_3d
 			QVector3D n2 = QVector3D::normal(v4, v5, v6);
 			addFaceDataWithQVector3D(v4, v5, v6, n2, vertexDatas);
 		}
-        for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
-        {
-            float angrad = angdeg * PI / 180.0;
-            float angradNext = (angdeg + angdesSpan) * PI / 180.0;
+        //for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
+        //{
+        //    float angrad = angdeg * PI / 180.0;
+        //    float angradNext = (angdeg + angdesSpan) * PI / 180.0;
 
-            QVector3D v1(0, cylinderLen, 0);
-            QVector3D v2(-axisR * sin(angrad), cylinderLen, -axisR * cos(angrad));
-            QVector3D v3(-axisR * sin(angradNext), cylinderLen, -axisR * cos(angradNext));
+        //    QVector3D v1(0, cylinderLen, 0);
+        //    QVector3D v2(-axisR * sin(angrad), cylinderLen, -axisR * cos(angrad));
+        //    QVector3D v3(-axisR * sin(angradNext), cylinderLen, -axisR * cos(angradNext));
 
-            QVector3D n = QVector3D::normal(v1, v2, v3);
-            addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas);
-        }
-        for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
-        {
-            float angrad = angdeg * PI / 180.0;
-            float angradNext = (angdeg + angdesSpan) * PI / 180.0;
+        //    QVector3D n = QVector3D::normal(v1, v2, v3);
+        //    addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas);
+        //}
+        //for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
+        //{
+        //    float angrad = angdeg * PI / 180.0;
+        //    float angradNext = (angdeg + angdesSpan) * PI / 180.0;
 
-            QVector3D v1(0, cylinderLen + axisLen, 0);
-            QVector3D v2(-axisR * sin(angradNext), cylinderLen, -axisR * cos(angradNext));
-            QVector3D v3(-axisR * sin(angrad), cylinderLen, -axisR * cos(angrad));
+        //    QVector3D v1(0, cylinderLen + axisLen, 0);
+        //    QVector3D v2(-axisR * sin(angradNext), cylinderLen, -axisR * cos(angradNext));
+        //    QVector3D v3(-axisR * sin(angrad), cylinderLen, -axisR * cos(angrad));
 
-            QVector3D n = QVector3D::normal(v1, v2, v3);
-            addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas);
-        }
+        //    QVector3D n = QVector3D::normal(v1, v2, v3);
+        //    addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas);
+        //}
 
 		return 0;
 	}

@@ -5,18 +5,22 @@
 
 namespace qtuser_3d
 {
-	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, int type)
+	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, bool alpha, bool pickable, bool depthTest)
 		:PickableEntity(parent)
 	{
-		QString shader_type = "manipulate.alpha_pickFace.pick";
-		if (type == 1)
+		QString showPassName = "manipulate";
+		QString pickPassName = "";
+		if (alpha)
 		{
-			shader_type = "manipulate.alpha";
+			showPassName += ".alpha";
 		}
-		else if (type == 2)
+		
+		if (pickable)
 		{
-			shader_type = "pickFace.pick";
+			pickPassName = "pickFace.pick";
 		}
+
+		QString shader_type = showPassName + "_" + pickPassName;
 
 		qtuser_3d::UEffect* effect = (qtuser_3d::UEffect*)EFFECTCREATE(shader_type, m_material);
 		setEffect(effect);
@@ -24,12 +28,24 @@ namespace qtuser_3d
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 		m_changeColorParameter = createParameter("changecolor", QVector4D(0.0f, 0.0f, 0.0f, 0.0f));
 		m_methodParameter = createParameter("mt", 0);
+		m_lightEnableParameter = createParameter("lightEnable", 0);
 
-		effect->setPassDepthTest("manipulate.alpha", Qt3DRender::QDepthTest::Always);
-		effect->setPassDepthTest("pickFace.pick", Qt3DRender::QDepthTest::Always);
+		if (!depthTest)
+		{
+			effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::Always);
+			if (pickable)
+				effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Always);
+		}
+		//else
+		//{
+		//	effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::DepthFunction::Less);
+		//	if (pickable)
+		//		effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::DepthFunction::Less);
+		//}
 
-		setPassCullFace("manipulate.alpha", Qt3DRender::QCullFace::NoCulling);
-		setPassCullFace("pickFace.pick", Qt3DRender::QCullFace::NoCulling);
+		setPassCullFace(showPassName, Qt3DRender::QCullFace::NoCulling);
+		if (pickable)
+			setPassCullFace(pickPassName, Qt3DRender::QCullFace::NoCulling);
 	}
 
 	ManipulateEntity::~ManipulateEntity()
@@ -50,5 +66,10 @@ namespace qtuser_3d
 	void ManipulateEntity::setMethod(int mt)
 	{
 		m_methodParameter->setValue(mt);
+	}
+
+	void ManipulateEntity::setLightEnable(bool flag)
+	{
+		m_lightEnableParameter->setValue(flag);
 	}
 }

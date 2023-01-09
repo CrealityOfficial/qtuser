@@ -12,5 +12,7 @@ list(APPEND SRCS qtusercore/util/projectinformation.h
 				 qtusercore/util/configbundle.cpp
 				 qtusercore/util/applicationconfiguration.h
 				 qtusercore/util/applicationconfiguration.cpp
+				 qtusercore/util/textimggenerator.h
+				 qtusercore/util/textimggenerator.cpp
 				 )
 				 

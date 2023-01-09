@@ -16,7 +16,7 @@
 namespace qtuser_3d
 {
 	Rotate3DHelperEntity::Rotate3DHelperEntity(Qt3DCore::QNode* parent)
-		: QEntity(parent)
+		: BasicEntity(parent)
 		, m_pXRotHelper(nullptr)
 		, m_pYRotHelper(nullptr)
 		, m_pZRotHelper(nullptr)
@@ -120,6 +120,18 @@ namespace qtuser_3d
 	{
 		if (m_pZRotHelper)
 			m_pZRotHelper->setVisibility(visibility);
+	}
+
+	void Rotate3DHelperEntity::setScale(float scaleRate)
+	{
+		if (m_pXRotHelper)
+			m_pXRotHelper->setScale(scaleRate);
+
+		if (m_pYRotHelper)
+			m_pYRotHelper->setScale(scaleRate);
+		
+		if (m_pZRotHelper)
+			m_pZRotHelper->setScale(scaleRate);
 	}
 
 	QVector3D Rotate3DHelperEntity::getCurrentRotateAxis()

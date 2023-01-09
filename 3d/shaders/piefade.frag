@@ -7,8 +7,6 @@ in vec3 viewDirection;
 in vec3 world_position;
 
 uniform vec4 color;
-uniform vec4 changecolor;
-uniform int mt;
 
 uniform int rotMode;
 uniform float rotRadians;
@@ -23,7 +21,6 @@ uniform vec4 diffuse = vec4(0.6, 0.6, 0.6, 1.0);
 uniform vec4 specular = vec4(0.6, 0.6, 0.6, 1.0);
 uniform float specularPower = 4.5;
 
-uniform float state;
 
 vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_color, vec4 diffuse_color, vec4 specular_color)
 {
@@ -62,15 +59,7 @@ void main()
 		}
 	}
 
-	vec4 coreColor;
-	if(mt == 0)
-	{
-		coreColor = color * state;
-	}
-	else if(mt == 1)
-	{
-		coreColor = color + changecolor * state;
-	}
+	vec4 coreColor = color;
 
 	if (lightEnable > 0)
 	{

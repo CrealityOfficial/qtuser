@@ -79,5 +79,7 @@
 		<file>shaders/piefade.frag</file>
         <file>shaders/overlay.vert</file>
         <file>shaders/overlay.frag</file>
+      <file>shaders/boardentity.vert</file>
+      <file>shaders/boardentity.frag</file>
     </qresource>
 </RCC>
