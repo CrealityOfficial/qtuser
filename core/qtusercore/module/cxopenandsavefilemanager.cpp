@@ -20,6 +20,7 @@ namespace qtuser_core
 		, m_invokeObject(nullptr)
 		, m_State(OpenSaveState::oss_none)
 		, m_externalHandler(nullptr)
+		, m_filterKey("base")
 	{
 	}
 
@@ -99,19 +100,25 @@ namespace qtuser_core
 
 	QStringList CXFileOpenAndSaveManager::generateFiltersFromHandlers(bool saveState)
 	{
-		QMap<QString, CXHandleBase*>& handlers = saveState ? m_saveHandlers : m_openHandlers;
+		QMap<QString, QList<CXHandleBase*>>& handlers = saveState ? m_saveHandlers : m_openHandlers;
 		QStringList filters;
 		QString allSuffix;
-		for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin(); it != handlers.end(); ++it)
+		for (QMap<QString, QList<CXHandleBase*>>::iterator it = handlers.begin(); it != handlers.end(); ++it)
 		{
-			QStringList enableFilters = it.value()->suffixesFromFilter();
-			for (const QString& ext : enableFilters)
+			for (CXHandleBase* handler : it.value())
 			{
-				QString suffix = QString("*.%1 ").arg(ext);
-				if (!filters.contains(suffix))
+				if (handler->filterKey() != m_filterKey)
+					continue;
+
+				QStringList enableFilters = handler->suffixesFromFilter();
+				for (const QString& ext : enableFilters)
 				{
-					filters << suffix;
-					allSuffix += suffix;
+					QString suffix = QString("*.%1 ").arg(ext);
+					if (!filters.contains(suffix))
+					{
+						filters << suffix;
+						allSuffix += suffix;
+					}
 				}
 			}
 		}
@@ -121,8 +128,7 @@ namespace qtuser_core
 
 	QString CXFileOpenAndSaveManager::generateFilterFromHandlers(bool saveState)
 	{
-		QMap<QString, CXHandleBase*>& handlers = saveState ? m_saveHandlers : m_openHandlers;
-
+		QMap<QString, QList<CXHandleBase*>>& handlers = saveState ? m_saveHandlers : m_openHandlers;
 		QList<CXHandleBase*> uniqueHandlers;
 		if (m_externalHandler)
 		{
@@ -130,11 +136,17 @@ namespace qtuser_core
 		}
 		else
 		{
-			for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin();
+			for (QMap<QString, QList<CXHandleBase*>>::iterator it = handlers.begin();
 				it != handlers.end(); ++it)
 			{
-				if (!uniqueHandlers.contains(it.value()))
-					uniqueHandlers.append(it.value());
+				for (CXHandleBase* handler : it.value())
+				{
+					if (handler->filterKey() != m_filterKey)
+						continue;
+
+					if (!uniqueHandlers.contains(handler))
+						uniqueHandlers.append(handler);
+				}
 			}
 		}
 
@@ -257,6 +269,11 @@ namespace qtuser_core
 		}
 	}
 
+	void CXFileOpenAndSaveManager::setFilterKey(const QString& filterKey)
+	{
+		m_filterKey = filterKey;
+	}
+
 	void CXFileOpenAndSaveManager::openWithParams(const QStringList& params)
 	{
 		if (params.size() > 1)
@@ -346,7 +363,7 @@ namespace qtuser_core
 		return true;
 	}
 
-	bool CXFileOpenAndSaveManager::openWithUrl(const QList<QUrl>& urls)
+	bool CXFileOpenAndSaveManager::openWithUrls(const QList<QUrl>& urls)
 	{
 		if (urls.size() == 1)
 		{
@@ -427,11 +444,17 @@ namespace qtuser_core
 		return true;
 	}
 
-	CXHandleBase* CXFileOpenAndSaveManager::findHandler(const QString& suffix, QMap<QString, CXHandleBase*>& handlers)
+	CXHandleBase* CXFileOpenAndSaveManager::findHandler(const QString& suffix, QMap<QString, QList<CXHandleBase*>>& handlers)
 	{
-		QMap<QString, CXHandleBase*>::iterator it = handlers.find(suffix);
+		QMap<QString, QList<CXHandleBase*>>::iterator it = handlers.find(suffix);
 		if (it != handlers.end())
-			return it.value();
+		{
+			for (CXHandleBase* handler : it.value())
+			{
+				if (handler->filterKey() == m_filterKey)
+					return handler;
+			}
+		}
 		return nullptr;
 	}
 
@@ -495,19 +518,21 @@ namespace qtuser_core
 		m_saveFilterList.removeOne(suffix);
 	}
 
-	bool CXFileOpenAndSaveManager::registerHandler(const QString& suffix, CXHandleBase* handler, QMap<QString, CXHandleBase*>& handlers)
+	bool CXFileOpenAndSaveManager::registerHandler(const QString& suffix, CXHandleBase* handler, QMap<QString, QList<CXHandleBase*>>& handlers)
 	{
-		if (!handler || handlers.contains(suffix))
+		QMap<QString, QList<CXHandleBase*>>::iterator it = handlers.find(suffix);
+		if (!handler || it == handlers.end())
 		{
 			qDebug() << "handler exist for " << suffix;
 			return false;
 		}
 
-		handlers.insert(suffix, handler);
+		if(!it.value().contains(handler))
+			it.value().append(handler);
 		return true;
 	}
 
-	void CXFileOpenAndSaveManager::unRegisterHandler(const QString& suffix, QMap<QString, CXHandleBase*>& handlers)
+	void CXFileOpenAndSaveManager::unRegisterHandler(const QString& suffix, QMap<QString, QList<CXHandleBase*>>& handlers)
 	{
 		handlers.remove(suffix);
 	}

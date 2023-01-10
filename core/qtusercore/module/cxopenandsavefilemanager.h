@@ -53,11 +53,12 @@ namespace qtuser_core
 		Q_INVOKABLE void qSave(QObject* receiver);
 		Q_INVOKABLE void qOpen();
 
+		void setFilterKey(const QString& filterKey);
 		void openWithParams(const QStringList& fileNames);
 		bool openWithName(const QString& fileName);
 		void openWithNames(const QStringList& fileNames);
 		bool openWithUrl(const QUrl& url);
-		bool openWithUrl(const QList<QUrl>& urls);
+		bool openWithUrls(const QList<QUrl>& urls);
 		bool openWithString(const QString& commonName);
 
 		bool saveWithName(const QString& fileName);
@@ -90,9 +91,9 @@ namespace qtuser_core
 		bool openWithNamesSuffix(const QStringList& fileNames);
 		bool saveWithNameSuffix(const QString& fileName, const QString suffix);
 
-		bool registerHandler(const QString& suffix, CXHandleBase* handler, QMap<QString, CXHandleBase*>& handlers);
-		void unRegisterHandler(const QString& suffix, QMap<QString, CXHandleBase*>& handlers);
-		CXHandleBase* findHandler(const QString& suffix, QMap<QString, CXHandleBase*>& handlers);
+		bool registerHandler(const QString& suffix, CXHandleBase* handler, QMap<QString, QList<CXHandleBase*>>& handlers);
+		void unRegisterHandler(const QString& suffix, QMap<QString, QList<CXHandleBase*>>& handlers);
+		CXHandleBase* findHandler(const QString& suffix, QMap<QString, QList<CXHandleBase*>>& handlers);
 
 		QStringList generateFilters(const QStringList& extensions);
 		QStringList generateFiltersFromHandlers(bool saveState);
@@ -101,10 +102,11 @@ namespace qtuser_core
 		QObject* m_invokeObject;
 		OpenSaveState m_State;
 
-		QMap<QString, CXHandleBase*> m_openHandlers;
+		QString m_filterKey;
+		QMap<QString, QList<CXHandleBase*>> m_openHandlers;
 		QStringList m_openFilterList;
 
-		QMap<QString, CXHandleBase*> m_saveHandlers;
+		QMap<QString, QList<CXHandleBase*>> m_saveHandlers;
 		QStringList m_saveFilterList;
 
 		CXHandleBase* m_externalHandler;

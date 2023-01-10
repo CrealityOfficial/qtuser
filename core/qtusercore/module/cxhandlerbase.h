@@ -17,12 +17,10 @@ namespace qtuser_core
 		virtual void cancelHandle();
 		virtual void handle(const QString& fileName);
 		virtual void handle(const QStringList& fileNames);
+		virtual QString filterKey();  // for manager  , "base" for default
 
-		virtual void openfail();
 		QStringList suffixesFromFilter();
 	private:
-		QStringList m_fileNames;
-		QString m_fileName;
 	};
 }
 
