@@ -5,11 +5,10 @@
 
 namespace qtuser_core
 {
-	class QTUSER_CORE_API CXHandleBase : public QObject
+	class QTUSER_CORE_API CXHandleBase
 	{
-		Q_OBJECT
 	public:
-		CXHandleBase(QObject* parent = nullptr);
+		CXHandleBase();
 		virtual ~CXHandleBase();
 
 	public:

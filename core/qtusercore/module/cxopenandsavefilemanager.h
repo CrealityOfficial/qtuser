@@ -77,6 +77,7 @@ namespace qtuser_core
 		void unRegisterSaveHandler(const QString& suffix);
 
 		QString lastOpenFileName();
+		QString lastOpenFilePath();
 		QString lastSaveFileName();
 		void setLastOpenFileName(QString filePath);
 		void setLastSaveFileName(QString filePath);
@@ -113,6 +114,7 @@ namespace qtuser_core
 
 		QString m_lastSaveFile;
 		QString m_lastOpenFile;
+		QString m_lastOpenFilePath;
 
 		QList<CXFileOpenSaveCallback*> m_callbacks;
 	};

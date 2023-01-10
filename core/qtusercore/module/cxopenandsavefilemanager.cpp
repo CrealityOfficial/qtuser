@@ -205,13 +205,13 @@ namespace qtuser_core
 
 	void CXFileOpenAndSaveManager::qOpen(QObject* receiver)
 	{
-		CXHandleBase* handle = qobject_cast<CXHandleBase*>(receiver);
+		CXHandleBase* handle = dynamic_cast<CXHandleBase*>(receiver);
 		open(handle);
 	}
 
 	void CXFileOpenAndSaveManager::qSave(QObject* receiver)
 	{
-		CXHandleBase* handle = qobject_cast<CXHandleBase*>(receiver);
+		CXHandleBase* handle = dynamic_cast<CXHandleBase*>(receiver);
 		save(handle);
 	}
 
@@ -313,6 +313,7 @@ namespace qtuser_core
 		QString suffix = info.suffix();
 		suffix = suffix.toLower();
 		m_lastOpenFile = info.baseName();
+		m_lastOpenFilePath = info.absoluteFilePath();
 		return openWithNameSuffix(fileName, suffix);
 	}
 
@@ -332,6 +333,7 @@ namespace qtuser_core
 			QString suffix = info.suffix();
 			suffix = suffix.toLower();
 			m_lastOpenFile = info.baseName();
+			m_lastOpenFilePath = info.absoluteFilePath();
 			CXHandleBase* handler = findHandler(suffix, m_openHandlers);
 			if (!handler)
 			{
@@ -521,11 +523,10 @@ namespace qtuser_core
 	bool CXFileOpenAndSaveManager::registerHandler(const QString& suffix, CXHandleBase* handler, QMap<QString, QList<CXHandleBase*>>& handlers)
 	{
 		QMap<QString, QList<CXHandleBase*>>::iterator it = handlers.find(suffix);
-		if (!handler || it == handlers.end())
-		{
-			qDebug() << "handler exist for " << suffix;
+		if (!handler)
 			return false;
-		}
+		
+		it = handlers.insert(suffix, QList<CXHandleBase*>());
 
 		if(!it.value().contains(handler))
 			it.value().append(handler);
@@ -540,6 +541,11 @@ namespace qtuser_core
 	QString CXFileOpenAndSaveManager::lastOpenFileName()
 	{
 		return m_lastOpenFile;
+	}
+
+	QString CXFileOpenAndSaveManager::lastOpenFilePath()
+	{
+		return m_lastOpenFilePath;
 	}
 
 	QString CXFileOpenAndSaveManager::lastSaveFileName()

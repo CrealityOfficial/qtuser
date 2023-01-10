@@ -2,8 +2,7 @@
 
 namespace qtuser_core
 {
-	CXHandleBase::CXHandleBase(QObject* parent)
-		:QObject(parent)
+	CXHandleBase::CXHandleBase()
 	{
 	}
 
