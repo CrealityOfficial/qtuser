@@ -51,7 +51,7 @@ namespace qtuser_3d
 
 			if (m_pickables.size() == 1 && pickable->enableSelect())
 			{
-				selectPickable(pickable);
+				selectOne(pickable);
 			}
 			notifyTracers();
 		}
@@ -68,8 +68,6 @@ namespace qtuser_3d
 			{
 				clearHover();
 			}
-
-			m_selectedPickables.removeOne(pickable);
 
 			if (pickable->enableSelect())
 				notifyTracers();
@@ -92,7 +90,7 @@ namespace qtuser_3d
 
 	QList<qtuser_3d::Pickable*> Selector::selectionmPickables()
 	{
-		return m_selectedPickables;
+		return _selectedPickables();
 	}
 
 	bool Selector::facePick(const QPoint& p, int* faceID)
@@ -143,6 +141,17 @@ namespace qtuser_3d
 			m_pickables.removeAt(index);
 			m_currentFaceBase -= offset;
 		}
+	}
+
+	QList<qtuser_3d::Pickable*> Selector::_selectedPickables()
+	{
+		QList<qtuser_3d::Pickable*> selections;
+		for (qtuser_3d::Pickable* pickable : m_pickables)
+		{
+			if (pickable->selected())
+				selections << pickable;
+		}
+		return selections;
 	}
 
 	void Selector::updateFaceBases()
@@ -226,7 +235,7 @@ namespace qtuser_3d
 		Pickable* pickable = check(p, nullptr);
 		if (sGroup)
 			selectGroup(pickable);
-		else selectPickable(pickable);
+		else selectOne(pickable);
 	}
 
 	void Selector::selectCtrl(const QPoint& p, bool sGroup)
@@ -247,7 +256,7 @@ namespace qtuser_3d
 			return;
 
 		QList<Pickable*> offList;
-		QList<Pickable*> onList = m_selectedPickables;
+		QList<Pickable*> onList = _selectedPickables();
 		for (size_t i = 0; i < onList.size(); i++)
 		{
 			if (pickable == onList[i])
@@ -263,7 +272,7 @@ namespace qtuser_3d
 		selectPickables(onList, offList);
 	}
 
-	void Selector::selectPickable(Pickable* pickable)
+	void Selector::selectOne(Pickable* pickable)
 	{
 		if (!m_enabled)
 			return;
@@ -271,7 +280,7 @@ namespace qtuser_3d
 		if (selectNotifying)
 			return;
 		
-		QList<Pickable*> offList = m_selectedPickables;
+		QList<Pickable*> offList = _selectedPickables();
 		QList<Pickable*> onList;
 		if (m_disableReverseSelect && !pickable)
 			return;
@@ -305,7 +314,6 @@ namespace qtuser_3d
 			if (pickable && !pickable->selected() && pickable->enableSelect())
 			{
 				pickable->setSelected(true);
-				m_selectedPickables << pickable;
 			}
 		}
 		notifyTracers();
@@ -330,13 +338,29 @@ namespace qtuser_3d
 
 	void Selector::selectNone()
 	{
-		selectPickable(nullptr);
+		selectOne(nullptr);
 	}
 
 	void Selector::selectMore(const QList<qtuser_3d::Pickable*>& pickables)
 	{
 		QList<qtuser_3d::Pickable*> offLists = selectionmPickables();
 		selectPickables(pickables, offLists);
+	}
+
+	void Selector::unselectOne(qtuser_3d::Pickable* pickable)
+	{
+		if (!pickable || !pickable->selected())
+			return;
+
+		QList<qtuser_3d::Pickable*> pickables;
+		pickables << pickable;
+		unselectMore(pickables);
+	}
+
+	void Selector::unselectMore(const QList<qtuser_3d::Pickable*>& pickables)
+	{
+		QList<qtuser_3d::Pickable*> onList;
+		selectPickables(onList, pickables);
 	}
 
 	void Selector::selectPickables(const QList<Pickable*>& onList, const QList<Pickable*>& offList)
@@ -360,7 +384,6 @@ namespace qtuser_3d
 			pickable->setSelected(true);
 		}
 
-		m_selectedPickables = onList;
 		notifyTracers();
 	}
 
