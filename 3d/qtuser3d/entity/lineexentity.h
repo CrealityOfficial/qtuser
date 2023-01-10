@@ -49,6 +49,8 @@ namespace qtuser_3d
 	protected:
 		QVector<QVector3D> m_storageData;
 
+		Qt3DRender::QDepthTest *m_depthTestState;
+
 	private:
 		// 内部所用参数
 		LINE_TYPE m_lineType;

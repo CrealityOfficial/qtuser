@@ -10,6 +10,7 @@ namespace qtuser_3d
 
 	LineExEntity::LineExEntity(Qt3DCore::QNode* parent)
 		:qtuser_3d::LineEntity(parent)
+		, m_depthTestState(nullptr)
 	{
 		m_startPoint = QVector3D(0, 0, 0);
 		m_endPoint = QVector3D(0, 0, 0);
@@ -26,11 +27,16 @@ namespace qtuser_3d
 
 		setEffect(EFFECTCREATE("pure", m_material));
 
+		m_depthTestState = new Qt3DRender::QDepthTest();
+
 		QList<Qt3DRender::QRenderPass*> renderPasses = m_material->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
 		//m_lineWidth = new Qt3DRender::QLineWidth(m_material);
 		////m_lineWidth->setSmooth(true);
-		if (renderPasses.size() > 0)
-			renderPasses.at(0)->addRenderState(m_lineWidth);
+		for (Qt3DRender::QRenderPass* pass : renderPasses)
+		{
+			pass->addRenderState(m_lineWidth);
+			pass->addRenderState(m_depthTestState);
+		}	
 	}
 
 	LineExEntity::~LineExEntity()
@@ -49,9 +55,13 @@ namespace qtuser_3d
 	void LineExEntity::setDepthTest(bool need_check_depth)
 	{
 		Qt3DRender::QDepthTest::DepthFunction func = need_check_depth ? Qt3DRender::QDepthTest::Less : Qt3DRender::QDepthTest::Always;
-		QList<Qt3DRender::QDepthTest*> tests = m_material->findChildren<Qt3DRender::QDepthTest*>(QString(), Qt::FindChildrenRecursively);
-		for (Qt3DRender::QDepthTest* test : tests)
-			test->setDepthFunction(func);
+		
+		QList<Qt3DRender::QRenderPass*> renderPasses = m_material->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
+		for (Qt3DRender::QRenderPass* pass : renderPasses)
+		{
+			m_depthTestState->setDepthFunction(func);
+			pass->addRenderState(m_depthTestState);
+		}
 	}
 
 	int LineExEntity::genGeometry()
@@ -172,6 +182,7 @@ namespace qtuser_3d
 		for (Qt3DRender::QRenderPass* pass : renderPasses)
 		{
 			pass->addRenderState(m_lineWidth);
+			pass->addRenderState(m_depthTestState);
 		}
 	}
 }
