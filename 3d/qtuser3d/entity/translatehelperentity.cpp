@@ -166,13 +166,14 @@ namespace qtuser_3d
 
 			m_pXArrowPickable = new ManipulatePickable(this);
 			m_pXArrowPickable->setPickableEntity(m_pXArrowEntity);
+			m_pXArrowPickable->setEnableSelect(false);
 		}
 		if (helperType & HELPERTYPE_AXIS_Y)
 		{
 			QMatrix4x4 yMatrix;
 			yMatrix.scale(m_scale, m_scale, m_scale);
 			//yMatrix.scale(15.0f, 15.0f, 15.0f);
-			m_pYArrowEntity = new qtuser_3d::ManipulateEntity(this, false, true);
+			m_pYArrowEntity = new qtuser_3d::ManipulateEntity(this, true, true);
 			m_pYArrowEntity->setObjectName("TranslateHelperEntity.yArrowEntity");
 			m_pYArrowEntity->setPose(yMatrix);
 			m_pYArrowEntity->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
@@ -182,6 +183,7 @@ namespace qtuser_3d
 
 			m_pYArrowPickable = new ManipulatePickable(this);
 			m_pYArrowPickable->setPickableEntity(m_pYArrowEntity);
+			m_pYArrowPickable->setEnableSelect(false);
 		}
 		if (helperType & HELPERTYPE_AXIS_Z)
 		{
@@ -189,7 +191,7 @@ namespace qtuser_3d
 			zMatrix.rotate(QQuaternion::rotationTo(m_initAxisDir, QVector3D(0.0, 0.0, 1.0)));
 			zMatrix.scale(m_scale, m_scale, m_scale);
 			//zMatrix.scale(15.0f, 15.0f, 15.0f);
-			m_pZArrowEntity = new qtuser_3d::ManipulateEntity(this, false, true);
+			m_pZArrowEntity = new qtuser_3d::ManipulateEntity(this, true, true);
 			m_pZArrowEntity->setObjectName("TranslateHelperEntity.zArrowEntity");
 			m_pZArrowEntity->setPose(zMatrix);
 			m_pZArrowEntity->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
@@ -199,6 +201,7 @@ namespace qtuser_3d
 
 			m_pZArrowPickable = new ManipulatePickable(this);
 			m_pZArrowPickable->setPickableEntity(m_pZArrowEntity);
+			m_pZArrowPickable->setEnableSelect(false);
 		}
 	}
 
@@ -283,6 +286,7 @@ namespace qtuser_3d
 
 			m_pXYPlanePickable = new ManipulatePickable(this);
 			m_pXYPlanePickable->setPickableEntity(m_pXYPlaneEntity);
+			m_pXYPlanePickable->setEnableSelect(false);
 		}
 		if (helperType & HELPERTYPE_PLANE_YZ)
 		{
@@ -300,6 +304,7 @@ namespace qtuser_3d
 
 			m_pYZPlanePickable = new ManipulatePickable(this);
 			m_pYZPlanePickable->setPickableEntity(m_pYZPlaneEntity);
+			m_pYZPlanePickable->setEnableSelect(false);
 		}
 		if (helperType & HELPERTYPE_PLANE_ZX)
 		{
@@ -317,6 +322,7 @@ namespace qtuser_3d
 
 			m_pZXPlanePickable = new ManipulatePickable(this);
 			m_pZXPlanePickable->setPickableEntity(m_pZXPlaneEntity);
+			m_pZXPlanePickable->setEnableSelect(false);
 		}
 	}
 
@@ -425,6 +431,7 @@ namespace qtuser_3d
 
 			m_pXYZCubePickable = new ManipulatePickable(this);
 			m_pXYZCubePickable->setPickableEntity(m_pXYZCubeEntity);
+			m_pXYZCubePickable->setEnableSelect(false);
 		}
 	}
 
@@ -491,6 +498,12 @@ namespace qtuser_3d
 	void TranslateHelperEntity::setScale(float scaleRate)
 	{
 		m_transform->setScale(scaleRate);
+	}
+
+	void TranslateHelperEntity::setRotation(QQuaternion rotQ)
+	{
+		m_initRotationQ = rotQ;
+		m_transform->setRotation(m_initRotationQ);
 	}
 
 	void TranslateHelperEntity::updateBox(const Box3D& box)

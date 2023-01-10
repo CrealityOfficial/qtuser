@@ -270,6 +270,7 @@ namespace qtuser_3d
 		m_pHandlerPickable = new ManipulatePickable(this);
 		m_pHandlerPickable->setPickableEntity(m_pHandlerEntity);
 		m_pHandlerPickable->setShowEntity(m_pHandlerEntity);
+		m_pHandlerPickable->setEnableSelect(false);
 	}
 
 	void RotateHelperEntity_T::initDial()

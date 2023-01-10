@@ -55,6 +55,7 @@ namespace qtuser_3d
 		void setZVisibility(bool visibility);
 
 		void setScale(float scaleRate);
+		void setRotation(QQuaternion rotQ);
 		Qt3DCore::QTransform* getTransform() { return m_transform; }
 
 		void updateBox(const Box3D& box);
@@ -77,6 +78,7 @@ namespace qtuser_3d
 		double m_scale;
 		QVector3D m_center;
 		QVector3D m_initAxisDir;
+		QQuaternion m_initRotationQ;
 		QQuaternion m_initXYPlaneQ;
 		QQuaternion m_initYZPlaneQ;
 		QQuaternion m_initZXPlaneQ;

@@ -16,6 +16,9 @@ namespace qtuser_3d
 
 	void ManipulatePickable::onStateChanged(ControlState state)
 	{
+		if (!enableSelect() && state == ControlState::selected)
+			return;
+
 		int index = (int)state;
 		if (index < 0) index = 0;
 		if (index > 2) index = 2;
