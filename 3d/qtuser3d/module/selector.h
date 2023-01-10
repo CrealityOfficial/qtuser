@@ -33,6 +33,7 @@ namespace qtuser_3d
 		virtual void selectCtrl(const QPoint& p, bool sGroup = false);
 		void selectPickable(qtuser_3d::Pickable* pickable);
 		void appendSelect(qtuser_3d::Pickable* pickable);
+		void appendSelects(const QList<qtuser_3d::Pickable*> pickables);
 		void selectGroup(qtuser_3d::Pickable* pickable);
 		void updateFaceBases();
 

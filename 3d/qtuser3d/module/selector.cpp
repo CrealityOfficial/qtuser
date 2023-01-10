@@ -284,18 +284,31 @@ namespace qtuser_3d
 
 	void Selector::appendSelect(qtuser_3d::Pickable* pickable)
 	{
+		if (!pickable)
+			return;
+
+		QList<qtuser_3d::Pickable*> pickables;
+		pickables << pickable;
+		appendSelects(pickables);
+	}
+
+	void Selector::appendSelects(const QList<qtuser_3d::Pickable*> pickables)
+	{
 		if (!m_enabled)
 			return;
 
 		if (selectNotifying)
 			return;
 
-		if (pickable && !pickable->selected() && pickable->enableSelect())
+		for (qtuser_3d::Pickable* pickable : pickables)
 		{
-			pickable->setSelected(true);
-			m_selectedPickables << pickable;
-			notifyTracers();
+			if (pickable && !pickable->selected() && pickable->enableSelect())
+			{
+				pickable->setSelected(true);
+				m_selectedPickables << pickable;
+			}
 		}
+		notifyTracers();
 	}
 
 	void Selector::selectAll()
