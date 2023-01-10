@@ -35,26 +35,30 @@ namespace qtuser_core
 		virtual ~CXFileOpenAndSaveManager();
 
 		void init(QObject* obj);
-		void clear();
 
 		Q_INVOKABLE QString title();
 		Q_INVOKABLE QStringList nameFilters();
-
+		Q_INVOKABLE QString currOpenFile();
 		Q_INVOKABLE void fileOpen(const QString& url);
 		Q_INVOKABLE void fileSave(const QString& url);
 		Q_INVOKABLE void filesOpen(const QList<QUrl>& urls);
-
+		Q_INVOKABLE bool cancelHandle();
 		void addCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback);
 		void removeCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback);
 	public:
-		void open(CXHandleBase* receiver = nullptr, const QStringList& filters = QStringList());
-		void save(CXHandleBase* receiver = nullptr, const QStringList& filters = QStringList());
+		void open(CXHandleBase* receiver = nullptr);
+		void save(CXHandleBase* receiver = nullptr);
+
+		Q_INVOKABLE void qOpen(QObject* receiver);
+		Q_INVOKABLE void qSave(QObject* receiver);
+		Q_INVOKABLE void qOpen();
 
 		void openWithParams(const QStringList& fileNames);
 		bool openWithName(const QString& fileName);
 		void openWithNames(const QStringList& fileNames);
 		bool openWithUrl(const QUrl& url);
 		bool openWithUrl(const QList<QUrl>& urls);
+		bool openWithString(const QString& commonName);
 
 		bool saveWithName(const QString& fileName);
 		bool saveWithUrl(const QUrl& url);
@@ -73,11 +77,14 @@ namespace qtuser_core
 
 		QString lastOpenFileName();
 		QString lastSaveFileName();
+		void setLastOpenFileName(QString filePath);
 		void setLastSaveFileName(QString filePath);
 
 		void openDesktopFolder();
 		void openLastSaveFolder();
 		void openFolder(const QString& folder);
+
+		size_t getFileSize(const QString& fileName);
 	protected:
 		bool openWithNameSuffix(const QString& fileName, const QString suffix);
 		bool openWithNamesSuffix(const QStringList& fileNames);
@@ -100,7 +107,6 @@ namespace qtuser_core
 		QMap<QString, CXHandleBase*> m_saveHandlers;
 		QStringList m_saveFilterList;
 
-		QStringList m_externalFilterList;
 		CXHandleBase* m_externalHandler;
 
 		QString m_lastSaveFile;
@@ -113,7 +119,7 @@ namespace qtuser_core
 	QTUSER_CORE_API void dialogOpenFiles(const QString& filter, loadFunc func);
 
 	typedef std::function<void(const QString& fileName)> saveFunc;
-	QTUSER_CORE_API void dialogSave(const QString& filter, saveFunc func);
+	QTUSER_CORE_API void dialogSave(const QString& filter, const QString& defaultName, saveFunc func);
 }
 
 #endif // !QTUSER_CORE_CXFileOpenAndSaveManager_H

@@ -8,6 +8,9 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtWidgets/QFileDialog>
+#include <QtCore/QOperatingSystemVersion>
+#include <QtCore/QSettings>
+#include "ccglobal/platform.h"
 
 namespace qtuser_core
 {
@@ -26,12 +29,9 @@ namespace qtuser_core
 
 	void CXFileOpenAndSaveManager::init(QObject* obj)
 	{
+#ifdef CXFILE_USE_INVOKE
 		m_invokeObject = obj;
-	}
-
-	void CXFileOpenAndSaveManager::clear()
-	{
-
+#endif
 	}
 
 	QString CXFileOpenAndSaveManager::title()
@@ -66,13 +66,19 @@ namespace qtuser_core
 			break;
 		case OpenSaveState::oss_external_open:
 		case OpenSaveState::oss_external_save:
-			filterList = generateFilters(m_externalFilterList);
+			if(m_externalHandler)
+				filterList = generateFilters(m_externalHandler->suffixesFromFilter());
 			break;
 		default:
 			break;
 		}
 
 		return filterList;
+	}
+
+	QString CXFileOpenAndSaveManager::currOpenFile()
+	{
+	    return m_lastOpenFile.mid(0, m_lastOpenFile.size() - 4);
 	}
 
 	QStringList CXFileOpenAndSaveManager::generateFilters(const QStringList& extensions)
@@ -98,7 +104,7 @@ namespace qtuser_core
 		QString allSuffix;
 		for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin(); it != handlers.end(); ++it)
 		{
-			QStringList enableFilters = it.value()->enableFilters();
+			QStringList enableFilters = it.value()->suffixesFromFilter();
 			for (const QString& ext : enableFilters)
 			{
 				QString suffix = QString("*.%1 ").arg(ext);
@@ -116,23 +122,29 @@ namespace qtuser_core
 	QString CXFileOpenAndSaveManager::generateFilterFromHandlers(bool saveState)
 	{
 		QMap<QString, CXHandleBase*>& handlers = saveState ? m_saveHandlers : m_openHandlers;
-		QString filter;
-		QStringList extensions;
-		filter += "FILES (";
-		for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin(); it != handlers.end(); ++it)
+
+		QList<CXHandleBase*> uniqueHandlers;
+		if (m_externalHandler)
 		{
-			QStringList enableFilters = it.value()->enableFilters();
-			for (const QString& ext : enableFilters)
+			uniqueHandlers.append(m_externalHandler);
+		}
+		else
+		{
+			for (QMap<QString, CXHandleBase*>::iterator it = handlers.begin();
+				it != handlers.end(); ++it)
 			{
-				if (!extensions.contains(ext))
-				{
-					QString suffix = QString("*.%1 ").arg(ext);
-					filter += suffix;
-					extensions << ext;
-				}
+				if (!uniqueHandlers.contains(it.value()))
+					uniqueHandlers.append(it.value());
 			}
 		}
-		filter += ")";
+
+		QString filter;
+		for (CXHandleBase* handle : uniqueHandlers)
+		{
+			filter += handle->filter();
+			if (handle != uniqueHandlers.back())
+				filter += ";;";
+		}
 
 		return filter;
 	}
@@ -156,13 +168,47 @@ namespace qtuser_core
 		saveWithUrl(QUrl(url));
 	}
 
-	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver, const QStringList& filters)
+	bool CXFileOpenAndSaveManager::cancelHandle()
+	{
+		if (m_externalHandler)
+		{
+			if (m_State == OpenSaveState::oss_save || m_State == OpenSaveState::oss_external_save)
+			{
+		           m_externalHandler->cancelHandle();
+				//dlp save gcode canel back Mainscene
+				//creative_kernel::AbstractKernelUI::getSelf()->backMainSceneShow();
+			}
+			m_externalHandler = nullptr;
+			m_State = OpenSaveState::oss_none;
+			
+			return true;
+		}
+		return true;
+	}
+
+	void CXFileOpenAndSaveManager::qOpen()
+	{
+		open();
+	}
+
+	void CXFileOpenAndSaveManager::qOpen(QObject* receiver)
+	{
+		CXHandleBase* handle = qobject_cast<CXHandleBase*>(receiver);
+		open(handle);
+	}
+
+	void CXFileOpenAndSaveManager::qSave(QObject* receiver)
+	{
+		CXHandleBase* handle = qobject_cast<CXHandleBase*>(receiver);
+		save(handle);
+	}
+
+	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver)
 	{
 		m_State = OpenSaveState::oss_open;
 		if (receiver)
 		{
 			m_externalHandler = receiver;
-			m_externalFilterList = filters;
 			m_State = OpenSaveState::oss_external_open;
 		}
 
@@ -179,16 +225,17 @@ namespace qtuser_core
 
 			QString filter = generateFilterFromHandlers(false);
 			dialogOpenFiles(filter, f);
+
+			m_externalHandler = nullptr;
 		}
 	}
 
-	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver, const QStringList& filters)
+	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver)
 	{
 		m_State = OpenSaveState::oss_save;
 		if (receiver)
 		{
 			m_externalHandler = receiver;
-			m_externalFilterList = filters;
 			m_State = OpenSaveState::oss_external_save;
 		}
 
@@ -202,9 +249,11 @@ namespace qtuser_core
 			auto f = [this](const QString& file) {
 				saveWithName(file);
 			};
-
+			qDebug() << "last open" << m_lastOpenFile;
 			QString filter = generateFilterFromHandlers(true);
-			dialogSave(filter, f);
+			dialogSave(filter, m_lastOpenFile, f);
+
+			m_externalHandler = nullptr;
 		}
 	}
 
@@ -246,6 +295,7 @@ namespace qtuser_core
 		QFileInfo info(fileName);
 		QString suffix = info.suffix();
 		suffix = suffix.toLower();
+		m_lastOpenFile = info.baseName();
 		return openWithNameSuffix(fileName, suffix);
 	}
 
@@ -264,6 +314,7 @@ namespace qtuser_core
 			QFileInfo info(fileNames.at(0));
 			QString suffix = info.suffix();
 			suffix = suffix.toLower();
+			m_lastOpenFile = info.baseName();
 			CXHandleBase* handler = findHandler(suffix, m_openHandlers);
 			if (!handler)
 			{
@@ -279,6 +330,20 @@ namespace qtuser_core
 	bool CXFileOpenAndSaveManager::openWithUrl(const QUrl& url)
 	{
 		return openWithName(url.toLocalFile());
+	}
+
+	bool CXFileOpenAndSaveManager::openWithString(const QString& commonName)
+	{
+		if (commonName.startsWith("file:///"))
+		{
+			QUrl url(commonName);
+			openWithUrl(url);
+		}
+		else
+		{
+			openWithName(commonName);
+		}
+		return true;
 	}
 
 	bool CXFileOpenAndSaveManager::openWithUrl(const QList<QUrl>& urls)
@@ -373,7 +438,7 @@ namespace qtuser_core
 	void CXFileOpenAndSaveManager::registerOpenHandler(CXHandleBase* handler)
 	{
 		if (handler)
-			registerOpenHandler(handler->supportFilters(), handler);
+			registerOpenHandler(handler->suffixesFromFilter(), handler);
 	}
 
 	void CXFileOpenAndSaveManager::registerOpenHandler(const QStringList& suffixes, CXHandleBase* handler)
@@ -403,7 +468,7 @@ namespace qtuser_core
 	void CXFileOpenAndSaveManager::registerSaveHandler(CXHandleBase* handler)
 	{
 		if (handler)
-			registerSaveHandler(handler->supportFilters(), handler);
+			registerSaveHandler(handler->suffixesFromFilter(), handler);
 	}
 
 	void CXFileOpenAndSaveManager::registerSaveHandler(const QStringList& suffixes, CXHandleBase* handler)
@@ -456,7 +521,10 @@ namespace qtuser_core
 	{
 		return m_lastSaveFile;
 	}
-
+void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
+{
+    m_lastOpenFile = filePath;
+}
 	void CXFileOpenAndSaveManager::setLastSaveFileName(QString filePath)
 	{
 		m_lastSaveFile = filePath;
@@ -476,7 +544,22 @@ namespace qtuser_core
 
 	void CXFileOpenAndSaveManager::openFolder(const QString& folder)
 	{
-		QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
+		QOperatingSystemVersion version = QOperatingSystemVersion::current();
+		QProcess process;
+		qDebug()<<"openFolder version.type() : " <<version.type();
+		if(version.type() == QOperatingSystemVersion::Windows)
+		{
+		    QString strPath = "explorer.exe /select," + m_lastSaveFile;
+		    qDebug() << "strFile =" << m_lastSaveFile;
+		    process.startDetached(QStringLiteral("explorer.exe /select,") + m_lastSaveFile);
+		}
+		else if(version.type() == QOperatingSystemVersion::MacOS)
+		{
+		    m_lastSaveFile.replace("\\","/");
+		    process.startDetached("/usr/bin/open",QStringList() << folder);
+		}
+		qDebug()<<"m_lastSaveFile replace =" <<m_lastSaveFile;
+		//QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
 	}
 
 	void CXFileOpenAndSaveManager::addCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback)
@@ -490,34 +573,58 @@ namespace qtuser_core
 		if (callback)
 			m_callbacks.removeOne(callback);
 	}
+	
+	size_t CXFileOpenAndSaveManager::getFileSize(const QString& fileName)
+	{
+		if (fileName.isEmpty())
+			return 0;
+	
+		FILE* file = fopen(fileName.toLocal8Bit().constData(), "rb+");
+		if (nullptr == file)
+		{
+			return 0;
+		}
+
+		fseek(file, 0, SEEK_END);
+		size_t filesize = _cc_ftelli64(file);
+		fclose(file);
+
+		return filesize;	
+	}
 
 	void dialogOpenFiles(const QString& filter, loadFunc func)
 	{
 		if (!func)
 			return;
-
+		QSettings setting;
+		QString lastPath = setting.value("dialogLastPath", "").toString();
 		QStringList fileName = QFileDialog::getOpenFileNames(
 			nullptr, QObject::tr("OpenFile"),
-			QString(), filter);
+			lastPath, filter);
 
 		if (fileName.isEmpty())
 			return;
-
+		QFileInfo fileinfo = QFileInfo(fileName.first());
+		lastPath = fileinfo.path();
+		setting.setValue("dialogLastPath", lastPath);
 		func(fileName);
 	}
 
-	void dialogSave(const QString& filter, saveFunc func)
+	void dialogSave(const QString& filter, const QString& defaultName, saveFunc func)
 	{
 		if (!func)
 			return;
-
+		QSettings setting;
+		QString lastPath = setting.value("dialogLastPath", "").toString() + "/" + defaultName;
 		QString fileName = QFileDialog::getSaveFileName(
-			nullptr, QObject::tr("OpenFile"),
-			QString(), filter);
+			nullptr, QObject::tr("SaveFile"),
+			lastPath, filter);
 
 		if (fileName.isEmpty())
 			return;
-
+		QFileInfo fileinfo = QFileInfo(fileName);
+		lastPath = fileinfo.path();
+		setting.setValue("dialogLastPath", lastPath);
 		func(fileName);
 	}
 }
