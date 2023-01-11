@@ -112,4 +112,34 @@ namespace qtuser_core
 		}
 		return !error;
 	}
+
+	bool copyFileToPath(const QString& sourceDir, const QString& toDir, bool deleteFileIfExist)
+	{
+		QDir m_createfile;
+		// toDir.replace("\\","/");
+		if (sourceDir == toDir)
+		{
+			return true;
+		}
+
+		if (!QFile::exists(sourceDir))
+		{
+			return false;
+		}
+
+		bool exist = m_createfile.exists(toDir);
+		if (exist)
+		{
+			if (deleteFileIfExist)
+			{
+				m_createfile.remove(toDir);
+			}
+		}
+
+		if (!QFile::copy(sourceDir, toDir))
+		{
+			return false;
+		}
+		return true;
+	}
 }

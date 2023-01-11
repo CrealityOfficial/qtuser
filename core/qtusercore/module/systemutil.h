@@ -40,5 +40,7 @@ namespace qtuser_core
 		Q_INVOKABLE int getDiskTotalSpace(const QString& driver);
 		Q_INVOKABLE int getDiskFreeSpace(const QString& driver);
 	};
+
+	QTUSER_CORE_API QString calculateFileMD5(const QString& fileName);
 }
 #endif // creative_kernel_MATRIX_UTIL_H

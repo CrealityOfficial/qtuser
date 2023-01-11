@@ -9,6 +9,7 @@
 #include <QtGui/QSurfaceFormat>
 #include <QtCore/QDateTime>
 #include <QSettings>
+#include <QtCore/QCryptographicHash>
 
 #include "qtusercore/module/glcompatibility.h"
 #include "qtusercore/string/resourcesfinder.h"
@@ -335,5 +336,23 @@ namespace qtuser_core
 	int SystemUtil::getDiskFreeSpace(const QString& driver)
 	{
 		return 4096;
+	}
+
+	QString calculateFileMD5(const QString& fileName)
+	{
+		QFile file(fileName);
+		QString Md5Str = "";
+		if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+		{
+			QByteArray fileArray = file.readAll();
+			QByteArray md5 = QCryptographicHash::hash(fileArray, QCryptographicHash::Md5);
+			Md5Str = md5.toHex().toUpper();
+		}
+		else
+		{
+			qDebug() << QString("calculateFileMD5 openFile [%1] Error.").arg(fileName);
+		}
+		file.close();
+		return Md5Str;
 	}
 }
