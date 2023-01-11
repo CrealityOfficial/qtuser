@@ -341,7 +341,10 @@ namespace qtuser_core
 				return;
 			}
 
-			handler->handle(fileNames);
+			if (fileNames.count() == 1)
+				handler->handle(fileNames.at(0));
+			else
+				handler->handle(fileNames);
 			openWithNamesSuffix(fileNames);
 		}
 	}
