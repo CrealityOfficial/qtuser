@@ -261,6 +261,9 @@ namespace qtuser_3d
 
 	}
 
-
+	void PrinterSkirtEntity::setHighlight(bool highlight)
+	{
+		m_innerHighlightEntity->setEnabled(highlight);
+	}
 
 }

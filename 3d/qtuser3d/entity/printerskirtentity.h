@@ -28,6 +28,8 @@ namespace qtuser_3d
 
 		void updateBoundingBox(const Box3D& box);
 		void setColor(const QVector4D& color);
+		void setHighlight(bool highlight);
+
 	protected:
 		PrinterSkirtDecorEntity *m_outerEntity;
 		PrinterSkirtDecorEntity *m_verticalEntity;
