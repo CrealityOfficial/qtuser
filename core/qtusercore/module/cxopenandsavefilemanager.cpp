@@ -78,7 +78,7 @@ namespace qtuser_core
 
 	QString CXFileOpenAndSaveManager::currOpenFile()
 	{
-	    return m_lastOpenFile.mid(0, m_lastOpenFile.size() - 4);
+	    return m_lastOpenFile;
 	}
 
 	QStringList CXFileOpenAndSaveManager::generateFilters(const QStringList& extensions)
