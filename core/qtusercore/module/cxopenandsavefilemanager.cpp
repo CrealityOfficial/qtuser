@@ -126,6 +126,20 @@ namespace qtuser_core
 		return filters;
 	}
 
+	QStringList CXFileOpenAndSaveManager::generateSuffixesFromHandlers(bool saveState)
+	{
+		QMap<QString, QList<CXHandleBase*>>& handlers = saveState ? m_saveHandlers : m_openHandlers;
+		QStringList allSuffix;
+
+		for (QMap<QString, QList<CXHandleBase*>>::iterator it = handlers.begin(); it != handlers.end(); ++it)
+		{
+			if (it.value().count() > 0)
+				allSuffix << it.key();
+		}
+
+		return allSuffix;
+	}
+
 	QString CXFileOpenAndSaveManager::generateFilterFromHandlers(bool saveState)
 	{
 		QMap<QString, QList<CXHandleBase*>>& handlers = saveState ? m_saveHandlers : m_openHandlers;
@@ -450,6 +464,11 @@ namespace qtuser_core
 			registerOpenHandler(handler->suffixesFromFilter(), handler);
 	}
 
+	void CXFileOpenAndSaveManager::unRegisterSaveHandler(CXHandleBase* handler)
+	{
+		unRegisterHandler(handler, m_saveHandlers);
+	}
+
 	void CXFileOpenAndSaveManager::registerOpenHandler(const QStringList& suffixes, CXHandleBase* handler)
 	{
 		for (const QString& suffix : suffixes)
@@ -460,6 +479,11 @@ namespace qtuser_core
 	{
 		for (const QString& suffix : suffixes)
 			unRegisterOpenHandler(suffix);
+	}
+
+	void CXFileOpenAndSaveManager::unRegisterOpenHandler(CXHandleBase* handler)
+	{
+		unRegisterHandler(handler, m_openHandlers);
 	}
 
 	void CXFileOpenAndSaveManager::registerOpenHandler(const QString& suffix, CXHandleBase* handler)
@@ -520,6 +544,16 @@ namespace qtuser_core
 	void CXFileOpenAndSaveManager::unRegisterHandler(const QString& suffix, QMap<QString, QList<CXHandleBase*>>& handlers)
 	{
 		handlers.remove(suffix);
+	}
+
+	void CXFileOpenAndSaveManager::unRegisterHandler(CXHandleBase* handler, QMap<QString, QList<CXHandleBase*>>& handlers)
+	{
+		if (!handler)
+			return;
+
+		for (QMap<QString, QList<CXHandleBase*>>::Iterator it = handlers.begin();
+			it != handlers.end(); ++it)
+			it.value().removeOne(handler);
 	}
 
 	QString CXFileOpenAndSaveManager::lastOpenFileName()

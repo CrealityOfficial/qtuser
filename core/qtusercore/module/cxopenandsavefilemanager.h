@@ -64,12 +64,14 @@ namespace qtuser_core
 		bool saveWithUrl(const QUrl& url);
 
 		void registerOpenHandler(CXHandleBase* handler);
+		void unRegisterOpenHandler(CXHandleBase* handler);
 		void registerOpenHandler(const QStringList& suffixes, CXHandleBase* handler);
 		void unRegisterOpenHandler(const QStringList& suffixes);
 		void registerOpenHandler(const QString& suffix, CXHandleBase* handler);
 		void unRegisterOpenHandler(const QString& suffix);
 
 		void registerSaveHandler(CXHandleBase* handler);
+		void unRegisterSaveHandler(CXHandleBase* handler);
 		void registerSaveHandler(const QStringList& suffixes, CXHandleBase* handler);
 		void unRegisterSaveHandler(const QStringList& suffixes);
 		void registerSaveHandler(const QString& suffix, CXHandleBase* handler);
@@ -95,10 +97,12 @@ namespace qtuser_core
 
 		bool registerHandler(const QString& suffix, CXHandleBase* handler, QMap<QString, QList<CXHandleBase*>>& handlers);
 		void unRegisterHandler(const QString& suffix, QMap<QString, QList<CXHandleBase*>>& handlers);
+		void unRegisterHandler(CXHandleBase* handler, QMap<QString, QList<CXHandleBase*>>& handlers);
 		CXHandleBase* findHandler(const QString& suffix, QMap<QString, QList<CXHandleBase*>>& handlers);
 
 		QStringList generateFilters(const QStringList& extensions);
 		QStringList generateFiltersFromHandlers(bool saveState);
+		QStringList generateSuffixesFromHandlers(bool saveState);
 		QString generateFilterFromHandlers(bool saveState);
 	protected:
 		QObject* m_invokeObject;
