@@ -47,7 +47,7 @@ namespace qtuser_core
 		void removeCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback);
 	public:
 		void open(CXHandleBase* receiver = nullptr);
-		void save(CXHandleBase* receiver = nullptr);
+		void save(CXHandleBase* receiver = nullptr, const QString& defaultName = QString());
 
 		Q_INVOKABLE void qOpen(QObject* receiver);
 		Q_INVOKABLE void qSave(QObject* receiver);

@@ -242,7 +242,7 @@ namespace qtuser_core
 		}
 	}
 
-	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver)
+	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver, const QString& defaultName)
 	{
 		m_State = OpenSaveState::oss_save;
 		if (receiver)
@@ -260,10 +260,14 @@ namespace qtuser_core
 		{
 			auto f = [this](const QString& file) {
 				saveWithName(file);
+				m_lastSaveFile = file;
 			};
-			qDebug() << "last open" << m_lastOpenFile;
+
 			QString filter = generateFilterFromHandlers(true);
-			dialogSave(filter, m_lastOpenFile, f);
+			QString name = defaultName;
+			if (name.isEmpty())
+				name = m_lastOpenFile;
+			dialogSave(filter, name, f);
 
 			m_externalHandler = nullptr;
 		}
@@ -555,10 +559,12 @@ namespace qtuser_core
 	{
 		return m_lastSaveFile;
 	}
-void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
-{
-    m_lastOpenFile = filePath;
-}
+
+	void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
+	{
+	    m_lastOpenFile = filePath;
+	}
+
 	void CXFileOpenAndSaveManager::setLastSaveFileName(QString filePath)
 	{
 		m_lastSaveFile = filePath;
@@ -580,20 +586,19 @@ void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
 	{
 		QOperatingSystemVersion version = QOperatingSystemVersion::current();
 		QProcess process;
-		qDebug()<<"openFolder version.type() : " <<version.type();
 		if(version.type() == QOperatingSystemVersion::Windows)
 		{
-		    QString strPath = "explorer.exe /select," + m_lastSaveFile;
-		    qDebug() << "strFile =" << m_lastSaveFile;
-		    process.startDetached(QStringLiteral("explorer.exe /select,") + m_lastSaveFile);
+			QString dir = folder;
+			dir.replace("/", "\\");
+		    process.startDetached(QStringLiteral("explorer ") + dir);
 		}
 		else if(version.type() == QOperatingSystemVersion::MacOS)
 		{
 		    m_lastSaveFile.replace("\\","/");
 		    process.startDetached("/usr/bin/open",QStringList() << folder);
 		}
-		qDebug()<<"m_lastSaveFile replace =" <<m_lastSaveFile;
-		//QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
+
+		qDebug() << QString("CXFileOpenAndSaveManager::openFolder : [%1]").arg(folder);
 	}
 
 	void CXFileOpenAndSaveManager::addCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback)
@@ -648,17 +653,40 @@ void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
 	{
 		if (!func)
 			return;
+
+		QFileInfo defaultFile(defaultName);
+
 		QSettings setting;
-		QString lastPath = setting.value("dialogLastPath", "").toString() + "/" + defaultName;
+		bool isFile = defaultName.lastIndexOf("/") != (defaultName.size() - 1);
+		bool isAbso = defaultFile.isAbsolute();
+
+		QString lastPath;
+		if (isFile)
+		{
+			if (isAbso)
+				lastPath = defaultName;
+			else
+				lastPath = setting.value("dialogLastPath", "").toString() + "/" + defaultName;
+		}
+		else
+		{
+			if (isAbso)
+				lastPath = defaultName;
+			else
+				lastPath = setting.value("dialogLastPath", "").toString();
+		}
+
 		QString fileName = QFileDialog::getSaveFileName(
 			nullptr, QObject::tr("SaveFile"),
 			lastPath, filter);
 
 		if (fileName.isEmpty())
 			return;
+
 		QFileInfo fileinfo = QFileInfo(fileName);
 		lastPath = fileinfo.path();
 		setting.setValue("dialogLastPath", lastPath);
+
 		func(fileName);
 	}
 }
