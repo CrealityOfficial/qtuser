@@ -54,7 +54,6 @@ namespace qtuser_core
 		Q_INVOKABLE void qOpen();
 
 		void setFilterKey(const QString& filterKey);
-		void openWithParams(const QStringList& fileNames);
 		bool openWithName(const QString& fileName);
 		void openWithNames(const QStringList& fileNames);
 		bool openWithUrl(const QUrl& url);
@@ -82,8 +81,10 @@ namespace qtuser_core
 		void setLastOpenFileName(QString filePath);
 		void setLastSaveFileName(QString filePath);
 
-		void openDesktopFolder();
-		void openLastSaveFolder();
+		bool isSupportSuffix(const QString& suffix);
+
+		Q_INVOKABLE void openDesktopFolder();
+		Q_INVOKABLE void openLastSaveFolder();
 		void openFolder(const QString& folder);
 
 		size_t getFileSize(const QString& fileName);

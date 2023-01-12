@@ -278,29 +278,6 @@ namespace qtuser_core
 		m_filterKey = filterKey;
 	}
 
-	void CXFileOpenAndSaveManager::openWithParams(const QStringList& params)
-	{
-		if (params.size() > 1)
-		{
-			qDebug() << "params length > 1. maybe need open file";
-			QString needOpenName;
-
-			for (const QString& fileName : params)
-			{
-				QFile file(fileName);
-				QFileInfo fileInfo(fileName);
-				QString suffix = fileInfo.suffix();
-				if (file.exists() && m_openFilterList.contains(suffix))
-				{
-					needOpenName = fileName;
-					break;
-				}
-			}
-
-			openWithName(needOpenName);
-		}
-	}
-
 	bool CXFileOpenAndSaveManager::openWithName(const QString& fileName)
 	{
 		if (m_externalHandler)
@@ -568,6 +545,11 @@ namespace qtuser_core
 	void CXFileOpenAndSaveManager::setLastSaveFileName(QString filePath)
 	{
 		m_lastSaveFile = filePath;
+	}
+
+	bool CXFileOpenAndSaveManager::isSupportSuffix(const QString& suffix)
+	{
+		return m_openFilterList.contains(suffix);
 	}
 
 	void CXFileOpenAndSaveManager::openDesktopFolder()
