@@ -253,12 +253,19 @@ namespace qtuser_3d
 		}
 	}
 
-	void PrinterSkirtEntity::setColor(const QVector4D& color)
+	void PrinterSkirtEntity::setInnerColor(const QVector4D& color)
 	{
-		m_verticalEntity->setColor(QVector4D(0.180392, 0.180392, 0.188235, 1.0));
-		m_outerEntity->setColor(QVector4D(0.231373, 0.231373, 0.243137, 1.0f));
-		m_innerHighlightEntity->setColor(QVector4D(0.388235, 0.388235, 0.396078, 1.0));
+		m_innerHighlightEntity->setColor(color);
+	}
 
+	void PrinterSkirtEntity::setOuterColor(const QVector4D& color)
+	{
+		m_outerEntity->setColor(color);
+	}
+
+	void PrinterSkirtEntity::setVerticalBottomColor(const QVector4D& color)
+	{
+		m_verticalEntity->setColor(color);
 	}
 
 	void PrinterSkirtEntity::setHighlight(bool highlight)
