@@ -29,7 +29,8 @@
 #pragma comment(lib, "dbghelp.lib")
 
 #endif
-#include <buildinfo.h>
+#include "buildinfo.h"
+#include "qtusercore/string/resourcesfinder.h"
 
 #define DEBUG_FUNCTION 0
 
@@ -71,7 +72,7 @@ void showDetailSystemInfo()
 	qDebug() << version.name() << version.majorVersion() << version.minorVersion() << version.microVersion();
 	showSysMemory();
 
-	QString appLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	QString appLocation = qtuser_core::getOrCreateAppDataLocation();
 	qDebug() << "WriteAppData: " << appLocation;
 	qDebug() << "--------------------------------showDetailSystemInfo----------------------------";
 }
@@ -127,7 +128,7 @@ void printCallStack()
 
 QString getCanWriteFolder()
 {
-	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	return qtuser_core::getOrCreateAppDataLocation("");
 }
 
 void redirectIo()

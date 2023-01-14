@@ -3,6 +3,7 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
 #include <QtCore/QCoreApplication>
+#include "buildinfo.h"
 
 namespace qtuser_core
 {
@@ -53,7 +54,9 @@ namespace qtuser_core
 		if (!dir.exists())
 			dir.mkdir(directory);
 
-		QString folderDirectory = directory + QString("/") + folder;
+		QString version;
+		version.sprintf("%d.%d", PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR);
+		QString folderDirectory = directory + QString("/") + version + "/" + folder;
 		folderDirectory = mkMutiDir(folderDirectory);
 		return folderDirectory;
 	}
