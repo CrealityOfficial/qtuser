@@ -36,16 +36,16 @@ namespace qtuser_3d
 			if (pickable)
 				effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Always);
 		}
-		//else
-		//{
-		//	effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::DepthFunction::Less);
-		//	if (pickable)
-		//		effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::DepthFunction::Less);
-		//}
+		else
+		{
+			effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::DepthFunction::Less);
+			if (pickable)
+				effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::DepthFunction::Less);
+		}
 
-		setPassCullFace(showPassName, Qt3DRender::QCullFace::NoCulling);
+		setPassCullFace(showPassName, Qt3DRender::QCullFace::CullingMode::NoCulling);
 		if (pickable)
-			setPassCullFace(pickPassName, Qt3DRender::QCullFace::NoCulling);
+			setPassCullFace(pickPassName, Qt3DRender::QCullFace::CullingMode::NoCulling);
 	}
 
 	ManipulateEntity::~ManipulateEntity()

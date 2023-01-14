@@ -142,22 +142,22 @@ namespace qtuser_3d
 		m_local2Parent.translate(m_localPosition + m_localCenter);
 		QMatrix4x4 t = m_local2Parent;
 
+		t.rotate(m_localRotate);
+		t.scale(m_localScale);
+		t.translate(-m_localCenter);
+
 		m_local2Parent *= m_mirrorMatrix;
 		
 		m_local2Parent.rotate(m_localRotate);
 		m_local2Parent.scale(m_localScale);
 		m_local2Parent.translate(-m_localCenter);
 
-		t.rotate(m_localRotate);
-		t.scale(m_localScale);
-		t.translate(-m_localCenter);
-
 		onLocalMatrixChanged(m_local2Parent);
 
 		m_globalMatrix = m_parent2Global * m_local2Parent;
 		notifyGlobalChanged(m_globalMatrix);
 
-		m_objectMatrix = m_parent2Global * t;
+		m_objectMatrix = m_parent2Global  * t;
 
 		m_localMatrixDirty = false;
 		m_parentMatrixDirty = false;
