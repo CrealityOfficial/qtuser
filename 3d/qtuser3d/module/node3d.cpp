@@ -173,14 +173,25 @@ namespace qtuser_3d
 		return m_globalSpaceBox;
 	}
 
+	Box3D Node3D::globalSpaceBoxNoScale() const
+	{
+		return m_globalSpaceBoxNoScale;
+	}
+
 	qtuser_3d::Box3D Node3D::calculateGlobalSpaceBox()
 	{
 		return qtuser_3d::Box3D();
 	}
 
+	Box3D Node3D::calculateGlobalSpaceBoxNoScale()
+	{
+		return Box3D();
+	}
+
 	void Node3D::updateGlobalSpaceBox()
 	{
 		m_globalSpaceBox = calculateGlobalSpaceBox();
+		m_globalSpaceBoxNoScale = calculateGlobalSpaceBoxNoScale();
 	}
 
 	QMatrix4x4 Node3D::parent2Global() const
