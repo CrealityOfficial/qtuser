@@ -10,6 +10,8 @@
 #include <QtCore/QDateTime>
 #include <QSettings>
 #include <QtCore/QCryptographicHash>
+#include <QtCore/QMimeData>
+#include <QtGui/QClipboard>
 
 #include "qtusercore/module/glcompatibility.h"
 #include "qtusercore/string/resourcesfinder.h"
@@ -354,5 +356,13 @@ namespace qtuser_core
 		}
 		file.close();
 		return Md5Str;
+	}
+
+	void copyString2Clipboard(const QString& str)
+	{
+		QClipboard* clipboard = QApplication::clipboard();
+		QMimeData* mimeData = new QMimeData();
+		mimeData->setText(str);
+		clipboard->setMimeData(mimeData);
 	}
 }
