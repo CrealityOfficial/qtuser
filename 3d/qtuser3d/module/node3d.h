@@ -47,6 +47,7 @@ namespace qtuser_3d
 
 		Box3D localBox() const;
 		Box3D globalSpaceBox() const;
+		Box3D globalSpaceBoxNoScale() const;
 
 		QMatrix4x4 parent2Global() const;
 		QMatrix4x4 globalMatrix() const;
@@ -71,6 +72,7 @@ namespace qtuser_3d
 		virtual void mirror(const QMatrix4x4& matrix, bool apply = true);
 	protected:
 		virtual Box3D calculateGlobalSpaceBox();
+		virtual Box3D calculateGlobalSpaceBoxNoScale();
 		void updateGlobalSpaceBox();
 	protected:
 		QVector3D m_localCenter;
@@ -81,6 +83,7 @@ namespace qtuser_3d
 
 		Box3D m_globalSpaceBox;    // parent space box
 		Box3D m_localBox;
+		Box3D m_globalSpaceBoxNoScale;
 
 		QMatrix4x4 m_local2Parent;
 		QMatrix4x4 m_parent2Global;

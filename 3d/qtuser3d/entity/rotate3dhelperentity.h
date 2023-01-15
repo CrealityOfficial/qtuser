@@ -37,7 +37,7 @@ namespace qtuser_3d
 		inline void setXVisibility(bool visibility);
 		inline void setYVisibility(bool visibility);
 		inline void setZVisibility(bool visibility);
-		inline void setScale(float scaleRate);
+		void setScale(float scaleRate);
 
 		QVector3D getCurrentRotateAxis();
 		double getCurrentRotAngle();

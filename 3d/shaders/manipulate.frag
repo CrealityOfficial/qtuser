@@ -4,17 +4,18 @@ out vec4 fragColor;
 
 in vec3 normal;
 in vec3 viewDirection;
+in vec3 lightDir;
 
 uniform vec4 color;
 uniform vec4 changecolor;
 uniform int mt;
 
 uniform int lightEnable = 0;
-uniform vec4 ambient = vec4(0.6, 0.6, 0.6, 1.0);
-uniform vec4 diffuse = vec4(0.6, 0.6, 0.6, 1.0);
-uniform vec4 specular = vec4(0.6, 0.6, 0.6, 1.0);
+uniform vec4 ambient = vec4(0.5, 0.5, 0.5, 1.0);
+uniform vec4 diffuse = vec4(0.7, 0.7, 0.7, 1.0);
+uniform vec4 specular = vec4(0.5, 0.5, 0.5, 1.0);
 uniform float specularPower = 4.5;
-uniform vec3 lightDirection = vec3(1.0, 0.0, 1.0);
+// uniform vec3 lightDirection = vec3(0.0, 1.0, 1.0);
 
 uniform float state;
 
@@ -52,9 +53,8 @@ void main()
 		vec4 diffuse_color = diffuse;
 		vec4 specular_color = specular;
 
-		vec3 lightDir = normalize(lightDirection);
-		float normalCos = dot(fnormal, lightDir);
-		coreColor = directLight(lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
+		vec3 lightDirN = normalize(lightDir);
+		coreColor = directLight(lightDirN, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
 	}
 		
 	fragColor = coreColor;

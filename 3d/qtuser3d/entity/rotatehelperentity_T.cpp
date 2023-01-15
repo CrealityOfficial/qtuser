@@ -36,13 +36,13 @@ namespace qtuser_3d
 		, m_degreeColor(1.0f, 1.0f, 1.0f, 1.0f)
 		, m_handlerColor(1.0f, 0.0f, 0.0f, 1.0f)
 		, m_handlerPickedColor(1.0f, 0.79f, 0.0f, 1.0f)
-		, m_scale(25.0f, 25.0f, 25.0f)
-		, m_ringRadius(2)
-		, m_ringMinorRadius(0.02)
-		, m_dialRadius(2)
-		, m_degreeRadius(1.5)
+		, m_scale(17.0f, 17.0f, 17.0f)
+		, m_ringRadius(3)
+		, m_ringMinorRadius(0.016)
+		, m_dialRadius(3)
+		, m_degreeRadius(2.5)
 		, m_markOffset(0.2)
-		, m_handlerOffset(2.16)
+		, m_handlerOffset(3.36)
 		, m_fixSize(false)
 		, m_pRingEntity(nullptr)
 		, m_pHandlerEntity(nullptr)
@@ -109,6 +109,7 @@ namespace qtuser_3d
 		m_pRingEntity->setRotMode(0);
 		m_pRingEntity->setRotInitDir(m_initRotateDir);
 		m_pRingEntity->setRotAxis(m_rotateAxis);
+		m_pRingEntity->setLigthEnable(true);
 
 		Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
 		torusMesh->setRadius(m_ringRadius);
@@ -129,7 +130,7 @@ namespace qtuser_3d
 		m.rotate(90.0, m_initRotateDir);
 
 		// 旋转手柄初始化
-		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, false, true, true);
+		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, true, true, false);
 		m_pHandlerEntity->setObjectName("RotateHelperEntity_T.handleEntity");
 		m_pHandlerEntity->setPose(m);
 		m_pHandlerEntity->setColor(m_handlerColor);
@@ -138,10 +139,10 @@ namespace qtuser_3d
 		m_pHandlerEntity->setLightEnable(true);
 
 		// 构建手柄模型数据
-		double bottomRadius = m_ringRadius / 30.0;
-		double coneHeight = m_ringRadius * 3.0 / 25.0;
-		double cylinderHeight = m_ringRadius * 3.0 / 25.0;
-		double gapLength = m_ringRadius / 40.0;
+		double bottomRadius = m_ringRadius / 27.0;
+		double coneHeight = m_ringRadius * 2.0 / 24.0;
+		double cylinderHeight = m_ringRadius * 1.8 / 24.0;
+		double gapLength = m_ringRadius * 0.9 / 27.0;
 		QVector3D origin(0.0, 0.0, 0.0);
 	
 		int split = 20;
@@ -158,6 +159,43 @@ namespace qtuser_3d
 		std::vector<float> positions;
 		std::vector<float> normals;
 
+		// 上圆锥
+		{
+			QVector3D topCenter(0.0f, 0.0f, (float)(coneHeight + gapLength + cylinderHeight / 2.0));
+			QVector3D bottomCenter(0.0f, 0.0f, (float)(gapLength + cylinderHeight / 2.0));
+
+			for (int i = 0; i < roundDirs.size(); i++)
+			{
+				int iNext = i < roundDirs.size() - 1 ? i + 1 : 0;
+
+				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
+				QVector3D bottomVertexNext = bottomCenter + roundDirs[iNext] * bottomRadius;
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
+				positions.push_back(bottomCenter.x()); positions.push_back(bottomCenter.y());  positions.push_back(bottomCenter.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
+			}
+
+			for (int i = 0; i < roundDirs.size(); i++)
+			{
+				int iNext = i < roundDirs.size() - 1 ? i + 1 : 0;
+
+				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
+				QVector3D bottomVertexNext = bottomCenter + roundDirs[iNext] * bottomRadius;
+				QVector3D sideNormal = ((bottomVertex - bottomCenter) + (topCenter - bottomCenter)).normalized();
+				QVector3D sideNormalNext = ((bottomVertexNext - bottomCenter) + (topCenter - bottomCenter)).normalized();
+				QVector3D topNormal = (sideNormal + sideNormalNext).normalized();
+				positions.push_back(topCenter.x()); positions.push_back(topCenter.y());  positions.push_back(topCenter.z());
+				normals.push_back(topNormal.x()); normals.push_back(topNormal.y()); normals.push_back(topNormal.z());
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
+				normals.push_back(sideNormal.x()); normals.push_back(sideNormal.y()); normals.push_back(sideNormal.z());
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(sideNormalNext.x()); normals.push_back(sideNormalNext.y()); normals.push_back(sideNormalNext.z());
+			}
+		}
+
 		// 中间圆柱
 		{
 			QVector3D topCenter(0.0f, 0.0f, (float)(cylinderHeight / 2.0));
@@ -170,65 +208,45 @@ namespace qtuser_3d
 
 				QVector3D topVertex = topCenter + roundDirs[i] * bottomRadius;
 				QVector3D topVertexNext = topCenter + roundDirs[iNext] * bottomRadius;
-				positions.push_back(topVertex.x()); positions.push_back(topVertex.y());  positions.push_back(topVertex.z());
-				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
 				positions.push_back(topCenter.x()); positions.push_back(topCenter.y());  positions.push_back(topCenter.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
+				positions.push_back(topVertex.x()); positions.push_back(topVertex.y());  positions.push_back(topVertex.z());
 				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
 				positions.push_back(topVertexNext.x()); positions.push_back(topVertexNext.y());  positions.push_back(topVertexNext.z());
 				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
 
 				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
 				QVector3D bottomVertexNext = bottomCenter + roundDirs[iNext] * bottomRadius;
-				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
-				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
 				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
 				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
 				positions.push_back(bottomCenter.x()); positions.push_back(bottomCenter.y());  positions.push_back(bottomCenter.z());
 				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
-
-				positions.push_back(topVertex.x()); positions.push_back(topVertex.y());  positions.push_back(topVertex.z());
-				normals.push_back(roundDirs[i].x()); normals.push_back(roundDirs[i].y()); normals.push_back(roundDirs[i].z());
-				positions.push_back(topVertexNext.x()); positions.push_back(topVertexNext.y());  positions.push_back(topVertexNext.z());
-				normals.push_back(roundDirs[iNext].x()); normals.push_back(roundDirs[iNext].y()); normals.push_back(roundDirs[iNext].z());
-				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
-				normals.push_back(roundDirs[iNext].x()); normals.push_back(roundDirs[iNext].y()); normals.push_back(roundDirs[iNext].z());
-
-				positions.push_back(topVertex.x()); positions.push_back(topVertex.y());  positions.push_back(topVertex.z());
-				normals.push_back(roundDirs[i].x()); normals.push_back(roundDirs[i].y()); normals.push_back(roundDirs[i].z());
-				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
-				normals.push_back(roundDirs[iNext].x()); normals.push_back(roundDirs[iNext].y()); normals.push_back(roundDirs[iNext].z());
-				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
-				normals.push_back(roundDirs[i].x()); normals.push_back(roundDirs[i].y()); normals.push_back(roundDirs[i].z());
 			}
-		}
 
-		// 上圆锥
-		{
-			QVector3D topCenter(0.0f, 0.0f, (float)(coneHeight + gapLength + cylinderHeight / 2.0));
-			QVector3D bottomCenter(0.0f, 0.0f, (float)(gapLength + cylinderHeight / 2.0));
-			
 			for (int i = 0; i < roundDirs.size(); i++)
 			{
 				int iNext = i < roundDirs.size() - 1 ? i + 1 : 0;
 
+				QVector3D topVertex = topCenter + roundDirs[i] * bottomRadius;
+				QVector3D topVertexNext = topCenter + roundDirs[iNext] * bottomRadius;
 				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
 				QVector3D bottomVertexNext = bottomCenter + roundDirs[iNext] * bottomRadius;
-				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
-				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
-				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
-				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
-				positions.push_back(bottomCenter.x()); positions.push_back(bottomCenter.y());  positions.push_back(bottomCenter.z());
-				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(-1.0);
 
-				QVector3D sideNormal = ((bottomVertex - bottomCenter) + (topCenter - bottomCenter)).normalized();
-				QVector3D sideNormalNext = ((bottomVertexNext - bottomCenter) + (topCenter - bottomCenter)).normalized();
-				QVector3D topNormal = (sideNormal + sideNormalNext).normalized();
-				positions.push_back(topCenter.x()); positions.push_back(topCenter.y());  positions.push_back(topCenter.z());
-				normals.push_back(topNormal.x()); normals.push_back(topNormal.y()); normals.push_back(topNormal.z());
-				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
-				normals.push_back(sideNormal.x()); normals.push_back(sideNormal.y()); normals.push_back(sideNormal.z());
+				positions.push_back(topVertexNext.x()); positions.push_back(topVertexNext.y());  positions.push_back(topVertexNext.z());
+				normals.push_back(roundDirs[iNext].x()); normals.push_back(roundDirs[iNext].y()); normals.push_back(roundDirs[iNext].z());
+				positions.push_back(topVertex.x()); positions.push_back(topVertex.y());  positions.push_back(topVertex.z());
+				normals.push_back(roundDirs[i].x()); normals.push_back(roundDirs[i].y()); normals.push_back(roundDirs[i].z());
 				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
-				normals.push_back(sideNormalNext.x()); normals.push_back(sideNormalNext.y()); normals.push_back(sideNormalNext.z());
+				normals.push_back(roundDirs[iNext].x()); normals.push_back(roundDirs[iNext].y()); normals.push_back(roundDirs[iNext].z());
+
+				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
+				normals.push_back(roundDirs[iNext].x()); normals.push_back(roundDirs[iNext].y()); normals.push_back(roundDirs[iNext].z());
+				positions.push_back(topVertex.x()); positions.push_back(topVertex.y());  positions.push_back(topVertex.z());
+				normals.push_back(roundDirs[i].x()); normals.push_back(roundDirs[i].y()); normals.push_back(roundDirs[i].z());
+				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
+				normals.push_back(roundDirs[i].x()); normals.push_back(roundDirs[i].y()); normals.push_back(roundDirs[i].z());
 			}
 		}
 
@@ -249,14 +267,20 @@ namespace qtuser_3d
 				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
 				positions.push_back(bottomCenter.x()); positions.push_back(bottomCenter.y());  positions.push_back(bottomCenter.z());
 				normals.push_back(0.0); normals.push_back(0.0); normals.push_back(1.0);
+			}
 
+			for (int i = 0; i < roundDirs.size(); i++)
+			{
+				int iNext = i < roundDirs.size() - 1 ? i + 1 : 0;
+				QVector3D bottomVertex = bottomCenter + roundDirs[i] * bottomRadius;
+				QVector3D bottomVertexNext = bottomCenter + roundDirs[iNext] * bottomRadius;
 				QVector3D sideNormal = ((bottomVertex - bottomCenter) + (topCenter - bottomCenter)).normalized();
 				QVector3D sideNormalNext = ((bottomVertexNext - bottomCenter) + (topCenter - bottomCenter)).normalized();
 				QVector3D topNormal = (sideNormal + sideNormalNext).normalized();
-				positions.push_back(topCenter.x()); positions.push_back(topCenter.y());  positions.push_back(topCenter.z());
-				normals.push_back(topNormal.x()); normals.push_back(topNormal.y()); normals.push_back(topNormal.z());
 				positions.push_back(bottomVertex.x()); positions.push_back(bottomVertex.y());  positions.push_back(bottomVertex.z());
 				normals.push_back(sideNormal.x()); normals.push_back(sideNormal.y()); normals.push_back(sideNormal.z());
+				positions.push_back(topCenter.x()); positions.push_back(topCenter.y());  positions.push_back(topCenter.z());
+				normals.push_back(topNormal.x()); normals.push_back(topNormal.y()); normals.push_back(topNormal.z());
 				positions.push_back(bottomVertexNext.x()); positions.push_back(bottomVertexNext.y());  positions.push_back(bottomVertexNext.z());
 				normals.push_back(sideNormalNext.x()); normals.push_back(sideNormalNext.y()); normals.push_back(sideNormalNext.z());
 			}

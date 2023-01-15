@@ -39,9 +39,9 @@ namespace qtuser_3d
 		if (pickable)
 			effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Always);
 
-		setPassCullFace(showPassName, Qt3DRender::QCullFace::NoCulling);
+		setPassCullFace(showPassName, Qt3DRender::QCullFace::CullingMode::Back);
 		if (pickable)
-			setPassCullFace(pickPassName, Qt3DRender::QCullFace::NoCulling);
+			setPassCullFace(pickPassName, Qt3DRender::QCullFace::CullingMode::Back);
 	}
 
 	PieFadeEntity::~PieFadeEntity()
