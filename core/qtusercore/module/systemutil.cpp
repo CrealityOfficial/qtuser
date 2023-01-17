@@ -174,6 +174,34 @@ void mkMutiDirFromFileName(const QString& fileName)
 	}
 }
 
+bool clearPath(const QString& path)
+{
+	if (path.isEmpty())
+		return false;
+
+	QDir dir(path);
+	if (!dir.exists())
+		return false;
+
+	dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
+	QFileInfoList fileList = dir.entryInfoList();
+
+	for(const QFileInfo& file : fileList)
+	{
+		if (file.isFile())
+		{
+			file.dir().remove(file.fileName());
+		}
+		else
+		{
+			clearPath(file.absoluteFilePath());
+			file.dir().rmdir(file.absoluteFilePath());
+		}
+	}
+
+	return true;
+}
+
 void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg)
 {
 #ifdef QT_NO_DEBUG
