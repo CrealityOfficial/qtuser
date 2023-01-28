@@ -45,4 +45,6 @@ list(APPEND SRCS qtusercore/module/commandcenter.cpp
 				 qtusercore/module/glcompatibility.cpp
 				 qtusercore/module/cyclejob.h
 				 qtusercore/module/cyclejob.cpp
+				 qtusercore/module/fileio.h
+				 qtusercore/module/fileio.cpp
 				 )
