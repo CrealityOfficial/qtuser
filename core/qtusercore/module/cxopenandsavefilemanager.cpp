@@ -314,14 +314,6 @@ namespace qtuser_core
 
 	void CXFileOpenAndSaveManager::openWithNames(const QStringList& fileNames)
 	{
-		if (m_externalHandler)
-		{
-			m_externalHandler->handle(fileNames);
-			m_externalHandler = nullptr;
-			m_State = OpenSaveState::oss_none;
-			return;
-		}
-
 		if (fileNames.size() > 0)
 		{
 			QFileInfo info(fileNames.at(0));
@@ -329,17 +321,35 @@ namespace qtuser_core
 			suffix = suffix.toLower();
 			m_lastOpenFile = info.baseName();
 			m_lastOpenFilePath = info.absoluteFilePath();
-			CXHandleBase* handler = findHandler(suffix, m_openHandlers);
+			CXHandleBase* handler = nullptr;
+			if (m_externalHandler)
+			{
+				handler = m_externalHandler;
+			}
+			else
+			{
+				handler = findHandler(suffix, m_openHandlers);
+			}
+
 			if (!handler)
 			{
 				qDebug() << "not register handler for this file type!";
 				return;
 			}
 
-			if (fileNames.count() == 1)
+			if (suffix == "gcode" || suffix == "cxprj")
+			{
 				handler->handle(fileNames.at(0));
+			}
 			else
+			{
 				handler->handle(fileNames);
+			}
+			if (m_externalHandler)
+			{
+				m_externalHandler = nullptr;
+				m_State = OpenSaveState::oss_none;
+			}
 			openWithNamesSuffix(fileNames);
 		}
 	}
