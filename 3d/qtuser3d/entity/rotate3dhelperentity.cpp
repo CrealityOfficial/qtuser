@@ -24,12 +24,12 @@ namespace qtuser_3d
 	{
 		m_pXRotHelper = new RotateHelperEntity_T(this);
 		m_pXRotHelper->setColor(QVector4D(1.0, 0.0, 0.0, 1.0));
-		m_pXRotHelper->setRotateAxis(QVector3D(0.0, 1.0, 0.0));
+		m_pXRotHelper->setRotateAxis(QVector3D(1.0, 0.0, 0.0));
 		m_pXRotHelper->setRotateCallback(this);
 
 		m_pYRotHelper = new RotateHelperEntity_T(this);
 		m_pYRotHelper->setColor(QVector4D(0.0, 1.0, 0.0, 1.0));
-		m_pYRotHelper->setRotateAxis(QVector3D(1.0, 0.0, 0.0));
+		m_pYRotHelper->setRotateAxis(QVector3D(0.0, 1.0, 0.0));
 		//m_pYRotHelper->setRotateInitAngle(90);
 		m_pYRotHelper->setRotateCallback(this);
 

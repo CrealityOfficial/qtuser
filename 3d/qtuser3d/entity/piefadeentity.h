@@ -9,7 +9,7 @@ namespace qtuser_3d
 	class QTUSER_3D_API PieFadeEntity : public PickableEntity
 	{
 	public:
-		PieFadeEntity(Qt3DCore::QNode* parent = nullptr, bool alpha = true, bool pickable = true);
+		PieFadeEntity(Qt3DCore::QNode* parent = nullptr, bool alpha = true, bool depthTest = false, bool pickable = true);
 		virtual ~PieFadeEntity();
 
 		void setColor(const QVector4D& color);

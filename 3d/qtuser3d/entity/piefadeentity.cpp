@@ -5,7 +5,7 @@
 
 namespace qtuser_3d
 {
-	PieFadeEntity::PieFadeEntity(Qt3DCore::QNode* parent, bool alpha, bool pickable)
+	PieFadeEntity::PieFadeEntity(Qt3DCore::QNode* parent, bool alpha, bool depthTest, bool pickable)
 		:PickableEntity(parent)
 	{
 		QString showPassName = "piefade";
@@ -35,9 +35,18 @@ namespace qtuser_3d
 
 		m_lightEnableParameter = createParameter("lightEnable", 0);
 
-		effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::Always);
-		if (pickable)
-			effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Always);
+		if (!depthTest)
+		{
+			effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::Always);
+			if (pickable)
+				effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Always);
+		}
+		else
+		{
+			effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::Always);
+			if (pickable)
+				effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Always);
+		}
 
 		setPassCullFace(showPassName, Qt3DRender::QCullFace::CullingMode::Back);
 		if (pickable)

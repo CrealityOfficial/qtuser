@@ -12,7 +12,7 @@ namespace qtuser_3d
 	TranslateHelperEntity::TranslateHelperEntity(Qt3DCore::QNode* parent, int type, IndicatorType shapetype, QVector3D dir)
 		: BasicEntity(parent)
 		, m_fixSize(0)
-		, m_scale(50.0)
+		, m_scale(70.0)
 		, m_initAxisDir(0.0, 1.0, 0.0)
 		, m_pXArrowEntity(nullptr)
 		, m_pYArrowEntity(nullptr)
@@ -56,7 +56,10 @@ namespace qtuser_3d
 	void TranslateHelperEntity::attach()
 	{
 		if (m_pCameraController)
+		{
 			connect(m_pCameraController, &CameraController::signalCameraChaged, this, &TranslateHelperEntity::slotCameraChanged);
+			slotCameraChanged(m_pCameraController->getViewPosition(), m_pCameraController->getViewupVector());
+		}
 	}
 
 	void TranslateHelperEntity::detach()
@@ -156,7 +159,7 @@ namespace qtuser_3d
 			xMatrix.scale(m_scale, m_scale, m_scale);
 			//xMatrix.scale(15.0f, 15.0f, 15.0f);
 
-			m_pXArrowEntity = new qtuser_3d::ManipulateEntity(this, false, true);
+			m_pXArrowEntity = new qtuser_3d::ManipulateEntity(this, true, true);
 			m_pXArrowEntity->setObjectName("TranslateHelperEntity.xArrowEntity");
 			m_pXArrowEntity->setPose(xMatrix);
 			m_pXArrowEntity->setColor(QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
@@ -174,7 +177,7 @@ namespace qtuser_3d
 			QMatrix4x4 yMatrix;
 			yMatrix.scale(m_scale, m_scale, m_scale);
 			//yMatrix.scale(15.0f, 15.0f, 15.0f);
-			m_pYArrowEntity = new qtuser_3d::ManipulateEntity(this, false, true);
+			m_pYArrowEntity = new qtuser_3d::ManipulateEntity(this, true, true);
 			m_pYArrowEntity->setObjectName("TranslateHelperEntity.yArrowEntity");
 			m_pYArrowEntity->setPose(yMatrix);
 			m_pYArrowEntity->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
@@ -193,7 +196,7 @@ namespace qtuser_3d
 			zMatrix.rotate(QQuaternion::rotationTo(m_initAxisDir, QVector3D(0.0, 0.0, 1.0)));
 			zMatrix.scale(m_scale, m_scale, m_scale);
 			//zMatrix.scale(15.0f, 15.0f, 15.0f);
-			m_pZArrowEntity = new qtuser_3d::ManipulateEntity(this, false, true);
+			m_pZArrowEntity = new qtuser_3d::ManipulateEntity(this, true, true);
 			m_pZArrowEntity->setObjectName("TranslateHelperEntity.zArrowEntity");
 			m_pZArrowEntity->setPose(zMatrix);
 			m_pZArrowEntity->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));

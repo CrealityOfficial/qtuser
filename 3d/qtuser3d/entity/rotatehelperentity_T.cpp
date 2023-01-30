@@ -62,20 +62,20 @@ namespace qtuser_3d
 		m_pGlobalTransform = new Qt3DCore::QTransform(this);
 		addComponent(m_pGlobalTransform);
 
-		m_pRotateGroup = new BasicEntity(this);
-		m_pRotateTransform = new Qt3DCore::QTransform(m_pRotateGroup);
-		m_pRotateGroup->addComponent(m_pRotateTransform);
-
 		m_pNoRotateGroup = new BasicEntity(this);
 		m_pNoRotateTransform = new Qt3DCore::QTransform(m_pNoRotateGroup);
 		m_pNoRotateGroup->addComponent(m_pNoRotateTransform);
+
+		m_pRotateGroup = new BasicEntity(this);
+		m_pRotateTransform = new Qt3DCore::QTransform(m_pRotateGroup);
+		m_pRotateGroup->addComponent(m_pRotateTransform);
 
 		m_initQuaternion = QQuaternion::rotationTo(m_originRotateAxis, m_rotateAxis);
 
 		initRing();
 		initHandler();
 		initDial();
-		initTip();
+		//initTip();
 	}
 
 	RotateHelperEntity_T::~RotateHelperEntity_T()
@@ -102,7 +102,7 @@ namespace qtuser_3d
 		m.scale(m_scale);
 
 		// 旋转轨初始化
-		m_pRingEntity = new PieFadeEntity(m_pNoRotateGroup, true, false);
+		m_pRingEntity = new PieFadeEntity(m_pNoRotateGroup, true, true, false);
 		m_pRingEntity->setObjectName("RotateHelperEntity_T.ringEntity");
 		m_pRingEntity->setPose(m);
 		m_pRingEntity->setColor(m_ringColor);
@@ -303,7 +303,7 @@ namespace qtuser_3d
 		m.scale(m_scale);
 
 		// 刻度盘初始化
-		m_pDialEntity = new PieFadeEntity(nullptr, true, false);
+		m_pDialEntity = new PieFadeEntity(m_pRotateGroup, true, false, false);
 		m_pDialEntity->setObjectName("RotateHelperEntity_T.dialEntity");
 		m_pDialEntity->setPose(m);
 		m_pDialEntity->setColor(m_dialColor);
@@ -375,7 +375,7 @@ namespace qtuser_3d
 
 
 		// 刻度初始化
-		m_pDegreeEntity = new ManipulateEntity(nullptr, true, false);
+		m_pDegreeEntity = new ManipulateEntity(nullptr, true, false, false);
 		m_pDegreeEntity->setObjectName("RotateHelperEntity_T.degreeEntity");
 		m_pDegreeEntity->setPose(m);
 		m_pDegreeEntity->setColor(m_degreeColor);
@@ -448,7 +448,7 @@ namespace qtuser_3d
 
 	void RotateHelperEntity_T::initTip()
 	{
-		m_pTipEntity = new Qt3DExtras::QText2DEntity(this);
+		m_pTipEntity = new Qt3DExtras::QText2DEntity(m_pNoRotateGroup);
 		m_pTipEntity->setFont(QFont("monospace", 5));
 		m_pTipEntity->setText("TEST");
 		m_pTipEntity->setColor(Qt::white);
@@ -462,9 +462,9 @@ namespace qtuser_3d
 
 	void RotateHelperEntity_T::setVisibility(bool visibility)
 	{
+		visibility ? m_pDegreeEntity->setParent(m_pNoRotateGroup) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
 		visibility ? m_pRingEntity->setParent(m_pRotateGroup) : m_pRingEntity->setParent((Qt3DCore::QNode*)nullptr);
 		visibility ? m_pHandlerEntity->setParent(m_pRotateGroup) : m_pHandlerEntity->setParent((Qt3DCore::QNode*)nullptr);
-		visibility ? m_pDegreeEntity->setParent(m_pNoRotateGroup) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
 		visibility ? m_pDialEntity->setParent(m_pRotateGroup) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
@@ -477,7 +477,7 @@ namespace qtuser_3d
 	void RotateHelperEntity_T::setDialVisibility(bool visibility)
 	{
 		visibility ? m_pDegreeEntity->setParent(m_pNoRotateGroup) : m_pDegreeEntity->setParent((Qt3DCore::QNode*)nullptr);
-		visibility ? m_pDialEntity->setParent(m_pRotateGroup) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
+		//visibility ? m_pDialEntity->setParent(m_pRotateGroup) : m_pDialEntity->setParent((Qt3DCore::QNode*)nullptr);
 	}
 
 	void RotateHelperEntity_T::setColor(QVector4D v4)
@@ -624,6 +624,8 @@ namespace qtuser_3d
 
 			if (m_pRotateCallback)
 				m_pRotateCallback->onStartRotate();
+
+			//m_pTipEntity->setText("START");
 		}
 	}
 
@@ -635,7 +637,10 @@ namespace qtuser_3d
 			m_rotatingFlag = false;
 			m_lastestRotAngles = 0;
 			m_pRingEntity->setRotMode(0);
+			m_pRingEntity->setRotRadians(0);
 			m_pDialEntity->setRotRadians(0);
+
+			//m_pTipEntity->setText("END");
 		}
 	}
 
