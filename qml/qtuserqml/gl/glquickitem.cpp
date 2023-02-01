@@ -587,7 +587,8 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		{
 			frameGraph->setParent((Qt3DCore::QNode*)nullptr);
 		}
-		if(sceneGraph) sceneGraph->setEnabled(false);
+		if(sceneGraph)
+			sceneGraph->setParent((Qt3DCore::QNode*)nullptr);
 		m_renderGraph->endRender();
 
 		disconnect(m_renderGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
@@ -607,7 +608,8 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		{
 			frameGraph->setParent(m_rootFrameGraph);
 		}
-		if (sceneGraph) sceneGraph->setEnabled(true);
+		if (sceneGraph) 
+			sceneGraph->setParent(m_rootEntity);
 
 		QSize itemSize = size().toSize();
 		if (m_ratio > 0)
@@ -634,8 +636,8 @@ void GLQuickItem::registerRenderGraph(RenderGraph* graph)
 		}
 		if (sceneGraph)
 		{
-			sceneGraph->setParent(m_rootEntity);
-			sceneGraph->setEnabled(false);
+			//sceneGraph->setParent(m_rootEntity);
+			//sceneGraph->setEnabled(false);
 		}
 
 		m_registerRenderGraph.push_back(graph);
