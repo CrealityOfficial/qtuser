@@ -15,6 +15,10 @@ namespace qtuser_3d
 
         void resize(const QSize& size);
 		Qt3DRender::QTexture2D* colorTexture();
+        Qt3DRender::QTexture2D* depthTexture();
+        Qt3DRender::QTexture2D* worldPosTexture();
+        Qt3DRender::QTexture2D* worldNormalTexture();
+
     private:
         QSize m_size;
         Qt3DRender::QRenderTargetOutput* m_colorOutput;
@@ -22,6 +26,12 @@ namespace qtuser_3d
         // To enable depth testing
         Qt3DRender::QRenderTargetOutput* m_depthOutput;
         Qt3DRender::QTexture2D* m_depthTexture;
+
+        Qt3DRender::QRenderTargetOutput* m_worldPosOutput;
+        Qt3DRender::QTexture2D* m_worldPosTexture;
+
+        Qt3DRender::QRenderTargetOutput* m_worldNormalOutput;
+        Qt3DRender::QTexture2D* m_worldNormalTexture;
 	};
 }
 #endif // _QTUSER_3D_TEXTURERENDERTARGET_1589166630506_H

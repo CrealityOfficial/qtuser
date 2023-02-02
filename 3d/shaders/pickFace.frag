@@ -1,11 +1,17 @@
-#version 150 core
+#version 330 core
 
 flat in vec4 passColor;
-in vec3 passVert;
 
-out vec4 fragColor;
+in vec3 passVert;
+in vec3 passNormal;
+
+layout (location = 0) out vec4 fragColor;
+layout (location = 1) out vec3 worldPosion;
+layout (location = 2) out vec3 worldNormal;
 
 void main()
 {
 	fragColor = passColor;
+	worldPosion = passVert;
+	worldNormal = passNormal;
 }

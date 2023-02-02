@@ -1,9 +1,12 @@
-#version 150 core
+#version 330 core
 
 in vec3 vertexPosition;
+in vec3 vertexNormal;
 
 flat out vec4 passColor;
+
 out vec3 passVert;
+out vec3 passNormal;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -33,5 +36,7 @@ void main()
 					float(i3) / 255.0);
 	
 	passVert = (modelMatrix * position).xyz;
+	passNormal = mat3(modelMatrix) * vertexNormal;
 	gl_Position = projectionMatrix * viewMatrix * modelMatrix * position;
+
 }
