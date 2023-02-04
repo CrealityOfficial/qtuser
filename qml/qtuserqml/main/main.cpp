@@ -129,11 +129,12 @@ namespace qtuser_qml
             //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
             preSetDynamicLoadPath();
+
+            specifyOpenGL();
             QApplication app(argc, argv);
             QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
             setDynamicLoadPath(*engine);
-            specifyOpenGL();
 
 #ifdef Q_OS_OSX
             QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
