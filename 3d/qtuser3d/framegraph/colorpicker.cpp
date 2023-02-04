@@ -8,10 +8,10 @@ namespace qtuser_3d
 		, m_updateTimer(nullptr)
 		, m_useDelay(true)
 		, m_textureRenderTarget(nullptr)
-        #ifdef _DEBUG
+#ifdef _DEBUG
 		, m_debugName("pickTest.bmp")
         , m_createImageFinished(false)
-        #endif
+#endif
 	{
 		m_clearBuffer = new Qt3DRender::QClearBuffers(this);
 		m_clearBuffer->setClearColor(QColor(255, 255, 255, 255));
@@ -48,7 +48,7 @@ namespace qtuser_3d
 
 	void ColorPicker::resize(const QSize& size)
 	{
-		qDebug() << "ColorPicker::resize " << size;
+		//qDebug() << "ColorPicker::resize " << size;
 		m_colorPickerImage = QImage(size, QImage::Format_RGBA8888);
 		m_colorPickerImage.fill(0xFFFFFFFF);
 	}
@@ -113,7 +113,7 @@ namespace qtuser_3d
 
 	void ColorPicker::setFilterKey(const QString& name, int value)
 	{
-		qDebug() << "ColorPicker::setFilterKey " << name << " = " << value;
+		//qDebug() << "ColorPicker::setFilterKey " << name << " = " << value;
 		m_filterKey->setName(name);
 		m_filterKey->setValue(value);
 	}
@@ -125,7 +125,7 @@ namespace qtuser_3d
 
 	void ColorPicker::setClearColor(const QColor& color)
 	{
-		qDebug() << "ColorPicker::setClearColor " << color;
+		//qDebug() << "ColorPicker::setClearColor " << color;
 		m_clearBuffer->setClearColor(color);
 	}
 
@@ -180,7 +180,7 @@ namespace qtuser_3d
 
 	void ColorPicker::useSelfCameraSelector(bool use)
 	{
-		qDebug() << "ColorPicker::useSelfCameraSelector " << use;
+		//qDebug() << "ColorPicker::useSelfCameraSelector " << use;
 		if (use)
 		{
 			m_cameraSelector->setParent(m_renderPassFilter);
@@ -204,8 +204,9 @@ namespace qtuser_3d
 
 	void ColorPicker::setTextureRenderTarget(TextureRenderTarget* textureRenderTarget)
 	{
-		qDebug() << "ColorPicker::setTextureRenderTarget " << m_textureRenderTarget;
+		//qDebug() << "ColorPicker::setTextureRenderTarget " << m_textureRenderTarget;
 		m_textureRenderTarget = textureRenderTarget;
-		if(m_textureRenderTarget) m_renderTargetSelector->setTarget(m_textureRenderTarget);
+		if(m_textureRenderTarget)
+			m_renderTargetSelector->setTarget(m_textureRenderTarget);
 	}
 }
