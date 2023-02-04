@@ -1,6 +1,9 @@
 #include "fileio.h"
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
+
+#include "qtusercore/module/systemutil.h"
 
 namespace qtuser_core
 {
@@ -19,5 +22,11 @@ namespace qtuser_core
 	{
 		QString str(content);
 		writeTextFile(fileName, str);
+	}
+
+	void ensureFilePath(const QString& fileName)
+	{
+		QFileInfo info(fileName);
+		mkMutiDir(info.absolutePath());
 	}
 }
