@@ -53,7 +53,7 @@ namespace qtuser_core
 		Q_INVOKABLE void qSave(QObject* receiver);
 		Q_INVOKABLE void qOpen();
 
-		void setFilterKey(const QString& filterKey);
+		Q_INVOKABLE void setFilterKey(const QString& filterKey);
 		bool openWithName(const QString& fileName);
 		void openWithNames(const QStringList& fileNames);
 		Q_INVOKABLE bool openWithUrl(const QUrl& url);
