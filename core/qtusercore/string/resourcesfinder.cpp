@@ -145,4 +145,13 @@ namespace qtuser_core
 		}
 		return true;
 	}
+
+	bool copyFile(const QString& source, const QString& destination)
+	{
+		QFile file(destination);
+		if (file.exists())
+			file.remove();
+		
+		return file.copy(source, destination);
+	}
 }
