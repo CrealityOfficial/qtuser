@@ -102,3 +102,8 @@ bool ToolCommand::isSelectModel()
 {
     return true;
 }
+
+void ToolCommand::saveCall()
+{
+	QMetaObject::invokeMethod(this, "execute", Qt::QueuedConnection);
+}

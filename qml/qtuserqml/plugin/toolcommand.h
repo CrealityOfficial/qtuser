@@ -45,6 +45,7 @@ private:
 	bool m_enabled;
 
 protected:
+	Q_INVOKABLE void saveCall();
 	QString m_enabledIcon;
 	QString m_disableIcon;
 	QString m_pressedIcon;
