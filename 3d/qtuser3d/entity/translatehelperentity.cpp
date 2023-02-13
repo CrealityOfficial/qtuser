@@ -188,7 +188,7 @@ namespace qtuser_3d
 
 			m_pYArrowPickable = new ManipulatePickable(this);
 			m_pYArrowPickable->setPickableEntity(m_pYArrowEntity);
-			m_pYArrowPickable->setEnableSelect(true);
+			m_pYArrowPickable->setEnableSelect(false);
 		}
 		if (helperType & HELPERTYPE_AXIS_Z)
 		{

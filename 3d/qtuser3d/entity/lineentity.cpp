@@ -35,16 +35,16 @@ namespace qtuser_3d
 	{
 		int pointsNum = (int)positions.size();
 		if (pointsNum <= 0)
-			updateGeometry(pointsNum, nullptr, nullptr);
+			updateGeometry(pointsNum, nullptr, nullptr, loop);
 		else
 		{
-			updateGeometry(pointsNum, (float*)&positions.at(0), (colors.size() > 0 ? (float*)&colors.at(0) : nullptr));
+			updateGeometry(pointsNum, (float*)&positions.at(0), (colors.size() > 0 ? (float*)&colors.at(0) : nullptr), loop);
 		}
 	}
 
 	void LineEntity::updateGeometry(const QVector<QVector3D>& positions, bool loop)
 	{
-		updateGeometry(positions.size(), positions.size() > 0 ? (float*)&positions.at(0) : nullptr, nullptr);
+		updateGeometry(positions.size(), positions.size() > 0 ? (float*)&positions.at(0) : nullptr, nullptr, loop);
 	}
 
 	void LineEntity::updateGeometry(int pointsNum, float* positions, float* colors, bool loop)

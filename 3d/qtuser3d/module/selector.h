@@ -45,6 +45,9 @@ namespace qtuser_3d
 
 		void selectPickables(const QList<qtuser_3d::Pickable*>& onList, const QList<qtuser_3d::Pickable*>& offList);
 		
+		void selectRect(const QRect& rect, bool exclude = true);
+
+
 		Q_INVOKABLE void selectAll();
 		Q_INVOKABLE void selectNone();
 
