@@ -46,13 +46,13 @@ namespace qtuser_3d
 
 	void Surface::setClearColor(const QColor& color)
 	{
-		qDebug() << "Surface setClearColor " << color;
+		//qDebug() << "Surface setClearColor " << color;
 		m_clearBuffer->setClearColor(color);
 	}
 
 	void Surface::setViewport(const QRectF& rect)
 	{
-        qDebug() << "Surface viewport " << rect;
+        //qDebug() << "Surface viewport " << rect;
 		m_viewPort->setNormalizedRect(rect);
 	}
 
@@ -63,7 +63,7 @@ namespace qtuser_3d
 
 	void Surface::updateSurfaceSize(const QSize& size)
 	{
-        qDebug() << "Surface Set External Target Size : " << size;
+        //qDebug() << "Surface Set External Target Size : " << size;
 		setExternalRenderTargetSize(size);
 	}
 }

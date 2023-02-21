@@ -97,6 +97,22 @@ void showSysMemory()
 #endif
 }
 
+int currentProcessMemory()
+{
+	int memory = 0;
+#ifdef _WINDOWS
+	HANDLE handle = GetCurrentProcess();
+	PROCESS_MEMORY_COUNTERS pmc;
+	GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
+
+	int msize = 1024;
+	memory = pmc.WorkingSetSize / msize;
+#else
+
+#endif
+	return memory;
+}
+
 void printCallStack()
 {
 #ifdef _WINDOWS

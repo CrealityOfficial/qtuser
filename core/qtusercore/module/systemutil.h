@@ -6,6 +6,7 @@
 QTUSER_CORE_API void initSystemUtil();
 QTUSER_CORE_API void showDetailSystemInfo();
 QTUSER_CORE_API void showSysMemory();
+QTUSER_CORE_API int currentProcessMemory();   // K
 
 QTUSER_CORE_API void printCallStack();
 
