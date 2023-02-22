@@ -12,6 +12,7 @@ namespace qtuser_3d
 
 		void setColor(const QVector4D& color);
 		void setHoverColor(const QVector4D& color);
+
 	protected:
 		void updateColor();
 		void onStateChanged(ControlState state);

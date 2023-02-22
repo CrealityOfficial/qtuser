@@ -35,9 +35,9 @@ namespace qtuser_3d
 
 		static int createBallData(QVector3D center, float r, float angleSpan, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
 
-		static int createInstructionsData(float cylinderR, float cylinderLen, float axisR, float axisLen, int seg, std::vector<float>& vertexDatas);
+		static int createInstructionsData(float cylinderR, float cylinderLen, float axisR, float axisLen, int seg, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
 
-		static int createScaleIndicatorData(float cylinderR, float cylinderLen, int seg, float squarelen, std::vector<float>& vertexDatas);
+		static int createScaleIndicatorData(float cylinderR, float cylinderLen, int seg, float squarelen, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
 
 	private:
 		static int addFaceDataWithQVector3D(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3, const QVector3D& n, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);

@@ -1,13 +1,21 @@
 #include "purepickentity.h"
 #include "qtuser3d/effect/effectmanager.h"
+#include <QDepthTest>
+#include <Qt3DRender/QClearBuffers>
+#include <Qt3DRender/QRenderStateSet>
+#include <Qt3DRender/QRenderSettings>
+#include <Qt3DRender/QViewport>
+#include <Qt3DRender/QCameraSelector>
 
 namespace qtuser_3d
 {
 	PurePickEntity::PurePickEntity(Qt3DCore::QNode* parent)
 		:PickEntity(parent)
 	{
-		setEffect(EFFECT("pure.view_pickFace.pick"));
+		//setEffect(EFFECT("pure.view_pickFace.pick"));
+		setEffect(EFFECT("xyzIndicator.xyzAxis_pickFace.pick"));
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
+
 	}
 
 	PurePickEntity::~PurePickEntity()
