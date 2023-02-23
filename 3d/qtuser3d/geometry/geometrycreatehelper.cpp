@@ -47,11 +47,20 @@ namespace qtuser_3d
 	{
 		auto f = [](AttributeShade* attribute)-> Qt3DRender::QAttribute* {
 			Qt3DRender::QAttribute* qAttribute = nullptr;
-			if (attribute && attribute->count > 0 && !attribute->name.isEmpty())
+			if (attribute && attribute->count > 0 && !attribute->name.isEmpty() && attribute->type == 0)
 			{
 				Qt3DRender::QBuffer* buffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
 				buffer->setData(attribute->bytes);
 				qAttribute = new Qt3DRender::QAttribute(buffer, attribute->name, Qt3DRender::QAttribute::Float, attribute->stride, attribute->count);
+			}
+			if (attribute && attribute->count > 0 && attribute->type == 1)
+			{
+				Qt3DRender::QBuffer* indexBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::IndexBuffer);
+				indexBuffer->setData(attribute->bytes);
+
+				qAttribute = new Qt3DRender::QAttribute(indexBuffer, Qt3DRender::QAttribute::UnsignedInt,
+					1, attribute->stride * attribute->count);
+				qAttribute->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
 			}
 			return qAttribute;
 		};
@@ -61,6 +70,17 @@ namespace qtuser_3d
 		Qt3DRender::QAttribute* qAttribute4 = f(attribute4);
 		Qt3DRender::QAttribute* qAttribute5 = f(attribute5);
 		return createEx(parent, qAttribute1, qAttribute2, qAttribute3, qAttribute4, qAttribute5);
+	}
+
+	Qt3DRender::QBuffer* GeometryCreateHelper::createBuffer(AttributeShade* attribute)
+	{
+		if (attribute && attribute->count > 0 && !attribute->name.isEmpty() && attribute->type == 0)
+		{
+			Qt3DRender::QBuffer* buffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+			buffer->setData(attribute->bytes);
+			return buffer;
+		}
+		return nullptr;
 	}
 
 	Qt3DRender::QGeometry* GeometryCreateHelper::create(const GeometryData& data, Qt3DCore::QNode* parent)
