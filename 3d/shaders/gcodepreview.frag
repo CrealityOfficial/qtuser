@@ -3,6 +3,7 @@ out vec4 fragment_color;
 
 in vec3 normal;
 flat in vec2 step;
+flat in float visualType;
 in vec3 viewDirection;
 
 uniform vec4 color = vec4(0.8, 0.8, 0.8, 1.0);
@@ -25,7 +26,6 @@ uniform float speedcolorSize;
 uniform vec4 typecolors[18];
 uniform vec4 speedcolors[13];
 uniform vec4 nozzlecolors[6];
-
 uniform int typecolorsshow[18];
 
 uniform float specularPower = 32.0;
@@ -46,33 +46,35 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 diffuse_color, vec4 core_col
 
 void main( void )
 {
-	//if(flag.x < clipValue.x || flag.x > clipValue.y)
-	//	discard;
-	//	
-	//if(flag.x == clipValue.y && (flag.y < clipValue.z || flag.y > clipValue.w))
-	//	discard;
-	//	
-	//if(flag.x < layershow.x || flag.x > layershow.y)
-	//	discard;
+	if(step.x < clipValue.x || step.x > clipValue.y)
+		discard;
 		
-	//if(typecolorsshow[int(drawFlag.y)] == 0)
-	//	discard;
-	//
+	if(step.x == clipValue.y && (step.y < clipValue.z || step.y > clipValue.w))
+		discard;
+		
+	if(step.x < layershow.x || step.x > layershow.y)
+		discard;
+	
+	if(typecolorsshow[int(visualType)] == 0)
+		discard;
+	
 	vec4 core_color = vec4(0.5, 0.5, 0.5, 1.0);
 	vec3 lightDir = normalize(light_direction);
-	//
-	//if(showType == 0)
-	//{
-	//	float speedFlag = drawFlag.x * speedcolorSize;
-	//	int stype = int(speedFlag);
-	//	vec4 lastColor = speedcolors[stype];
-	//	vec4 nextColor = speedcolors[stype + 1];
-	//	core_color = lastColor + (nextColor - lastColor) * (speedFlag - stype);
-	//}
-	//else if(showType == 1)
-	//	core_color = typecolors[int(drawFlag.y)];
-	//else if(showType == 2)
-	//	core_color = nozzlecolors[int(drawFlag.z)];
+	
+	if(showType == 0)
+	{
+		float speedFlag = visualType * speedcolorSize;
+		int stype = int(speedFlag);
+		vec4 lastColor = speedcolors[stype];
+		vec4 nextColor = speedcolors[stype + 1];
+		core_color = lastColor + (nextColor - lastColor) * (speedFlag - stype);
+	}
+	else if(showType == 1)
+	{
+		core_color = typecolors[int(visualType)];
+	}
+	else if(showType == 2)
+		core_color = nozzlecolors[int(visualType)];
 	
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 ambient_color 	  = front_ambient;
@@ -87,14 +89,14 @@ void main( void )
 	
 	if(animation > 0)
 	{
-		//if(flag.x == clipValue.y)
-		//{
-		//	core_color += vec4(0.3, 0.3, 0.3, 0.0);
-		//}
-		//else
-		//{
-		//	core_color -= vec4(0.3, 0.3, 0.3, 0.0);
-		//}
+		if(step.x == clipValue.y)
+		{
+			core_color += vec4(0.3, 0.3, 0.3, 0.0);
+		}
+		else
+		{
+			core_color -= vec4(0.3, 0.3, 0.3, 0.0);
+		}
 	}
 	
 	fragment_color = core_color;
