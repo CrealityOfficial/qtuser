@@ -31,6 +31,8 @@
         <file>shaders/slicepreview.frag</file>
         <file>shaders/gcodepreview.vert</file>
         <file>shaders/gcodepreview.frag</file>
+        <file>shaders/gcodepreviewG.vert</file>
+        <file>shaders/gcodepreviewG.frag</file>
         <file>shaders/slicepreviewAD.vert</file>
         <file>shaders/slicepreviewAD.frag</file>
         <file>shaders/printergrid.vert</file>
