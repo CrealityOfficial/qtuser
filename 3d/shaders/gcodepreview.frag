@@ -46,17 +46,17 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 diffuse_color, vec4 core_col
 
 void main( void )
 {
-	if(step.x < clipValue.x || step.x > clipValue.y)
-		discard;
-		
-	if(step.x == clipValue.y && (step.y < clipValue.z || step.y > clipValue.w))
-		discard;
-		
-	if(step.x < layershow.x || step.x > layershow.y)
-		discard;
+	//if(step.x < clipValue.x || step.x > clipValue.y)
+	//	discard;
+	//	
+	//if(step.x == clipValue.y && (step.y < clipValue.z || step.y > clipValue.w))
+	//	discard;
+	//	
+	//if(step.x < layershow.x || step.x > layershow.y)
+	//	discard;
 	
-	if(typecolorsshow[int(visualType)] == 0)
-		discard;
+	//if(typecolorsshow[int(visualType)] == 0)
+	//	discard;
 	
 	vec4 core_color = vec4(0.5, 0.5, 0.5, 1.0);
 	vec3 lightDir = normalize(light_direction);
@@ -89,14 +89,14 @@ void main( void )
 	
 	if(animation > 0)
 	{
-		if(step.x == clipValue.y)
-		{
-			core_color += vec4(0.3, 0.3, 0.3, 0.0);
-		}
-		else
-		{
-			core_color -= vec4(0.3, 0.3, 0.3, 0.0);
-		}
+		//if(step.x == clipValue.y)
+		//{
+		//	core_color += vec4(0.3, 0.3, 0.3, 0.0);
+		//}
+		//else
+		//{
+		//	core_color -= vec4(0.3, 0.3, 0.3, 0.0);
+		//}
 	}
 	
 	fragment_color = core_color;
