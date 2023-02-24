@@ -33,6 +33,7 @@
         <file>shaders/gcodepreview.frag</file>
         <file>shaders/gcodepreviewG.vert</file>
         <file>shaders/gcodepreviewG.frag</file>
+		<file>shaders/gcodepreviewG.geom</file>
         <file>shaders/slicepreviewAD.vert</file>
         <file>shaders/slicepreviewAD.frag</file>
         <file>shaders/printergrid.vert</file>
