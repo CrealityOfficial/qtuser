@@ -42,13 +42,13 @@ void main( void )
 	
 	vec3 poses[8];
 	poses[0] = startVertexVS[0] + 0.05 * norms[0];
-	poses[1] = startVertexVS[0] + 0.1  * norms[1];
+	poses[1] = startVertexVS[0] + 0.2  * norms[1];
 	poses[2] = startVertexVS[0] + 0.05 * norms[2];
-	poses[3] = startVertexVS[0] + 0.1  * norms[3];
+	poses[3] = startVertexVS[0] + 0.2  * norms[3];
 	poses[4] = endVertexVS[0]   + 0.05 * norms[4];
-	poses[5] = endVertexVS[0]   + 0.1  * norms[5];
+	poses[5] = endVertexVS[0]   + 0.2  * norms[5];
 	poses[6] = endVertexVS[0]   + 0.05 * norms[6];
-	poses[7] = endVertexVS[0]   + 0.1  * norms[7];
+	poses[7] = endVertexVS[0]   + 0.2  * norms[7];
 	
 	combindVertex(poses[0], norms[0]);
 	combindVertex(poses[4], norms[4]);
