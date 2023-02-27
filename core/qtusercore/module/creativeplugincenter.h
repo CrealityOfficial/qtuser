@@ -19,8 +19,6 @@ namespace qtuser_core
 		void uninitialize();
 		CreativeInterface* getPluginByName(QString name);
 	protected:
-		QStringList m_searchPathes;
-
 		QMap<QString, CreativeInterface*> m_interfaces;
 	};
 }

@@ -16,13 +16,17 @@ namespace qtuser_core
 	CreativePluginCenter::~CreativePluginCenter()
 	{
 	}
+
 	void CreativePluginCenter::load()
 	{
-		m_searchPathes = QCoreApplication::libraryPaths();
+		QStringList searchPathes = QCoreApplication::libraryPaths();
+		int count = searchPathes.removeDuplicates();
+
 		QStringList nameFilters = qtuser_core::dynamicLoadFilters();
 		qDebug() << "CreativePluginCenter nameFilters : " << nameFilters;
-		qDebug() << "CreativePluginCenter searchPathes : " << m_searchPathes;
-		for (const QString& path : m_searchPathes)
+		qDebug() << "CreativePluginCenter searchPathes : " << searchPathes;
+
+		for (const QString& path : searchPathes)
 		{
 			QDir dir(path);
 			QList<QFileInfo> fileInfos = dir.entryInfoList(nameFilters, QDir::Files);
