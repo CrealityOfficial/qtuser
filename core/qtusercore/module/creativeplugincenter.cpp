@@ -20,7 +20,7 @@ namespace qtuser_core
 	void CreativePluginCenter::load()
 	{
 		QStringList searchPathes = QCoreApplication::libraryPaths();
-		int count = searchPathes.removeDuplicates();
+		searchPathes.removeDuplicates();
 
 		QStringList nameFilters = qtuser_core::dynamicLoadFilters();
 		qDebug() << "CreativePluginCenter nameFilters : " << nameFilters;
