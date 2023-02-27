@@ -121,7 +121,7 @@ namespace qtuser_3d
 
 	void BasicEntity::replaceGeometryRenderer(Qt3DRender::QGeometryRenderer* geometryRenderer)
 	{
-		qDebug() << "replaceGeometryRenderer from " << m_geometryRenderer << " to " << geometryRenderer;
+		//qDebug() << "replaceGeometryRenderer from " << m_geometryRenderer << " to " << geometryRenderer;
 		removeComponent(m_geometryRenderer);
 		m_geometryRenderer->setParent((Qt3DCore::QNode*)nullptr);
 
