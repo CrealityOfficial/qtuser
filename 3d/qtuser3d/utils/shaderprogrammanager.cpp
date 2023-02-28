@@ -153,6 +153,7 @@ namespace qtuser_3d
 		}
 		if (def)
 		{
+			code.name = def->name;
 			if (qtuser_3d::isGles())
 			{
 				code.source[0] = def->vIndex >= 0 ? gles_shader_code_array[def->vIndex] : "";

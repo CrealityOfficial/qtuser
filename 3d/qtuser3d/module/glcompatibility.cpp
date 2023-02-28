@@ -43,6 +43,9 @@ namespace qtuser_3d
 
     Qt::ApplicationAttribute chooseAttribute()
     {
+#ifdef __APPLE__
+        return Qt::AA_UseDesktopOpenGL;
+#endif
         GLContext ctx;
         /* ---------------------------------------------------------------------- */
         /* create OpenGL rendering context */
