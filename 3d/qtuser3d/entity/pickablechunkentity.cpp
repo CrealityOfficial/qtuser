@@ -203,7 +203,8 @@ namespace qtuser_3d
 
 			normal = *normalBuffer;
 			QVector3D v0 = *(positionBuffer);
-			lineCollidePlane(v0, *normalBuffer, ray, QVector3D(position.x, position.y, position.z));
+			QVector3D vec3Pos = QVector3D(position.x, position.y, position.z);
+			lineCollidePlane(v0, *normalBuffer, ray, vec3Pos);
 		}
 	}
 
