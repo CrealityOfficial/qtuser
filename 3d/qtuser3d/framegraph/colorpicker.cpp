@@ -1,16 +1,19 @@
 #include "qtuser3d/framegraph/colorpicker.h"
 #include "qtuser3d/framegraph/texturerendertarget.h"
-
+#include <QtWidgets/QApplication>
+#include <QtCore/QDebug>
 namespace qtuser_3d
 {
 	ColorPicker::ColorPicker(Qt3DCore::QNode* parent)
 		:QFrameGraphNode(parent)
 		, m_textureRenderTarget(nullptr)
 		, m_capturing(false)
-#ifdef _DEBUG
-		, m_debugName("pickTest.bmp")
-#endif
 	{
+#ifdef _DEBUG
+		m_debugName = QString("%1/pickTest.bmp").arg(QCoreApplication::applicationDirPath());
+		qDebug() << QString("ColorPicker::ColorPicker %1").arg(m_debugName);
+#endif
+	
 		m_clearBuffer = new Qt3DRender::QClearBuffers(this);
 		m_clearBuffer->setClearColor(QColor(255, 255, 255, 255));
 		m_clearBuffer->setBuffers(Qt3DRender::QClearBuffers::BufferType::ColorDepthBuffer);

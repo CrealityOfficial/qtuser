@@ -31,7 +31,12 @@ const float zcha = 0.1;
 
 uniform vec4 stateColors[6];
 uniform vec3 water;
-
+bool frontFacing()
+{
+        vec3 fdx = dFdx(worldPosition);
+        vec3 fdy = dFdy(worldPosition);
+        return dot(gnormal, cross(fdx, fdy)) > 0.0;
+}
 float distance2Plane(vec3 position, vec4 plane)
 {
 	vec3 p = position - vec3(0.0, 0.0, plane.w);
@@ -69,7 +74,7 @@ void main( void )
 		
 	vec3 lightDir = normalize(lightDirection);
 
-	if(!gl_FrontFacing)
+	if(!frontFacing())
 	{
 		color = vec4(stateColors[5].xyz, 1.0);
 		fnormal = - fnormal;
