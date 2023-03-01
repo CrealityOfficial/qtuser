@@ -144,7 +144,8 @@ namespace qtuser_3d
 
 	Qt3DRender::QTexture2D* ColorPicker::colorTexture()
 	{
-		if(m_textureRenderTarget) m_textureRenderTarget->colorTexture();
+		if(m_textureRenderTarget) 
+			return m_textureRenderTarget->colorTexture();
 		return nullptr;
 	}
 

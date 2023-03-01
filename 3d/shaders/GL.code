@@ -4255,7 +4255,7 @@ const char* overlay_vert =
                              "\n"
                              "void main() \n"
                              "{\n"
-                             "   vec4 pos =  projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
+                             "   vec4 pos = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
                              "   pos.z = -pos.w;\n"
                              "   gl_Position = pos;\n"
                              "}\n"
@@ -5359,6 +5359,80 @@ const char* text_vert =
                              "   gl_Position = modelViewProjection * vec4(vertexPosition, 1.0);\n"
                              "}\n"
 ;
+const char* xyzIndicator_fragment = 
+                             "#version 150 core\n"
+                             " \n"
+                             "out vec4 fragColor;\n"
+                             "\n"
+                             "in vec3 viewDirection;\n"
+                             "in vec3 normal;\n"
+                             "in vec3 worldPosition;\n"
+                             "\n"
+                             "uniform vec4 color;\n"
+                             "\n"
+                             "uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);\n"
+                             "uniform vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);\n"
+                             "uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);\n"
+                             "uniform float specularPower = 12.0;\n"
+                             "uniform vec3 lightDirection = vec3(1.0, 0.0, 0.0);\n"
+                             "\n"
+                             "\n"
+                             "vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_color, vec4 diffuse_color, vec4 specular_color)\n"
+                             "{\n"
+                             "	float NdotL 		  = max(dot(fnormal, light_dir), 0.0);\n"
+                             "	ambient_color 	  	  = ambient_color * core_color;\n"
+                             "\n"
+                             "	vec3 freflection      = reflect(-light_dir, fnormal);\n"
+                             "	vec3 fViewDirection   = normalize(viewDirection);\n"
+                             "	float RdotV           = max(0.0, dot(freflection, fViewDirection)); \n"
+                             "	\n"
+                             "	diffuse_color		  = NdotL * diffuse_color * core_color;\n"
+                             "	specular_color        = specular_color * pow( RdotV, specularPower) * core_color;\n"
+                             "	\n"
+                             "	return ambient_color + diffuse_color + specular_color;\n"
+                             "}\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "	vec3 fnormal 		  =	normalize(normal);\n"
+                             "		\n"
+                             "	vec3 lightDir = normalize(lightDirection);\n"
+                             "	\n"
+                             "	vec4 coreColor = directLight(lightDir, fnormal, color, ambient, diffuse, specular);	\n"
+                             "	\n"
+                             "	fragColor = vec4(coreColor.rgb, 1.0);\n"
+                             "}\n"
+;
+const char* xyzIndicator_vert = 
+                             "#version 150 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec3 vertexNormal;\n"
+                             "\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "\n"
+                             "out vec3 viewDirection;\n"
+                             "out vec3 normal;\n"
+                             "out vec3 worldPosition;\n"
+                             "out vec3  worldWater;\n"
+                             "\n"
+                             "void main( void ) \n"
+                             "{\n"
+                             "	mat4 modelViewMatrix = viewMatrix * modelMatrix;\n"
+                             "	vec4 tworldPosition = modelViewMatrix * vec4(vertexPosition, 1.0);\n"
+                             "	gl_Position = projectionMatrix *  tworldPosition;\n"
+                             "	\n"
+                             "	viewDirection  = normalize(vec3(-tworldPosition));\n"
+                             "	mat3 normalMatrix = mat3(modelViewMatrix);\n"
+                             "	\n"
+                             "	normal          = normalMatrix * vertexNormal;\n"
+                             "	\n"
+                             "	worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));\n"
+                             "	\n"
+                             "}\n"
+;
 const char* zproject_fragment = 
                              "#version 150 core \n"
                              "out vec4 fragmentColor;\n"
@@ -5390,7 +5464,7 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
-const char* shader_code_array[75] = {
+const char* shader_code_array[77] = {
 	admodel_fragment,
 	admodel_vert,
 	bottomface_fragment,
@@ -5464,6 +5538,8 @@ const char* shader_code_array[75] = {
 	texshape_vert,
 	text_fragment,
 	text_vert,
+	xyzIndicator_fragment,
+	xyzIndicator_vert,
 	zproject_fragment,
 	zproject_vert
 };
@@ -5477,8 +5553,8 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
-int programs_meta_size = 37;
-ProgramDef programs_meta[37] = {
+int programs_meta_size = 38;
+ProgramDef programs_meta[38] = {
   { "admodel" , 1  ,  -1   ,  -1   ,  -1   , 0  },
    { "bottomface" , 3  ,  -1   ,  -1   ,  -1   , 2  },
    { "boxclippure" , 5  ,  -1   ,  -1   ,  -1   , 4  },
@@ -5515,5 +5591,6 @@ ProgramDef programs_meta[37] = {
    { "tex" , 68  ,  -1   ,  -1   ,  -1   , 67  },
    { "texshape" , 70  ,  -1   ,  -1   ,  -1   , 69  },
    { "text" , 72  ,  -1   ,  -1   ,  -1   , 71  },
-   { "zproject" , 74  ,  -1   ,  -1   ,  -1   , 73  },
+   { "xyzIndicator" , 74  ,  -1   ,  -1   ,  -1   , 73  },
+   { "zproject" , 76  ,  -1   ,  -1   ,  -1   , 75  },
  };
