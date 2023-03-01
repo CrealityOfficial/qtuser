@@ -50,6 +50,9 @@ namespace qtuser_3d
 		void updateContextSize(const QSize& size) override;
 
 		void bindRenderGraph();
+		void createRenderSystem();
+
+		void releaseGL();
 	public slots:
 		void applyRootEntity();
 	protected:

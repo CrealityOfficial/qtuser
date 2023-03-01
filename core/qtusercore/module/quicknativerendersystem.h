@@ -20,7 +20,6 @@ namespace qtuser_core
 		QuickNativeRenderSystem(QObject* parent = nullptr);
 		virtual ~QuickNativeRenderSystem() {}
 
-
 		virtual void initializeFromRenderThread() = 0;
 		virtual void unitializeFromRenderThread() = 0;
 		virtual bool render() = 0;   // called from render thread, true need update
