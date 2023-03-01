@@ -25,6 +25,7 @@ namespace qtuser_3d
 		m_filterKey->setValue(0);
 		m_renderPassFilter->addMatch(m_filterKey);
 
+#if 0
 		{
 			Qt3DRender::QViewport* viewPort = new Qt3DRender::QViewport(m_renderPassFilter);
 			viewPort->setNormalizedRect(QRectF(0.750f, 0.10f, 0.10f, 0.10f));
@@ -34,7 +35,10 @@ namespace qtuser_3d
 			filterKey->setName("pickt");
 			filterKey->setValue(0);
 			renderPassFilter->addMatch(filterKey);
-		}
+	}
+#endif // 0
+
+		
 
 
 		m_cameraSelector = new Qt3DRender::QCameraSelector();
