@@ -50,10 +50,29 @@ namespace qtuser_3d
 		{
 			_add(pickable);
 
-			if (m_pickables.size() == 1 && pickable->enableSelect())
+			/*if (m_pickables.size() == 1 && pickable->enableSelect())
 			{
 				selectOne(pickable);
+			}*/
+
+			int selectableSize = 0;
+			Pickable* enableSelect = nullptr;
+			for (Pickable * pickable : m_pickables)
+			{
+				if (pickable->enableSelect()) 
+				{
+					selectableSize++;
+					if (enableSelect == nullptr)
+					{
+						enableSelect = pickable;
+					}
+				}	
 			}
+			if (selectableSize == 1 && enableSelect)
+			{
+				selectOne(enableSelect);
+			}
+
 			notifyTracers();
 		}
 	}
@@ -232,8 +251,19 @@ namespace qtuser_3d
 
 		if (selectNotifying)
 			return;
+		int primitiveID = -1;
+		Pickable* pickable = check(p, &primitiveID);
 
-		Pickable* pickable = check(p, nullptr);
+		if (pickable)
+		{
+			pickable->pick(primitiveID);
+		}
+
+		if (pickable && pickable->enableSelect() == false)
+		{
+			return;
+		}
+
 		if (sGroup)
 			selectGroup(pickable);
 		else selectOne(pickable);

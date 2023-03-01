@@ -1,5 +1,6 @@
 #include "qtuser3d/framegraph/colorpicker.h"
 #include "qtuser3d/framegraph/texturerendertarget.h"
+#include <Qt3DRender/QViewport>
 
 namespace qtuser_3d
 {
@@ -23,6 +24,18 @@ namespace qtuser_3d
 		m_filterKey->setName("pick");
 		m_filterKey->setValue(0);
 		m_renderPassFilter->addMatch(m_filterKey);
+
+		{
+			Qt3DRender::QViewport* viewPort = new Qt3DRender::QViewport(m_renderPassFilter);
+			viewPort->setNormalizedRect(QRectF(0.750f, 0.10f, 0.10f, 0.10f));
+
+			Qt3DRender::QRenderPassFilter* renderPassFilter = new Qt3DRender::QRenderPassFilter(viewPort);
+			Qt3DRender::QFilterKey* filterKey = new Qt3DRender::QFilterKey();
+			filterKey->setName("pickt");
+			filterKey->setValue(0);
+			renderPassFilter->addMatch(filterKey);
+		}
+
 
 		m_cameraSelector = new Qt3DRender::QCameraSelector();
 		m_camera = new Qt3DRender::QCamera(m_cameraSelector);
