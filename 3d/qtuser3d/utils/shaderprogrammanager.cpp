@@ -6,15 +6,7 @@
 
 #include "qtuser3d/module/glcompatibility.h"
 #include "../../buildinfo.h"
-//
-//#if QT_USE_GLES
-//QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gles/2/";
-//#include "../../shaders/GLES2.code"
-//#else
-//QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gl/3.3/";
-//#include "../../shaders/GL3.code"
-//#endif
-QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gl/3.3/";
+
 #include "../../shaders/GL.code"
 namespace qtuser_3d
 {
@@ -94,11 +86,13 @@ namespace qtuser_3d
 #if (_WIN32 || __APPLE__) && _DEBUG
 		ShaderCode code;
 		code.name = name;
+
+		QString rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gl/3.3/";
 		if (qtuser_3d::isGles())
 		{
 			rootSourceDir = QString(CMAKE_MODULE) + "/../qtuser/3d/shaders/gles/2/";
 		}
-		QString rootDir = QCoreApplication::testAttribute(Qt::AA_UseOpenGLES) ? rootSourceDir : rootSourceDir;
+		QString rootDir = rootSourceDir;
 		for (int i = 0; i < 5; ++i)
 		{
 			QByteArray source;
