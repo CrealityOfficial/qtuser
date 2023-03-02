@@ -35,13 +35,18 @@ namespace qtuser_3d
 
 		m_rootFrameGraph = new Qt3DRender::QFrameGraphNode(m_renderSettings);
 		m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
+
+		qDebug() << "Q3DRenderSystem Ctr. thread " << QThread::currentThreadId();
 	}
 
 	Q3DRenderSystem::~Q3DRenderSystem()
 	{
-		m_renderGraph = nullptr;
-		delete m_aspectEngine;
 		qDebug() << "Q3DRenderSystem Ctr~. thread " << QThread::currentThreadId();
+
+		m_renderGraph = nullptr;
+#ifndef __APPLE__
+		releaseGL();
+#endif
 	}
 
 	void Q3DRenderSystem::renderNode(Qt3DRender::QFrameGraphNode* node, Qt3DCore::QEntity* entity)
@@ -169,8 +174,7 @@ namespace qtuser_3d
 
 	void Q3DRenderSystem::releaseGL()
 	{
-		qDebug() << "Mac Q3DRenderSystem::releaseGL ->" << QThread::currentThread();
-		qDebug() << "releaseGL Start ~~ ";
+		qDebug() << "Q3DRenderSystem::releaseGL ->" << QThread::currentThread();
 		delete m_aspectEngine;
 		qDebug() << "releaseGL End ~~ ";
 	}
@@ -248,6 +252,6 @@ namespace qtuser_3d
 		m_aspectEngine->registerAspect(m_logicAspect);
 
 		m_raw = new qtuser_core::RawOGL(this);
-		qDebug() << "initializeFromRenderThread. thread " << QThread::currentThreadId();
+		qDebug() << "Q3DRenderSystem::createRenderSystem. thread " << QThread::currentThreadId();
 	}
 }

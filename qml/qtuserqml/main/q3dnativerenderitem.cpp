@@ -12,18 +12,21 @@ Q3DNativeRenderItem::Q3DNativeRenderItem(QQuickItem* parent)
 	: QuickNativeRenderItem(parent)
 {
 	m_eventSubdivide = new qtuser_3d::EventSubdivide(this);
-	m_renderSystem = new qtuser_3d::Q3DRenderSystem(this);
+	m_q3dRenderSystem = new qtuser_3d::Q3DRenderSystem(this);
 
-	m_renderSystem->registerResidentNode(SHADERROOT);
-	m_renderSystem->registerResidentNode(RENDERPASSROOT);
-	m_renderSystem->registerResidentNode(EFFECTROOT);
+	m_q3dRenderSystem->registerResidentNode(SHADERROOT);
+	m_q3dRenderSystem->registerResidentNode(RENDERPASSROOT);
+	m_q3dRenderSystem->registerResidentNode(EFFECTROOT);
 
 	setQuickNativeEventDispacher(this);
-	setQuickNativeRenderSystem(m_renderSystem);
+	setQuickNativeRenderSystem(m_q3dRenderSystem);
+
+	qDebug() << "Q3DNativeRenderItem Ctr. thread " << QThread::currentThreadId();
 }
 
 Q3DNativeRenderItem::~Q3DNativeRenderItem()
 {
+	qDebug() << "Q3DNativeRenderItem Ctr. thread " << QThread::currentThreadId();
 }
 
 qtuser_3d::EventSubdivide* Q3DNativeRenderItem::eventSubdivide()
@@ -33,53 +36,52 @@ qtuser_3d::EventSubdivide* Q3DNativeRenderItem::eventSubdivide()
 
 qtuser_3d::Q3DRenderSystem* Q3DNativeRenderItem::renderSystem()
 {
-	return m_renderSystem;
+	return m_q3dRenderSystem;
 }
 
 void Q3DNativeRenderItem::uninitialize()
 {
 	qDebug() << "Q3DNativeRenderItem uninitialize " << QThread::currentThread();
 
-	m_renderSystem->renderRenderGraph(nullptr);
+	m_q3dRenderSystem->renderRenderGraph(nullptr);
 	setQuickNativeEventDispacher(nullptr);
-	setQuickNativeRenderSystem(nullptr);
 
-	m_renderSystem->unRegisterResidentNode(SHADERROOT);
-	m_renderSystem->unRegisterResidentNode(RENDERPASSROOT);
-	m_renderSystem->unRegisterResidentNode(EFFECTROOT);
+	m_q3dRenderSystem->unRegisterResidentNode(SHADERROOT);
+	m_q3dRenderSystem->unRegisterResidentNode(RENDERPASSROOT);
+	m_q3dRenderSystem->unRegisterResidentNode(EFFECTROOT);
 
-	m_renderSystem->unRegisterAll();
+	m_q3dRenderSystem->unRegisterAll();
 	m_eventSubdivide->closeHandlers();
 }
 
 void Q3DNativeRenderItem::geometryChanged(const QSize& size)
 {
 	m_eventSubdivide->geometryChanged(size);
-	m_renderSystem->requestUpdate();
+	m_q3dRenderSystem->requestUpdate();
 }
 
 void Q3DNativeRenderItem::mousePressEvent(QMouseEvent* event)
 {
 	m_eventSubdivide->mousePressEvent(event);
-	m_renderSystem->requestUpdate();
+	m_q3dRenderSystem->requestUpdate();
 }
 
 void Q3DNativeRenderItem::mouseMoveEvent(QMouseEvent* event)
 {
 	m_eventSubdivide->mouseMoveEvent(event);
-	m_renderSystem->requestUpdate();
+	m_q3dRenderSystem->requestUpdate();
 }
 
 void Q3DNativeRenderItem::mouseReleaseEvent(QMouseEvent* event)
 {
 	m_eventSubdivide->mouseReleaseEvent(event);
-	m_renderSystem->requestUpdate();
+	m_q3dRenderSystem->requestUpdate();
 }
 
 void Q3DNativeRenderItem::wheelEvent(QWheelEvent* event)
 {
 	m_eventSubdivide->wheelEvent(event);
-	m_renderSystem->requestUpdate();
+	m_q3dRenderSystem->requestUpdate();
 }
 
 void Q3DNativeRenderItem::hoverEnterEvent(QHoverEvent* event)

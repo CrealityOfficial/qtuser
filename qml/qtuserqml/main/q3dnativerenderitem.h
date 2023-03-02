@@ -30,7 +30,7 @@ protected:
 	void keyReleaseEvent(QKeyEvent* event) override;
 protected:
 	qtuser_3d::EventSubdivide* m_eventSubdivide;
-	qtuser_3d::Q3DRenderSystem* m_renderSystem;
+	qtuser_3d::Q3DRenderSystem* m_q3dRenderSystem;
 };
 
 #endif // _Q3DNATIVERENDERITEM_1650183679751_H
