@@ -40,6 +40,7 @@ namespace qtuser_core
 		qDebug() << "ProgressorTracer failed: " << msg;
 		if (m_progressor)
 			m_progressor->failed(msg);
+		m_failed = true;
 	}
 
 	void ProgressorTracer::success()
