@@ -1,3 +1,5 @@
+/* glcomp1.vert */
+
 attribute vec3 vertexPosition;
 attribute vec3 vertexNormal;
 

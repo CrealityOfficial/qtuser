@@ -1,4 +1,4 @@
-/* ModelDLP Vertex*/
+/* modeldlp.vert */
 
 attribute vec4 vertexPosition;
 attribute vec3 vertexNormal;

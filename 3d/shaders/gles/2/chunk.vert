@@ -1,14 +1,14 @@
-#version 150 core
+/* chunk.vert */
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
-in float vertexFlag;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
+attribute float vertexFlag;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-flat out float flag;
+varying float flag;
 
 void main( void )
 {

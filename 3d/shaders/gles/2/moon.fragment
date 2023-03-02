@@ -1,7 +1,6 @@
-#version 150 core 
+/* moon.fragment */
 
-out vec4 fragColor;
-in float radius;
+varying float radius;
 
 uniform float D = 50.0;
 uniform vec2 hs;
@@ -20,5 +19,5 @@ void main()
 	float bright= thick;
 	vec3 v = vec3(hs, bright);
 	
-	fragColor = vec4(hsv2rgb(v), 1.0);
+	gl_FragColor = vec4(hsv2rgb(v), 1.0);
 }

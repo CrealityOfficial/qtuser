@@ -1,6 +1,4 @@
-/*Manipulate Fragment*/
- 
-precision mediump float; 
+/* manipulate.fragment */
 
 uniform vec4 color;
 uniform vec4 changecolor;

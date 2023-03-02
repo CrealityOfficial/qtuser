@@ -1,8 +1,6 @@
-#version 150 core 
+/* splitplane.fragment */
 
-out vec4 fragColor;
-
-in vec3 worldPosition;
+varying vec3 worldPosition;
 uniform vec4 color;
 uniform vec3 clip[2];
 
@@ -13,5 +11,5 @@ void main()
 		|| worldPosition.y < clip[0].y || worldPosition.y > clip[1].y)
 		discard;
 		
-	fragColor = color;
+	gl_FragColor = color;
 }

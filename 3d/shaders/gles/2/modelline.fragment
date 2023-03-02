@@ -1,5 +1,4 @@
-/* ModelLine Fragment*/
-precision mediump float; 
+/* modelline.fragment */
 
 varying vec3 worldPosition;
 

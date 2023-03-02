@@ -1,6 +1,4 @@
-/* PrinterBottom Fragment*/
-
-precision mediump float; 
+/* printerbottom.fragment */
 
 varying vec2 texcoord;
 varying vec3 normal;
@@ -19,6 +17,7 @@ void main()
 {
 	vec4 coloruse = color;
 	vec4 finalcolor = color;
+	gl_FragColor = color;
 
 	if(visible == 1)
 	{
@@ -33,7 +32,7 @@ void main()
 			
 		if(texuse.x >= 0.0 && texuse.x <= 1.0 && texuse.y >= 0.0 && texuse.y <= 1.0)
 		{
-			coloruse = texture(shapeTexture, texuse);
+			coloruse = texture2D(shapeTexture, texuse);
 			if(coloruse.a > 0.0 && colorVisible <= 0)
 			{
 				coloruse = logcolor;

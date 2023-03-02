@@ -1,10 +1,9 @@
-#version 150 core 
-out vec4 fragmentColor;
+/* modelSupport.fragment */
 
-in vec3 viewDirection;
-in vec3 normal;
-in vec3 worldPosition;
-flat in vec3 gnormal;
+varying vec3 viewDirection;
+varying vec3 normal;
+varying vec3 worldPosition;
+flat varying vec3 gnormal;
 
 uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 1.0);
 uniform vec4 diffuse = vec4(1.0, 1.0, 1.0, 1.0);
@@ -35,5 +34,5 @@ void main( void )
 	vec4 diffuseColor     = NdotL * diffuse * color;
 	vec4 specularColor    = specular * pow( RdotV, specularPower);
 	vec4 coreColor = ambientColor + diffuseColor + specularColor;
-	fragmentColor = vec4(coreColor.rgb, 1.0);
+	gl_FragColor = vec4(coreColor.rgb, 1.0);
 }

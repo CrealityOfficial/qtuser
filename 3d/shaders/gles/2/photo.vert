@@ -1,12 +1,12 @@
-#version 150 core
+/* photo.vert */
 
-in vec3 vertexPosition;
+attribute vec3 vertexPosition;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out float height;
+varying float height;
 
 void main() 
 {

@@ -1,11 +1,10 @@
-#version 150 core 
-out vec4 fragment_color;
+/* slicepreview.fragment */
 
-in vec3 normal;
-flat in vec2 flag;
-flat in vec4 drawFlag;
-in vec4 smoothFlag;
-in vec3 viewDirection;
+varying vec3 normal;
+varying vec2 flag;
+varying vec4 drawFlag;
+varying vec4 smoothFlag;
+varying vec3 viewDirection;
 
 uniform vec4 color = vec4(0.8, 0.8, 0.8, 1.0);
 
@@ -101,5 +100,5 @@ void main( void )
 		}
 	}
 	
-	fragment_color = core_color;
+	gl_FragColor = core_color;
 }

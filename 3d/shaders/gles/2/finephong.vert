@@ -1,4 +1,4 @@
-/*FinePhong Vertix*/
+/* finephong.vert */
 
 attribute vec3 vertexPosition;
 attribute vec3 vertexNormal;

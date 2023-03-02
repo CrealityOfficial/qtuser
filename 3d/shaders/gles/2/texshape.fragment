@@ -1,5 +1,5 @@
-/*TextShape Fragment */
-precision mediump float; 
+/* texshape.fragment */
+
 uniform sampler2D shapeTexture;
 
 varying vec2 texcoord;

@@ -1,10 +1,10 @@
-#version 150 core
+/* pickFaceChunk.vert */
 
-in vec3 vertexPosition;
-in float vertexFlag;
+attribute vec3 vertexPosition;
+attribute float vertexFlag;
 
-flat out vec4 passColor;
-out float flag;
+varying vec4 passColor;
+varying float flag;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;

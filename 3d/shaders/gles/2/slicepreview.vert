@@ -1,20 +1,20 @@
-#version 150 core
+/* slicepreview.vert */
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
-in vec2 vertexFlag;
-in vec4 vertexDrawFlag;
-in vec4 vertexSmoothFlag;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
+attribute vec2 vertexFlag;
+attribute vec4 vertexDrawFlag;
+attribute vec4 vertexSmoothFlag;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 normal;
-flat out vec2 flag;
-flat out vec4 drawFlag;
-out vec4 smoothFlag;
-out vec3 viewDirection;
+varying vec3 normal;
+varying vec2 flag;
+varying vec4 drawFlag;
+varying vec4 smoothFlag;
+varying vec3 viewDirection;
 
 void main( void )
 {	

@@ -1,15 +1,13 @@
-/* PrinterGrid Fragment*/
-
-precision mediump float; 
-
+/* printergrid.fragment */
+precision mediump float;
 varying vec2 flag;
 uniform float visible;
 uniform vec4 xshowcolor;
 uniform vec4 yshowcolor;
 uniform vec4 linecolor;
 uniform vec4 xyIndexcolor;
-uniform float highlight_index_x = 3.0;
-uniform float highlight_index_y = 3.0;
+uniform float highlight_index_x;
+uniform float highlight_index_y;
 void main() 
 {
 	if(int(flag.x) == 0)
@@ -26,9 +24,12 @@ void main()
 		//	discard;
 		if(int(highlight_index_x) == int(flag.x) || int(highlight_index_y) == int(flag.y))
 		{
-			fragColor = xyIndexcolor; // vec4(1.0, 1.0, 0.0,1.0);
+			gl_FragColor = xyIndexcolor; // vec4(1.0, 1.0, 0.0,1.0);
 		}
-		gl_FragColor = linecolor;
+		else
+		{
+			gl_FragColor = linecolor;
+		}
 	}
 	
 
@@ -40,10 +41,10 @@ void main()
 	else
 	{
 		if(((int(flag.x/10.0))%4 > 0) || ((int(flag.y/10.0))%4 > 0))
-			//gl_FragColor = showcolor;
+			//fragColor = showcolor;
 			discard;
 		else	
-			gl_FragColor = linecolor;
+			fragColor = linecolor;
 	}
 	*/
 }

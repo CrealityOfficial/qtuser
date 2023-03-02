@@ -1,7 +1,7 @@
-/* BottomFace Vertex*/
+/* bottomface.vert */
 
-varying vec3 vertexPosition;
-varying vec3 vertexNormal;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;

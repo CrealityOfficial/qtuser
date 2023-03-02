@@ -1,4 +1,4 @@
-/*TextShape vertix*/
+/* texshape.vert */
 
 attribute vec3 vertexPosition;
 attribute vec2 vertexTexcoord;

@@ -1,12 +1,11 @@
-#version 150 core 
-out vec4 fragmentColor;
+/* modelwireframe.fragment */
 
-in vec3 viewDirection;
-in vec3 normal;
-in vec3 gnormal;
-in vec3 worldPosition;
-in vec3 worldWater;
-in vec3 barycentric;
+varying vec3 viewDirection;
+varying vec3 normal;
+varying vec3 gnormal;
+varying vec3 worldPosition;
+varying vec3 worldWater;
+varying vec3 barycentric;
 
 uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);
 uniform vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
@@ -170,5 +169,5 @@ void main( void )
 		}
 	}
 
-	fragmentColor = vec4(coreColor.rgb, transparency);
+	gl_FragColor = vec4(coreColor.rgb, transparency);
 }

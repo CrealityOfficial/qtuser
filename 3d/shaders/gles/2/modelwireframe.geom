@@ -1,4 +1,4 @@
-#version 150 core
+/* modelwireframe.geom */
 
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
@@ -9,12 +9,12 @@ in vec3 gnormalVS[3];
 in vec3 worldPositionVS[3];
 in vec3 worldWaterVS[3];
 
-out vec3 viewDirection;
-out vec3 normal;
-out vec3 gnormal;
-out vec3 worldPosition;
-out vec3 worldWater;
-out vec3 barycentric;
+varying vec3 viewDirection;
+varying vec3 normal;
+varying vec3 gnormal;
+varying vec3 worldPosition;
+varying vec3 worldWater;
+varying vec3 barycentric;
 
 
 void combindVertex(int index)

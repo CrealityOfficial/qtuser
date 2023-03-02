@@ -1,6 +1,4 @@
-/* Color Fragment*/
-
-precision mediump float; 
+/* color.fragment */
 
 varying vec4 fcolor;
 void main() 

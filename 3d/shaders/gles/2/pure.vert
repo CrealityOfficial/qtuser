@@ -1,3 +1,5 @@
+/* pure.vert */
+
 attribute vec3 vertexPosition;
 
 uniform mat4 modelMatrix;

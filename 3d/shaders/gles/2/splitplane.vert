@@ -1,12 +1,12 @@
-#version 150 core
+/* splitplane.vert */
 
-in vec3 vertexPosition;
+attribute vec3 vertexPosition;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 worldPosition;
+varying vec3 worldPosition;
 
 void main() 
 {

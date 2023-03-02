@@ -21,6 +21,7 @@ namespace qtuser_3d
 	{
 	public:
 		static Qt3DRender::QAttribute* CreateVertexAttribute(const char* buffer, AttribueSlot slot, uint count);
+		static Qt3DRender::QAttribute* CreateVertexAttributeEx(const char* buffer, AttribueSlot slot, uint count);
 		static Qt3DRender::QAttribute* CreateVertexAttribute(const QString& name, const char* buffer, uint vertexSize, uint count);
 		static Qt3DRender::QAttribute* CreateIndexAttribute(const char* buffer, uint count);
 

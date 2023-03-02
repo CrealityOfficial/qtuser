@@ -1,4 +1,4 @@
-/* Text Vertex*/
+/* text.vert */
 
 attribute vec3 vertexPosition;
 

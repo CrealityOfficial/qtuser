@@ -1,16 +1,15 @@
-#version 150 core
-
-in vec3 vertexPosition;
-in vec3 vertexNormal;
-in vec2 vertexTexcoord;
+/* finephongtex.vert */
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
+attribute vec2 vertexTexcoord;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec3 viewDirection;
-out vec3 normal;
-out vec2 texcoord;
+varying vec3 viewDirection;
+varying vec3 normal;
+varying vec2 texcoord;
 
 void main( void )
 {

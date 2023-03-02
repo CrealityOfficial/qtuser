@@ -1,7 +1,6 @@
-#version 150 core
-out vec4 fragment_color; 
+/* slicepreviewpath.fragment */
 
-flat in vec2 flag;
+varying vec2 flag;
 uniform vec4 color = vec4(1.0, 0.0, 0.0, 1.0);
 
 uniform vec4 clipValue;
@@ -19,5 +18,5 @@ void main( void )
 		discard;
 	
 	vec4 core_color = color;
-	fragment_color = core_color;
+	gl_FragColor = core_color;
 }

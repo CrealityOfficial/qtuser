@@ -37,6 +37,42 @@ namespace qtuser_3d
 		return attribute;
 	}
 
+	Qt3DRender::QAttribute* BufferHelper::CreateVertexAttributeEx(const char* buffer, AttribueSlot slot, uint count)
+	{
+		if (count == 0 || !buffer) return nullptr;
+
+		uint vertexSize = 3;
+		QString attributeName;
+		switch (slot)
+		{
+		case AttribueSlot::Position:
+			attributeName = Qt3DRender::QAttribute::defaultPositionAttributeName();
+			if (qtuser_3d::isGles())
+			{
+				vertexSize = 4;
+			}
+			break;
+		case AttribueSlot::Normal:
+			attributeName = Qt3DRender::QAttribute::defaultNormalAttributeName();
+			break;
+		case AttribueSlot::Color:
+			attributeName = Qt3DRender::QAttribute::defaultColorAttributeName();
+			vertexSize = 4;
+			break;
+		case AttribueSlot::Texcoord:
+			attributeName = "vertexTexcoord"; // Qt3DRender::QAttribute::defaultTextureCoordinate1AttributeName();
+			vertexSize = 2;
+			break;
+		default:
+			break;
+		}
+
+		Qt3DRender::QBuffer* qBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+		qBuffer->setData(QByteArray(buffer, vertexSize * sizeof(float) * count));
+		Qt3DRender::QAttribute* attribute = new Qt3DRender::QAttribute(qBuffer, attributeName, Qt3DRender::QAttribute::Float, vertexSize, count);
+		return attribute;
+	}
+
 	Qt3DRender::QAttribute* BufferHelper::CreateVertexAttribute(const QString& name, const char* buffer, uint vertexSize, uint count)
 	{
 		Qt3DRender::QBuffer* qBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);

@@ -1,7 +1,5 @@
-/* ModelDLP Fragment*/
-
-precision mediump float; 
- 
+/* modeldlp.fragment */
+precision mediump float;
 varying vec3 viewDirection;
 varying vec3 normal;
 varying vec3 gnormal;
@@ -10,25 +8,25 @@ varying vec3 worldPosition;
 uniform int state;
 uniform float error;
 
-uniform vec4 ambient;
-uniform vec4 diffuse;
-uniform vec4 specular;
+const vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);
+const vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
+const vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);
 const float specularPower = 12.0;
 const vec3 lightDirection = vec3(0.0, 0.0, 1.0);
 
 uniform vec4 clipPlane1;
 uniform vec4 clipPlane2;
 
-uniform int checkScope;
+const int checkScope = 1;
 
 uniform vec3 minSpace;
 uniform vec3 maxSpace;
-uniform float supportCos;
+const float supportCos = 0.5;
 
-uniform int hoverState;
-uniform int waterState;
+const int hoverState = 0;
+const int waterState = 0;
 
-const float zcha = 0.01;
+const float zcha = 0.1;
 
 uniform vec4 stateColors[6];
 uniform vec3 water;

@@ -26,6 +26,8 @@ namespace qtuser_3d
 
 		static Qt3DRender::QGeometry* createGeometry(Qt3DCore::QNode* parent, std::vector<float> *vertexDatas, std::vector<float>* normalDatas = nullptr, QVector<unsigned>* indices = nullptr);
 
+		static Qt3DRender::QGeometry* createGeometryEx(Qt3DCore::QNode* parent, std::vector<float>* vertexDatas, std::vector<float>* normalDatas = nullptr, QVector<unsigned>* indices = nullptr);
+
 	public:
 		static int createCylinderData(float r, float h, int seg, std::vector<float> &datas);
 
@@ -43,6 +45,8 @@ namespace qtuser_3d
 		static int addFaceDataWithQVector3D(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3, const QVector3D& n, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
 		
 		static int addFaceDataWithQVector3D(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3, const QVector3D& n, std::vector<float>& vertexDatas);
+
+		static int addFaceDataWithQVector3DEx(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3, const QVector3D& n, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
 
 	};
 }

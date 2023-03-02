@@ -1,13 +1,13 @@
-#version 150 core
+/* slicepreviewpath.vert */
 
-in vec3 vertexPosition;
-in vec2 vertexFlag;
+attribute vec3 vertexPosition;
+attribute vec2 vertexFlag;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-flat out vec2 flag;
+varying vec2 flag;
 
 void main( void )
 {	

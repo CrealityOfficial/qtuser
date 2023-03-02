@@ -1,5 +1,4 @@
-/*ManiPulate Vertix*/
-
+/* manipulate.vert */
 
 attribute vec3 vertexPosition;
 

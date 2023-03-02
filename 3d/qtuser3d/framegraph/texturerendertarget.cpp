@@ -17,17 +17,14 @@ namespace qtuser_3d
         // Create a texture to render into.
         m_colorTexture = new Qt3DRender::QTexture2D(m_colorOutput);
         m_colorTexture->setSize(size.width(), size.height());
-//#if QT_USE_GLES
         if (qtuser_3d::isGles())
         {
-            m_colorTexture->setFormat(Qt3DRender::QAbstractTexture::RGBAFormat);
+            m_colorTexture->setFormat(Qt3DRender::QAbstractTexture::RGBA8_UNorm); //Automatic ; RGBAFormat
         }
-//#else
         else
         {
-            m_colorTexture->setFormat(Qt3DRender::QAbstractTexture::RGBA8_UNorm);
+            m_colorTexture->setFormat(Qt3DRender::QAbstractTexture::RGBA8_UNorm); //   RGBA8_UNorm; Unsigned normalized formats,  will cause effect for the pick pass of the xyz indicator( object translate )
         }
-//#endif
         m_colorTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::Linear);
         m_colorTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::Linear);
 
@@ -39,22 +36,24 @@ namespace qtuser_3d
         m_depthOutput->setAttachmentPoint(Qt3DRender::QRenderTargetOutput::Depth);
         m_depthTexture = new Qt3DRender::QTexture2D(m_depthOutput);
         m_depthTexture->setSize(size.width(), size.height());
-//#if QT_USE_GLES
+
         if (qtuser_3d::isGles())
         {
-            m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::D16);
+            m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::DepthFormat);//D16  ; Automatic  ; DepthFormat
         }
-//#else
         else
         {
             m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::DepthFormat);
         }
         
-//#endif
         m_depthTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::Linear);
         m_depthTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::Linear);
-        //m_depthTexture->setComparisonFunction(Qt3DRender::QAbstractTexture::CompareLessEqual);
-        //m_depthTexture->setComparisonMode(Qt3DRender::QAbstractTexture::CompareRefToTexture);
+        if (qtuser_3d::isGles()) 
+        {
+            m_depthTexture->setComparisonFunction(Qt3DRender::QAbstractTexture::CompareLessEqual);
+            m_depthTexture->setComparisonMode(Qt3DRender::QAbstractTexture::CompareRefToTexture);
+        }
+
         // Hook up the depth texture
         m_depthOutput->setTexture(m_depthTexture);
         addOutput(m_depthOutput);

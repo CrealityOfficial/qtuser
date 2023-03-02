@@ -1,18 +1,18 @@
-#version 150 core
+/* modelwireframe.vert */
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform vec3 water;
 
-out vec3 viewDirectionVS;
-out vec3 normalVS;
-out vec3 gnormalVS;
-out vec3 worldPositionVS;
-out vec3 worldWaterVS;
+varying vec3 viewDirectionVS;
+varying vec3 normalVS;
+varying vec3 gnormalVS;
+varying vec3 worldPositionVS;
+varying vec3 worldWaterVS;
 
 void main( void )
 {

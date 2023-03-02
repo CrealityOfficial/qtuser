@@ -1,8 +1,8 @@
-/* PrinterBottom Vertex*/
+/* printerbottom.vert */
 
-varying vec3 vertexPosition;
-varying vec3 vertexNormal;
-varying vec2 vertexTexcoord;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
+attribute vec2 vertexTexcoord;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;

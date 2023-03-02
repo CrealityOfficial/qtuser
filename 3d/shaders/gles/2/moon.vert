@@ -1,12 +1,12 @@
-#version 150 core
+/* moon.vert */
 
-in vec3 vertexPosition;
+attribute vec3 vertexPosition;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out float radius;
+varying float radius;
 
 void main() 
 {

@@ -96,7 +96,7 @@ namespace qtuser_3d
 
         if (haveDriver)
         {
-            gAttribute = chooseAttribute();
+            gAttribute = chooseAttribute();// ; chooseAttribute()  //Qt::AA_UseOpenGLES
         }
         else
         {

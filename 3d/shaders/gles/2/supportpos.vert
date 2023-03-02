@@ -1,4 +1,4 @@
-/* SupportPos Vertex*/
+/* supportpos.vert */
 
 attribute vec3 vertexPosition;
 attribute vec3 vertexNormal;
@@ -7,9 +7,9 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-varying vec3 viewDirection;
-varying vec3 normal;
-varying vec3 worldPosition;
+noperspective varying vec3 viewDirection;
+noperspective varying vec3 normal;
+noperspective varying vec3 worldPosition;
 
 void main( void )
 {

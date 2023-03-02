@@ -1,4 +1,4 @@
-/* ModelLine Vertex*/
+/* modelline.vert */
 
 attribute vec3 vertexPosition;
 

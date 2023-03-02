@@ -1,6 +1,5 @@
-/* BottomFace Fragment*/
-precision mediump float; 
-
+/* bottomface.fragment */
+precision mediump float;
 varying vec3 normal;
 
 uniform vec4 color;
@@ -9,7 +8,7 @@ void main()
 {
 	vec4 finalcolor = color;
 
-	vec3 fgnormal =	normalize(normal);
+	vec3 fgnormal 		  =	normalize(normal);
 	if(dot(fgnormal, vec3(0.0, 0.0, -1.0)) > 0.0)
 	{
 		finalcolor.a = 0.0;

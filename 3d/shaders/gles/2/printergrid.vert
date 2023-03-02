@@ -1,8 +1,7 @@
-/* PrinterGrid Vertex*/
+/* printergrid.vert */
 
 attribute vec3 vertexPosition;
 attribute vec2 vertexFlag;
-
 uniform mat4 modelViewProjection;
 
 varying vec2 flag;

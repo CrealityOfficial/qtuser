@@ -1,9 +1,8 @@
-#version 150 core 
-out vec4 fragmentColor;
+/* admodel.fragment */
 
-in vec3 viewDirection;
-in vec3 normal;
-in vec3 worldPosition;
+varying vec3 viewDirection;
+varying vec3 normal;
+varying vec3 worldPosition;
 
 uniform vec4 ambient = vec4(0.4, 0.4, 0.4, 1.0);
 uniform vec4 diffuse = vec4(0.6, 0.6, 0.6, 1.0);
@@ -86,5 +85,5 @@ void main( void )
 		}
 	}
    
-	fragmentColor = vec4(coreColor.rgb, 1.0);
+	gl_FragColor = vec4(coreColor.rgb, 1.0);
 }

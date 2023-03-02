@@ -1,8 +1,8 @@
-/* SupportShow Vertex*/
+/* supportshow.vert */
 
-attribute  vec3 vertexPosition;
-attribute  vec3 vertexNormal;
-attribute  float vertexFlag;
+attribute vec3 vertexPosition;
+attribute vec3 vertexNormal;
+attribute float vertexFlag;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;

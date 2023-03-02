@@ -2,6 +2,7 @@
 #include "qtuser3d/geometry/bufferhelper.h"
 #include <math.h>
 #include <QVector3D>
+#include <qtuser3d/module/glcompatibility.h>
 
 
 namespace trimesh
@@ -23,6 +24,27 @@ namespace qtuser_3d
 	Qt3DRender::QGeometry* BasicShapeCreateHelper::createGeometry(Qt3DCore::QNode* parent, std::vector<float>* vertexDatas, std::vector<float>* normalDatas, QVector<unsigned>* indices)
 	{
 		Qt3DRender::QAttribute* positionAttribute = BufferHelper::CreateVertexAttribute((const char*)&(*vertexDatas)[0], AttribueSlot::Position, vertexDatas->size() / 3);
+		Qt3DRender::QAttribute* normalAttribute = nullptr;
+		if (normalDatas != nullptr)
+		{
+			normalAttribute = BufferHelper::CreateVertexAttribute((const char*)&(*normalDatas)[0], AttribueSlot::Normal, normalDatas->size() / 3);
+		}
+		Qt3DRender::QAttribute* indicesAttribute = nullptr;
+		if (indices != nullptr)
+		{
+			indicesAttribute = BufferHelper::CreateIndexAttribute((const char*)&(*indices)[0], indices->size() / 3);
+		}
+		return GeometryCreateHelper::create(parent, positionAttribute, normalAttribute, indicesAttribute, nullptr);
+	}
+
+	Qt3DRender::QGeometry* BasicShapeCreateHelper::createGeometryEx(Qt3DCore::QNode* parent, std::vector<float>* vertexDatas, std::vector<float>* normalDatas, QVector<unsigned>* indices)
+	{
+		uint vertexCount = vertexDatas->size() / 3;
+		if (qtuser_3d::isGles())
+		{
+			vertexCount = vertexDatas->size() / 4;
+		}
+		Qt3DRender::QAttribute* positionAttribute = BufferHelper::CreateVertexAttributeEx((const char*)&(*vertexDatas)[0], AttribueSlot::Position, vertexCount);
 		Qt3DRender::QAttribute* normalAttribute = nullptr;
 		if (normalDatas != nullptr)
 		{
@@ -78,7 +100,7 @@ namespace qtuser_3d
 		std::vector<float> vertexDatas, normalDatas;
 		//createInstructionsData(cylinderR, cylinderLen, axisR, axisLen, 18, vertexDatas, normalDatas);
 		createInstructionsData(cylinderR, cylinderLen, axisR, axisLen, 36, vertexDatas, normalDatas);
-		return createGeometry(parent, &vertexDatas, &normalDatas);
+		return createGeometryEx(parent, &vertexDatas, &normalDatas);
 	}
 
 	Qt3DRender::QGeometry* BasicShapeCreateHelper::createScaleIndicator(float cylinderR, float cylinderLen, int seg, float squarelen, Qt3DCore::QNode* parent)
@@ -350,7 +372,8 @@ namespace qtuser_3d
 			QVector3D v3(-cylinderR * sin(angradNext), 0, -cylinderR * cos(angradNext));
 
 			QVector3D n = QVector3D::normal(v1, v2, v3);
-			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas, normalDatas);
+			addFaceDataWithQVector3DEx(v1, v2, v3, n, vertexDatas, normalDatas);
+			
 		}
 		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
 		{
@@ -362,14 +385,14 @@ namespace qtuser_3d
 			QVector3D v3(-cylinderR * sin(angrad), cylinderLen, -cylinderR * cos(angrad));
 
 			QVector3D n = QVector3D::normal(v1, v2, v3);
-			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas, normalDatas);
+			addFaceDataWithQVector3DEx(v1, v2, v3, n, vertexDatas, normalDatas);
 
 			QVector3D v4(-cylinderR * sin(angrad), 0, -cylinderR * cos(angrad));
 			QVector3D v5(-cylinderR * sin(angradNext), 0, -cylinderR * cos(angradNext));
 			QVector3D v6(-cylinderR * sin(angradNext), cylinderLen, -cylinderR * cos(angradNext));
 
 			QVector3D n2 = QVector3D::normal(v4, v5, v6);
-			addFaceDataWithQVector3D(v4, v5, v6, n2, vertexDatas, normalDatas);
+			addFaceDataWithQVector3DEx(v4, v5, v6, n2, vertexDatas, normalDatas);
 		}
 		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
 		{
@@ -381,7 +404,7 @@ namespace qtuser_3d
 			QVector3D v3(-axisR * sin(angradNext), cylinderLen, -axisR * cos(angradNext));
 
 			QVector3D n = QVector3D::normal(v1, v2, v3);
-			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas, normalDatas);
+			addFaceDataWithQVector3DEx(v1, v2, v3, n, vertexDatas, normalDatas);
 		}
 		for (float angdeg = 0; ceil(angdeg) < 360; angdeg += angdesSpan)
 		{
@@ -393,7 +416,7 @@ namespace qtuser_3d
 			QVector3D v3(-axisR * sin(angrad), cylinderLen, -axisR * cos(angrad));
 
 			QVector3D n = QVector3D::normal(v1, v2, v3);
-			addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas, normalDatas);
+			addFaceDataWithQVector3DEx(v1, v2, v3, n, vertexDatas, normalDatas);
 		}
 
 		return 0;
@@ -545,4 +568,46 @@ namespace qtuser_3d
 
 		return 0;
 	}
+
+	int BasicShapeCreateHelper::addFaceDataWithQVector3DEx(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3, const QVector3D& n, std::vector<float>& vertexDatas, std::vector<float>& normalDatas)
+	{
+		int vertexIndex = vertexDatas.size() / 3;
+
+		vertexDatas.push_back(v1.x());
+		vertexDatas.push_back(v1.y());
+		vertexDatas.push_back(v1.z());
+
+		if (qtuser_3d::isGles())
+		{
+			vertexDatas.push_back(float(vertexIndex));
+		}
+
+		vertexDatas.push_back(v2.x());
+		vertexDatas.push_back(v2.y());
+		vertexDatas.push_back(v2.z());
+
+		if (qtuser_3d::isGles())
+		{
+			vertexDatas.push_back(float(vertexIndex + 1));
+		}
+
+		vertexDatas.push_back(v3.x());
+		vertexDatas.push_back(v3.y());
+		vertexDatas.push_back(v3.z());
+
+		if (qtuser_3d::isGles())
+		{
+			vertexDatas.push_back(float(vertexIndex + 2));
+		}
+
+		for (int i = 0; i < 3; i++)
+		{
+			normalDatas.push_back(n.x());
+			normalDatas.push_back(n.y());
+			normalDatas.push_back(n.z());
+		}
+
+		return 0;
+	}
+
 }
