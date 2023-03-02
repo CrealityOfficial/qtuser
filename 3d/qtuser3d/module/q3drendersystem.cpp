@@ -36,12 +36,12 @@ namespace qtuser_3d
 		m_rootFrameGraph = new Qt3DRender::QFrameGraphNode(m_renderSettings);
 		m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
 
-		qDebug() << "Q3DRenderSystem Ctr. thread " << QThread::currentThreadId();
+		qDebug() << "Q3DRenderSystem Ctr. thread " << QThread::currentThread();
 	}
 
 	Q3DRenderSystem::~Q3DRenderSystem()
 	{
-		qDebug() << "Q3DRenderSystem Ctr~. thread " << QThread::currentThreadId();
+		qDebug() << "Q3DRenderSystem Ctr~. thread " << QThread::currentThread();
 
 		m_renderGraph = nullptr;
 #ifndef __APPLE__
@@ -151,38 +151,44 @@ namespace qtuser_3d
 
 	void Q3DRenderSystem::initializeFromRenderThread()
 	{
-		QOpenGLContext* context = QOpenGLContext::currentContext();
-		m_sharedContext = context;
-
 #ifdef __APPLE__
 		createRenderSystem();
+#endif
+		static_cast<Qt3DRender::QRenderAspectPrivate*>(
+			Qt3DRender::QRenderAspectPrivate::get(m_renderAspect))->renderInitialize(QOpenGLContext::currentContext());
+
+		m_sharedContext = QOpenGLContext::currentContext();
+		qDebug() << "m_sharedContext . thread " << m_sharedContext->thread();
+
+#ifdef __APPLE__
 		QObject::connect(m_sharedContext, &QOpenGLContext::aboutToBeDestroyed,
 			[this] { releaseGL(); });
 #endif
 
-		static_cast<Qt3DRender::QRenderAspectPrivate*>(
-			Qt3DRender::QRenderAspectPrivate::get(m_renderAspect))->renderInitialize(context);
-
-		m_raw->init(context);
+		m_raw->init(m_sharedContext);
 		QMetaObject::invokeMethod(this, "applyRootEntity", Qt::QueuedConnection);
 	}
 
 	void Q3DRenderSystem::unitializeFromRenderThread()
 	{
-		//delete m_aspectEngine;
+		if (m_aspectEngine)
+			m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr());
 	}
 
 	void Q3DRenderSystem::releaseGL()
 	{
 		qDebug() << "Q3DRenderSystem::releaseGL ->" << QThread::currentThread();
-		delete m_aspectEngine;
+		if (m_aspectEngine)
+		{
+			delete m_aspectEngine;
+			m_aspectEngine = nullptr;
+		}
 		qDebug() << "releaseGL End ~~ ";
 	}
 
 	void Q3DRenderSystem::applyRootEntity()
 	{
 		m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr(m_rootEntity));
-
 		bindRenderGraph();
 	}
 
@@ -252,6 +258,6 @@ namespace qtuser_3d
 		m_aspectEngine->registerAspect(m_logicAspect);
 
 		m_raw = new qtuser_core::RawOGL(this);
-		qDebug() << "Q3DRenderSystem::createRenderSystem. thread " << QThread::currentThreadId();
+		qDebug() << "Q3DRenderSystem::createRenderSystem. thread " << QThread::currentThread();
 	}
 }

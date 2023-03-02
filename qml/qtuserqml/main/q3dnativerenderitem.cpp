@@ -21,12 +21,12 @@ Q3DNativeRenderItem::Q3DNativeRenderItem(QQuickItem* parent)
 	setQuickNativeEventDispacher(this);
 	setQuickNativeRenderSystem(m_q3dRenderSystem);
 
-	qDebug() << "Q3DNativeRenderItem Ctr. thread " << QThread::currentThreadId();
+	qDebug() << "Q3DNativeRenderItem Ctr. thread " << QThread::currentThread();
 }
 
 Q3DNativeRenderItem::~Q3DNativeRenderItem()
 {
-	qDebug() << "Q3DNativeRenderItem Ctr. thread " << QThread::currentThreadId();
+	qDebug() << "Q3DNativeRenderItem Ctr. thread " << QThread::currentThread();
 }
 
 qtuser_3d::EventSubdivide* Q3DNativeRenderItem::eventSubdivide()
