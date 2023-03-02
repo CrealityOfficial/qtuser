@@ -146,7 +146,8 @@ namespace qtuser_3d
 
 		renderRenderGraph(nullptr);
 
-		m_aspectEngine->setRootEntity(nullptr);
+		if(m_aspectEngine)
+			m_aspectEngine->setRootEntity(nullptr);
 	}
 
 	void Q3DRenderSystem::initializeFromRenderThread()
@@ -188,12 +189,16 @@ namespace qtuser_3d
 
 	void Q3DRenderSystem::applyRootEntity()
 	{
-		m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr(m_rootEntity));
+		if(m_aspectEngine)
+			m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr(m_rootEntity));
 		bindRenderGraph();
 	}
 
 	bool Q3DRenderSystem::render()
 	{
+		if (!m_renderAspect)
+			return false;
+
 		static_cast<Qt3DRender::QRenderAspectPrivate*>(
 			Qt3DRender::QRenderAspectPrivate::get(m_renderAspect))->renderSynchronous();
 
