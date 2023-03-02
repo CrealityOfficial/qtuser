@@ -23,6 +23,7 @@ public:
 	virtual ~CameraController();
 
 	void setScreenCamera(qtuser_3d::ScreenCamera* camera);
+	qtuser_3d::ScreenCamera* screenCamera();
 
 	void setNeed360Rotate(bool is_need);
 

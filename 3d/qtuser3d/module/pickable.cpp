@@ -166,4 +166,9 @@ namespace qtuser_3d
 
 		return check;
 	}
+
+	void Pickable::pick(int primitiveID)
+	{
+
+	}
 }

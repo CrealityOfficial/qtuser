@@ -37,6 +37,11 @@ void CameraController::setScreenCamera(qtuser_3d::ScreenCamera* camera)
 	m_cameraManipulator->setCamera(m_screenCamera);
 }
 
+qtuser_3d::ScreenCamera* CameraController::screenCamera() 
+{
+	return m_screenCamera;
+}
+
 void CameraController::viewFromOrthographic()
 {
 	Qt3DRender::QCamera* pickerCamera = m_screenCamera->camera();

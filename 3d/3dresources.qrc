@@ -84,7 +84,11 @@
 		<file>shaders/piefade.frag</file>
         <file>shaders/overlay.vert</file>
         <file>shaders/overlay.frag</file>
-      <file>shaders/boardentity.vert</file>
-      <file>shaders/boardentity.frag</file>
+        <file>shaders/boardentity.vert</file>
+        <file>shaders/boardentity.frag</file>
+        <file>shaders/sceneindicator.vert</file>
+        <file>shaders/sceneindicator.frag</file>
+        <file>shaders/pickindicator.vert</file>
+        <file>shaders/pickindicator.frag</file>
     </qresource>
 </RCC>

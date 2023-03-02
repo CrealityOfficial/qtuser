@@ -21,6 +21,9 @@ namespace qtuser_3d
 
 		virtual int primitiveNum();   // 0
 		virtual int chunk(int primitiveID);
+
+		virtual void pick(int primitiveID);
+
 		///////////////////////
 		ControlState state();
 		void setState(ControlState state);
