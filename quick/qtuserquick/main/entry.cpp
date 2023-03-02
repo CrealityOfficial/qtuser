@@ -56,17 +56,21 @@ namespace qtuser_quick
             QFont default_font = QFont();
             default_font.setPointSize(9);
             app.setFont(default_font);
-			QQmlApplicationEngine engine;
+			QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
 			qtuser_core::setDefaultAfterApp();
-			setDefaultQmlAfterApp(engine);
+			setDefaultQmlAfterApp(*engine);
 
 			appModule.afterAppConstruct();
 
-			appModule.startLoadQmlEngine(app, engine);
+			appModule.startLoadQmlEngine(app, *engine);
 			ret = app.exec();
 
 			appModule.onAppEngineShutDown();
+
+#ifndef __APPLE__
+			delete engine;
+#endif
 		}
 
 		qtuser_core::uninitializeLog();
