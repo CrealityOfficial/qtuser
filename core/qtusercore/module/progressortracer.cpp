@@ -6,6 +6,7 @@ namespace qtuser_core
 {
 	ProgressorTracer::ProgressorTracer(Progressor* progressor)
 		:m_progressor(progressor)
+		, m_failed(false)
 	{
 		resetProgressScope();
 	}
@@ -44,5 +45,10 @@ namespace qtuser_core
 	void ProgressorTracer::success()
 	{
 		qDebug() << "ProgressorTracer success. ";
+	}
+
+	bool ProgressorTracer::error()
+	{
+		return m_failed;
 	}
 }
