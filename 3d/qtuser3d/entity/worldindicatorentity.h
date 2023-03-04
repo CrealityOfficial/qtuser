@@ -27,9 +27,10 @@ namespace qtuser_3d
 		void setHighlightDirections(int dirs);
 
 		void setSelectedDirections(int dirs);
-		
+		void setScreenPos(float x, float y);
 	protected:
 		void onCameraChanged(ScreenCamera* camera) override;
+		void setViewport(float x, float y, float w, float h);
 
 	private:
 		void setupGeometry();

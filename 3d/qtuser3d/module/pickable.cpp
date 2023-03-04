@@ -150,8 +150,8 @@ namespace qtuser_3d
 			if (primitiveID)
 				*primitiveID = _primitiveID;
 
-#ifdef _DEBUG
-			//qDebug() << "Face ID "<< faceID <<" Primitive ID " << _primitiveID;
+#if 0 //_DEBUG
+			qDebug() << "Face ID "<< faceID <<" Primitive ID " << _primitiveID;
 #endif
 		}
 

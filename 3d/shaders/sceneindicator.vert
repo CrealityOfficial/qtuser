@@ -13,11 +13,12 @@ uniform mat4 modelViewProjection;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform mat4 viewportMatrix;
 
 void main() 
 {
    texCoord = vertexTexCoord;
    dirIndex = facesIndex;
    normal = vertexNormal;
-   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);
+   gl_Position = viewportMatrix * projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);
 }

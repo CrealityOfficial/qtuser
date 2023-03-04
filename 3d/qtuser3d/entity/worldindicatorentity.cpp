@@ -14,8 +14,8 @@
 namespace qtuser_3d {
 
 	WorldIndicatorEntity::WorldIndicatorEntity(Qt3DCore::QNode* parent)
-		: PickableEntity(parent),
-        m_cameraController(nullptr)
+		: PickableEntity(parent)
+        , m_cameraController(nullptr)
 	{
         m_pickable = new IndicatorPickable(this);
         m_pickable->setPickableEntity(this);
@@ -23,7 +23,7 @@ namespace qtuser_3d {
         setupGeometry();
         setupTexture();
 
-		qtuser_3d::UEffect* effect = qobject_cast<qtuser_3d::UEffect*>(EFFECTCREATE("pickindicator.pickt_sceneindicator.indicator", this));     
+		qtuser_3d::UEffect* effect = qobject_cast<qtuser_3d::UEffect*>(EFFECTCREATE("sceneindicator.view_pickindicator.pick", this));     
 		setEffect(effect);
    
         {            
@@ -31,6 +31,8 @@ namespace qtuser_3d {
             projection.perspective(60.0f, 1920.0 / 1080.0, 1.0, 1000.0);
             setParameter("projectionMatrix", QVariant(projection));
         }
+
+        setScreenPos(0.5f, 0.85f);
 	}
 
 	WorldIndicatorEntity::~WorldIndicatorEntity()
@@ -57,9 +59,9 @@ namespace qtuser_3d {
         float bottom = ibottom;
         float top = itop;
 
-        float k = 0.2;
+        float k = 0.2f;
 
-        float uvstep = 1.0 / 6.0;
+        float uvstep = 1.0f / 6.0f;
 
         float vertices[] = {
 
@@ -507,6 +509,24 @@ namespace qtuser_3d {
     {
         adaptCamera(dirs);
         onCameraChanged(m_cameraController->screenCamera());
+    }
+
+    void WorldIndicatorEntity::setScreenPos(float x, float y)
+    {
+        float w = 0.1f;
+        float h = 0.1f;
+        setViewport(x, y, w, h);
+    }
+
+    void WorldIndicatorEntity::setViewport(float x, float y, float w, float h)
+    {
+        QMatrix4x4 viewportMatrix;
+        QMatrix4x4 m1, m2, m3;
+        m1.translate(1.0f, 1.0f, 0.0f);
+        m2.scale(w, h, 1.0f);
+        m3.translate(2.0f * x - 1.0f, 2.0f * y - 1.0f);
+        viewportMatrix = m3 * m2 * m1;
+        setParameter("viewportMatrix", viewportMatrix);
     }
 
     void WorldIndicatorEntity::setCameraController(CameraController* cc)
