@@ -14,8 +14,10 @@
 namespace qtuser_3d {
 
 	WorldIndicatorEntity::WorldIndicatorEntity(Qt3DCore::QNode* parent)
-		: PickableEntity(parent)
-        , m_cameraController(nullptr)
+		: PickableEntity(parent),
+        m_cameraController(nullptr),
+        m_animation(nullptr),
+        m_lambda(0.0f)
 	{
         m_pickable = new IndicatorPickable(this);
         m_pickable->setPickableEntity(this);
@@ -25,14 +27,9 @@ namespace qtuser_3d {
 
 		qtuser_3d::UEffect* effect = qobject_cast<qtuser_3d::UEffect*>(EFFECTCREATE("sceneindicator.view_pickindicator.pick", this));     
 		setEffect(effect);
-   
-        {            
-            QMatrix4x4 projection;
-            projection.perspective(60.0f, 1920.0 / 1080.0, 1.0, 1000.0);
-            setParameter("projectionMatrix", QVariant(projection));
-        }
 
-        setScreenPos(0.5f, 0.85f);
+        //setScreenPos(QPoint(0.75f * 1920, 0.83 * 1008));
+        setScreenPos(QPoint(50, 50));
 	}
 
 	WorldIndicatorEntity::~WorldIndicatorEntity()
@@ -508,14 +505,22 @@ namespace qtuser_3d {
     void WorldIndicatorEntity::setSelectedDirections(int dirs)
     {
         adaptCamera(dirs);
-        onCameraChanged(m_cameraController->screenCamera());
     }
 
-    void WorldIndicatorEntity::setScreenPos(float x, float y)
+    void WorldIndicatorEntity::setScreenPos(const QPoint& p)
     {
-        float w = 0.1f;
-        float h = 0.1f;
-        setViewport(x, y, w, h);
+        m_showOnPoint = p;
+
+        if (m_cameraController)
+        {
+            QSize size = m_cameraController->screenCamera()->size();
+            float x = float(p.x()) / size.width();
+            float y = float(p.y()) / size.height();
+
+            float w = 0.1f * 1920.0 / size.width();
+            float h = w;
+            setViewport(x, y, w, h);
+        }   
     }
 
     void WorldIndicatorEntity::setViewport(float x, float y, float w, float h)
@@ -534,6 +539,7 @@ namespace qtuser_3d {
         if (m_cameraController)
         {
             m_cameraController->screenCamera()->removeCameraObserver(this);
+            disconnect(m_cameraController->screenCamera()->camera(), SIGNAL(aspectRatioChanged(float)), this, SLOT(aspectRatioChanged(float)));
         }
 
         m_cameraController = cc;
@@ -542,6 +548,7 @@ namespace qtuser_3d {
         {
             qtuser_3d::ScreenCamera* sc = m_cameraController->screenCamera();
             sc->addCameraObserver(this);
+            connect(sc->camera(), SIGNAL(aspectRatioChanged(float)), this, SLOT(aspectRatioChanged(float)));
             onCameraChanged(sc);
         }
     }
@@ -601,95 +608,42 @@ namespace qtuser_3d {
 
         if (viewDir == up)
         {
-            m_cameraController->viewFromBottom();
+            //m_cameraController->viewFromBottom();
+            viewDir = QVector3D(0.0f, 0.0f, 1.0f);
+            QVector3D right(1.0f, 0.0f, 0.0f);
+            up = QVector3D::crossProduct(right, viewDir).normalized();
         }
         else if (viewDir == -up) {
-            m_cameraController->viewFromTop();
+            //m_cameraController->viewFromTop();
+            viewDir = QVector3D(0.0f, 0.0f, -1.0f);
+            QVector3D right(1.0f, 0.0f, 0.0f);
+            up = QVector3D::crossProduct(right, viewDir).normalized();
         }
         else {
-            QVector3D right = QVector3D::crossProduct(viewDir, up);
-            m_cameraController->view(viewDir, right);
-        }
-    }
-
-    void WorldIndicatorEntity::adaptLocal(int dirs)
-    {
-        int  ifront = 1 << 0;
-        int  iback = 1 << 1;
-        int  ileft = 1 << 2;
-        int  iright = 1 << 3;
-        int  ibottom = 1 << 4;
-        int  itop = 1 << 5;
-
-        QVector3D start = QVector3D(0.0, 0.0, 1.0);
-        QVector3D dir = QVector3D(0.0, 0.0, 0.0);
-
-        if (dirs & ifront) {
-            dir += QVector3D(0.0, 0.0, 1.0);
-        }
-        if (dirs & iback) {
-            dir += QVector3D(0.0, 0.0, -1.0);
-        }
-        if (dirs & ileft) {
-            dir += QVector3D(-1.0, 0.0, 0.0);
-        }
-        if (dirs & iright) {
-            dir += QVector3D(1.0, 0.0, 0.0);
-        }
-        if (dirs & ibottom) {
-            dir += QVector3D(0.0, -1.0, 0.0);
-        }
-        if (dirs & itop) {
-            dir += QVector3D(0.0, 1.0, 0.0);
+            /*QVector3D right = QVector3D::crossProduct(viewDir, up);
+            m_cameraController->view(viewDir, right);*/
         }
 
-        QMatrix4x4 model;
-        model.setToIdentity();
+        qtuser_3d::ScreenCamera* sc = m_cameraController->screenCamera();
+        Qt3DRender::QCamera* camera = sc->camera();
+        m_startDir = camera->viewVector();
+        m_startUp = camera->upVector();
 
-        QVector3D end = dir;
+        m_endDir = viewDir;
+        m_endUp = up;
 
-        if (start == end) {
-
-            model.setToIdentity();
-
-        } if (end == QVector3D(0.0, 1.0, 0.0)) {
-
-            model.rotate(90.0f, QVector3D(1.0, 0.0, 0.0));
+        {
+            QPropertyAnimation* animation = new QPropertyAnimation(this);
+            animation->setTargetObject(this);
+            animation->setEasingCurve(QEasingCurve::InOutQuad);
+            animation->setPropertyName("lambda");
+            animation->setStartValue(QVariant::fromValue(0.0f));
+            animation->setEndValue(QVariant::fromValue(1.0f));
+            animation->setDuration(500);
+            animation->setLoopCount(1);
+            animation->start();
+            m_animation.reset(animation);
         }
-        else if (end == QVector3D(0.0, -1.0, 0.0)) {
-
-            model.rotate(-90.0f, QVector3D(1.0, 0.0, 0.0));
-        }
-        else {
-
-            end.normalize();
-
-            end.setZ(-end.z());
-
-            float theta = atan(end.z() / end.x());  // (-PI/2 ~ PI/2)
-
-            if (end.x() < 0.0) {
-                theta += M_PI;
-            }
-
-            theta += M_PI_2;
-            float angle = qRadiansToDegrees(theta);
-
-            model.rotate(qRadiansToDegrees(-theta), QVector3D(0.0, 1.0, 0.0));
-
-            if (dirs & ibottom) {
-                QMatrix4x4 t;
-                t.rotate(-45.0f, QVector3D(1.0, 0.0, 0.0));
-                model = t * model;
-            }
-            else if (dirs & itop) {
-                QMatrix4x4 t;
-                t.rotate(45.0f, QVector3D(1.0, 0.0, 0.0));
-                model = t * model;
-            }
-        }
-
-        setParameter("modelMatrix", QVariant(model));
     }
 
     void WorldIndicatorEntity::onCameraChanged(ScreenCamera* sc)
@@ -699,14 +653,56 @@ namespace qtuser_3d {
         QVector3D viewDir = camera->viewVector();
         QVector3D newPosition = camera->viewCenter() + viewDir.normalized() * -2.0;
 
-        QMatrix4x4 view;
-        view.lookAt(newPosition, camera->viewCenter(), camera->upVector());
-        setParameter("viewMatrix", QVariant(view));
-
         QMatrix4x4 model;
         model.translate(camera->viewCenter());
         model.rotate(90.0f, QVector3D(1.0, 0.0, 0.0));
         setParameter("modelMatrix", model);
+
+        QMatrix4x4 view;
+        view.lookAt(newPosition, camera->viewCenter(), camera->upVector());
+        setParameter("viewMatrix", QVariant(view));
+
+        QMatrix4x4 projection;
+        projection.perspective(60.0f, camera->aspectRatio(), 1.0, 1000.0); //camera->aspectRatio()
+        setParameter("projectionMatrix", QVariant(projection));
         
+        setScreenPos(m_showOnPoint);
+    }
+
+    void WorldIndicatorEntity::setLambda(float lambda)
+    {
+        m_lambda = lambda;
+        qDebug() << "setLambda:" << lambda;
+
+        if (!m_cameraController)
+            return;
+
+        QVector3D up(0.0f, 0.0f, 1.0f);
+        QQuaternion q1up = QQuaternion::rotationTo(up, m_startUp);
+        QQuaternion q2up = QQuaternion::rotationTo(up, m_endUp);
+        QQuaternion qup = QQuaternion::slerp(q1up, q2up, lambda);
+        QVector3D newUp = qup * up;
+
+
+        QVector3D dir(0.0f, 1.0f, 0.0f);
+        QQuaternion q1dir = QQuaternion::rotationTo(dir, m_startDir);
+        QQuaternion q2dir = QQuaternion::rotationTo(dir, m_endDir);
+        QQuaternion qdir = QQuaternion::slerp(q1dir, q2dir, lambda);
+        QVector3D newDir = qdir * dir;
+
+        QVector3D right = QVector3D::crossProduct(newDir, newUp);
+        m_cameraController->view(newDir, right);
+
+        onCameraChanged(m_cameraController->screenCamera());
+    }
+
+    float WorldIndicatorEntity::lambda() const
+    {
+        return m_lambda;
+    }
+
+    void WorldIndicatorEntity::aspectRatioChanged(float aspectRatio)
+    {
+        onCameraChanged(m_cameraController->screenCamera());
     }
 }

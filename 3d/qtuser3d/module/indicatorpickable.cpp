@@ -45,8 +45,7 @@ namespace qtuser_3d
 
 	int IndicatorPickable::primitiveNum()
 	{
-		return 18 * 6;
-		//return 1 << 7;
+		return 1 << 7;
 	}
 
 	bool IndicatorPickable::hoverPrimitive(int primitiveID)

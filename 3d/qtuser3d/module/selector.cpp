@@ -448,6 +448,8 @@ namespace qtuser_3d
 		if (rect.size().isNull()) return;
 
 		int width = abs(rect.width()), height = abs(rect.height());
+		if (width <= 1 || height <= 1) return;
+	
 		int x = std::min(rect.left(), rect.right()), y = std::min(rect.top(), rect.bottom());
 
 		QList<qtuser_3d::Pickable*> list;

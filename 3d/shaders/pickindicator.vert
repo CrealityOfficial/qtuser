@@ -2,6 +2,8 @@
 
 in vec3 vertexPosition;
 in vec3 vertexNormal;
+in vec2 vertexTexCoord;
+in float facesIndex;
 
 flat out vec4 passColor;
 
@@ -17,7 +19,7 @@ uniform ivec2 vertexBase;
 void main() 
 {
 	int ids[2];
-	ids[0] = int(gl_VertexID / 3.0) + int(vertexBase.x / 3);
+	ids[0] = int(facesIndex) + int(vertexBase.x / 3);
 	ids[1] = int(vertexBase.x / 3);
 	
 	int _faceId = ids[vertexBase.y];

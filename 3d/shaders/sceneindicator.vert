@@ -19,6 +19,10 @@ void main()
 {
    texCoord = vertexTexCoord;
    dirIndex = facesIndex;
-   normal = vertexNormal;
+   
    gl_Position = viewportMatrix * projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);
+
+   normal = mat3(viewMatrix * modelMatrix ) * vertexNormal;
+   // gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);
+
 }
