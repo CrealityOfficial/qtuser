@@ -1,5 +1,6 @@
 #include "qtuser3d/framegraph/texturerendertarget.h"
 #include "qtuser3d//module/glcompatibility.h"
+
 namespace qtuser_3d
 {
     TextureRenderTarget::TextureRenderTarget(Qt3DCore::QNode* parent, const QSize& size)
@@ -19,7 +20,7 @@ namespace qtuser_3d
         m_colorTexture->setSize(size.width(), size.height());
         if (qtuser_3d::isGles())
         {
-            m_colorTexture->setFormat(Qt3DRender::QAbstractTexture::RGBA8_UNorm); //Automatic ; RGBAFormat
+            m_colorTexture->setFormat(Qt3DRender::QAbstractTexture::RGBAFormat); //Automatic ; RGBAFormat
         }
         else
         {
@@ -39,24 +40,30 @@ namespace qtuser_3d
 
         if (qtuser_3d::isGles())
         {
-            m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::DepthFormat);//D16  ; Automatic  ; DepthFormat
+            //ToDo
+            m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::Automatic);//D16  ; Automatic  ; DepthFormat
         }
         else
         {
             m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::DepthFormat);
         }
-        
-        m_depthTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::Linear);
+
+        m_depthTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::Linear);// Linear
         m_depthTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::Linear);
-        if (qtuser_3d::isGles()) 
-        {
-            m_depthTexture->setComparisonFunction(Qt3DRender::QAbstractTexture::CompareLessEqual);
-            m_depthTexture->setComparisonMode(Qt3DRender::QAbstractTexture::CompareRefToTexture);
-        }
 
         // Hook up the depth texture
         m_depthOutput->setTexture(m_depthTexture);
-        addOutput(m_depthOutput);
+
+        if (qtuser_3d::isGles())
+        {
+            // ToDo
+            //addOutput(m_depthOutput);
+        }
+        else
+        {
+            addOutput(m_depthOutput);
+        }
+        
     }
 
     TextureRenderTarget::~TextureRenderTarget()

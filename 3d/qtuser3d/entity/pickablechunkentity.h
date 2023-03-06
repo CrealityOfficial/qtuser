@@ -5,6 +5,7 @@
 #include <Qt3DRender/QGeometry>
 #include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QAttribute>
+#include <qtuser3d/geometry/supportattribute.h>
 
 namespace qtuser_3d
 {
@@ -38,6 +39,7 @@ namespace qtuser_3d
 		int allFaces();
 
 		int chunkIndex(int chunkID);
+		
 	protected:
 		Qt3DRender::QGeometry* m_geometry;
 

@@ -2,6 +2,7 @@
 #include "qtuser3d/math/space3d.h"
 #include "qtuser3d/module/chunkbufferuser.h"
 #include <QThread>
+#include <qtuser3d/module/glcompatibility.h>
 
 namespace qtuser_3d
 {
@@ -18,7 +19,12 @@ namespace qtuser_3d
 		m_normalBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
 		m_flagBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
 
-		m_positionAttribute = new Qt3DRender::QAttribute(m_positionBuffer, Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, 3, 0);
+		int vertexSize = 3;
+		if (qtuser_3d::isGles())
+		{
+			vertexSize = 4;
+		}
+		m_positionAttribute = new Qt3DRender::QAttribute(m_positionBuffer, Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, vertexSize, 0);
 		m_normalAttribute = new Qt3DRender::QAttribute(m_normalBuffer, Qt3DRender::QAttribute::defaultNormalAttributeName(), Qt3DRender::QAttribute::Float, 3, 0);
 		m_flagAttribute = new Qt3DRender::QAttribute(m_flagBuffer, "vertexFlag", Qt3DRender::QAttribute::Float, 1, 0);
 
@@ -40,12 +46,18 @@ namespace qtuser_3d
 
 		if (m_chunkFaces <= 0) m_chunkFaces = 100;
 		if (m_chunks <= 0) m_chunks = 50;
-		m_chunkBytes = 3 * m_chunkFaces * sizeof(float);
+		m_chunkBytes = 3 * m_chunkFaces * sizeof(float);  // "3" means each triangle face has 3 vertex
 		int size = m_chunkBytes * m_chunks;
 
-		m_positionByteArray.resize(size * 3);
+		int vertexSize = 3;  // the type of each vertex is vec3
+		if (qtuser_3d::isGles())
+		{
+			vertexSize = 4;  // the type of each vertex is vec4
+		}
+
+		m_positionByteArray.resize(size * vertexSize);
 		m_positionByteArray.fill(0);
-		m_normalByteArray.resize(size * 3);
+		m_normalByteArray.resize(size * 3);  // the type of each normal is vec3
 		m_normalByteArray.fill(0);
 		m_flagByteArray.resize(size);
 		m_flagByteArray.fill(0);
@@ -53,7 +65,7 @@ namespace qtuser_3d
 		m_positionBuffer->setData(m_positionByteArray);
 		m_normalBuffer->setData(m_normalByteArray);
 		m_flagBuffer->setData(m_flagByteArray);
-		m_positionAttribute->setCount(3 * m_chunkFaces * m_chunks);
+		m_positionAttribute->setCount(3 * m_chunkFaces * m_chunks); // "3" means each triangle face has 3 vertex 
 		m_normalAttribute->setCount(3 * m_chunkFaces * m_chunks);
 		m_flagAttribute->setCount(3 * m_chunkFaces * m_chunks);
 
@@ -92,29 +104,65 @@ namespace qtuser_3d
 		setParent((QNode*)nullptr);
 		QThread::usleep(20);
 #endif
-		
+
+		int vertexSize = 3;
+		if (qtuser_3d::isGles())
+		{
+			vertexSize = 4;
+		}
 
 		int baseIndex = m_chunkBytes * chunk;
 		if (positionBytes)
 		{
-			m_positionBuffer->updateData(baseIndex * 3, *positionBytes);
-			m_positionByteArray.replace(baseIndex * 3, positionBytes->size(), *positionBytes);
+			m_positionBuffer->updateData(baseIndex * vertexSize, *positionBytes);
+			m_positionByteArray.replace(baseIndex * vertexSize, positionBytes->size(), *positionBytes);
 
-			QVector3D* position = (QVector3D*)positionBytes->data();
-			QByteArray normalBytes(positionBytes->size(), 0);
-			QVector3D* normal = (QVector3D*)normalBytes.data();
+			trimesh::vec4* vertex4Data = nullptr;
+			trimesh::vec3* vertex3Data = nullptr;
+			if (qtuser_3d::isGles())
+			{
+				vertex4Data = (trimesh::vec4*)positionBytes->data();
+			}
+			else
+			{
+				vertex3Data = (trimesh::vec3*)positionBytes->data();
+			}
 
-			int n = positionBytes->size() / (3 * 3 * sizeof(float));
+			//QVector3D* position = (QVector3D*)positionBytes->data();
+			
+			int normalSize = m_chunkBytes * 3;
+			//QByteArray normalBytes(positionBytes->size(), 0);
+			QByteArray normalBytes(normalSize, 0);
+			trimesh::vec3* normal = (trimesh::vec3*)normalBytes.data();
+
+			int n = normalSize / (3 * 3 * sizeof(float));
 
 			for (int i = 0; i < n; ++i)
 			{
-				QVector3D v0 = *(position + 3 * i);
-				QVector3D v1 = *(position + 3 * i + 1);
-				QVector3D v2 = *(position + 3 * i + 2);
-				QVector3D v01 = v1 - v0;
-				QVector3D v02 = v2 - v0;
-				QVector3D n = QVector3D::crossProduct(v01, v02);
-				n.normalize();
+				//QVector3D v0 = *(position + vertexSize * i);
+				//QVector3D v1 = *(position + vertexSize * i + 1);
+				//QVector3D v2 = *(position + vertexSize * i + 2);
+
+				trimesh::vec3 v0;
+				trimesh::vec3 v1;
+				trimesh::vec3 v2;
+				if (qtuser_3d::isGles())
+				{
+					v0 = *(vertex4Data + vertexSize * i);
+					v1 = *(vertex4Data + vertexSize * i + 1);
+					v2 = *(vertex4Data + vertexSize * i + 2);
+				}
+				else
+				{
+					v0 = *(vertex3Data + vertexSize * i);
+					v1 = *(vertex3Data + vertexSize * i + 1);
+					v2 = *(vertex3Data + vertexSize * i + 2);
+				}
+
+				trimesh::vec3 v01 = v1 - v0;
+				trimesh::vec3 v02 = v2 - v0;
+				trimesh::vec3 n = v01 TRICROSS v02;
+				trimesh::normalize(n);
 				*normal++ = n;
 				*normal++ = n;
 				*normal++ = n;

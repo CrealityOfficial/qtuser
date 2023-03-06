@@ -1,5 +1,6 @@
 /* Support Vertex*/
 precision mediump float;
+
 attribute vec4 vertexPosition;
 attribute vec3 vertexNormal;
 attribute float vertexFlag;
@@ -25,6 +26,7 @@ void main( void )
     normal          = normalMatrix * vertexNormal;
 	worldPosition   = vec3(modelMatrix * vec4(vertexPosition.xyz, 1.0));
 	flag			= vertexFlag;
+	
 	if(vertexFlag == 0.0)
 	{
 		gl_Position = vec4(0.0, 0.0, 0.0, 1.0);

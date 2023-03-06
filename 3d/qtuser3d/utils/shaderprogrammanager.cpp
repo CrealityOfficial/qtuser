@@ -83,6 +83,7 @@ namespace qtuser_3d
 
 	Qt3DRender::QShaderProgram* ShaderProgramManager::LoadLocal(const QString& name)
 	{
+		return nullptr;
 #if (_WIN32 || __APPLE__) && _DEBUG
 		ShaderCode code;
 		code.name = name;
