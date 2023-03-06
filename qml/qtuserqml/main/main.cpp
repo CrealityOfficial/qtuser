@@ -145,6 +145,10 @@ namespace qtuser_qml
 
             func(*engine);
             ret = app.exec();
+
+#ifndef __APPLE__
+            delete engine;
+#endif
         }
         qtuser_core::uninitializeLog();
         return ret;
