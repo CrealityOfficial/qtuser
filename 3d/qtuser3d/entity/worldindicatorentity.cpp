@@ -23,7 +23,8 @@ namespace qtuser_3d {
         m_pickable->setPickableEntity(this);
 
         setupGeometry();
-        setupTexture();
+
+        setupTexture(QUrl("qrc:/UI/images/scene_all_dir_en.png"));
 
 		qtuser_3d::UEffect* effect = qobject_cast<qtuser_3d::UEffect*>(EFFECTCREATE("sceneindicator.view_pickindicator.pick", this));     
 		setEffect(effect);
@@ -486,12 +487,6 @@ namespace qtuser_3d {
         setGeometry(geo);
 	}
 
-    void WorldIndicatorEntity::setupTexture()
-    {
-        Qt3DRender::QTexture2D *t = createFromSource(QUrl("qrc:/UI/images/scene_all_dir.png"));
-        setParameter("colorMap", QVariant::fromValue(t));
-    }
-
     Pickable* WorldIndicatorEntity::pickable() const
     {
         return m_pickable;
@@ -704,5 +699,11 @@ namespace qtuser_3d {
     void WorldIndicatorEntity::aspectRatioChanged(float aspectRatio)
     {
         onCameraChanged(m_cameraController->screenCamera());
+    }
+
+    void WorldIndicatorEntity::setupTexture(const QUrl& url)
+    {
+        Qt3DRender::QTexture2D* t = createFromSource(url);
+        setParameter("colorMap", QVariant::fromValue(t));
     }
 }

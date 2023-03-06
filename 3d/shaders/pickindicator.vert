@@ -18,11 +18,8 @@ uniform ivec2 vertexBase;
 
 void main() 
 {
-	int ids[2];
-	ids[0] = int(facesIndex) + int(vertexBase.x / 3);
-	ids[1] = int(vertexBase.x / 3);
-	
-	int _faceId = ids[vertexBase.y];
+
+	int _faceId =  int(facesIndex) + int(vertexBase.x / 3);;
 	int i3 = _faceId / 0x1000000;
 	_faceId = _faceId - i3 * 0x1000000;
 	int i2 = _faceId / 0x10000;

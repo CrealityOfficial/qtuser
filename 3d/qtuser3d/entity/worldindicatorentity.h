@@ -32,7 +32,8 @@ namespace qtuser_3d
 
 		void setScreenPos(const QPoint& p);
 
-	
+		void setupTexture(const QUrl& url);
+
 	signals:
 		void lambdaChanged();
 
@@ -45,7 +46,6 @@ namespace qtuser_3d
 
 	private:
 		void setupGeometry();
-		void setupTexture();
 
 		void adaptCamera(int dirs);
 
