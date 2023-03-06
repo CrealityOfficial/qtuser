@@ -21,10 +21,10 @@ const int checkScope = 1;
 
 uniform vec3 minSpace;
 uniform vec3 maxSpace;
-const float supportCos = 0.5;
+uniform float supportCos; // = 0.5;
 
-const int hoverState = 0;
-const int waterState = 0;
+uniform int hoverState; // = 0;
+uniform int waterState; // = 0;
 
 const float zcha = 0.1;
 
