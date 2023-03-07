@@ -101,7 +101,10 @@ namespace qtuser_qml
 #ifdef Q_OS_OSX
 		qDebug() << "OS OSX setDynamicLoadPath";
         dynamicPathList << QCoreApplication::applicationDirPath() + "/../Frameworks";
-    	qmlPathList << QCoreApplication::applicationDirPath() + "/../Resources/qml";
+    #ifdef QT_DEBUG
+        dynamicPathList << QCoreApplication::applicationDirPath() + "/../../../";
+    #endif
+        qmlPathList << QCoreApplication::applicationDirPath() + "/../Resources/qml";
 #elif defined Q_OS_WIN32
 		qDebug() << "OS WIN32 setDynamicLoadPath";
 #elif defined Q_OS_LINUX
