@@ -7,6 +7,8 @@
 #include <QtCore/QProcess>
 #include <QtGui/QOpenglContext>
 
+#define FORCE_USE_GLES 1
+
 namespace qtuser_3d
 {
 	QSurfaceFormat gFormat;
@@ -96,7 +98,11 @@ namespace qtuser_3d
 
         if (haveDriver)
         {
-            gAttribute = chooseAttribute();// ; chooseAttribute()  //Qt::AA_UseOpenGLES
+#if FORCE_USE_GLES
+            gAttribute = Qt::AA_UseOpenGLES;
+#else
+            gAttribute = chooseAttribute();
+#endif
         }
         else
         {

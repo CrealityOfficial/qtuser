@@ -41,7 +41,7 @@ namespace qtuser_3d
         if (qtuser_3d::isGles())
         {
             //ToDo
-            m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::Automatic);//D16  ; Automatic  ; DepthFormat
+            m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::DepthFormat);//D16  ; Automatic  ; DepthFormat
         }
         else
         {
