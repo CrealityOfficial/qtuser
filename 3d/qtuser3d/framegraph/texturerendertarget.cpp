@@ -20,7 +20,7 @@ namespace qtuser_3d
         m_colorTexture->setSize(size.width(), size.height());
         if (qtuser_3d::isGles())
         {
-            m_colorTexture->setFormat(Qt3DRender::QAbstractTexture::RGBAFormat); //Automatic ; RGBAFormat
+            m_colorTexture->setFormat(Qt3DRender::QAbstractTexture::RGBAFormat); //Automatic ; RGBAFormat; RGBA4
         }
         else
         {
@@ -41,7 +41,7 @@ namespace qtuser_3d
         if (qtuser_3d::isGles())
         {
             //ToDo
-            m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::Automatic);//D16  ; Automatic  ; DepthFormat
+            m_depthTexture->setFormat(Qt3DRender::QAbstractTexture::DepthFormat);//D16  ; Automatic  ; DepthFormat
         }
         else
         {
@@ -56,7 +56,7 @@ namespace qtuser_3d
 
         if (qtuser_3d::isGles())
         {
-            // ToDo
+            // ToDo : GLES 2.0 supports a depth renderbuffer but not a depth texture buffer.
             //addOutput(m_depthOutput);
         }
         else
