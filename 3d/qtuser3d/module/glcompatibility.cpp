@@ -7,7 +7,7 @@
 #include <QtCore/QProcess>
 #include <QtGui/QOpenglContext>
 
-#define FORCE_USE_GLES 1
+#define FORCE_USE_GLES 0
 
 namespace qtuser_3d
 {
