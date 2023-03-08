@@ -103,7 +103,7 @@ namespace qtuser_3d
 		else
 		{
             m_createImageFinished = true;
-#if 1
+#if _DEBUG
             m_colorPickerImage.save("pickTest.bmp");
 #endif
 
