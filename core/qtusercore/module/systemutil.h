@@ -46,5 +46,7 @@ namespace qtuser_core
 	QTUSER_CORE_API QString calculateFileMD5(const QString& fileName);
 	
 	QTUSER_CORE_API void copyString2Clipboard(const QString& str);
+
+	QTUSER_CORE_API int getSystemMaxPath();
 }
 #endif // creative_kernel_MATRIX_UTIL_H

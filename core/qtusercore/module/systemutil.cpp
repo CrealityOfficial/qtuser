@@ -30,6 +30,10 @@
 #pragma comment(lib, "psapi.lib")
 #pragma comment(lib, "dbghelp.lib")
 
+#elif defined(__linux__)
+#include <linux/limits.h>
+#elif defined(__APPLE__)
+#include <sys/syslimits.h>
 #endif
 #include "buildinfo.h"
 #include "qtusercore/string/resourcesfinder.h"
@@ -409,5 +413,14 @@ namespace qtuser_core
 		QMimeData* mimeData = new QMimeData();
 		mimeData->setText(str);
 		clipboard->setMimeData(mimeData);
+	}
+
+	int getSystemMaxPath()
+	{
+#ifdef _WINDOWS
+		return MAX_PATH;
+#else
+		return PATH_MAX;
+#endif
 	}
 }
