@@ -2,7 +2,7 @@
 #include "qtuser3d/entity/pickableentity.h"
 #include "qtuser3d/entity/worldindicatorentity.h"
 
-#include <QtCore/QDebug>
+//#include <QtCore/QDebug>
 
 namespace qtuser_3d
 {
@@ -45,12 +45,12 @@ namespace qtuser_3d
 
 	int IndicatorPickable::primitiveNum()
 	{
-		return 1 << 7;
+		return 1 << 6;
 	}
 
 	bool IndicatorPickable::hoverPrimitive(int primitiveID)
 	{
-		qDebug() << QString("IndicatorPickable::hoverPrimitive [%1]").arg(primitiveID);
+		//qDebug() << QString("IndicatorPickable::hoverPrimitive [%1]").arg(primitiveID);
 
 		if (!m_pickableEntity)
 			return false;
@@ -66,7 +66,7 @@ namespace qtuser_3d
 
 	void IndicatorPickable::unHoverPrimitive()
 	{
-		qDebug() << QString("IndicatorPickable::unHoverPrimitive []");
+		//qDebug() << QString("IndicatorPickable::unHoverPrimitive []");
 		if (!m_pickableEntity)
 			return;
 
@@ -89,7 +89,7 @@ namespace qtuser_3d
 
 	void IndicatorPickable::pick(int primitiveID)
 	{
-		qDebug() << QString("IndicatorPickable::pick [%1]").arg(primitiveID);
+		//qDebug() << QString("IndicatorPickable::pick [%1]").arg(primitiveID);
 		if (!m_pickableEntity)
 			return;
 

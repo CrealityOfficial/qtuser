@@ -17,14 +17,13 @@ namespace qtuser_3d {
 		: PickableEntity(parent),
         m_cameraController(nullptr),
         m_animation(nullptr),
-        m_lambda(0.0f)
+        m_lambda(0.0f),
+        m_theme(-1)
 	{
         m_pickable = new IndicatorPickable(this);
         m_pickable->setPickableEntity(this);
 
         setupGeometry();
-
-        setupTexture(QUrl("qrc:/UI/images/scene_all_dir_en.png"));
 
 		qtuser_3d::UEffect* effect = qobject_cast<qtuser_3d::UEffect*>(EFFECTCREATE("sceneindicator.view_pickindicator.pick", this));     
 		setEffect(effect);
@@ -57,7 +56,7 @@ namespace qtuser_3d {
         float bottom = ibottom;
         float top = itop;
 
-        float k = 0.2f;
+        float k = 0.15f;
 
         float uvstep = 1.0f / 6.0f;
 
@@ -627,6 +626,7 @@ namespace qtuser_3d {
         m_endDir = viewDir;
         m_endUp = up;
 
+        if (m_animation == nullptr)
         {
             QPropertyAnimation* animation = new QPropertyAnimation(this);
             animation->setTargetObject(this);
@@ -636,9 +636,10 @@ namespace qtuser_3d {
             animation->setEndValue(QVariant::fromValue(1.0f));
             animation->setDuration(500);
             animation->setLoopCount(1);
-            animation->start();
+            
             m_animation.reset(animation);
         }
+        m_animation->start();
     }
 
     void WorldIndicatorEntity::onCameraChanged(ScreenCamera* sc)
@@ -701,9 +702,66 @@ namespace qtuser_3d {
         onCameraChanged(m_cameraController->screenCamera());
     }
 
-    void WorldIndicatorEntity::setupTexture(const QUrl& url)
+    /*void WorldIndicatorEntity::setupBasicTexture(const QUrl& url)
     {
         Qt3DRender::QTexture2D* t = createFromSource(url);
         setParameter("colorMap", QVariant::fromValue(t));
+    }*/
+
+    void WorldIndicatorEntity::setTheme(int theme)
+    {
+        m_theme = theme;
+        updateBasicTexture();
+    }
+
+    void WorldIndicatorEntity::setupLightTexture(const QUrl& url)
+    {
+        m_lightTextureUrl = url;
+        updateBasicTexture();
+    }
+
+    void WorldIndicatorEntity::setupDarkTexture(const QUrl& url)
+    {
+        m_darkTextureUrl = url;
+        updateBasicTexture();
+    }
+
+    void WorldIndicatorEntity::setupSelectTexture(const QUrl& url)
+    {
+        Qt3DRender::QTexture2D* t = createFromSource(url);
+        setParameter("selectMap", QVariant::fromValue(t));
+    }
+
+    void WorldIndicatorEntity::updateBasicTexture()
+    {
+        if (m_theme == -1) return;
+
+        switch (m_theme)
+        {
+        case 0:
+        {
+            if (m_darkTextureUrl.isEmpty() == false)
+            {
+                Qt3DRender::QTexture2D* t = createFromSource(m_darkTextureUrl);
+                setParameter("colorMap", QVariant::fromValue(t));
+            }
+ 
+        }
+            break;
+
+        case 1:
+        {
+            if (m_lightTextureUrl.isEmpty() == false)
+            {
+                Qt3DRender::QTexture2D* t = createFromSource(m_lightTextureUrl);
+                setParameter("colorMap", QVariant::fromValue(t));
+            }
+        }
+            break;
+
+        default:
+            break;
+        }
+
     }
 }

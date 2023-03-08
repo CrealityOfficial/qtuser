@@ -10,6 +10,8 @@
 #include "qtuser3d/entity/pickableentity.h"
 #include "qtuser3d/camera/screencamera.h"
 
+#include <QUrl>
+
 class CameraController;
 
 namespace qtuser_3d
@@ -32,7 +34,10 @@ namespace qtuser_3d
 
 		void setScreenPos(const QPoint& p);
 
-		void setupTexture(const QUrl& url);
+		void setTheme(int theme);
+		void setupLightTexture(const QUrl& url);
+		void setupDarkTexture(const QUrl& url);
+		void setupSelectTexture(const QUrl& url);
 
 	signals:
 		void lambdaChanged();
@@ -52,6 +57,8 @@ namespace qtuser_3d
 		void setLambda(float lambda);
 		float lambda() const;
 
+		void updateBasicTexture();
+
 	private:
 		IndicatorPickable* m_pickable;
 		CameraController* m_cameraController;
@@ -65,6 +72,10 @@ namespace qtuser_3d
 		QVector3D m_endUp;
 
 		QPoint m_showOnPoint;
+
+		int m_theme;
+		QUrl m_lightTextureUrl;
+		QUrl m_darkTextureUrl;
 	};
 }
 
