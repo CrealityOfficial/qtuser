@@ -513,8 +513,9 @@ namespace qtuser_3d {
             float x = float(p.x()) / size.width();
             float y = float(p.y()) / size.height();
 
-            float w = 0.1f * 1920.0 / size.width();
-            float h = w;
+            float pixNum = 100.0;
+            float w = pixNum / size.width();
+            float h = pixNum / size.height();
             setViewport(x, y, w, h);
         }   
     }
@@ -668,7 +669,7 @@ namespace qtuser_3d {
         setParameter("viewMatrix", QVariant(view));
 
         QMatrix4x4 projection;
-        projection.perspective(60.0f, camera->aspectRatio(), 1.0, 1000.0); //camera->aspectRatio()
+        projection.perspective(60.0f, 1.0, 1.0, 1000.0);
         setParameter("projectionMatrix", QVariant(projection));
         
         setScreenPos(m_showOnPoint);
