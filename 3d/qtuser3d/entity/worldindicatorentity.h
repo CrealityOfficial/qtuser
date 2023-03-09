@@ -3,6 +3,7 @@
 
 #include <Qt3DCore/QEntity>
 #include <QPropertyAnimation>
+#include <QPointer>
 
 #include "qtuser3d/qtuser3dexport.h"
 #include "qtuser3d/entity/basicentity.h"
@@ -62,7 +63,7 @@ namespace qtuser_3d
 
 	private:
 		IndicatorPickable* m_pickable;
-		CameraController* m_cameraController;
+		QPointer<CameraController> m_cameraController;
 		
 		// for animate
 		QSharedPointer<QPropertyAnimation> m_animation;
