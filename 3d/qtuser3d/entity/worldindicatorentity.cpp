@@ -519,6 +519,13 @@ namespace qtuser_3d {
         }   
     }
 
+    void WorldIndicatorEntity::resetCameraAngle() {
+      constexpr int TOP{ 1 << 5 };
+      constexpr int FRONT{ 1 << 0 };
+      constexpr int DEFAUT_ANGLE{ TOP + FRONT };
+      adaptCamera(DEFAUT_ANGLE);
+    }
+
     void WorldIndicatorEntity::setViewport(float x, float y, float w, float h)
     {
         QMatrix4x4 viewportMatrix;
