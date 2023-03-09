@@ -9,17 +9,17 @@ in vec3 normal;
 uniform sampler2D colorMap;
 uniform sampler2D selectMap;
 
-uniform int highlightFaces;
+uniform float highlightFaces;
 
 void main() 
 {	
-	float diffuse = dot(normalize(normal), vec3(0.0, 0.0, 1.0));
+	float diffuse = dot(normalize(normal), normalize(vec3(1.0, 1.0, 1.0)));
 	diffuse = clamp(diffuse, 0.0, 1.0);
 	diffuse = mix(0.6, 1.1, diffuse);
 
 	vec4 texColor = texture2D(colorMap, texCoord);
 
-	if (highlightFaces == dirIndex) {
+	if (abs(highlightFaces - dirIndex) < 0.0001) {
 		texColor = texture2D(selectMap, texCoord);
 	}
 

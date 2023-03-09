@@ -495,7 +495,7 @@ namespace qtuser_3d {
 
     void WorldIndicatorEntity::setHighlightDirections(int dirs)
     {
-        setParameter("highlightFaces", QVariant::fromValue(dirs));
+        setParameter("highlightFaces", float(dirs));
     }
 
     void WorldIndicatorEntity::setSelectedDirections(int dirs)
