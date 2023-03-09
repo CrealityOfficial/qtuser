@@ -33,6 +33,7 @@ namespace qtuser_3d
 		void setSelectedDirections(int dirs);
 
 		void setScreenPos(const QPoint& p);
+		void resetCameraAngle();
 
 		void setTheme(int theme);
 		void setupLightTexture(const QUrl& url);
