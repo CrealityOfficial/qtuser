@@ -178,7 +178,7 @@ namespace qtuser_3d
 	{
 		setEffect(EFFECTCREATE(name, m_material));
 
-		QList<Qt3DRender::QRenderPass*> renderPasses = m_material->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
+		QList<Qt3DRender::QRenderPass*> renderPasses = m_material->findChildren<Qt3DRender::QRenderPass*>(name, Qt::FindChildrenRecursively);
 		for (Qt3DRender::QRenderPass* pass : renderPasses)
 		{
 			pass->addRenderState(m_lineWidth);

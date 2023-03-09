@@ -26,6 +26,7 @@ namespace qtuser_3d {
         setupGeometry();
 
 		qtuser_3d::UEffect* effect = qobject_cast<qtuser_3d::UEffect*>(EFFECTCREATE("sceneindicator.view_pickindicator.pick", this));     
+        effect->setPassCullFace("pickindicator.pick", Qt3DRender::QCullFace::NoCulling);
 		setEffect(effect);
 
         //setScreenPos(QPoint(0.75f * 1920, 0.83 * 1008));
@@ -475,6 +476,7 @@ namespace qtuser_3d {
 
         Qt3DRender::QBuffer* qBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
         qBuffer->setData(*bytes);
+        delete bytes;
 
         Qt3DRender::QAttribute* position = new Qt3DRender::QAttribute(qBuffer, Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, 3, vertSize, 0, stride);
         Qt3DRender::QAttribute* normal = new Qt3DRender::QAttribute(qBuffer, Qt3DRender::QAttribute::defaultNormalAttributeName(), Qt3DRender::QAttribute::Float, 3, vertSize, 3*sizeof(float), stride);
