@@ -21,6 +21,8 @@ namespace qtuser_3d
 		virtual void onAttach() = 0;
 		virtual void onDettach() = 0;
 
+		virtual bool shouldMultipleSelect();
+
 		void onHoverEnter(QHoverEvent* event) override;
 		void onHoverLeave(QHoverEvent* event) override;
 		void onHoverMove(QHoverEvent* event) override;

@@ -101,4 +101,9 @@ namespace qtuser_3d
 	{
 		(void)event;
 	}
+
+	bool SceneOperateMode::shouldMultipleSelect()
+	{
+		return false;
+	}
 }
