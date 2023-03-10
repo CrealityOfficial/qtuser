@@ -44,7 +44,7 @@ namespace qtuser_core
 
 		if (index < 0)
 		{
-			qInfo() << QString("ContextBase::obj find [%1].").arg(name);
+			//qInfo() << QString("ContextBase::obj find [%1].").arg(name);
 			return child;
 		}
 
