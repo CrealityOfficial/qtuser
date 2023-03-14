@@ -540,11 +540,12 @@ namespace qtuser_core
 
 	bool CXFileOpenAndSaveManager::registerHandler(const QString& suffix, CXHandleBase* handler, QMap<QString, QList<CXHandleBase*>>& handlers)
 	{
-		QMap<QString, QList<CXHandleBase*>>::iterator it = handlers.find(suffix);
 		if (!handler)
 			return false;
-		
-		it = handlers.insert(suffix, QList<CXHandleBase*>());
+
+		QMap<QString, QList<CXHandleBase*>>::iterator it = handlers.find(suffix);
+		if(it == handlers.end())
+			it = handlers.insert(suffix, QList<CXHandleBase*>());
 
 		if(!it.value().contains(handler))
 			it.value().append(handler);
