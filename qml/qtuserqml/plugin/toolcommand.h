@@ -9,8 +9,8 @@ class QTUSER_QML_API ToolCommand: public QObject
 	Q_PROPERTY(bool enabled READ enabled NOTIFY enabledChanged)
 
 	Q_PROPERTY(QString enabledIcon READ enabledIcon NOTIFY enabledIconChanged)
-	//Q_PROPERTY(QString pressedIcon READ pressedIcon NOTIFY pressedIconChanged)
-	//Q_PROPERTY(QString disabledIcon READ disableIcon NOTIFY disableIconChanged)
+	Q_PROPERTY(QString pressedIcon READ pressedIcon NOTIFY pressedIconChanged)
+	Q_PROPERTY(QString disabledIcon READ disableIcon NOTIFY disableIconChanged)
 
 
     Q_PROPERTY(QString source READ source)
@@ -41,6 +41,8 @@ signals:
 	void enabledChanged();
 	void executed();
 	void enabledIconChanged();
+	void pressedIconChanged();
+	void disableIconChanged();
 private:
 	bool m_enabled;
 
