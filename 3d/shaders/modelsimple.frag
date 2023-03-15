@@ -9,7 +9,7 @@ uniform vec4 diffuse = vec4(0.6, 0.6, 0.6, 1.0);
 uniform vec4 specular = vec4(0.125, 0.125, 0.125, 1.0);
 uniform float specularPower = 12.0;
 
-uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
+uniform vec3 lightDirection = vec3(-0.57730, 0.577300, -0.577300);
 
 uniform vec4 stateColors = vec4(0.8, 0.5, 0.8, 1.0);
 
