@@ -26,11 +26,11 @@ namespace qtuser_3d {
         setupGeometry();
 
 		qtuser_3d::UEffect* effect = qobject_cast<qtuser_3d::UEffect*>(EFFECTCREATE("sceneindicator.view_pickindicator.pick", this));     
-        effect->setPassCullFace("pickindicator.pick", Qt3DRender::QCullFace::NoCulling);
+        effect->setPassCullFace("pickindicator.pick", Qt3DRender::QCullFace::Back);
+        effect->setPassDepthTest("pickindicator.pick", Qt3DRender::QDepthTest::Less);
 		setEffect(effect);
 
-        //setScreenPos(QPoint(0.75f * 1920, 0.83 * 1008));
-        setScreenPos(QPoint(50, 50));
+        //setScreenPos(QPoint(50, 50));
 	}
 
 	WorldIndicatorEntity::~WorldIndicatorEntity()

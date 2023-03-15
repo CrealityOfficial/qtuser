@@ -17,10 +17,10 @@ void main()
 	diffuse = clamp(diffuse, 0.0, 1.0);
 	diffuse = mix(0.6, 1.1, diffuse);
 
-	vec4 texColor = texture2D(colorMap, texCoord);
+	vec4 texColor = texture(colorMap, texCoord);
 
 	if (abs(highlightFaces - dirIndex) < 0.0001) {
-		texColor = texture2D(selectMap, texCoord);
+		texColor = texture(selectMap, texCoord);
 	}
 
 	fragColor = vec4(texColor.rgb * diffuse, 1.0);
