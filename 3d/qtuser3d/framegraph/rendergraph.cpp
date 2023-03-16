@@ -4,7 +4,7 @@
 namespace qtuser_3d
 {
 	RenderGraph::RenderGraph(Qt3DCore::QNode* parent)
-		:Qt3DCore::QNode(parent)
+		:Qt3DRender::QFrameGraphNode(parent)
 		, m_operateMode(nullptr)
 	{
 	}
@@ -14,11 +14,6 @@ namespace qtuser_3d
 	}
 
 	Qt3DCore::QEntity* RenderGraph::sceneGraph()
-	{
-		return nullptr;
-	}
-
-	Qt3DRender::QFrameGraphNode* RenderGraph::frameGraph()
 	{
 		return nullptr;
 	}

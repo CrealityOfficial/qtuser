@@ -344,14 +344,10 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 	, m_renderAspect(new Qt3DRender::QRenderAspect(Qt3DRender::QRenderAspect::Synchronous))
 	, m_inputAspect(new Qt3DInput::QInputAspect)
 	, m_logicAspect(new Qt3DLogic::QLogicAspect)
-	, m_rootEntity(nullptr)
-	, m_renderSettings(nullptr)
-	, m_inputSettings(nullptr)
 	, m_shotTimes(0)
-	, m_renderGraph(nullptr)
 	, m_always(false)
 	, m_sharedContext(nullptr)
-	, m_ratio(1)
+	, m_ratio(1.0f)
 {
 	setFlag(ItemHasContents, true);
 	m_aspectEngine->registerAspect(m_renderAspect);
@@ -372,11 +368,7 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 
 	m_eventSubdivide = new qtuser_3d::EventSubdivide(this);
 
-	m_rootFrameGraph = new Qt3DRender::QFrameGraphNode(m_renderSettings);
-	m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
-
 	m_rawOGL = new qtuser_qml::RawOGL(this);
-
     qDebug() << "windows GLQuickItem  -->" << QThread::currentThread();
 }
 
@@ -385,8 +377,6 @@ GLQuickItem::~GLQuickItem()
 	qDebug() << "windows GLQuickItem destruction -->" << QThread::currentThread();
 
 	m_eventSubdivide->closeHandlers();
-	m_renderGraph = nullptr;
-
 	delete m_aspectEngine;
 }
 
@@ -479,7 +469,11 @@ void GLQuickItem::geometryChanged(const QRectF& newGeometry, const QRectF& oldGe
 	}
 	size *= m_ratio;
 	m_eventSubdivide->geometryChanged(size);
-	if (m_renderGraph) m_renderGraph->updateRenderSize(size);
+
+	RenderGraph* graph = currentRenderGraph();
+	if (graph) 
+		graph->updateRenderSize(size);
+
 	requestUpdate();
 }
 
@@ -569,45 +563,43 @@ void GLQuickItem::unRegisterResidentNode(Qt3DCore::QNode* node)
 	}
 }
 
+RenderGraph* GLQuickItem::currentRenderGraph()
+{
+	return qobject_cast<RenderGraph*>(m_renderSettings->activeFrameGraph());
+}
+
 bool GLQuickItem::isRenderRenderGraph(RenderGraph* graph)
 {
-	return m_renderGraph == graph;
+	return graph && (currentRenderGraph() == graph);
 }
 
 void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 {
-	if (m_renderGraph == graph) return;
+	if (isRenderRenderGraph(graph))
+		return;
 
-	if (m_renderGraph)
+	RenderGraph* currentGraph = currentRenderGraph();
+	if (currentGraph)
 	{
-		Qt3DRender::QFrameGraphNode* frameGraph = m_renderGraph->frameGraph();
-		Qt3DCore::QEntity* sceneGraph = m_renderGraph->sceneGraph();
+		//m_renderSettings->setActiveFrameGraph(nullptr);
 
-		if (frameGraph)
-		{
-			frameGraph->setParent((Qt3DCore::QNode*)nullptr);
-		}
+		Qt3DCore::QEntity* sceneGraph = currentGraph->sceneGraph();
 		if(sceneGraph)
 			sceneGraph->setParent((Qt3DCore::QNode*)nullptr);
-		m_renderGraph->endRender();
+		currentGraph->endRender();
 
-		disconnect(m_renderGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
+		disconnect(currentGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 	}
 
-	m_renderGraph = graph;
-
-	if (m_renderGraph)
+	if (graph)
 	{
-		connect(m_renderGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
+		connect(graph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 
-		m_renderGraph->begineRender();
-		Qt3DRender::QFrameGraphNode* frameGraph = graph->frameGraph();
+		graph->begineRender();
+
 		Qt3DCore::QEntity* sceneGraph = graph->sceneGraph();
+		m_renderSettings->setActiveFrameGraph(graph);
 
-		if (frameGraph)
-		{
-			frameGraph->setParent(m_rootFrameGraph);
-		}
 		if (sceneGraph) 
 			sceneGraph->setParent(m_rootEntity);
 
@@ -616,7 +608,7 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		{
 			itemSize *= m_ratio;
 		}
-		m_renderGraph->updateRenderSize(itemSize);
+		graph->updateRenderSize(itemSize);
 	}
 
 	requestUpdate();
@@ -626,14 +618,9 @@ void GLQuickItem::registerRenderGraph(RenderGraph* graph)
 {
 	if (graph && (m_registerRenderGraph.indexOf(graph) == -1))
 	{
-		Qt3DRender::QFrameGraphNode* frameGraph = graph->frameGraph();
 		Qt3DCore::QEntity* sceneGraph = graph->sceneGraph();
-
-		if (frameGraph)
-		{	
-			//frameGraph->setParent(m_rootFrameGraph);
-			//frameGraph->setEnabled(false);
-		}
+		graph->setParent(m_renderSettings);
+		
 		if (sceneGraph)
 		{
 			//sceneGraph->setParent(m_rootEntity);
@@ -649,19 +636,13 @@ void GLQuickItem::unRegisterRenderGraph(RenderGraph* graph)
 	int index = m_registerRenderGraph.indexOf(graph);
 	if (index != -1)
 	{
-		if (m_renderGraph == graph)
-		{
+		if (isRenderRenderGraph(graph))
 			renderRenderGraph(nullptr);
-		}
 
-		Qt3DRender::QFrameGraphNode* frameGraph = graph->frameGraph();
 		Qt3DCore::QEntity* sceneGraph = graph->sceneGraph();
+		graph->setParent((Qt3DCore::QNode*)nullptr);
+		graph->setEnabled(true);
 
-		if (frameGraph)
-		{
-			frameGraph->setParent((Qt3DCore::QNode*)nullptr);
-			frameGraph->setEnabled(true);
-		}
 		if (sceneGraph)
 		{
 			sceneGraph->setParent((Qt3DCore::QNode*)nullptr);

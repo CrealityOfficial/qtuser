@@ -9,7 +9,7 @@
 namespace qtuser_3d
 {
 	class SceneOperateMode;
-	class QTUSER_3D_API RenderGraph : public Qt3DCore::QNode
+	class QTUSER_3D_API RenderGraph : public Qt3DRender::QFrameGraphNode
 	{
 		Q_OBJECT
 	public:
@@ -20,7 +20,6 @@ namespace qtuser_3d
 		void reinOperationMode();
 
 		virtual Qt3DCore::QEntity* sceneGraph();
-		virtual Qt3DRender::QFrameGraphNode* frameGraph();
 
 		virtual void begineRender();
 		virtual void endRender();
