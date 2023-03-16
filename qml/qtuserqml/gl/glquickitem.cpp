@@ -581,8 +581,6 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 	RenderGraph* currentGraph = currentRenderGraph();
 	if (currentGraph)
 	{
-		//m_renderSettings->setActiveFrameGraph(nullptr);
-
 		Qt3DCore::QEntity* sceneGraph = currentGraph->sceneGraph();
 		if(sceneGraph)
 			sceneGraph->setParent((Qt3DCore::QNode*)nullptr);
@@ -596,10 +594,7 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		connect(graph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 
 		graph->begineRender();
-
 		Qt3DCore::QEntity* sceneGraph = graph->sceneGraph();
-		m_renderSettings->setActiveFrameGraph(graph);
-
 		if (sceneGraph) 
 			sceneGraph->setParent(m_rootEntity);
 
@@ -611,6 +606,7 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		graph->updateRenderSize(itemSize);
 	}
 
+	m_renderSettings->setActiveFrameGraph(graph);
 	requestUpdate();
 }
 
