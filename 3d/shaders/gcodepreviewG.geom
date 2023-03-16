@@ -11,6 +11,7 @@ flat in float visualTypeVS[1];
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform mat4 modelMatrix;
 
 out vec3 normal;
 flat out vec2 step;
@@ -19,7 +20,7 @@ out vec3 viewDirection;
 
 void combindVertex(vec3 pos, vec3 norm)
 {
-	vec4 world_position = viewMatrix * vec4(pos, 1.0);
+	vec4 world_position = viewMatrix * modelMatrix * vec4(pos, 1.0);
 	gl_Position = projectionMatrix *  world_position;
 	normal = mat3(viewMatrix) * norm;
 	step = stepVS[0];
