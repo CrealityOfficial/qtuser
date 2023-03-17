@@ -15,6 +15,7 @@ namespace qtuser_3d
 		void updateLocal(QVector3D& point, const QMatrix4x4& parentMatrix);
 		void setColor(const QVector4D& color);
 		void setPointSize(float size);	
+		void setShader(const QString& name);
 	protected:
 		void selectEffect();
 	protected:

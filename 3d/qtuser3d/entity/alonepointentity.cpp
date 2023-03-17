@@ -72,4 +72,18 @@ namespace qtuser_3d
 			setEffect(m_usedEffect);
 		}
 	}
+
+	void AlonePointEntity::setShader(const QString& name)
+	{
+		setEffect(EFFECTCREATE(name, m_material));
+
+		QList<Qt3DRender::QRenderPass*> renderPasses = m_material->findChildren<Qt3DRender::QRenderPass*>(name, Qt::FindChildrenRecursively);
+		for (Qt3DRender::QRenderPass* pass : renderPasses)
+		{
+			if (m_pointSizeState)
+			{
+				pass->addRenderState(m_pointSizeState);
+			}
+		}
+	}
 }

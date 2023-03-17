@@ -90,5 +90,7 @@
         <file>shaders/sceneindicator.frag</file>
         <file>shaders/pickindicator.vert</file>
         <file>shaders/pickindicator.frag</file>
+        <file>shaders/pointInGcode.vert</file>
+        <file>shaders/pointInGcode.frag</file>
     </qresource>
 </RCC>
