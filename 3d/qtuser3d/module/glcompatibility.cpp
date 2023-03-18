@@ -1,11 +1,12 @@
+
+#include <QDebug>
 #include "glcompatibility.h"
 
 #include "visualinfo.h"
 
-#include <QtCore/QDebug>
 #include <QtGui/QSurfaceFormat>
 #include <QtCore/QProcess>
-#include <QtGui/QOpenglContext>
+//#include <QtGui/QOpenGLContext>
 
 namespace qtuser_3d
 {

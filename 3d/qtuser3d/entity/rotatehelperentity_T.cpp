@@ -1,4 +1,4 @@
-#include "qtuser3d/entity/RotateHelperEntity_T.h"
+#include "qtuser3d/entity/rotatehelperentity_T.h"
 
 #include "qtuser3d/module/manipulatecallback.h"
 
