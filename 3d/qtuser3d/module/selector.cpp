@@ -65,6 +65,7 @@ namespace qtuser_3d
 		if (pickable)
 		{
 			_remove(pickable);
+			updateFaceBases(); //prevent m_currentFaceBase from changing into nagetive value, modified by wys, 2023-3-21
 
 			pickable->setState(ControlState::none);
 			if (m_hoverPickable && (m_hoverPickable == pickable))
