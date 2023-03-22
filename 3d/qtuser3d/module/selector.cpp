@@ -50,6 +50,7 @@ namespace qtuser_3d
 			if (m_pickables.indexOf(pickable) < 0)
 			{
 				_add(pickable);
+				updateFaceBases();
 			}
 
 			if (m_pickables.size() == 1)
@@ -109,56 +110,77 @@ namespace qtuser_3d
 		return pickable;
 	}
 
+	//void Selector::_add(Pickable* pickable)
+	//{
+	//	m_pickables.push_back(pickable);
+
+	//	bool noPrimitive = pickable->noPrimitive();
+	//	int primitiveNum = pickable->primitiveNum();
+	//	if (noPrimitive) primitiveNum = 1;
+
+	//	pickable->setFaceBase(m_currentFaceBase);
+	//	m_currentFaceBase += primitiveNum;
+	//}
+
 	void Selector::_add(Pickable* pickable)
 	{
 		m_pickables.push_back(pickable);
-
-		bool noPrimitive = pickable->noPrimitive();
-		int primitiveNum = pickable->primitiveNum();
-		if (noPrimitive) primitiveNum = 1;
-
-		pickable->setFaceBase(m_currentFaceBase);
-		m_currentFaceBase += primitiveNum;
 	}
+
+	//void Selector::_remove(Pickable* pickable)
+	//{
+	//	//rebase 
+	//	bool noPrimitive = pickable->noPrimitive();
+	//	int primitiveNum = pickable->primitiveNum();
+	//	if (noPrimitive) primitiveNum = 1;
+
+	//	int offset = primitiveNum;
+
+	//	int size = m_pickables.size();
+	//	int index = m_pickables.indexOf(pickable);
+	//	if (index >= 0)
+	//	{
+	//		for (int i = index + 1; i < size; ++i)
+	//		{
+	//			Pickable* p = m_pickables.at(i);
+	//			int fBase = p->faceBase();
+	//			fBase -= offset;
+	//			p->setFaceBase(fBase);
+	//		}
+
+	//		m_pickables.removeAt(index);
+	//		m_currentFaceBase -= offset;
+	//	}
+	//}
 
 	void Selector::_remove(Pickable* pickable)
 	{
-		//rebase 
-		bool noPrimitive = pickable->noPrimitive();
-		int primitiveNum = pickable->primitiveNum();
-		if (noPrimitive) primitiveNum = 1;
-
-		int offset = primitiveNum;
-
-		int size = m_pickables.size();
 		int index = m_pickables.indexOf(pickable);
 		if (index >= 0)
 		{
-			for (int i = index + 1; i < size; ++i)
-			{
-				Pickable* p = m_pickables.at(i);
-				int fBase = p->faceBase();
-				fBase -= offset;
-				p->setFaceBase(fBase);
-			}
-
 			m_pickables.removeAt(index);
-			m_currentFaceBase -= offset;
 		}
 	}
 
 	void Selector::updateFaceBases()
 	{
-		m_currentFaceBase = 0;
+		int currentFaceBase = 0;
 
 		for (qtuser_3d::Pickable* pickable : m_pickables)
 		{
+			bool notSupportData = pickable->notSupportData();
+			if (!notSupportData)
+			{
+				// supportData faceBase no need to update
+				continue;
+			}
+
 			bool noPrimitive = pickable->noPrimitive();
 			int primitiveNum = pickable->primitiveNum();
 			if (noPrimitive) primitiveNum = 1;
 
-			pickable->setFaceBase(m_currentFaceBase);
-			m_currentFaceBase += primitiveNum;
+			pickable->setFaceBase(currentFaceBase);
+			currentFaceBase += primitiveNum;
 		}
 	}
 

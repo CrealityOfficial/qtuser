@@ -35,6 +35,9 @@ namespace qtuser_3d
 		bool noPrimitive();
 		void setNoPrimitive(bool noPrimitive);  // only set once at construct
 
+		bool notSupportData();
+		void setNotSupportData(bool notSupportData);
+
 		virtual void setVisible(bool visible);
 		bool isVisible();
 	public slots:
@@ -54,6 +57,9 @@ namespace qtuser_3d
 		int m_faceBase;
 		bool m_noPrimitive;
 		bool m_enableSelect;
+
+		// if this pickable is NOT  supportData, the value will be true;  otherwise it will be false
+		bool m_notSupportData;
 	};
 
 	class FacePicker;
