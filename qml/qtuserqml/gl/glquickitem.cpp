@@ -111,7 +111,6 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 	, m_renderSettings(nullptr)
 	, m_inputSettings(nullptr)
 	, m_shotTimes(0)
-	, m_renderGraph(nullptr)
 	, m_always(false)
 	, m_sharedContext(nullptr)
 	, m_ratio(1)
@@ -132,10 +131,7 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 
 	m_eventSubdivide = new qtuser_3d::EventSubdivide(this);
 
-	m_rootFrameGraph = new Qt3DRender::QFrameGraphNode(m_renderSettings);
-	m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
-
-	setFocus(Qt::ClickFocus, Qt::ActiveWindowFocusReason);
+	setFocus(true, Qt::ActiveWindowFocusReason);
 
 	qDebug() << "mac GLQuickItem -->" << QThread::currentThread();
 }
@@ -143,7 +139,6 @@ GLQuickItem::GLQuickItem(QQuickItem* parent)
 GLQuickItem::~GLQuickItem()
 {
 	m_eventSubdivide->closeHandlers();
-	m_renderGraph = nullptr;
 	
 	qDebug() << "mac GLQuickItem ~~ -->" << QThread::currentThread();
 }
