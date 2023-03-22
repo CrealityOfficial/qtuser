@@ -22,6 +22,7 @@ namespace qtuser_qml
         Q_INVOKABLE QObject* get(int index);
 
 		QList<ToolCommand*> getToolCommandList();
+		void refreshModel();
 
 	protected:
 		int rowCount(const QModelIndex& parent) const override;

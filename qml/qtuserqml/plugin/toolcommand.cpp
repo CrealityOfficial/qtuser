@@ -21,6 +21,10 @@ QString ToolCommand::enabledIcon() const
 	return m_enabledIcon;
 }
 
+QString ToolCommand::hoveredIcon() const {
+	return m_hoveredIcon;
+}
+
 QString ToolCommand::disableIcon() const
 {
 	return m_disableIcon;
@@ -49,6 +53,13 @@ void ToolCommand::setEnabledIcon(const QString& icon)
 		emit enabledIconChanged();
 	}
 	
+}
+
+void ToolCommand::setHoveredIcon(const QString& icon) {
+	if (m_hoveredIcon != icon) {
+		m_hoveredIcon = icon;
+		emit hoveredIconChanged();
+	}
 }
 
 void ToolCommand::setPressedIcon(const QString& icon)

@@ -9,6 +9,7 @@ class QTUSER_QML_API ToolCommand: public QObject
 	Q_PROPERTY(bool enabled READ enabled NOTIFY enabledChanged)
 
 	Q_PROPERTY(QString enabledIcon READ enabledIcon NOTIFY enabledIconChanged)
+	Q_PROPERTY(QString hoveredIcon READ hoveredIcon NOTIFY hoveredIconChanged)
 	Q_PROPERTY(QString pressedIcon READ pressedIcon NOTIFY pressedIconChanged)
 	Q_PROPERTY(QString disabledIcon READ disableIcon NOTIFY disableIconChanged)
 
@@ -20,11 +21,13 @@ public:
     int orderindex;
 	bool enabled();
 	QString enabledIcon() const;
+	QString hoveredIcon() const;
 	QString disableIcon() const;
 	QString pressedIcon() const;
 	QString source() const;
 	QString name() const;
 	void setEnabledIcon(const QString& icon);
+	void setHoveredIcon(const QString& icon);
 	void setPressedIcon(const QString& icon);
 	void setDisabledIcon(const QString& icon);
 	void setName(const QString& name);
@@ -41,6 +44,7 @@ signals:
 	void enabledChanged();
 	void executed();
 	void enabledIconChanged();
+	void hoveredIconChanged();
 	void pressedIconChanged();
 	void disableIconChanged();
 private:
@@ -49,6 +53,7 @@ private:
 protected:
 	Q_INVOKABLE void saveCall();
 	QString m_enabledIcon;
+	QString m_hoveredIcon;
 	QString m_disableIcon;
 	QString m_pressedIcon;
 	QString m_source;

@@ -1,5 +1,7 @@
 #include "qtuserqml/plugin/toolcommandcenter.h"
 
+#include <QPointer>
+
 namespace qtuser_qml
 {
 
@@ -8,6 +10,7 @@ enum
     tc_name = Qt::UserRole + 1,
     tc_pressd_icon,
     tc_enabled_icon,
+    tc_hovered_icon,
     tc_disabled_icon,
     tc_source,
     tc_item
@@ -19,6 +22,7 @@ ToolCommandCenter::ToolCommandCenter(QObject* parent)
     m_rolesName[tc_name] = "name";
     m_rolesName[tc_pressd_icon] = "pressedIcon";
     m_rolesName[tc_enabled_icon] = "enabledIcon";
+    m_rolesName[tc_hovered_icon] = "hoveredIcon";
     m_rolesName[tc_disabled_icon] = "disabledIcon";
     m_rolesName[tc_source] = "source";
     m_rolesName[tc_item] = "item";
@@ -115,6 +119,8 @@ QVariant ToolCommandCenter::data(const QModelIndex& index, int role) const
             return command->pressedIcon();
         case tc_enabled_icon:
             return command->enabledIcon();
+        case tc_hovered_icon:
+            return command->hoveredIcon();
         case tc_disabled_icon:
             return command->disableIcon();
         case tc_source:
@@ -145,6 +151,15 @@ QList<ToolCommand*> ToolCommandCenter::getToolCommandList()
 {
     return m_toolCommands;
 }
+
+void ToolCommandCenter::refreshModel() {
+    // emit the signal after command objects update themselves finished
+    QMetaObject::invokeMethod(this, [this, self = QPointer<ToolCommandCenter>{ this }]() {
+        if (!self) { return; }
+        Q_EMIT dataChanged(createIndex(0, 0), createIndex(m_toolCommands.size(), 0));
+    }, Qt::ConnectionType::QueuedConnection);
+}
+
 bool ToolCommandCenter::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     return false;
