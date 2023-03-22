@@ -58,8 +58,6 @@ namespace qtuser_3d
 		bool m_noPrimitive;
 		bool m_enableSelect;
 
-		// if this pickable is NOT  supportData, the value will be true;  otherwise it will be false
-		bool m_notSupportData;
 	};
 
 	class FacePicker;

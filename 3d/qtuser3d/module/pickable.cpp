@@ -11,7 +11,6 @@ namespace qtuser_3d
 		, m_faceBase(0)
 		, m_noPrimitive(false)
 		, m_visible(true)
-		, m_notSupportData(true)
 	{
 	}
 
@@ -115,16 +114,6 @@ namespace qtuser_3d
 	{
 		m_noPrimitive = noPrimitive;
 		noPrimitiveChanged(m_noPrimitive);
-	}
-
-	bool Pickable::notSupportData()
-	{
-		return m_notSupportData;
-	}
-
-	void Pickable::setNotSupportData(bool notSupportData)
-	{
-		m_notSupportData = notSupportData;
 	}
 
 	void Pickable::setVisible(bool visible)

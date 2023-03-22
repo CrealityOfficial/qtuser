@@ -168,8 +168,7 @@ namespace qtuser_3d
 
 		for (qtuser_3d::Pickable* pickable : m_pickables)
 		{
-			bool notSupportData = pickable->notSupportData();
-			if (!notSupportData)
+			if (pickable->faceBase() >= 40000000)
 			{
 				// supportData faceBase no need to update
 				continue;
