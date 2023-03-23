@@ -63,7 +63,7 @@ namespace qtuser_3d
 			{
 				m_usedEffect = EFFECTCREATE("pure", m_material);
 				QList<Qt3DRender::QRenderPass*> renderPasses = m_usedEffect->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
-				m_pointSizeState = new Qt3DRender::QPointSize(m_usedEffect);
+				m_pointSizeState = new Qt3DRender::QPointSize(this);
 				m_pointSizeState->setSizeMode(Qt3DRender::QPointSize::Fixed);
 				if (renderPasses.size() > 0) renderPasses.at(0)->addRenderState(m_pointSizeState);
 			}
@@ -75,7 +75,9 @@ namespace qtuser_3d
 
 	void AlonePointEntity::setShader(const QString& name)
 	{
-		setEffect(EFFECTCREATE(name, m_material));
+		m_usedEffect = EFFECTCREATE(name, m_material);
+
+		setEffect(m_usedEffect);
 
 		QList<Qt3DRender::QRenderPass*> renderPasses = m_material->findChildren<Qt3DRender::QRenderPass*>(name, Qt::FindChildrenRecursively);
 		for (Qt3DRender::QRenderPass* pass : renderPasses)
