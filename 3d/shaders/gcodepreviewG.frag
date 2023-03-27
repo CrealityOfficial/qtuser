@@ -6,7 +6,8 @@ flat in vec2 step;
 flat in float visualType;
 in vec3 viewDirection;
 
-uniform vec4 color = vec4(0.8, 0.8, 0.8, 1.0);
+// uniform vec4 color = vec4(0.8, 0.8, 0.8, 1.0);
+uniform vec4 darkColor = vec4(0.161, 0.161, 0.161, 1.0);
 
 uniform vec3 light_direction = vec3(0.0, 0.0, 1.0);
 uniform vec4 front_ambient = vec4(0.8, 0.8, 0.8, 1.0);
@@ -69,20 +70,20 @@ vec4 speedColor()
 	return lastColor + (nextColor - lastColor) * (speedFlag - stype);
 }
 
-vec4 processAnimation()
-{
-	vec4 colors[2];
-	colors[0] = vec4(0.0, 0.0, 0.0, 0.0);
-	if(step.x == clipValue.y)
-	{
-		colors[1] = vec4(0.3, 0.3, 0.3, 0.0);
-	}
-	else
-	{
-		colors[1] = vec4(-0.3, -0.3, -0.3, 0.0);
-	}
-	return colors[animation];
-}
+// vec4 processAnimation()
+// {
+// 	vec4 colors[2];
+// 	colors[0] = vec4(0.0, 0.0, 0.0, 0.0);
+// 	if(step.x == clipValue.y)
+// 	{
+// 		colors[1] = vec4(0.3, 0.3, 0.3, 0.0);
+// 	}
+// 	else
+// 	{
+// 		colors[1] = vec4(-0.3, -0.3, -0.3, 0.0);
+// 	}
+// 	return colors[animation];
+// }
 
 void main( void )
 {
@@ -107,8 +108,13 @@ void main( void )
 	colors[2] = nozzleColor();
 	
 	vec4 core_color = colors[showType];
+
+	if (animation == 1 && step.x != clipValue.y) {
+		core_color = darkColor;
+	}
+
 	vec4 resultColor     = directLight(core_color);
-	resultColor += processAnimation();
+	// resultColor += processAnimation();
 	
 	fragment_color = resultColor;
 }

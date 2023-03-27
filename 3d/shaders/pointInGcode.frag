@@ -5,8 +5,12 @@ in vec2 flags;
 out vec4 fragColor;
 
 uniform vec4 color;
+uniform vec4 darkColor = vec4(0.161, 0.161, 0.161, 1.0);
+
 uniform vec4 clipValue = vec4(0.0, 200.0, 0.0, 300.0);
 uniform vec2 layershow = vec2(-1.0, 9999999.0);
+
+uniform int animation = 0;
 
 void main() 
 {
@@ -19,5 +23,5 @@ void main()
 	if (flags.x < layershow.x || flags.x > layershow.y)
 		discard;
 
-	fragColor = color;
+	fragColor = (animation == 1 && flags.x != clipValue.y) ? darkColor : color;
 }
