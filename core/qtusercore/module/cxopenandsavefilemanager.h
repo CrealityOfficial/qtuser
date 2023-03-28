@@ -47,7 +47,7 @@ namespace qtuser_core
 		void removeCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback);
 	public:
 		void open(CXHandleBase* receiver = nullptr);
-		void save(CXHandleBase* receiver = nullptr);
+		void save(CXHandleBase* receiver = nullptr,const QString& title=QString(""),const QString& defaultName=QString(""));
 
 		Q_INVOKABLE void qOpen(QObject* receiver);
 		Q_INVOKABLE void qSave(QObject* receiver);
@@ -81,7 +81,7 @@ namespace qtuser_core
 		void setLastSaveFileName(QString filePath);
 
 		void openDesktopFolder();
-		void openLastSaveFolder();
+		Q_INVOKABLE void openLastSaveFolder();
 		void openFolder(const QString& folder);
 
 		size_t getFileSize(const QString& fileName);
@@ -119,7 +119,7 @@ namespace qtuser_core
 	QTUSER_CORE_API void dialogOpenFiles(const QString& filter, loadFunc func);
 
 	typedef std::function<void(const QString& fileName)> saveFunc;
-	QTUSER_CORE_API void dialogSave(const QString& filter, const QString& defaultName, saveFunc func);
+	QTUSER_CORE_API void dialogSave(const QString& filter, const QString& defaultName, const QString& title, saveFunc func);
 }
 
 #endif // !QTUSER_CORE_CXFileOpenAndSaveManager_H

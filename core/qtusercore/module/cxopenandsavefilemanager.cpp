@@ -230,7 +230,7 @@ namespace qtuser_core
 		}
 	}
 
-	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver)
+	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver, const QString& title, const QString& defaultName)
 	{
 		m_State = OpenSaveState::oss_save;
 		if (receiver)
@@ -251,7 +251,10 @@ namespace qtuser_core
 			};
 			qDebug() << "last open" << m_lastOpenFile;
 			QString filter = generateFilterFromHandlers(true);
-			dialogSave(filter, m_lastOpenFile, f);
+			dialogSave(filter, 
+				defaultName.isEmpty() ? m_lastOpenFile : defaultName,
+				title.isEmpty() ? QObject::tr("Save") : title
+				, f);
 
 			m_externalHandler = nullptr;
 		}
@@ -610,14 +613,14 @@ void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
 		func(fileName);
 	}
 
-	void dialogSave(const QString& filter, const QString& defaultName, saveFunc func)
+	void dialogSave(const QString& filter, const QString& defaultName, const QString& title,saveFunc func)
 	{
 		if (!func)
 			return;
 		QSettings setting;
 		QString lastPath = setting.value("dialogLastPath", "").toString() + "/" + defaultName;
 		QString fileName = QFileDialog::getSaveFileName(
-			nullptr, QObject::tr("SaveFile"),
+			nullptr, title,
 			lastPath, filter);
 
 		if (fileName.isEmpty())
