@@ -17,6 +17,11 @@ namespace qtuser_3d
 		return gAttribute == Qt::AA_UseOpenGLES;
 	}
 
+	bool isSoftwareGL()
+	{
+		return gAttribute == Qt::AA_UseSoftwareOpenGL;
+	}
+
     bool _isNotInstalledVideoDriver() {
         QProcess* wmic = new QProcess();
         wmic->setProcessChannelMode(QProcess::MergedChannels);

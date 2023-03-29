@@ -12,6 +12,9 @@
 #include "qtuserqml/interface/qmlapplicationinterface.h"
 #include <QThread>
 #include <QDir>
+
+#include "qtuser3d/module/glcompatibility.h"
+
 namespace qtuser_qml
 {
     void specifyOpenGL()
@@ -134,6 +137,8 @@ namespace qtuser_qml
             preSetDynamicLoadPath();
 
             specifyOpenGL();
+			qtuser_3d::setBeforeApplication();
+
             QApplication app(argc, argv);
             QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
