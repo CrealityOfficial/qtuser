@@ -203,7 +203,7 @@ namespace qtuser_core
 		save(handle);
 	}
 
-	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver)
+	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver, const QString& title)
 	{
 		m_State = OpenSaveState::oss_open;
 		if (receiver)
@@ -224,7 +224,9 @@ namespace qtuser_core
 			};
 
 			QString filter = generateFilterFromHandlers(false);
-			dialogOpenFiles(filter, f);
+			dialogOpenFiles(filter,
+				title.isEmpty() ? QObject::tr("OpenFile") : title
+				,f);
 
 			m_externalHandler = nullptr;
 		}
@@ -595,14 +597,14 @@ void CXFileOpenAndSaveManager::setLastOpenFileName(QString filePath)
 		return filesize;	
 	}
 
-	void dialogOpenFiles(const QString& filter, loadFunc func)
+	void dialogOpenFiles(const QString& filter, const QString& title,loadFunc func)
 	{
 		if (!func)
 			return;
 		QSettings setting;
 		QString lastPath = setting.value("dialogLastPath", "").toString();
 		QStringList fileName = QFileDialog::getOpenFileNames(
-			nullptr, QObject::tr("OpenFile"),
+			nullptr, title,
 			lastPath, filter);
 
 		if (fileName.isEmpty())
