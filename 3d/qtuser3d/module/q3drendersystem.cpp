@@ -101,6 +101,16 @@ namespace qtuser_3d
 		invokeUpdate();
 	}
 
+	void Q3DRenderSystem::pauseUpdate()
+	{
+		m_continous = false;
+	}
+
+	bool Q3DRenderSystem::inRenderingState()
+	{
+		return m_continous;
+	}
+
 	void Q3DRenderSystem::requestUpdate()
 	{
 		if (m_continous)

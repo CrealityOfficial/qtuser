@@ -58,6 +58,7 @@ namespace qtuser_3d
 
 	void ColorPicker::captureCompleted()
 	{
+		emit frameCaptureComplete();
 #if 0
 		qDebug() << "ColorPicker::captureCompleted";
 #endif

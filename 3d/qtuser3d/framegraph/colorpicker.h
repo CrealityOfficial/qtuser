@@ -23,6 +23,8 @@ namespace qtuser_3d
 		, public FacePicker
 	{
 		Q_OBJECT
+	signals:
+		void frameCaptureComplete();
 	public:
 		ColorPicker(Qt3DCore::QNode* parent = nullptr);
 		virtual ~ColorPicker();
