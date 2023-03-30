@@ -40,6 +40,8 @@ namespace qtuser_3d
 
 		void setContinousRender();
 		void setCommandRender();
+		void pauseUpdate();
+		bool inRenderingState();
 	public slots:
 		void requestUpdate();
 	protected:
@@ -76,7 +78,7 @@ namespace qtuser_3d
 		qtuser_core::RawOGL* m_raw;
 		QOpenGLContext* m_sharedContext;
 		int m_times;
-		bool m_continous;
+		volatile bool m_continous;
 	};
 }
 
