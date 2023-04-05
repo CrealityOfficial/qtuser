@@ -42,6 +42,7 @@ namespace qtuser_core
 						CreativeInterface* interf = qobject_cast<CreativeInterface*>(object);
 						if (interf)
 						{
+							object->setParent(this);
 	                        m_interfaces.insert(fileInfo.baseName(),interf);
 						}else
 							qDebug() << "Can't Find Interface in Plugin." << fileInfo.filePath();
