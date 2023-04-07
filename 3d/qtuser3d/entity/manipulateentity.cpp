@@ -17,7 +17,7 @@ namespace qtuser_3d
 		{
 			shader_type = "pickFace.pick";
 		}
-		setEffect(EFFECTCREATE(shader_type, m_material));
+		setEffect(EFFECT(shader_type));
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 		m_changeColorParameter = createParameter("changecolor", QVector4D(0.0f, 0.0f, 0.0f, 0.0f));
 		m_methodParameter = createParameter("mt", 0);
