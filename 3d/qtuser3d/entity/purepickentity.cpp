@@ -13,7 +13,7 @@ namespace qtuser_3d
 		:PickEntity(parent)
 	{
 		//setEffect(EFFECT("pure.view_pickFace.pick"));
-		setEffect(EFFECTCREATE("xyzIndicator.view_pickFace.pick", m_material));
+		setEffect(EFFECTCREATE("xyzIndicator.xyzAxis_pickFace.pick", m_material));
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
 
 	}
