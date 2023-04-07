@@ -63,6 +63,9 @@ namespace qtuser_3d
 		Qt3DRender::QRenderCapture* m_renderCapture;
 		Qt3DRender::QRenderPassFilter* m_renderPassFilter;
 		Qt3DRender::QFilterKey* m_filterKey;
+		Qt3DRender::QRenderPassFilter* m_renderPassFilter2;
+		Qt3DRender::QFilterKey* m_filterKey2;
+
 		Qt3DRender::QCameraSelector* m_cameraSelector;
 		Qt3DRender::QCamera* m_camera;
 

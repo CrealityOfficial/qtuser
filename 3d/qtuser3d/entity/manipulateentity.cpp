@@ -17,7 +17,7 @@ namespace qtuser_3d
 		
 		if (pickable)
 		{
-			pickPassName = "pickFace.pick";
+			pickPassName = "pickFace.pickManipulate";
 		}
 
 		QString shader_type = showPassName + "_" + pickPassName;

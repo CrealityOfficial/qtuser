@@ -17,9 +17,9 @@ namespace qtuser_3d
 		m_stateParameter = createParameter("state", 0.0f);
 		m_colorParameter = createParameter("color", QVector4D(1.0f, 1.0f, 1.0f, 0.2f));
 		m_vertexBaseParameter = createParameter("vertexBase", QPoint(0, 0));
-		qtuser_3d::UEffect* effect = (qtuser_3d::UEffect*)EFFECTCREATE("pure.alpha.rt_pickFace.pick", this);
-		effect->setPassBlend("pure.alpha.rt");
-		effect->setPassCullFace("pure.alpha.rt");
+		qtuser_3d::UEffect* effect = (qtuser_3d::UEffect*)EFFECTCREATE("pure.alpha_pickFace.pick", this);
+		effect->setPassBlend("pure.alpha");
+		effect->setPassCullFace("pure.alpha");
 
 		Qt3DRender::QNoDepthMask* mask = new Qt3DRender::QNoDepthMask(this);
 		QList<Qt3DRender::QRenderPass*> passes

@@ -14,16 +14,26 @@ namespace qtuser_3d
         , m_createImageFinished(false)
 #endif
 	{
-		m_clearBuffer = new Qt3DRender::QClearBuffers(this);
+		m_renderTargetSelector = new Qt3DRender::QRenderTargetSelector(this);
+
+		m_clearBuffer = new Qt3DRender::QClearBuffers(m_renderTargetSelector);
 		m_clearBuffer->setClearColor(QColor(255, 255, 255, 255));
 		m_clearBuffer->setBuffers(Qt3DRender::QClearBuffers::BufferType::ColorDepthBuffer);
-		m_renderTargetSelector = new Qt3DRender::QRenderTargetSelector(m_clearBuffer);
-		m_renderCapture = new Qt3DRender::QRenderCapture(m_renderTargetSelector);
-		m_renderPassFilter = new Qt3DRender::QRenderPassFilter(m_renderCapture);
+		
+		m_renderPassFilter = new Qt3DRender::QRenderPassFilter(m_clearBuffer);
 		m_filterKey = new Qt3DRender::QFilterKey(m_renderPassFilter);
 		m_filterKey->setName("pick");
 		m_filterKey->setValue(0);
 		m_renderPassFilter->addMatch(m_filterKey);
+
+
+		m_renderPassFilter2 = new Qt3DRender::QRenderPassFilter(m_renderTargetSelector);
+		m_filterKey2 = new Qt3DRender::QFilterKey(m_renderPassFilter2);
+		m_filterKey2->setName("pickManipulate");
+		m_filterKey2->setValue(0);
+		m_renderPassFilter2->addMatch(m_filterKey2);
+
+		m_renderCapture = new Qt3DRender::QRenderCapture(m_filterKey2);
 
 		m_cameraSelector = new Qt3DRender::QCameraSelector();
 		m_camera = new Qt3DRender::QCamera(m_cameraSelector);
