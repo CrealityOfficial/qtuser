@@ -18,13 +18,13 @@ public:
 		:m_item(item)
 	{
 		m_item->_initialize();
-		qDebug() << "NativeRenderSystemWrapper Ctr. thread " << QThread::currentThread();
+		qDebug() << "NativeRenderSystemWrapper Ctr. thread " << QThread::currentThreadId();
 	}
 
 	virtual ~NativeRenderSystemWrapper()
 	{
 		m_item->_uninitialize();
-		qDebug() << "NativeRenderSystemWrapper Ctr~. thread " << QThread::currentThread();
+		qDebug() << "NativeRenderSystemWrapper Ctr~. thread " << QThread::currentThreadId();
 	}
 
 	void render() Q_DECL_OVERRIDE
@@ -33,14 +33,14 @@ public:
 			qtuser_core::OpenGLContextSaver saver;
 			if (m_item->_render())
 				update();
-			//qInfo() << "NativeRenderSystemWrapper render. thread " << QThread::currentThread();
+			//qInfo() << "NativeRenderSystemWrapper render. thread " << QThread::currentThreadId();
 		}
 		m_item->window()->resetOpenGLState();
 	}
 
 	void synchronize(QQuickFramebufferObject* item) Q_DECL_OVERRIDE
 	{
-		//qInfo() << "NativeRenderSystemWrapper synchronize." << QThread::currentThread();
+		//qInfo() << "NativeRenderSystemWrapper synchronize." << QThread::currentThreadId();
 		m_item->_synchronize();
 	}
 
@@ -69,12 +69,12 @@ QuickNativeRenderItem::QuickNativeRenderItem(QQuickItem* parent)
 	forceActiveFocus(Qt::MouseFocusReason);
 
 	connect(this, &QQuickItem::windowChanged, this, &QuickNativeRenderItem::handleWindowChanged);
-	qDebug() << "QuickNativeRenderItem Ctr. thread " << QThread::currentThread();
+	qDebug() << "QuickNativeRenderItem Ctr. thread " << QThread::currentThreadId();
 }
 
 QuickNativeRenderItem::~QuickNativeRenderItem()
 {
-	qDebug() << "QuickNativeRenderItem Ctr~. thread " << QThread::currentThread();
+	qDebug() << "QuickNativeRenderItem Ctr. thread " << QThread::currentThreadId();
 }
 
 void QuickNativeRenderItem::setQuickNativeEventDispacher(qtuser_core::QuickNativeEventDispacher* dispacher)

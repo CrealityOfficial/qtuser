@@ -32,7 +32,7 @@ namespace qtuser_3d
 
 	}
 
-	void RenderGraph::updateRenderSize(QSize size)
+	void RenderGraph::updateRenderSize(const QSize& size)
 	{
 
 	}

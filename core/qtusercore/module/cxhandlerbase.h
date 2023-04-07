@@ -5,11 +5,10 @@
 
 namespace qtuser_core
 {
-	class QTUSER_CORE_API CXHandleBase : public QObject
+	class QTUSER_CORE_API CXHandleBase
 	{
-		Q_OBJECT
 	public:
-		CXHandleBase(QObject* parent = nullptr);
+		CXHandleBase();
 		virtual ~CXHandleBase();
 
 	public:
@@ -17,12 +16,10 @@ namespace qtuser_core
 		virtual void cancelHandle();
 		virtual void handle(const QString& fileName);
 		virtual void handle(const QStringList& fileNames);
+		virtual QString filterKey();  // for manager  , "base" for default
 
-		virtual void openfail();
 		QStringList suffixesFromFilter();
 	private:
-		QStringList m_fileNames;
-		QString m_fileName;
 	};
 }
 

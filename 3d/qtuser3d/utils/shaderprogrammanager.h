@@ -29,6 +29,7 @@ namespace qtuser_3d
 
 		void cache(const QString& name);
 		Qt3DRender::QShaderProgram* Get(const QString& name);
+		Qt3DRender::QShaderProgram* Create(const QString& name);
 		Qt3DCore::QNode* root();
 	protected:
 		Qt3DRender::QShaderProgram* loadShaderProgram(const QString& name);
@@ -49,6 +50,7 @@ namespace qtuser_3d
 }
 
 #define SHADERS(x) qtuser_3d::ShaderProgramManager::Instance().Get(x)
+#define CREATE_SHADER(x) qtuser_3d::ShaderProgramManager::Instance().Create(x)
 #define SHADERROOT qtuser_3d::ShaderProgramManager::Instance().root()
 #define SHADERCACHE(x) qtuser_3d::ShaderProgramManager::Instance().cache(x)
 #endif // _QTUSER_3D_SHADERPROGRAMMANAGER_1588130738105_H

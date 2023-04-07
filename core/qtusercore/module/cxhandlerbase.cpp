@@ -2,8 +2,7 @@
 
 namespace qtuser_core
 {
-	CXHandleBase::CXHandleBase(QObject* parent)
-		:QObject(parent)
+	CXHandleBase::CXHandleBase()
 	{
 	}
 
@@ -24,20 +23,15 @@ namespace qtuser_core
 
 	void CXHandleBase::handle(const QString& fileName)
 	{
-		m_fileName = fileName;
 	}
 
 	void CXHandleBase::handle(const QStringList& fileNames)
 	{
-		for (QString fileName : fileNames)
-		{
-			m_fileNames << fileName;
-		}
 	}
 
-	void CXHandleBase::openfail()
+	QString CXHandleBase::filterKey()
 	{
-		return ;
+		return "base";
 	}
 
 	QStringList CXHandleBase::suffixesFromFilter()

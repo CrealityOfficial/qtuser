@@ -66,6 +66,11 @@ namespace qtuser_3d
 		}
 		return shaderProgram;
 	}
+	
+	Qt3DRender::QShaderProgram* ShaderProgramManager::Create(const QString& name)
+	{
+		return loadShaderProgram(name);
+	}
 
 	void ShaderProgramManager::cache(const QString& name)
 	{

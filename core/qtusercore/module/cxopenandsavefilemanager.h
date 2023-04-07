@@ -53,34 +53,40 @@ namespace qtuser_core
 		Q_INVOKABLE void qSave(QObject* receiver);
 		Q_INVOKABLE void qOpen();
 
+		Q_INVOKABLE void setFilterKey(const QString& filterKey);
 		void openWithParams(const QStringList& fileNames);
 		bool openWithName(const QString& fileName);
 		void openWithNames(const QStringList& fileNames);
-		bool openWithUrl(const QUrl& url);
-		bool openWithUrl(const QList<QUrl>& urls);
+		Q_INVOKABLE bool openWithUrl(const QUrl& url);
+		Q_INVOKABLE bool openWithUrls(const QList<QUrl>& urls);
 		bool openWithString(const QString& commonName);
 
 		bool saveWithName(const QString& fileName);
 		bool saveWithUrl(const QUrl& url);
 
 		void registerOpenHandler(CXHandleBase* handler);
+		void unRegisterOpenHandler(CXHandleBase* handler);
 		void registerOpenHandler(const QStringList& suffixes, CXHandleBase* handler);
 		void unRegisterOpenHandler(const QStringList& suffixes);
 		void registerOpenHandler(const QString& suffix, CXHandleBase* handler);
 		void unRegisterOpenHandler(const QString& suffix);
 
 		void registerSaveHandler(CXHandleBase* handler);
+		void unRegisterSaveHandler(CXHandleBase* handler);
 		void registerSaveHandler(const QStringList& suffixes, CXHandleBase* handler);
 		void unRegisterSaveHandler(const QStringList& suffixes);
 		void registerSaveHandler(const QString& suffix, CXHandleBase* handler);
 		void unRegisterSaveHandler(const QString& suffix);
 
 		QString lastOpenFileName();
+		QString lastOpenFilePath();
 		QString lastSaveFileName();
 		void setLastOpenFileName(QString filePath);
 		void setLastSaveFileName(QString filePath);
 
-		void openDesktopFolder();
+		bool isSupportSuffix(const QString& suffix);
+
+		Q_INVOKABLE void openDesktopFolder();
 		Q_INVOKABLE void openLastSaveFolder();
 		void openFolder(const QString& folder);
 
@@ -90,27 +96,31 @@ namespace qtuser_core
 		bool openWithNamesSuffix(const QStringList& fileNames);
 		bool saveWithNameSuffix(const QString& fileName, const QString suffix);
 
-		bool registerHandler(const QString& suffix, CXHandleBase* handler, QMap<QString, CXHandleBase*>& handlers);
-		void unRegisterHandler(const QString& suffix, QMap<QString, CXHandleBase*>& handlers);
-		CXHandleBase* findHandler(const QString& suffix, QMap<QString, CXHandleBase*>& handlers);
+		bool registerHandler(const QString& suffix, CXHandleBase* handler, QMap<QString, QList<CXHandleBase*>>& handlers);
+		void unRegisterHandler(const QString& suffix, QMap<QString, QList<CXHandleBase*>>& handlers);
+		void unRegisterHandler(CXHandleBase* handler, QMap<QString, QList<CXHandleBase*>>& handlers);
+		CXHandleBase* findHandler(const QString& suffix, QMap<QString, QList<CXHandleBase*>>& handlers);
 
 		QStringList generateFilters(const QStringList& extensions);
 		QStringList generateFiltersFromHandlers(bool saveState);
+		QStringList generateSuffixesFromHandlers(bool saveState);
 		QString generateFilterFromHandlers(bool saveState);
 	protected:
 		QObject* m_invokeObject;
 		OpenSaveState m_State;
 
-		QMap<QString, CXHandleBase*> m_openHandlers;
+		QString m_filterKey;
+		QMap<QString, QList<CXHandleBase*>> m_openHandlers;
 		QStringList m_openFilterList;
 
-		QMap<QString, CXHandleBase*> m_saveHandlers;
+		QMap<QString, QList<CXHandleBase*>> m_saveHandlers;
 		QStringList m_saveFilterList;
 
 		CXHandleBase* m_externalHandler;
 
 		QString m_lastSaveFile;
 		QString m_lastOpenFile;
+		QString m_lastOpenFilePath;
 
 		QList<CXFileOpenSaveCallback*> m_callbacks;
 	};

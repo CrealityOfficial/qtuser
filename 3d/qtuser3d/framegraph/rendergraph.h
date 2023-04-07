@@ -20,7 +20,7 @@ namespace qtuser_3d
 
 		virtual void begineRender();
 		virtual void endRender();
-		virtual void updateRenderSize(QSize size);
+		virtual void updateRenderSize(const QSize& size);
 
 		virtual void onRegistered();
 		virtual void onUnRegistered();

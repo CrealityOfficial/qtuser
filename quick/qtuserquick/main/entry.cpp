@@ -7,7 +7,6 @@
 #include <QFont>
 #include "qtusercore/module/systemutil.h"
 #include "qtuser3d/module/glcompatibility.h"
-#include "stringutil/util.h"
 
 namespace qtuser_quick
 {
@@ -77,15 +76,33 @@ namespace qtuser_quick
 		return ret;
 	}
 
-	int wQmlAppMain(int argc, wchar_t* argv[], QmlAppModule& app)
+	int appMain(int argc, char* argv[], AppModule& appModule)
 	{
-		std::vector<std::string> 	argv_narrow;
-		std::vector<char*>	argv_ptrs(argc + 1, nullptr);
-		for (size_t i = 0; i < argc; ++i)
-			argv_narrow.emplace_back(stringutil::wchar2char(argv[i]));
-		for (size_t i = 0; i < argc; ++i)
-			argv_ptrs[i] = (char*)argv_narrow[i].data();
+		qtuser_core::initializeLog(argc, argv);
 
-		return qmlAppMain(argc, argv_ptrs.data(), app);
+		int ret = 0;
+		{
+			qtuser_core::setDefaultBeforApp();
+			qtuser_3d::setBeforeApplication();
+			setDefaultQmlBeforeApp();
+
+			QApplication app(argc, argv);
+			QFont default_font = QFont();
+			default_font.setPointSize(9);
+			app.setFont(default_font);
+			QQmlApplicationEngine engine;
+
+			qtuser_core::setDefaultAfterApp();
+			setDefaultQmlAfterApp(engine);
+
+			if(appModule.loadQmlEngine(app, engine))
+				ret = app.exec();
+			
+			appModule.unloadQmlEngine();
+		}
+		appModule.shutDown();
+
+		qtuser_core::uninitializeLog();
+		return ret;
 	}
 }
