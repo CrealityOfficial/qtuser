@@ -20,7 +20,11 @@ namespace qtuser_3d
 	
 	RenderPassManager::~RenderPassManager()
 	{
-		delete m_root;
+		if (m_root)
+		{
+			delete m_root;
+			m_root = nullptr;
+		}
 	}
 
 	Qt3DCore::QNode* RenderPassManager::root()
