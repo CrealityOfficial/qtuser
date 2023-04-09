@@ -27,6 +27,7 @@ namespace qtuser_core
 		bool isRunning();
 		bool execute(QList<JobPtr> jobs, bool front = false);
 		bool execute(JobPtr job, bool front = false);
+		bool execute(Job* job, bool front = false);
 		void addJobTracer(JobTracer* tracer);
 		void removeJobTracer(JobTracer* tracer);
 	public slots:

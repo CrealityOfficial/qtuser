@@ -72,6 +72,11 @@ namespace qtuser_core
 		return execute(jobs, front);
 	}
 
+	bool JobExecutor::execute(Job* job, bool front)
+	{
+		return execute(JobPtr(job));
+	}
+
 	void JobExecutor::onJobFinished()
 	{	
 		m_runThread->invokeFinished();
