@@ -30,8 +30,11 @@ public:
 	{
 		if (single)
 		{
-			delete single;
-			single = nullptr;
+			#ifdef __APPLE__
+			#else
+				delete single;
+				single = nullptr;
+			#endif
 		}
 	}
 protected:
