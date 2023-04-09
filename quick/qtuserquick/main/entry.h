@@ -26,13 +26,15 @@ namespace qtuser_quick
 	class AppModule
 	{
 	public:
-		~AppModule() {}
+		virtual ~AppModule() {}
 
 		virtual bool loadQmlEngine(QApplication& app, QQmlApplicationEngine& engine) = 0;
 		virtual void unloadQmlEngine() = 0;
 		virtual void shutDown() = 0;
 	};
-	QTUSER_QUICK_API int appMain(int argc, char* argv[], AppModule& appModule);
+
+	typedef std::function<AppModule*()> AppModuleCreateFunc;
+	QTUSER_QUICK_API int appMain(int argc, char* argv[], AppModuleCreateFunc func);
 }
 
 #endif // QTUSER_QUICK_MAIN_1601388211209_H

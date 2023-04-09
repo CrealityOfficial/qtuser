@@ -76,31 +76,37 @@ namespace qtuser_quick
 		return ret;
 	}
 
-	int appMain(int argc, char* argv[], AppModule& appModule)
+	int appMain(int argc, char* argv[], AppModuleCreateFunc func)
 	{
 		qtuser_core::initializeLog(argc, argv);
 
+		qtuser_core::setDefaultBeforApp();
+		qtuser_3d::setBeforeApplication();
+		setDefaultQmlBeforeApp();
+
+		QApplication app(argc, argv);
+
+		AppModule* appModule = func ? func() : nullptr;
 		int ret = 0;
+		if (appModule)
 		{
-			qtuser_core::setDefaultBeforApp();
-			qtuser_3d::setBeforeApplication();
-			setDefaultQmlBeforeApp();
+			{
+				QFont default_font = QFont();
+				default_font.setPointSize(9);
+				app.setFont(default_font);
+				QQmlApplicationEngine engine;
 
-			QApplication app(argc, argv);
-			QFont default_font = QFont();
-			default_font.setPointSize(9);
-			app.setFont(default_font);
-			QQmlApplicationEngine engine;
+				qtuser_core::setDefaultAfterApp();
+				setDefaultQmlAfterApp(engine);
 
-			qtuser_core::setDefaultAfterApp();
-			setDefaultQmlAfterApp(engine);
+				if (appModule->loadQmlEngine(app, engine))
+					ret = app.exec();
 
-			if(appModule.loadQmlEngine(app, engine))
-				ret = app.exec();
-			
-			appModule.unloadQmlEngine();
+				appModule->unloadQmlEngine();
+			}
+			appModule->shutDown();
+			delete appModule;
 		}
-		appModule.shutDown();
 
 		qtuser_core::uninitializeLog();
 		return ret;
