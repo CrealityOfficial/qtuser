@@ -624,11 +624,13 @@ namespace qtuser_core
 		QOperatingSystemVersion version = QOperatingSystemVersion::current();
 		QProcess process;
 		qDebug()<<"openFolder version.type() : " <<version.type();
-		if(version.type() == QOperatingSystemVersion::Windows)
+		if (version.type() == QOperatingSystemVersion::Windows)
 		{
-		    QString strPath = "explorer.exe /select," + m_lastSaveFile;
-		    qDebug() << "strFile =" << m_lastSaveFile;
-		    process.startDetached(QStringLiteral("explorer.exe /select,") + m_lastSaveFile);
+			QString strPath = "explorer.exe /select," + m_lastSaveFile;
+			QString lastFile = m_lastSaveFile;
+			qDebug() << "strFile =" << m_lastSaveFile;
+			lastFile.replace("/", "\\");
+			process.startDetached(QStringLiteral("explorer.exe /select,") + lastFile);
 		}
 		else if(version.type() == QOperatingSystemVersion::MacOS)
 		{
