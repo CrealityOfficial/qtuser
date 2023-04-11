@@ -180,15 +180,6 @@ namespace qtuser_core
 		openWithUrl(QUrl(url));
 	};
 
-	void CXFileOpenAndSaveManager::filesOpen(const QList<QUrl>& urls)
-	{
-		QStringList fileNames;
-		for (const QUrl& url : urls)
-			fileNames << url.toLocalFile();
-
-		openWithNames(fileNames);
-	};
-
 	void CXFileOpenAndSaveManager::fileSave(const QString& url)
 	{
 		saveWithUrl(QUrl(url));

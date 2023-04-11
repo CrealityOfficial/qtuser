@@ -41,7 +41,6 @@ namespace qtuser_core
 		Q_INVOKABLE QString currOpenFile();
 		Q_INVOKABLE void fileOpen(const QString& url);
 		Q_INVOKABLE void fileSave(const QString& url);
-		Q_INVOKABLE void filesOpen(const QList<QUrl>& urls);
 		Q_INVOKABLE bool cancelHandle();
 		void addCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback);
 		void removeCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback);
