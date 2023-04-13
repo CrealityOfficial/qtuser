@@ -43,9 +43,9 @@ namespace qtuser_3d
 		}
 		else
 		{
-			effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::Always);
+			effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::Less);
 			if (pickable)
-				effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Always);
+				effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Less);
 		}
 
 		setPassCullFace(showPassName, Qt3DRender::QCullFace::CullingMode::Back);

@@ -5,19 +5,26 @@
 
 namespace qtuser_3d
 {
-	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, bool alpha, bool pickable, bool depthTest)
+	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, bool alpha, bool pickable, bool depthTest, int alphalayer)
 		:PickableEntity(parent)
 	{
 		QString showPassName = "manipulate";
 		QString pickPassName = "";
 		if (alpha)
 		{
-			showPassName += ".alpha";
+			if (alphalayer == 0)
+			{
+				showPassName += ".alpha";
+			}
+			else if (alphalayer == 1)
+			{
+				showPassName += ".alpha2nd";
+			}
 		}
 		
 		if (pickable)
 		{
-			pickPassName = "pickFace.pickManipulate";
+			pickPassName = "pickFace.pick2nd";
 		}
 
 		QString shader_type = showPassName + "_" + pickPassName;
@@ -44,8 +51,13 @@ namespace qtuser_3d
 		}
 
 		setPassCullFace(showPassName, Qt3DRender::QCullFace::CullingMode::NoCulling);
-		if (pickable)
+		if (pickable) {
 			setPassCullFace(pickPassName, Qt3DRender::QCullFace::CullingMode::NoCulling);
+		}
+		
+		if (alpha) {
+			setPassBlend(showPassName);
+		}
 	}
 
 	ManipulateEntity::~ManipulateEntity()

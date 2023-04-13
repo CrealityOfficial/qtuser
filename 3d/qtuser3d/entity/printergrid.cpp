@@ -13,7 +13,8 @@ namespace qtuser_3d
 		, m_yshowColor(0.65f, 0.23f, 0.23f, 1.0f)
 		, m_gap(10.0f)
 	{
-		UEffect* useEffect = qobject_cast<UEffect*>( EFFECTCREATE("printergrid", m_material));
+		UEffect* useEffect = qobject_cast<UEffect*>(EFFECTCREATE("printergrid", m_material));
+		useEffect->setPassDepthTest("printergrid", Qt3DRender::QDepthTest::Less);
 		m_xshowColorParam = useEffect->createParameter("xshowcolor", m_xshowColor);
 		m_yshowColorParam = useEffect->createParameter("yshowcolor", m_yshowColor);
 		m_lineColorParam = useEffect->createParameter("linecolor", m_lineColor);

@@ -31,6 +31,13 @@ namespace qtuser_3d
 		alphaKey->setName("alpha");
 		alphaKey->setValue(0);
 		m_alphaPassFilter->addMatch(alphaKey);
+
+		
+		m_alphaPassFilter2 = new Qt3DRender::QRenderPassFilter(m_cameraSelector);
+		Qt3DRender::QFilterKey* alphaKey2 = new Qt3DRender::QFilterKey();
+		alphaKey2->setName("alpha2nd");
+		alphaKey2->setValue(0);
+		m_alphaPassFilter2->addMatch(alphaKey2);
 	}
 
 	Surface::~Surface()

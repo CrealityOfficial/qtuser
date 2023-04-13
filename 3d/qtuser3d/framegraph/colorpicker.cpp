@@ -29,7 +29,7 @@ namespace qtuser_3d
 
 		m_renderPassFilter2 = new Qt3DRender::QRenderPassFilter(m_renderTargetSelector);
 		m_filterKey2 = new Qt3DRender::QFilterKey(m_renderPassFilter2);
-		m_filterKey2->setName("pickManipulate");
+		m_filterKey2->setName("pick2nd");
 		m_filterKey2->setValue(0);
 		m_renderPassFilter2->addMatch(m_filterKey2);
 

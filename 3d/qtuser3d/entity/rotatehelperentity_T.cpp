@@ -101,8 +101,8 @@ namespace qtuser_3d
 		QMatrix4x4 m;
 		m.scale(m_scale);
 
-		// 旋转轨初始化
-		m_pRingEntity = new PieFadeEntity(m_pNoRotateGroup, true, true, false);
+		// 细条环状旋转轨初始化
+		m_pRingEntity = new PieFadeEntity(m_pNoRotateGroup, true, false, false);
 		m_pRingEntity->setObjectName("RotateHelperEntity_T.ringEntity");
 		m_pRingEntity->setPose(m);
 		m_pRingEntity->setColor(m_ringColor);
@@ -302,7 +302,7 @@ namespace qtuser_3d
 		QMatrix4x4 m;
 		m.scale(m_scale);
 
-		// 刻度盘初始化
+		// 刻度盘初始化（半透明、扇形）
 		m_pDialEntity = new PieFadeEntity(m_pRotateGroup, true, false, false);
 		m_pDialEntity->setObjectName("RotateHelperEntity_T.dialEntity");
 		m_pDialEntity->setPose(m);
@@ -311,6 +311,7 @@ namespace qtuser_3d
 		m_pDialEntity->setRotRadians(0);
 		m_pDialEntity->setRotInitDir(m_initRotateDir);
 		m_pDialEntity->setRotAxis(m_rotateAxis);
+		m_pDialEntity->setPassBlend("piefade.alpha");
 
 		// 构建刻度盘模型数据
 		double radius = m_dialRadius;
@@ -374,7 +375,7 @@ namespace qtuser_3d
 		m_pDialEntity->setGeometry(dialGeo);
 
 
-		// 刻度初始化
+		// 刻度初始化（白色）
 		m_pDegreeEntity = new ManipulateEntity(nullptr, true, false, false);
 		m_pDegreeEntity->setObjectName("RotateHelperEntity_T.degreeEntity");
 		m_pDegreeEntity->setPose(m);

@@ -11,7 +11,8 @@ namespace qtuser_3d
 		QVector4D color(0.15f, 0.15f, 0.15f, 1.0f);
 		m_colorParameter = createParameter("color", color);
 
-		setEffect(EFFECT("pure"));
+		setEffect(EFFECTCREATE("pure", m_material));
+		setPassDepthTest("pure");
 	}
 	
 	PrinterSkirtDecorEntity::~PrinterSkirtDecorEntity()
