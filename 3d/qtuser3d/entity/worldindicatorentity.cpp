@@ -503,6 +503,11 @@ namespace qtuser_3d {
         adaptCamera(dirs);
     }
 
+    void WorldIndicatorEntity::setLength(float length)
+    {
+        m_length = length;
+    }
+
     void WorldIndicatorEntity::setScreenPos(const QPoint& p)
     {
         m_showOnPoint = p;
@@ -513,9 +518,8 @@ namespace qtuser_3d {
             float x = float(p.x()) / size.width();
             float y = float(p.y()) / size.height();
 
-            float pixNum = 100.0;
-            float w = pixNum / size.width();
-            float h = pixNum / size.height();
+            float w = m_length / size.width();
+            float h = m_length / size.height();
             setViewport(x, y, w, h);
         }   
     }

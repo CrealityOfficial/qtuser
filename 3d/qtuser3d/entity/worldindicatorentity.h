@@ -33,6 +33,7 @@ namespace qtuser_3d
 
 		void setSelectedDirections(int dirs);
 
+		void setLength(float length);
 		void setScreenPos(const QPoint& p);
 		void resetCameraAngle();
 
@@ -75,6 +76,7 @@ namespace qtuser_3d
 
 		QPoint m_showOnPoint;
 
+		float m_length = 100.0;//正方体的边长
 		int m_theme;
 		QUrl m_lightTextureUrl;
 		QUrl m_darkTextureUrl;
