@@ -19,11 +19,11 @@ namespace qtuser_3d
 	}
 
     bool _isNotInstalledVideoDriver() {
-        QProcess* wmic = new QProcess();
+        QScopedPointer<QProcess> wmic(new QProcess());
         wmic->setProcessChannelMode(QProcess::MergedChannels);
 
         QString infName, drvName;
-        QObject::connect(wmic, &QProcess::readyReadStandardOutput, [wmic, &infName, &drvName]() {
+        QObject::connect(wmic.data(), &QProcess::readyReadStandardOutput, [&wmic, &infName, &drvName]() {
             QTextStream stream(wmic->readAllStandardOutput());
             QString s;
             while (stream.readLineInto(&s)) {
