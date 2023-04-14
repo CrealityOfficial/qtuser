@@ -20,7 +20,6 @@ namespace qtuser_3d
 
 	ClearBufferGraph::~ClearBufferGraph()
 	{
-		delete m_clearBuffer;
 	}
 
 }
