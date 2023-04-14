@@ -63,14 +63,7 @@ void ToolCommandCenter::addCommand(ToolCommand* command,int index)
         const QModelIndex& modelindex = QModelIndex();
         beginInsertRows(modelindex, 0, 0);
         m_toolCommandsMap[index] = command;
-        if (index >= m_toolCommands.size())
-        {
-            m_toolCommands.push_back(command);
-        }
-        else
-        {
-            m_toolCommands.insert(index, command);
-        }
+        m_toolCommands = m_toolCommandsMap.values();
         endInsertRows();
         if (!command->parent())
             command->setParent(this);
@@ -109,8 +102,8 @@ QVariant ToolCommandCenter::data(const QModelIndex& index, int role) const
 {
     if (index.row() >= 0 && index.row() < m_toolCommands.size())
     {
-//        ToolCommand* command = m_toolCommands.at(index.row());
-        ToolCommand* command = m_toolCommandsMap.value(index.row()); 
+       ToolCommand* command = m_toolCommands.at(index.row());
+        // ToolCommand* command = m_toolCommandsMap.value(index.row()); 
         switch (role)
         {
         case tc_name:
@@ -177,5 +170,3 @@ QObject* ToolCommandCenter::get(int index)
 
 
 }
-
-

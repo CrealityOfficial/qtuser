@@ -15,7 +15,9 @@ namespace qtuser_qml
 		explicit ToolCommandCenter(QObject* parent = nullptr);
 		virtual ~ToolCommandCenter();
 
+        // command's parent property will be set to the command center if it don't have one
 		void addCommand(ToolCommand* command);
+        // command's parent property will be set to nullptr
 		void addCommand(ToolCommand* command, int index);
 		void removeCommand(ToolCommand* command);
         void changeCommand(ToolCommand* command);
