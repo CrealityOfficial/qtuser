@@ -586,6 +586,7 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		if(sceneGraph)
 			sceneGraph->setParent((Qt3DCore::QNode*)nullptr);
 		currentGraph->endRender();
+		currentGraph->setEnabled(false);
 
 		disconnect(currentGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 	}
@@ -605,6 +606,7 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 			itemSize *= m_ratio;
 		}
 		graph->updateRenderSize(itemSize);
+		graph->setEnabled(true);
 	}
 
 	m_renderSettings->setActiveFrameGraph(graph);
