@@ -17,7 +17,8 @@ namespace qtuser_3d
 
 		m_clearBuffer = new Qt3DRender::QClearBuffers(m_cameraSelector);
 		m_clearBuffer->setClearColor(QColor(120, 120, 120, 255));
-		m_clearBuffer->setBuffers(Qt3DRender::QClearBuffers::BufferType::ColorDepthBuffer);
+		m_clearBuffer->setClearStencilValue(0x0);
+		m_clearBuffer->setBuffers(Qt3DRender::QClearBuffers::BufferType::ColorDepthStencilBuffer);
 
 		m_renderPassFilter = new Qt3DRender::QRenderPassFilter(m_clearBuffer);
 		Qt3DRender::QFilterKey* filterKey = new Qt3DRender::QFilterKey();
@@ -45,13 +46,13 @@ namespace qtuser_3d
 
 	void Surface::setClearColor(const QColor& color)
 	{
-		qDebug() << "Surface setClearColor " << color;
+		//qDebug() << "Surface setClearColor " << color;
 		m_clearBuffer->setClearColor(color);
 	}
 
 	void Surface::setViewport(const QRectF& rect)
 	{
-        qDebug() << "Surface viewport " << rect;
+        //qDebug() << "Surface viewport " << rect;
 		m_viewPort->setNormalizedRect(rect);
 	}
 
@@ -62,7 +63,7 @@ namespace qtuser_3d
 
 	void Surface::updateSurfaceSize(const QSize& size)
 	{
-        qDebug() << "Surface Set External Target Size : " << size;
+        //qDebug() << "Surface Set External Target Size : " << size;
 		setExternalRenderTargetSize(size);
 	}
 }

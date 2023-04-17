@@ -128,7 +128,7 @@ namespace qtuser_3d
 
 		if (m_renderGraph && m_aspectEngine && m_aspectEngine->rootEntity())
 		{
-			Qt3DRender::QFrameGraphNode* frameGraph = m_renderGraph->frameGraph();
+			Qt3DRender::QFrameGraphNode* frameGraph = m_renderGraph;
 			Qt3DCore::QEntity* sceneGraph = m_renderGraph->sceneGraph();
 
 			if (frameGraph)
@@ -245,7 +245,7 @@ namespace qtuser_3d
 		if (m_renderGraph)
 		{
 			m_renderGraph->begineRender();
-			Qt3DRender::QFrameGraphNode* frameGraph = m_renderGraph->frameGraph();
+			Qt3DRender::QFrameGraphNode* frameGraph = m_renderGraph;
 			Qt3DCore::QEntity* sceneGraph = m_renderGraph->sceneGraph();
 
 			if (frameGraph)

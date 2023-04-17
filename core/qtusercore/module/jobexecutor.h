@@ -17,6 +17,7 @@ namespace qtuser_core
 	class QTUSER_CORE_API JobExecutor: public QObject
 	{
 		Q_OBJECT
+		Q_PROPERTY(bool isRunning READ isRunning NOTIFY  isRunningChanged)
 	public:
 		JobExecutor(QObject* parent = nullptr);
 		virtual ~JobExecutor();
@@ -38,6 +39,7 @@ namespace qtuser_core
 		void jobStart(QObject* details);
 		void jobEnd(QObject* details);
 		void jobProgress(float r);
+		void isRunningChanged();
 	protected:
 		void startJob();
 	protected:

@@ -16,10 +16,12 @@ namespace qtuser_core
 	JobExecutor::~JobExecutor()
 	{
 	}
+
     QString JobExecutor::getDescription()
     {
         return m_jobDescription;
     }
+
 	bool JobExecutor::isRunning()
 	{
 		return m_running;
@@ -54,7 +56,7 @@ namespace qtuser_core
 		}
 
 		m_running = true;
-
+		emit isRunningChanged();
 		
 		for (JobTracer* tracer : m_tracers)
 			tracer->jobExecutorStart();
@@ -92,6 +94,7 @@ namespace qtuser_core
 			m_exsitJobs.clear();
 			m_runThread->setJob(nullptr);
 			m_running = false;
+			emit isRunningChanged();
 
 			for (JobTracer* tracer : m_tracers)
 				tracer->jobExecutorStop();
