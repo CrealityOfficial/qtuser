@@ -101,7 +101,7 @@ namespace qtuser_core
 				{
 					QFile::setPermissions(dstFilePath, QFile::WriteOwner);
 				}
-				QFile::copy(srcFilePath, dstFilePath);
+				error = !QFile::copy(srcFilePath, dstFilePath);
 			}
 			else if (fileInfo.isDir())
 			{
