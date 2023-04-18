@@ -16,7 +16,7 @@ namespace qtuser_3d
 		m_cameraSelector = new Qt3DRender::QCameraSelector(m_viewPort);
 
 		m_clearBuffer = new Qt3DRender::QClearBuffers(m_cameraSelector);
-		m_clearBuffer->setClearColor(QColor(120, 120, 120, 255));
+		m_clearBuffer->setClearColor(QColor(60, 60, 60, 255));
 		m_clearBuffer->setClearStencilValue(0x0);
 		m_clearBuffer->setBuffers(Qt3DRender::QClearBuffers::BufferType::ColorDepthStencilBuffer);
 
@@ -47,5 +47,10 @@ namespace qtuser_3d
 	void XRenderGraph::updateRenderSize(const QSize& size)
 	{
 		updateSurfaceSize(size);
+	}
+
+	QSize XRenderGraph::surfaceSize()
+	{
+		return m_surfaceSelector->externalRenderTargetSize();
 	}
 }

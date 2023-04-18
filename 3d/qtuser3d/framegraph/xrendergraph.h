@@ -24,6 +24,7 @@ namespace qtuser_3d
 		void updateSurfaceSize(const QSize& size);
 	protected:
 		void updateRenderSize(const QSize& size) override;
+		QSize surfaceSize();
 
 	protected:
 		Qt3DRender::QRenderSurfaceSelector* m_surfaceSelector;
