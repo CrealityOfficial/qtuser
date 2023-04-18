@@ -20,6 +20,11 @@ namespace qtuser_3d
 	class QTUSER_3D_API BufferHelper
 	{
 	public:
+		static Qt3DRender::QAttribute* CreateVertexAttribute(const char* buffer, uint count, uint stride, const QString& name);
+
+
+
+
 		static Qt3DRender::QAttribute* CreateVertexAttribute(const char* buffer, AttribueSlot slot, uint count);
 		static Qt3DRender::QAttribute* CreateVertexAttributeEx(const char* buffer, AttribueSlot slot, uint count);
 		static Qt3DRender::QAttribute* CreateVertexAttribute(const QString& name, const char* buffer, uint vertexSize, uint count);

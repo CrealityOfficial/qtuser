@@ -17,7 +17,7 @@ namespace qtuser_qml
 		: QObject(parent)
 		, m_item(item)
 	{
-
+		m_item->setAlways(true);
 	}
 
 	RenderItemWrapper::~RenderItemWrapper()

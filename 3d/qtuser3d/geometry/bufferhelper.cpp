@@ -5,6 +5,19 @@
 
 namespace qtuser_3d
 {
+	Qt3DRender::QAttribute* BufferHelper::CreateVertexAttribute(const char* buffer, uint count, uint stride, const QString& name)
+	{
+		if (count == 0 || !buffer)
+			return nullptr;
+
+		Qt3DRender::QBuffer* qBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+		qBuffer->setData(QByteArray(buffer, stride * sizeof(float) * count));
+		Qt3DRender::QAttribute* attribute = new Qt3DRender::QAttribute(qBuffer, name, Qt3DRender::QAttribute::Float, stride, count);
+		return attribute;
+	}
+
+
+
 	Qt3DRender::QAttribute* BufferHelper::CreateVertexAttribute(const char* buffer, AttribueSlot slot, uint count)
 	{
 		if (count == 0 || !buffer) return nullptr;
