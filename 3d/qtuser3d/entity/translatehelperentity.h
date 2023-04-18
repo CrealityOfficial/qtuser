@@ -35,7 +35,7 @@ namespace qtuser_3d
 			CUBE
 		};
 	public:
-		TranslateHelperEntity(Qt3DCore::QNode* parent = nullptr, int type = 7, IndicatorType shapetype = ARROW, QVector3D dir = QVector3D(1, 1, 1));
+		TranslateHelperEntity(Qt3DCore::QNode* parent = nullptr, int type = 7, IndicatorType shapetype = ARROW);
 		virtual ~TranslateHelperEntity();
 
 		void setCameraController(CameraController* controller);

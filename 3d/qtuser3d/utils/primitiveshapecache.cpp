@@ -22,13 +22,13 @@ namespace qtuser_3d
 		PRIMITIVE_ADD("box_nobottom", box_no_bottom)
 		Qt3DRender::QGeometry* pointGeometry = PointsCreateHelper::create();
 		PRIMITIVE_ADD("point", pointGeometry)
-			Qt3DRender::QGeometry* arrowGeometry = BasicShapeCreateHelper::createInstructions(0.015, 1.0, 0.065, 0.20);//ArrowCreateHelper::create();
+		Qt3DRender::QGeometry* arrowGeometry = BasicShapeCreateHelper::createInstructions(0.010, 1.0, 0.065, 0.20);//ArrowCreateHelper::create();
 		PRIMITIVE_ADD("arrow", arrowGeometry)	// ¼ýÍ·
 		Qt3DRender::QGeometry* cylinderGeometry = BasicShapeCreateHelper::createCylinder();	
 		PRIMITIVE_ADD("cylinder", cylinderGeometry)	//Ô²Öù
 		Qt3DRender::QGeometry* penGeometry = BasicShapeCreateHelper::createPen();
 		PRIMITIVE_ADD("pen", penGeometry)
-		Qt3DRender::QGeometry* scaleIndicatorGeometry = BasicShapeCreateHelper::createScaleIndicator(0.015, 1.0, 15, 0.20);
+		Qt3DRender::QGeometry* scaleIndicatorGeometry = BasicShapeCreateHelper::createScaleIndicator(0.010, 1.0, 15, 0.20);
 		PRIMITIVE_ADD("scaleindicator", scaleIndicatorGeometry)
 	}
 	

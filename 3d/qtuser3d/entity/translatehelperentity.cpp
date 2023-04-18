@@ -9,7 +9,7 @@
 
 namespace qtuser_3d
 {
-	TranslateHelperEntity::TranslateHelperEntity(Qt3DCore::QNode* parent, int type, IndicatorType shapetype, QVector3D dir)
+	TranslateHelperEntity::TranslateHelperEntity(Qt3DCore::QNode* parent, int type, IndicatorType shapetype)
 		: BasicEntity(parent)
 		, m_fixSize(0)
 		, m_scale(70.0)
@@ -159,14 +159,14 @@ namespace qtuser_3d
 			xMatrix.scale(m_scale, m_scale, m_scale);
 			//xMatrix.scale(15.0f, 15.0f, 15.0f);
 
-			m_pXArrowEntity = new qtuser_3d::ManipulateEntity(this, true, true, false, 1);
+			m_pXArrowEntity = new qtuser_3d::ManipulateEntity(this, false, true, false, true);
 			m_pXArrowEntity->setObjectName("TranslateHelperEntity.xArrowEntity");
 			m_pXArrowEntity->setPose(xMatrix);
-			m_pXArrowEntity->setColor(QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
+			m_pXArrowEntity->setColor(QVector4D(1.0f, 0.1098f, 0.1098f, 1.0f));
 			m_pXArrowEntity->setChangeColor(QVector4D(1.0f, 0.79f, 0.0f, 1.0f));
 			m_pXArrowEntity->setMethod(1);
 			m_pXArrowEntity->setGeometry(geometry, Qt3DRender::QGeometryRenderer::Triangles);
-			m_pXArrowEntity->setLightEnable(true);
+			//m_pXArrowEntity->setLightEnable(true);
 
 			m_pXArrowPickable = new ManipulatePickable(this);
 			m_pXArrowPickable->setPickableEntity(m_pXArrowEntity);
@@ -177,14 +177,14 @@ namespace qtuser_3d
 			QMatrix4x4 yMatrix;
 			yMatrix.scale(m_scale, m_scale, m_scale);
 			//yMatrix.scale(15.0f, 15.0f, 15.0f);
-			m_pYArrowEntity = new qtuser_3d::ManipulateEntity(this, true, true, false, 1);
+			m_pYArrowEntity = new qtuser_3d::ManipulateEntity(this, false, true, false, true);
 			m_pYArrowEntity->setObjectName("TranslateHelperEntity.yArrowEntity");
 			m_pYArrowEntity->setPose(yMatrix);
-			m_pYArrowEntity->setColor(QVector4D(0.0f, 1.0f, 0.0f, 1.0f));
+			m_pYArrowEntity->setColor(QVector4D(0.247f, 0.933f, 0.1098f, 1.0f));
 			m_pYArrowEntity->setChangeColor(QVector4D(1.0f, 0.79f, 0.0f, 1.0f));
 			m_pYArrowEntity->setMethod(1);
 			m_pYArrowEntity->setGeometry(geometry, Qt3DRender::QGeometryRenderer::Triangles);
-			m_pYArrowEntity->setLightEnable(true);
+			//m_pYArrowEntity->setLightEnable(true);
 
 			m_pYArrowPickable = new ManipulatePickable(this);
 			m_pYArrowPickable->setPickableEntity(m_pYArrowEntity);
@@ -196,14 +196,14 @@ namespace qtuser_3d
 			zMatrix.rotate(QQuaternion::rotationTo(m_initAxisDir, QVector3D(0.0, 0.0, 1.0)));
 			zMatrix.scale(m_scale, m_scale, m_scale);
 			//zMatrix.scale(15.0f, 15.0f, 15.0f);
-			m_pZArrowEntity = new qtuser_3d::ManipulateEntity(this, true, true, false, 1);
+			m_pZArrowEntity = new qtuser_3d::ManipulateEntity(this, false, true, false, true);
 			m_pZArrowEntity->setObjectName("TranslateHelperEntity.zArrowEntity");
 			m_pZArrowEntity->setPose(zMatrix);
-			m_pZArrowEntity->setColor(QVector4D(0.0f, 0.0f, 1.0f, 1.0f));
+			m_pZArrowEntity->setColor(QVector4D(0.4117f, 0.243f, 1.0f, 1.0f));
 			m_pZArrowEntity->setChangeColor(QVector4D(1.0f, 0.79f, 0.0f, 1.0f));
 			m_pZArrowEntity->setMethod(1);
 			m_pZArrowEntity->setGeometry(geometry, Qt3DRender::QGeometryRenderer::Triangles);
-			m_pZArrowEntity->setLightEnable(true);
+			//m_pZArrowEntity->setLightEnable(true);
 
 			m_pZArrowPickable = new ManipulatePickable(this);
 			m_pZArrowPickable->setPickableEntity(m_pZArrowEntity);
@@ -285,7 +285,7 @@ namespace qtuser_3d
 			m_pXYPlaneEntity = new qtuser_3d::ManipulateEntity(this, true, true);
 			m_pXYPlaneEntity->setObjectName("TranslateHelperEntity.xyPlaneEntity");
 			m_pXYPlaneEntity->setPose(xMatrix);
-			m_pXYPlaneEntity->setColor(QVector4D(0.0f, 0.0f, 1.0f, 0.6f));
+			m_pXYPlaneEntity->setColor(QVector4D(0.4117f, 0.243f, 1.0f, 0.5f));
 			m_pXYPlaneEntity->setChangeColor(QVector4D(1.0f, 0.79f, 0.0f, 1.0f));
 			m_pXYPlaneEntity->setMethod(1);
 			m_pXYPlaneEntity->setGeometry(planeGeo, Qt3DRender::QGeometryRenderer::Triangles);
@@ -303,7 +303,7 @@ namespace qtuser_3d
 			m_pYZPlaneEntity = new qtuser_3d::ManipulateEntity(this, true, true);
 			m_pYZPlaneEntity->setObjectName("TranslateHelperEntity.yzPlaneEntity");
 			m_pYZPlaneEntity->setPose(yMatrix);
-			m_pYZPlaneEntity->setColor(QVector4D(1.0f, 0.0f, 0.0f, 0.6f));
+			m_pYZPlaneEntity->setColor(QVector4D(1.0f, 0.1098f, 0.1098f, 0.5f));
 			m_pYZPlaneEntity->setChangeColor(QVector4D(1.0f, 0.79f, 0.0f, 1.0f));
 			m_pYZPlaneEntity->setMethod(1);
 			m_pYZPlaneEntity->setGeometry(planeGeo, Qt3DRender::QGeometryRenderer::Triangles);
@@ -321,7 +321,7 @@ namespace qtuser_3d
 			m_pZXPlaneEntity = new qtuser_3d::ManipulateEntity(this, true, true);
 			m_pZXPlaneEntity->setObjectName("TranslateHelperEntity.zxPlaneEntity");
 			m_pZXPlaneEntity->setPose(zMatrix);
-			m_pZXPlaneEntity->setColor(QVector4D(0.0f, 1.0f, 0.0f, 0.6f));
+			m_pZXPlaneEntity->setColor(QVector4D(0.247f, 0.933f, 0.1098f, 0.5f));
 			m_pZXPlaneEntity->setChangeColor(QVector4D(1.0f, 0.79f, 0.0f, 1.0f));
 			m_pZXPlaneEntity->setMethod(1);
 			m_pZXPlaneEntity->setGeometry(planeGeo, Qt3DRender::QGeometryRenderer::Triangles);
@@ -430,7 +430,7 @@ namespace qtuser_3d
 			m_pXYZCubeEntity = new qtuser_3d::ManipulateEntity(this, true, true);
 			m_pXYZCubeEntity->setObjectName("TranslateHelperEntity.xyzCubeEntity");
 			m_pXYZCubeEntity->setPose(mt);
-			m_pXYZCubeEntity->setColor(QVector4D(1.0f, 1.0f, 1.0f, 0.3f));
+			m_pXYZCubeEntity->setColor(QVector4D(1.0f, 1.0f, 1.0f, 0.1f));
 			m_pXYZCubeEntity->setChangeColor(QVector4D(1.0f, 0.79f, 0.0f, 1.0f));
 			m_pXYZCubeEntity->setMethod(1);
 			m_pXYZCubeEntity->setGeometry(cubeGeo, Qt3DRender::QGeometryRenderer::Triangles);

@@ -38,10 +38,24 @@ namespace qtuser_3d
 		alphaKey2->setName("alpha2nd");
 		alphaKey2->setValue(0);
 		m_alphaPassFilter2->addMatch(alphaKey2);
+
+
+		{
+			Qt3DRender::QClearBuffers *clearBuffer = new Qt3DRender::QClearBuffers(m_cameraSelector);
+			clearBuffer->setClearStencilValue(0x0);
+			clearBuffer->setBuffers(Qt3DRender::QClearBuffers::BufferType::DepthStencilBuffer);
+
+			Qt3DRender::QRenderPassFilter *renderPassFilter = new Qt3DRender::QRenderPassFilter(clearBuffer);
+			Qt3DRender::QFilterKey* filterKey = new Qt3DRender::QFilterKey();
+			filterKey->setName("overlay");
+			filterKey->setValue(0);
+			renderPassFilter->addMatch(filterKey);
+		}
 	}
 
 	Surface::~Surface()
 	{
+		//m_surfaceSelector->setSurface(nullptr);
 		setSurface(nullptr);
 		delete m_offSurface;
 	}

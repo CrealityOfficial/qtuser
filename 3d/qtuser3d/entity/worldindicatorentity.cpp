@@ -673,7 +673,8 @@ namespace qtuser_3d {
         setParameter("viewMatrix", QVariant(view));
 
         QMatrix4x4 projection;
-        projection.perspective(60.0f, 1.0, 1.0, 1000.0);
+        //projection.perspective(60.0f, 1.0, 1.0, 1000.0);
+        projection.ortho(-1, 1, -1, 1, 1.0, 1000.0);
         setParameter("projectionMatrix", QVariant(projection));
         
         setScreenPos(m_showOnPoint);

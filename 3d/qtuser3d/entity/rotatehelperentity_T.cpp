@@ -109,7 +109,7 @@ namespace qtuser_3d
 		m_pRingEntity->setRotMode(0);
 		m_pRingEntity->setRotInitDir(m_initRotateDir);
 		m_pRingEntity->setRotAxis(m_rotateAxis);
-		m_pRingEntity->setLigthEnable(true);
+		//m_pRingEntity->setLigthEnable(true);
 
 		Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh(this);
 		torusMesh->setRadius(m_ringRadius);
@@ -130,7 +130,8 @@ namespace qtuser_3d
 		m.rotate(90.0, m_initRotateDir);
 
 		// 旋转手柄初始化
-		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, true, true, false);
+		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, false, true, true, true);
+
 		m_pHandlerEntity->setObjectName("RotateHelperEntity_T.handleEntity");
 		m_pHandlerEntity->setPose(m);
 		m_pHandlerEntity->setColor(m_handlerColor);

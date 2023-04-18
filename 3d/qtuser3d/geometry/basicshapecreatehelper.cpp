@@ -468,7 +468,7 @@ namespace qtuser_3d
         //    addFaceDataWithQVector3D(v1, v2, v3, n, vertexDatas);
         //}
 
-		float disLen = cylinderLen + axisLen + 0.05;
+		float disLen = cylinderLen + axisLen + 0.0;
 		QVector3D vs[8] = {
 			QVector3D(-halflen, disLen, -halflen),
 			QVector3D(-halflen, disLen, halflen),

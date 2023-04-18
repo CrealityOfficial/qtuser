@@ -5,21 +5,19 @@
 
 namespace qtuser_3d
 {
-	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, bool alpha, bool pickable, bool depthTest, int alphalayer)
+	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, bool alpha, bool pickable, bool depthTest, bool overlay)
 		:PickableEntity(parent)
 	{
 		QString showPassName = "manipulate";
 		QString pickPassName = "";
 		if (alpha)
 		{
-			if (alphalayer == 0)
-			{
-				showPassName += ".alpha";
-			}
-			else if (alphalayer == 1)
-			{
-				showPassName += ".alpha2nd";
-			}
+			showPassName += ".alpha";
+		}
+
+		if (overlay)
+		{
+			showPassName += ".overlay";
 		}
 		
 		if (pickable)
@@ -40,14 +38,10 @@ namespace qtuser_3d
 		if (!depthTest)
 		{
 			effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::Always);
-			if (pickable)
-				effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Always);
-		}
-		else
+			
+		} else
 		{
 			effect->setPassDepthTest(showPassName, Qt3DRender::QDepthTest::DepthFunction::Less);
-			if (pickable)
-				effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::DepthFunction::Less);
 		}
 
 		setPassCullFace(showPassName, Qt3DRender::QCullFace::CullingMode::NoCulling);
@@ -55,6 +49,10 @@ namespace qtuser_3d
 			setPassCullFace(pickPassName, Qt3DRender::QCullFace::CullingMode::NoCulling);
 		}
 		
+		if (pickable) {
+			effect->setPassDepthTest(pickPassName, Qt3DRender::QDepthTest::Always);
+		}
+
 		if (alpha) {
 			setPassBlend(showPassName);
 		}
