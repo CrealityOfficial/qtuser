@@ -47,6 +47,10 @@ namespace qtuser_3d
 
 		Qt3DRender::QTexture2D* colorTexture();
 		void setTextureRenderTarget(TextureRenderTarget* textureRenderTarget);
+
+		void use();
+		void unUse();
+
 	public slots:
 		void captureCompleted();
 	protected:

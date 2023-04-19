@@ -159,4 +159,19 @@ namespace qtuser_3d
 		m_textureRenderTarget = textureRenderTarget;
 		if(m_textureRenderTarget) m_renderTargetSelector->setTarget(m_textureRenderTarget);
 	}
+
+	void ColorPicker::use()
+	{
+		//set the filterName same as the  "pick" renderPass of the modelEffect
+		m_filterKey->setName("pick");
+		m_filterKey->setValue(0);
+	}
+
+	void ColorPicker::unUse()
+	{
+		//set the filterName different from the  "pick" renderPass of the modelEffect
+		m_filterKey->setName("-ignore-ColorPicker-");
+		m_filterKey->setValue(0);
+	}
+
 }
