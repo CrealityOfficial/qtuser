@@ -1,12 +1,12 @@
 #ifndef QTUSER_3D_XEFFECT_1679973441776_H
 #define QTUSER_3D_XEFFECT_1679973441776_H
 #include "qtuser3d/qtuser3dexport.h"
+#include "qtuser3d/refactor/xrenderpass.h"
 #include <Qt3DRender/QEffect>
 #include <Qt3DRender/QParameter>
 
 namespace qtuser_3d
 {
-	class XRenderPass;
 	class QTUSER_3D_API XEffect : public Qt3DRender::QEffect
 	{
 		Q_OBJECT

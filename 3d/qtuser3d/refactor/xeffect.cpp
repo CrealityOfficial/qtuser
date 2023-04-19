@@ -1,6 +1,5 @@
 #include "xeffect.h"
 #include "qtuser3d/utils/techniquecreator.h"
-#include "qtuser3d/refactor/xrenderpass.h"
 
 namespace qtuser_3d
 {
