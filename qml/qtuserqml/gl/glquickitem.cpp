@@ -22,6 +22,7 @@
 #include "qtuser3d/event/eventhandlers.h"
 
 #include "qtuser3d/framegraph/rendergraph.h"
+#include "qtuser3d/framegraph/xrendergraph.h"
 #include "qtuserqml/gl/rawogl.h"
 
 #include "qtuserqml/macro.h"
@@ -589,6 +590,18 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		currentGraph->setEnabled(false);
 
 		disconnect(currentGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
+
+		XRenderGraph* xRender = qobject_cast<XRenderGraph*>(currentGraph);
+		if (xRender)
+		{
+			m_eventSubdivide->removeHoverEventHandler(xRender);
+			m_eventSubdivide->removeKeyEventHandler(xRender);
+			m_eventSubdivide->removeLeftMouseEventHandler(xRender);
+			m_eventSubdivide->removeRightMouseEventHandler(xRender);
+			m_eventSubdivide->removeMidMouseEventHandler(xRender);
+			m_eventSubdivide->removeResizeEventHandler(xRender);
+			m_eventSubdivide->removeWheelEventHandler(xRender);
+		}
 	}
 
 	if (graph)
@@ -607,6 +620,18 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		}
 		graph->updateRenderSize(itemSize);
 		graph->setEnabled(true);
+
+		XRenderGraph* xRender = qobject_cast<XRenderGraph*>(graph);
+		if (xRender)
+		{
+			m_eventSubdivide->addHoverEventHandler(xRender);
+			m_eventSubdivide->addKeyEventHandler(xRender);
+			m_eventSubdivide->addLeftMouseEventHandler(xRender);
+			m_eventSubdivide->addRightMouseEventHandler(xRender);
+			m_eventSubdivide->addMidMouseEventHandler(xRender);
+			m_eventSubdivide->addResizeEventHandler(xRender);
+			m_eventSubdivide->addWheelEventHandler(xRender);
+		}
 	}
 
 	m_renderSettings->setActiveFrameGraph(graph);
