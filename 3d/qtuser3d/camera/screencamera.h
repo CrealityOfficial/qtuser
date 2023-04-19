@@ -19,7 +19,7 @@ namespace qtuser_3d
 	class QTUSER_3D_API ScreenCamera: public QObject
 	{
 	public:
-		ScreenCamera(QObject* parent = nullptr);
+		ScreenCamera(QObject* parent = nullptr, Qt3DRender::QCamera* camera = nullptr);
 		virtual ~ScreenCamera();
 
 		Qt3DRender::QCamera* camera();

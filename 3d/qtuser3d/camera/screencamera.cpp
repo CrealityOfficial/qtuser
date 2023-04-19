@@ -7,14 +7,16 @@
 
 namespace qtuser_3d
 {
-	ScreenCamera::ScreenCamera(QObject* parent)
+	ScreenCamera::ScreenCamera(QObject* parent, Qt3DRender::QCamera* camera)
 		:QObject(parent)
-		,m_camera(nullptr)
+		,m_camera(camera)
 		, m_minDistance(1.0f)
 		, m_maxDistance(4000.0f)
 		, m_updateNearFarRuntime(true)
 	{
-		m_camera = new Qt3DRender::QCamera();
+		if (!m_camera)
+			m_camera = new Qt3DRender::QCamera();
+
 		m_camera->lens()->setPerspectiveProjection(30.0f, 16.0f / 9.0f, 0.1f, 3000.0f);
 		m_camera->setPosition(QVector3D(0.0f, -40.0f, 0.0f));
 		m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
