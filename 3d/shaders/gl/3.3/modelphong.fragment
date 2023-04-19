@@ -14,20 +14,20 @@ uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);
 uniform float specularPower = 4.5;
 uniform vec3 lightDirection = vec3(1.0, 0.0, 1.0);
 
-uniform vec3 minSpace;
-uniform vec3 maxSpace;
-uniform float bottom; 
+uniform vec3 minSpace= vec3(1000.0);
+uniform vec3 maxSpace = vec3(-1000.0);
+uniform float bottom = 0.0; 
 uniform float topVisibleHeight = 100000.0;
 uniform float bottomVisibleHeight = -10000.0;
-uniform float error;
+uniform float error = 0.0;
 uniform float supportCos = 0.5;
 
 uniform int hoverState = 0;
 uniform int fanzhuan = 0;
 uniform int checkscope = 1;
 
-uniform float state;
-uniform float nozzle;
+uniform float state = 0;
+uniform float nozzle = 0;
 uniform vec4 stateColors[6];
 uniform vec4 customColor;
 
@@ -65,25 +65,14 @@ void main( void )
 	int stateInt = int(state);
 	vec4 color;
 	
-	if(varyUV.x<0.0||varyUV.y<0.0)
-	{
-		if (stateInt < 5)
-			color = stateColors[stateInt];
-		else
-			color = customColor;
-		
-		if(error == 1.0)
-			color = stateColors[3];	
-	}
+	if (stateInt < 5)
+		color = stateColors[stateInt];
 	else
-	{
-		vec4 textColor = texture(textureDiffuse, varyUV);
-		if(textColor.r<0 ||textColor.g<0||textColor.b<0)
-		{
-			textColor=stateColors[0];
-		}
-		color = textColor;
-	}
+		color = customColor;
+	
+	if(error == 1.0)
+		color = stateColors[3];	
+
 
 	vec4 coreColor = color;
 	vec3 fgnormal =	normalize(gnormal);
