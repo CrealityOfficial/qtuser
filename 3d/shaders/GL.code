@@ -3773,6 +3773,226 @@ const char* modelline_vert =
                              "	worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));\n"
                              "}\n"
 ;
+const char* modelphong_fragment = 
+                             "#version 150 core\n"
+                             "out vec4 fragmentColor;\n"
+                             "\n"
+                             "in vec3 viewDirection;\n"
+                             "in vec3 normal;\n"
+                             "in vec3 gnormal;\n"
+                             "in vec3 worldPosition;\n"
+                             "in vec3 worldWater;\n"
+                             "in vec3 barycentric;\n"
+                             "\n"
+                             "uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);\n"
+                             "uniform vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);\n"
+                             "uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);\n"
+                             "uniform float specularPower = 4.5;\n"
+                             "uniform vec3 lightDirection = vec3(1.0, 0.0, 1.0);\n"
+                             "\n"
+                             "uniform vec3 minSpace= vec3(1000.0);\n"
+                             "uniform vec3 maxSpace = vec3(-1000.0);\n"
+                             "uniform float bottom = 0.0; \n"
+                             "uniform float topVisibleHeight = 100000.0;\n"
+                             "uniform float bottomVisibleHeight = -10000.0;\n"
+                             "uniform float error = 0.0;\n"
+                             "uniform float supportCos = 0.5;\n"
+                             "\n"
+                             "uniform int hoverState = 0;\n"
+                             "uniform int fanzhuan = 0;\n"
+                             "uniform int checkscope = 1;\n"
+                             "\n"
+                             "uniform float state = 0;\n"
+                             "uniform float nozzle = 0;\n"
+                             "uniform vec4 stateColors[6];\n"
+                             "uniform vec4 customColor;\n"
+                             "\n"
+                             "uniform vec3 wireframeColor = vec3(0.1);\n"
+                             "uniform vec3 clearColor = vec3(0.27);\n"
+                             "uniform int renderModel = 1;\n"
+                             "\n"
+                             "bool frontFacing()\n"
+                             "{\n"
+                             "        vec3 fdx = dFdx(worldPosition);\n"
+                             "        vec3 fdy = dFdy(worldPosition);\n"
+                             "        return dot(gnormal, cross(fdx, fdy)) > 0.0;\n"
+                             "} \n"
+                             "\n"
+                             "vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_color, vec4 diffuse_color, vec4 specular_color)\n"
+                             "{\n"
+                             "	float NdotL 		  = max(dot(fnormal, light_dir), 0.0);\n"
+                             "	ambient_color 	  	  = ambient_color * core_color;\n"
+                             "\n"
+                             "	vec3 freflection      = reflect(-light_dir, fnormal);\n"
+                             "	vec3 fViewDirection   = normalize(viewDirection);\n"
+                             "	float RdotV           = max(0.0, dot(freflection, fViewDirection)); \n"
+                             "	\n"
+                             "	diffuse_color		  = NdotL * diffuse_color * core_color;\n"
+                             "	specular_color        = specular_color * pow( RdotV, specularPower) * core_color;\n"
+                             "	\n"
+                             "	return ambient_color + diffuse_color + specular_color;\n"
+                             "}\n"
+                             "\n"
+                             "void main( void )\n"
+                             "{\n"
+                             "	if(checkscope > 0 && (worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight))\n"
+                             "		discard;\n"
+                             "\n"
+                             "	int stateInt = int(state);\n"
+                             "	vec4 color;\n"
+                             "	\n"
+                             "	if (stateInt < 5)\n"
+                             "		color = stateColors[stateInt];\n"
+                             "	else\n"
+                             "		color = customColor;\n"
+                             "	\n"
+                             "	if(error == 1.0)\n"
+                             "		color = stateColors[3];	\n"
+                             "\n"
+                             "\n"
+                             "	vec4 coreColor = color;\n"
+                             "	vec3 fgnormal =	normalize(gnormal);\n"
+                             "	\n"
+                             "	if(checkscope > 0)\n"
+                             "	{\n"
+                             "		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z \n"
+                             "		|| worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z\n"
+                             "		|| abs(worldPosition.z - bottom) < 0.05 )\n"
+                             "		{\n"
+                             "			// coreColor = vec4(0.649, 0.516, 0.504, 1.0);\n"
+                             "			coreColor = stateColors[4];\n"
+                             "		}\n"
+                             "	}\n"
+                             "	\n"
+                             "	if(hoverState > 0)\n"
+                             "	{\n"
+                             "		float v = dot(fgnormal, vec3(0.0, 0.0, -1.0));\n"
+                             "		if(v >= supportCos)\n"
+                             "		{\n"
+                             "			coreColor.r += 0.8 * v;\n"
+                             "		}\n"
+                             "	}\n"
+                             "	\n"
+                             "	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;\n"
+                             "\n"
+                             "	vec3 fnormal 		  =	normalize(normal);\n"
+                             "	vec4 ambient_color 	  = ambient;\n"
+                             "	vec4 diffuse_color    = diffuse;\n"
+                             "	vec4 specular_color   = specular;\n"
+                             "	\n"
+                             "	vec3 lightDir = normalize(lightDirection);\n"
+                             "	float normalCos = dot(fnormal, lightDir);\n"
+                             "	if (normalCos >= 0)\n"
+                             "		coreColor = directLight(lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);\n"
+                             "	else\n"
+                             "		coreColor = directLight(-lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);\n"
+                             "\n"
+                             "	if(!frontFacing())\n"
+                             "	{\n"
+                             "		color = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;\n"
+                             "		color.a = 1.0;\n"
+                             "		vec3 fbnormal = -fnormal;\n"
+                             "		vec4 ambient_color_t 	  = ambient + vec4(0.03, 0.03, 0.03, 0.0);\n"
+                             "		vec4 diffuse_color_t    = diffuse;\n"
+                             "		vec4 specular_color_t   = specular;\n"
+                             "		coreColor = directLight(lightDir, fbnormal, color, ambient_color_t, diffuse_color_t, specular_color_t);\n"
+                             "	}\n"
+                             "\n"
+                             "	if (renderModel != 1) {\n"
+                             "		vec3 baryDelta = fwidth(barycentric);\n"
+                             "			\n"
+                             "		vec3 edgeFactor = smoothstep(vec3(0.0), baryDelta * 1.0, barycentric);\n"
+                             "		float minEdgeFactor = min(min(edgeFactor.x, edgeFactor.y), edgeFactor.z);\n"
+                             "\n"
+                             "		if (renderModel == 2) {			\n"
+                             "			if (minEdgeFactor >= 1.0) {\n"
+                             "                discard;\n"
+                             "            }\n"
+                             "            coreColor.rgb = mix(wireframeColor, clearColor, minEdgeFactor);\n"
+                             "\n"
+                             "		} else if (renderModel == 3) {\n"
+                             "			coreColor.rgb = mix(wireframeColor, coreColor.rgb, minEdgeFactor);\n"
+                             "		}\n"
+                             "	}\n"
+                             "\n"
+                             "	fragmentColor = vec4(coreColor.rgb, 1.0);\n"
+                             "}\n"
+;
+const char* modelphong_geom = 
+                             "#version 150 core\n"
+                             "\n"
+                             "layout (triangles) in;\n"
+                             "layout (triangle_strip, max_vertices = 3) out;\n"
+                             "\n"
+                             "in vec3 viewDirectionVS[3];\n"
+                             "in vec3 normalVS[3];\n"
+                             "in vec3 gnormalVS[3];\n"
+                             "in vec3 worldPositionVS[3];\n"
+                             "\n"
+                             "out vec3 viewDirection;\n"
+                             "out vec3 normal;\n"
+                             "out vec3 gnormal;\n"
+                             "out vec3 worldPosition;\n"
+                             "out vec3 barycentric;\n"
+                             "\n"
+                             "\n"
+                             "void combindVertex(int index)\n"
+                             "{\n"
+                             "    gl_Position = gl_in[index].gl_Position;\n"
+                             "\n"
+                             "    viewDirection = viewDirectionVS[index];\n"
+                             "    normal = normalVS[index];\n"
+                             "    gnormal = gnormalVS[index];\n"
+                             "    worldPosition = worldPositionVS[index];\n"
+                             "\n"
+                             "    EmitVertex();\n"
+                             "}\n"
+                             "\n"
+                             "\n"
+                             "void main() {\n"
+                             "    \n"
+                             "    barycentric = vec3(1.0, 0.0, 0.0);\n"
+                             "    combindVertex(0);\n"
+                             "    \n"
+                             "    barycentric = vec3(0.0, 1.0, 0.0);\n"
+                             "    combindVertex(1);\n"
+                             "\n"
+                             "    barycentric = vec3(0.0, 0.0, 1.0);\n"
+                             "    combindVertex(2);\n"
+                             "\n"
+                             "    EndPrimitive();\n"
+                             "}\n"
+;
+const char* modelphong_vert = 
+                             "#version 150 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec3 vertexNormal;\n"
+                             "		\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "\n"
+                             "out vec3 viewDirectionVS;\n"
+                             "out vec3 normalVS;\n"
+                             "out vec3 gnormalVS;\n"
+                             "out vec3 worldPositionVS;\n"
+                             "\n"
+                             "void main( void )\n"
+                             "{\n"
+                             "    mat4 modelViewMatrix = viewMatrix * modelMatrix;\n"
+                             "    vec4 tworldPosition = modelViewMatrix * vec4(vertexPosition, 1.0);\n"
+                             "    gl_Position = projectionMatrix *  tworldPosition;\n"
+                             "\n"
+                             "    viewDirectionVS  = normalize(vec3(-tworldPosition));\n"
+                             "    mat3 normalMatrix = mat3(modelViewMatrix);\n"
+                             "\n"
+                             "    normalVS          = normalMatrix * vertexNormal;\n"
+                             "    gnormalVS        = mat3(modelMatrix) * vertexNormal;\n"
+                             "		\n"
+                             "    worldPositionVS   = vec3(modelMatrix * vec4(vertexPosition, 1.0));\n"
+                             "}\n"
+;
 const char* modelselect_fragment = 
                              "#version 150 core \n"
                              "out vec4 fragmentColor;\n"
@@ -5582,7 +5802,7 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
-const char* shader_code_array[77] = {
+const char* shader_code_array[80] = {
 	admodel_fragment,
 	admodel_vert,
 	bottomface_fragment,
@@ -5609,6 +5829,9 @@ const char* shader_code_array[77] = {
 	modeldlp_vert,
 	modelline_fragment,
 	modelline_vert,
+	modelphong_fragment,
+	modelphong_geom,
+	modelphong_vert,
 	modelselect_fragment,
 	modelselect_vert,
 	modelsimple_fragment,
@@ -5671,8 +5894,8 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
-int programs_meta_size = 38;
-ProgramDef programs_meta[38] = {
+int programs_meta_size = 39;
+ProgramDef programs_meta[39] = {
   { "admodel" , 1  ,  -1   ,  -1   ,  -1   , 0  },
    { "bottomface" , 3  ,  -1   ,  -1   ,  -1   , 2  },
    { "boxclippure" , 5  ,  -1   ,  -1   ,  -1   , 4  },
@@ -5684,31 +5907,32 @@ ProgramDef programs_meta[38] = {
    { "glcomp1" , 17  ,  -1   ,  -1   ,  -1   , 16  },
    { "manipulate" , 19  ,  -1   ,  -1   ,  -1   , 18  },
    { "model" , 21  ,  -1   ,  -1   ,  -1   , 20  },
-   { "modelSupport" , 31  ,  -1   ,  -1   ,  -1   , 30  },
+   { "modelSupport" , 34  ,  -1   ,  -1   ,  -1   , 33  },
    { "modeldlp" , 23  ,  -1   ,  -1   ,  -1   , 22  },
    { "modelline" , 25  ,  -1   ,  -1   ,  -1   , 24  },
-   { "modelselect" , 27  ,  -1   ,  -1   ,  -1   , 26  },
-   { "modelsimple" , 29  ,  -1   ,  -1   ,  -1   , 28  },
-   { "modelwireframe" , 34  ,  -1   ,  -1   , 33  , 32  },
-   { "moon" , 36  ,  -1   ,  -1   ,  -1   , 35  },
-   { "overlay" , 38  ,  -1   ,  -1   ,  -1   , 37  },
-   { "photo" , 40  ,  -1   ,  -1   ,  -1   , 39  },
-   { "pickFace" , 42  ,  -1   ,  -1   ,  -1   , 41  },
-   { "pickFaceChunk" , 44  ,  -1   ,  -1   ,  -1   , 43  },
-   { "pickFaceFlag" , 46  ,  -1   ,  -1   ,  -1   , 45  },
-   { "printerbottom" , 48  ,  -1   ,  -1   ,  -1   , 47  },
-   { "printergrid" , 50  ,  -1   ,  -1   ,  -1   , 49  },
-   { "pure" , 52  ,  -1   ,  -1   ,  -1   , 51  },
-   { "slicepreview" , 54  ,  -1   ,  -1   ,  -1   , 53  },
-   { "slicepreviewAD" , 56  ,  -1   ,  -1   ,  -1   , 55  },
-   { "slicepreviewpath" , 58  ,  -1   ,  -1   ,  -1   , 57  },
-   { "splitplane" , 60  ,  -1   ,  -1   ,  -1   , 59  },
-   { "support" , 62  ,  -1   ,  -1   ,  -1   , 61  },
-   { "supportpos" , 64  ,  -1   ,  -1   ,  -1   , 63  },
-   { "supportshow" , 66  ,  -1   ,  -1   ,  -1   , 65  },
-   { "tex" , 68  ,  -1   ,  -1   ,  -1   , 67  },
-   { "texshape" , 70  ,  -1   ,  -1   ,  -1   , 69  },
-   { "text" , 72  ,  -1   ,  -1   ,  -1   , 71  },
-   { "xyzIndicator" , 74  ,  -1   ,  -1   ,  -1   , 73  },
-   { "zproject" , 76  ,  -1   ,  -1   ,  -1   , 75  },
+   { "modelphong" , 28  ,  -1   ,  -1   , 27  , 26  },
+   { "modelselect" , 30  ,  -1   ,  -1   ,  -1   , 29  },
+   { "modelsimple" , 32  ,  -1   ,  -1   ,  -1   , 31  },
+   { "modelwireframe" , 37  ,  -1   ,  -1   , 36  , 35  },
+   { "moon" , 39  ,  -1   ,  -1   ,  -1   , 38  },
+   { "overlay" , 41  ,  -1   ,  -1   ,  -1   , 40  },
+   { "photo" , 43  ,  -1   ,  -1   ,  -1   , 42  },
+   { "pickFace" , 45  ,  -1   ,  -1   ,  -1   , 44  },
+   { "pickFaceChunk" , 47  ,  -1   ,  -1   ,  -1   , 46  },
+   { "pickFaceFlag" , 49  ,  -1   ,  -1   ,  -1   , 48  },
+   { "printerbottom" , 51  ,  -1   ,  -1   ,  -1   , 50  },
+   { "printergrid" , 53  ,  -1   ,  -1   ,  -1   , 52  },
+   { "pure" , 55  ,  -1   ,  -1   ,  -1   , 54  },
+   { "slicepreview" , 57  ,  -1   ,  -1   ,  -1   , 56  },
+   { "slicepreviewAD" , 59  ,  -1   ,  -1   ,  -1   , 58  },
+   { "slicepreviewpath" , 61  ,  -1   ,  -1   ,  -1   , 60  },
+   { "splitplane" , 63  ,  -1   ,  -1   ,  -1   , 62  },
+   { "support" , 65  ,  -1   ,  -1   ,  -1   , 64  },
+   { "supportpos" , 67  ,  -1   ,  -1   ,  -1   , 66  },
+   { "supportshow" , 69  ,  -1   ,  -1   ,  -1   , 68  },
+   { "tex" , 71  ,  -1   ,  -1   ,  -1   , 70  },
+   { "texshape" , 73  ,  -1   ,  -1   ,  -1   , 72  },
+   { "text" , 75  ,  -1   ,  -1   ,  -1   , 74  },
+   { "xyzIndicator" , 77  ,  -1   ,  -1   ,  -1   , 76  },
+   { "zproject" , 79  ,  -1   ,  -1   ,  -1   , 78  },
  };
