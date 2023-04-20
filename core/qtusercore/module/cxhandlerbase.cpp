@@ -27,6 +27,8 @@ namespace qtuser_core
 
 	void CXHandleBase::handle(const QStringList& fileNames)
 	{
+		if (fileNames.size() == 1)
+			handle(fileNames.at(0));
 	}
 
 	QString CXHandleBase::filterKey()
