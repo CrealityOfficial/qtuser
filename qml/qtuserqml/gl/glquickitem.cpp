@@ -583,11 +583,9 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 	RenderGraph* currentGraph = currentRenderGraph();
 	if (currentGraph)
 	{
-		Qt3DCore::QEntity* sceneGraph = currentGraph->sceneGraph();
-		if(sceneGraph)
-			sceneGraph->setParent((Qt3DCore::QNode*)nullptr);
 		currentGraph->endRender();
 		currentGraph->setEnabled(false);
+		currentGraph->setParent((Qt3DCore::QNode*)nullptr);
 
 		disconnect(currentGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 
@@ -609,10 +607,6 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		connect(graph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 
 		graph->begineRender();
-		Qt3DCore::QEntity* sceneGraph = graph->sceneGraph();
-		if (sceneGraph) 
-			sceneGraph->setParent(m_rootEntity);
-
 		QSize itemSize = size().toSize();
 		if (m_ratio > 0)
 		{
@@ -620,6 +614,7 @@ void GLQuickItem::renderRenderGraph(RenderGraph* graph)
 		}
 		graph->updateRenderSize(itemSize);
 		graph->setEnabled(true);
+		graph->setParent(m_renderSettings);
 
 		XRenderGraph* xRender = qobject_cast<XRenderGraph*>(graph);
 		if (xRender)
@@ -642,47 +637,18 @@ void GLQuickItem::registerRenderGraph(RenderGraph* graph)
 {
 	if (graph && (m_registerRenderGraph.indexOf(graph) == -1))
 	{
-		Qt3DCore::QEntity* sceneGraph = graph->sceneGraph();
-		graph->setParent(m_renderSettings);
-		
-		if (sceneGraph)
-		{
-			//sceneGraph->setParent(m_rootEntity);
-			//sceneGraph->setEnabled(false);
-		}
-
 		m_registerRenderGraph.push_back(graph);
 	}
 }
 
 void GLQuickItem::unRegisterRenderGraph(RenderGraph* graph)
 {
-	int index = m_registerRenderGraph.indexOf(graph);
-	if (index != -1)
-	{
-		if (isRenderRenderGraph(graph))
-			renderRenderGraph(nullptr);
-
-		Qt3DCore::QEntity* sceneGraph = graph->sceneGraph();
-		graph->setParent((Qt3DCore::QNode*)nullptr);
-		graph->setEnabled(true);
-
-		if (sceneGraph)
-		{
-			sceneGraph->setParent((Qt3DCore::QNode*)nullptr);
-			sceneGraph->setEnabled(true);
-		}
-
-		m_registerRenderGraph.removeAt(index);
-	}
 }
 
 void GLQuickItem::unRegisterAll()
 {
-	while (m_registerRenderGraph.size())
-	{
-		unRegisterRenderGraph(m_registerRenderGraph.front());
-	}
+	for (RenderGraph* graph : m_registerRenderGraph)
+		graph->setParent(m_renderSettings);
 
 	while (m_residentNodes.size())
 	{

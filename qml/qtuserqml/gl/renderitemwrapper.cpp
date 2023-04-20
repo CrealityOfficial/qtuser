@@ -28,6 +28,7 @@ namespace qtuser_qml
 	void RenderItemWrapper::uninitialize()
 	{
 		m_item->eventSubdivide()->closeHandlers();
+		m_item->unRegisterAll();
 	}
 
 	void RenderItemWrapper::registerResidentNode(Qt3DCore::QNode* node)
