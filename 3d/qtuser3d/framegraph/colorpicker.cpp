@@ -49,6 +49,7 @@ namespace qtuser_3d
 		m_colorPickerImage.fill(0xFFFFFFFF);
 	}
 
+	//noted:  Only one render capture result is produced per requestCapture call even if the frame graph has multiple leaf nodes.
 	void ColorPicker::requestCapture()
 	{
 		m_capturing = true;
