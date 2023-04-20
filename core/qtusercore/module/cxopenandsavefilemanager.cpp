@@ -229,7 +229,7 @@ namespace qtuser_core
 		save(handle);
 	}
 
-	QStringList CXFileOpenAndSaveManager::open(CXHandleBase* receiver)
+	void CXFileOpenAndSaveManager::open(CXHandleBase* receiver)
 	{
 		m_State = OpenSaveState::oss_open;
 		if (receiver)
@@ -238,7 +238,6 @@ namespace qtuser_core
 			m_State = OpenSaveState::oss_external_open;
 		}
 
-		QStringList selectFiles;
 		if (m_invokeObject)
 		{
 			QMetaObject::invokeMethod(m_invokeObject,
@@ -246,8 +245,7 @@ namespace qtuser_core
 		}
 		else
 		{
-			auto f = [&, this](const QStringList& files) {
-				selectFiles = files;
+			auto f = [this](const QStringList& files) {
 				openWithNames(files);
 			};
 
@@ -256,8 +254,6 @@ namespace qtuser_core
 
 			m_externalHandler = nullptr;
 		}
-
-		return selectFiles;
 	}
 
 	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver, const QString& defaultName)
