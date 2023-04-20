@@ -90,13 +90,11 @@ namespace qtuser_3d
 			{
 				setParent(parent);
 			}
-				
 		}
 		else
 		{
 			setEnabled(false);
 		}
-			
 	}
 
 	void BasicEntity::setEffect(Qt3DRender::QEffect* effect)

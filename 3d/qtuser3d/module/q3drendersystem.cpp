@@ -18,7 +18,6 @@ namespace qtuser_3d
 		, m_rootEntity(nullptr)
 		, m_renderSettings(nullptr)
 		, m_inputSettings(nullptr)
-		, m_renderGraph(nullptr)
 		, m_sharedContext(nullptr)
 		, m_times(0)
 		, m_continous(false)
@@ -33,8 +32,8 @@ namespace qtuser_3d
 		m_rootEntity->addComponent(m_renderSettings);
 		m_rootEntity->addComponent(m_inputSettings);
 
-		m_rootFrameGraph = new Qt3DRender::QFrameGraphNode(m_renderSettings);
-		m_renderSettings->setActiveFrameGraph(m_rootFrameGraph);
+		m_emptyFrameGraphNode = new Qt3DRender::QFrameGraphNode(m_renderSettings);
+		m_renderSettings->setActiveFrameGraph(m_emptyFrameGraphNode);
 
 		qDebug() << "Q3DRenderSystem Ctr. thread " << QThread::currentThread();
 	}
@@ -43,7 +42,6 @@ namespace qtuser_3d
 	{
 		qDebug() << "Q3DRenderSystem Ctr~. thread " << QThread::currentThread();
 
-		m_renderGraph = nullptr;
 #ifndef __APPLE__
 		releaseGL();
 #endif
@@ -51,11 +49,6 @@ namespace qtuser_3d
 
 	void Q3DRenderSystem::renderNode(Qt3DRender::QFrameGraphNode* node, Qt3DCore::QEntity* entity)
 	{
-		if (node)
-			node->setParent(m_rootFrameGraph);
-		if (entity)
-			entity->setParent(m_rootEntity);
-
 		requestUpdate();
 	}
 
@@ -120,31 +113,43 @@ namespace qtuser_3d
 		invokeUpdate();
 	}
 
+	RenderGraph* Q3DRenderSystem::currentRenderGraph()
+	{
+		return qobject_cast<RenderGraph*>(m_renderSettings->activeFrameGraph());
+	}
+
+	bool Q3DRenderSystem::isRenderRenderGraph(RenderGraph* graph)
+	{
+		return graph && (currentRenderGraph() == graph);
+	}
+
 	void Q3DRenderSystem::renderRenderGraph(qtuser_3d::RenderGraph* graph)
 	{
-		if (m_renderGraph == graph)
+		if (isRenderRenderGraph(graph))
 			return;
 
-
-		if (m_renderGraph && m_aspectEngine && m_aspectEngine->rootEntity())
+		RenderGraph* currentGraph = currentRenderGraph();
+		if (currentGraph)
 		{
-			Qt3DRender::QFrameGraphNode* frameGraph = m_renderGraph;
-			Qt3DCore::QEntity* sceneGraph = m_renderGraph->sceneGraph();
+			currentGraph->endRender();
+			currentGraph->setEnabled(false);
 
-			if (frameGraph)
-			{
-				frameGraph->setParent((Qt3DCore::QNode*)nullptr);
-			}
-			if (sceneGraph)
-				sceneGraph->setParent((Qt3DCore::QNode*)nullptr);
-			m_renderGraph->endRender();
-
-			disconnect(m_renderGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
+			disconnect(currentGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 		}
 
-		m_renderGraph = graph;
+		if (graph)
+		{
+			connect(graph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
 
-		bindRenderGraph();
+			graph->begineRender();
+			graph->updateRenderSize(m_size);
+			graph->setEnabled(true);
+			if (graph->parent() != m_renderSettings)
+				graph->setParent(m_renderSettings);
+		}
+
+		m_renderSettings->setActiveFrameGraph(graph);
+		requestUpdate();
 	}
 
 	void Q3DRenderSystem::unRegisterAll()
@@ -201,7 +206,6 @@ namespace qtuser_3d
 	{
 		if(m_aspectEngine)
 			m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr(m_rootEntity));
-		bindRenderGraph();
 	}
 
 	bool Q3DRenderSystem::render()
@@ -236,29 +240,9 @@ namespace qtuser_3d
 	{
 		m_size = size;
 
-		if (m_renderGraph)
-			m_renderGraph->updateRenderSize(m_size);
-	}
-
-	void Q3DRenderSystem::bindRenderGraph()
-	{
-		if (m_renderGraph)
-		{
-			m_renderGraph->begineRender();
-			Qt3DRender::QFrameGraphNode* frameGraph = m_renderGraph;
-			Qt3DCore::QEntity* sceneGraph = m_renderGraph->sceneGraph();
-
-			if (frameGraph)
-			{
-				frameGraph->setParent(m_rootFrameGraph);
-			}
-			if (sceneGraph)
-				sceneGraph->setParent(m_rootEntity);
-
-			m_renderGraph->updateRenderSize(m_size);
-			connect(m_renderGraph, SIGNAL(signalUpdate()), this, SLOT(requestUpdate()));
-			requestUpdate();
-		}
+		RenderGraph* graph = currentRenderGraph();
+		if (graph)
+			graph->updateRenderSize(m_size);
 	}
 
 	void Q3DRenderSystem::createRenderSystem()

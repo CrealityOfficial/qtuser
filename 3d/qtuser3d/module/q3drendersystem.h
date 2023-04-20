@@ -42,6 +42,8 @@ namespace qtuser_3d
 		void setCommandRender();
 		void pauseUpdate();
 		bool inRenderingState();
+
+		bool isRenderRenderGraph(RenderGraph* graph);
 	public slots:
 		void requestUpdate();
 	protected:
@@ -51,10 +53,9 @@ namespace qtuser_3d
 		void synchronize() override;
 		void updateContextSize(const QSize& size) override;
 
-		void bindRenderGraph();
 		void createRenderSystem();
-
 		void releaseGL();
+		RenderGraph* currentRenderGraph();
 	public slots:
 		void applyRootEntity();
 	protected:
@@ -68,10 +69,9 @@ namespace qtuser_3d
 		Qt3DRender::QRenderSettings* m_renderSettings;
 		Qt3DInput::QInputSettings* m_inputSettings;
 
-		qtuser_3d::RenderGraph* m_renderGraph;
 		QList<qtuser_3d::RenderGraph*> m_registerRenderGraph;
+		Qt3DRender::QFrameGraphNode* m_emptyFrameGraphNode;
 		QList<Qt3DCore::QNode*> m_residentNodes;
-		Qt3DRender::QFrameGraphNode* m_rootFrameGraph;
 
 		QSize m_size;
 
