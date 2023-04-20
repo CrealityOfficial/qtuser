@@ -75,6 +75,8 @@ namespace qtuser_3d
 		void _updateNearFar(const qtuser_3d::Box3D& box);
 	protected:
 		Qt3DRender::QCamera* m_camera;
+		bool m_externalCamera;
+
 		QSize m_size;
 
 		float m_minDistance;
