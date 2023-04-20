@@ -20,6 +20,8 @@ uniform int checkScope = 1;
 uniform vec3 minSpace;
 uniform vec3 maxSpace;
 
+uniform int cameraDir;
+
 uniform vec4 stateColors[6];
 
 
@@ -47,6 +49,9 @@ vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_col
 
 void main( void )
 {
+	if(cameraDir == 0)
+		discard;
+		
 	if(distance2Plane(worldPosition, clipPlane1) < 0.0)
 		discard;
 

@@ -66,12 +66,37 @@ namespace qtuser_3d
 		m_vertexBaseParameter->setValue(vertexBase);
 	}
 
+	//void BasicEntity::setVisible(Qt3DCore::QNode* parent)
+	//{
+	//	if (parent)
+	//		setParent(parent);
+	//	else
+	//		setParent((Qt3DCore::QNode*)nullptr);
+	//}
+
 	void BasicEntity::setVisible(Qt3DCore::QNode* parent)
 	{
 		if (parent)
-			setParent(parent);
+		{
+			 //the default value of "m_enabled" of QNode is true
+			if (!isEnabled())
+			{
+				if (!parentNode())
+					setParent(parent);
+
+				setEnabled(true);
+			}
+			else
+			{
+				setParent(parent);
+			}
+				
+		}
 		else
-			setParent((Qt3DCore::QNode*)nullptr);
+		{
+			setEnabled(false);
+		}
+			
 	}
 
 	void BasicEntity::setEffect(Qt3DRender::QEffect* effect)
