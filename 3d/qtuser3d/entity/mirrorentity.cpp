@@ -1,11 +1,15 @@
 #include "mirrorentity.h"
 
-#include "qtuser3d/utils/primitiveshapecache.h"
 #include "qtuser3d/geometry/basicshapecreatehelper.h"
 
 namespace qtuser_3d {
 
 namespace {
+
+static const QVector4D RGBA_RED  { 1.0f   , 0.1098f, 0.1098f, 1.0f };
+static const QVector4D RGBA_GREEN{ 0.2470f, 0.933f , 0.1098f, 1.0f };
+static const QVector4D RGBA_BLUE { 0.4117f, 0.243f , 1.0f   , 1.0f };
+static const QVector4D RGBA_GOLD { 1.0f   , 0.79f  , 0.0f   , 1.0f };
 
 QMatrix4x4 CreateRotetedScaledMatrix(QVector3D&& to_direction) {
   static const QVector3D FROM_DIRECTION{ 0.0f, 1.0f, 0.0f };
@@ -19,15 +23,17 @@ QMatrix4x4 CreateRotetedScaledMatrix(QVector3D&& to_direction) {
   return matrix;
 }
 
-}
+} // namespace
 
-MirrorEntity::MirrorEntity( QPointer<CameraController> camera_controller,
-                           Qt3DCore::QNode* parent)
+MirrorEntity::MirrorEntity(QPointer<CameraController> camera_controller, Qt3DCore::QNode* parent)
     : BasicEntity(parent)
     , camera_controller_(camera_controller)
     , space_box_(QVector3D{ 0.0f, 0.0f, 0.0f })
-    , transform_(new Qt3DCore::QTransform{ this })
-    , geometry_(BasicShapeCreateHelper::createInstructions(0.0f, 1.0f, 0.1f, 0.4f, this))
+    , transform_(std::make_unique<Qt3DCore::QTransform>(this))
+    , geometry_([this]()->decltype(geometry_) {
+      auto* raw_ptr = BasicShapeCreateHelper::createInstructions(0.0f, 0.75f, 0.075f, 0.3f, this);
+      return decltype(geometry_){ raw_ptr };
+    }())
     , x_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
     , y_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
     , z_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
@@ -55,27 +61,20 @@ MirrorEntity::MirrorEntity( QPointer<CameraController> camera_controller,
   y_negative_entity_->setGeometry(geometry_.get());
   z_positive_entity_->setGeometry(geometry_.get());
   z_negative_entity_->setGeometry(geometry_.get());
-
-  x_positive_entity_->setColor(QVector4D{ 1.0f, 0.0f, 0.0f, 1.0f });
-  x_negative_entity_->setColor(QVector4D{ 1.0f, 0.0f, 0.0f, 1.0f });
-  y_positive_entity_->setColor(QVector4D{ 0.0f, 1.0f, 0.0f, 1.0f });
-  y_negative_entity_->setColor(QVector4D{ 0.0f, 1.0f, 0.0f, 1.0f });
-  z_positive_entity_->setColor(QVector4D{ 0.0f, 0.0f, 1.0f, 1.0f });
-  z_negative_entity_->setColor(QVector4D{ 0.0f, 0.0f, 1.0f, 1.0f });
-
-  x_positive_entity_->setChangeColor(QVector4D{ 1.0f, 0.79f, 0.0f, 1.0f });
-  x_negative_entity_->setChangeColor(QVector4D{ 1.0f, 0.79f, 0.0f, 1.0f });
-  y_positive_entity_->setChangeColor(QVector4D{ 1.0f, 0.79f, 0.0f, 1.0f });
-  y_negative_entity_->setChangeColor(QVector4D{ 1.0f, 0.79f, 0.0f, 1.0f });
-  z_positive_entity_->setChangeColor(QVector4D{ 1.0f, 0.79f, 0.0f, 1.0f });
-  z_negative_entity_->setChangeColor(QVector4D{ 1.0f, 0.79f, 0.0f, 1.0f });
   
-  x_positive_entity_->setLightEnable(true);
-  x_negative_entity_->setLightEnable(true);
-  y_positive_entity_->setLightEnable(true);
-  y_negative_entity_->setLightEnable(true);
-  z_positive_entity_->setLightEnable(true);
-  z_negative_entity_->setLightEnable(true);
+  x_positive_entity_->setColor(RGBA_RED);
+  x_negative_entity_->setColor(RGBA_RED);
+  y_positive_entity_->setColor(RGBA_GREEN);
+  y_negative_entity_->setColor(RGBA_GREEN);
+  z_positive_entity_->setColor(RGBA_BLUE);
+  z_negative_entity_->setColor(RGBA_BLUE);
+
+  x_positive_entity_->setChangeColor(RGBA_GOLD);
+  x_negative_entity_->setChangeColor(RGBA_GOLD);
+  y_positive_entity_->setChangeColor(RGBA_GOLD);
+  y_negative_entity_->setChangeColor(RGBA_GOLD);
+  z_positive_entity_->setChangeColor(RGBA_GOLD);
+  z_negative_entity_->setChangeColor(RGBA_GOLD);
   
   x_positive_entity_->setMethod(1);
   x_negative_entity_->setMethod(1);
@@ -118,8 +117,6 @@ void MirrorEntity::setSpaceBox(const Box3D& space_box) {
   
   QMatrix4x4 matrix;
   matrix.translate(space_box_.center());
-  matrix.scale(1.0f);
-  
   transform_->setMatrix(matrix);
 }
 
@@ -158,10 +155,8 @@ std::weak_ptr<Pickable> MirrorEntity::zNegativePickable() const {
 void MirrorEntity::attach() {
   if (camera_controller_ != nullptr) {
     connect(camera_controller_, &CameraController::signalCameraChaged,
-            this , &MirrorEntity::onCameraChanged);
-
-    onCameraChanged(camera_controller_->getViewPosition(),
-                    camera_controller_->getViewupVector());
+            this , &MirrorEntity::onCameraChanged, Qt::ConnectionType::UniqueConnection);
+    onCameraChanged(camera_controller_->getViewPosition(), camera_controller_->getViewupVector());
   }
 }
 

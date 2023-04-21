@@ -1,20 +1,18 @@
 #pragma once
 
 #include <memory>
-#include <functional>
 
 #include <QNode>
-#include <QEntity>
 #include <QPointer>
 #include <QGeometry>
 #include <QTransform>
 
-#include "qtuser3d/qtuser3dexport.h"
+#include "qtuser3d/camera/cameracontroller.h"
 #include "qtuser3d/entity/basicentity.h"
 #include "qtuser3d/entity/manipulateentity.h"
 #include "qtuser3d/module/manipulatepickable.h"
-#include "qtuser3d/camera/cameracontroller.h"
 #include "qtuser3d/math/box3d.h"
+#include "qtuser3d/qtuser3dexport.h"
 
 namespace qtuser_3d {
 
