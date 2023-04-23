@@ -148,6 +148,12 @@ namespace qtuser_core
 
 	bool copyFile(const QString& source, const QString& destination, bool cover)
 	{
+		QFile sourceFile(source);
+		if (!sourceFile.exists())
+		{
+			return false;
+		}
+
 		QFile file(destination);
 		if (cover)
 		{
