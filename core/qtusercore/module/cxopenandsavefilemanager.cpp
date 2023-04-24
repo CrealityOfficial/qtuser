@@ -79,7 +79,8 @@ namespace qtuser_core
 
 	QString CXFileOpenAndSaveManager::currOpenFile()
 	{
-	    return m_lastOpenFile;
+	    return m_lastOpenFile;  // Halot
+		//return m_lastOpenFile.mid(0, m_lastOpenFile.size() - 4);   // c3d
 	}
 
 	QStringList CXFileOpenAndSaveManager::generateFilters(const QStringList& extensions)
@@ -178,6 +179,15 @@ namespace qtuser_core
 	void CXFileOpenAndSaveManager::fileOpen(const QString& url)
 	{
 		openWithUrl(QUrl(url));
+	};
+
+	void CXFileOpenAndSaveManager::filesOpen(const QList<QUrl>& urls)
+	{
+		QStringList fileNames;
+		for (const QUrl& url : urls)
+			fileNames << url.toLocalFile();
+
+		openWithNames(fileNames);
 	};
 
 	void CXFileOpenAndSaveManager::fileSave(const QString& url)

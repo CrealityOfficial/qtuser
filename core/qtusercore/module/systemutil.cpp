@@ -9,6 +9,9 @@
 #include <QtGui/QSurfaceFormat>
 #include <QtCore/QDateTime>
 #include <QSettings>
+#include <QtCore/QCryptographicHash>
+#include <QtCore/QMimeData>
+#include <QtGui/QClipboard>
 
 #include "qtusercore/module/glcompatibility.h"
 #include "qtusercore/string/resourcesfinder.h"
@@ -27,7 +30,13 @@
 #pragma comment(lib, "psapi.lib")
 #pragma comment(lib, "dbghelp.lib")
 
+#elif defined(__linux__)
+#include <linux/limits.h>
+#elif defined(__APPLE__)
+#include <sys/syslimits.h>
 #endif
+#include "buildinfo.h"
+#include "qtusercore/string/resourcesfinder.h"
 
 #define DEBUG_FUNCTION 0
 
@@ -69,7 +78,8 @@ void showDetailSystemInfo()
 	qDebug() << version.name() << version.majorVersion() << version.minorVersion() << version.microVersion();
 	showSysMemory();
 
-	QString appLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	QString appLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);  //Halot
+	// QString appLocation = qtuser_core::getOrCreateAppDataLocation();  // c3d
 	qDebug() << "WriteAppData: " << appLocation;
 	qDebug() << "--------------------------------showDetailSystemInfo----------------------------";
 }
@@ -90,6 +100,22 @@ void showSysMemory()
 #else
 
 #endif
+}
+
+int currentProcessMemory()
+{
+	int memory = 0;
+#ifdef _WINDOWS
+	HANDLE handle = GetCurrentProcess();
+	PROCESS_MEMORY_COUNTERS pmc;
+	GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
+
+	int msize = 1024;
+	memory = pmc.WorkingSetSize / msize;
+#else
+
+#endif
+	return memory;
 }
 
 void printCallStack()
@@ -125,7 +151,8 @@ void printCallStack()
 
 QString getCanWriteFolder()
 {
-	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);  //HalotBox
+	// return qtuser_core::getOrCreateAppDataLocation(""); // c3d
 }
 
 void redirectIo()
@@ -171,6 +198,34 @@ void mkMutiDirFromFileName(const QString& fileName)
 	}
 }
 
+bool clearPath(const QString& path)
+{
+	if (path.isEmpty())
+		return false;
+
+	QDir dir(path);
+	if (!dir.exists())
+		return false;
+
+	dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
+	QFileInfoList fileList = dir.entryInfoList();
+
+	for(const QFileInfo& file : fileList)
+	{
+		if (file.isFile())
+		{
+			file.dir().remove(file.fileName());
+		}
+		else
+		{
+			clearPath(file.absoluteFilePath());
+			file.dir().rmdir(file.absoluteFilePath());
+		}
+	}
+
+	return true;
+}
+
 void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg)
 {
 #ifdef QT_NO_DEBUG
@@ -214,6 +269,15 @@ namespace qtuser_core
 		QString name = QString("/%1/Log/").arg(info.baseName());
 		QString logDirectory = qtuser_core::getOrCreateAppDataLocation(name);
 		qDebug() << logDirectory;
+		
+		// c3d
+		/*
+		qApp->setOrganizationName(ORGANIZATION);
+		qApp->setOrganizationDomain("FDM");
+		qApp->setApplicationName(PROJECT_NAME);//by TCJ "Creative3D"
+
+		QString logDirectory = qtuser_core::getOrCreateAppDataLocation("Log");
+		*/
 
 		auto func = [](const char* name)->std::string {
 			QString  dataTime = QDateTime::currentDateTime().toString("yyyy-MM-dd");
@@ -328,5 +392,40 @@ namespace qtuser_core
 	int SystemUtil::getDiskFreeSpace(const QString& driver)
 	{
 		return 4096;
+	}
+
+	QString calculateFileMD5(const QString& fileName)
+	{
+		QFile file(fileName);
+		QString Md5Str = "";
+		if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+		{
+			QByteArray fileArray = file.readAll();
+			QByteArray md5 = QCryptographicHash::hash(fileArray, QCryptographicHash::Md5);
+			Md5Str = md5.toHex().toUpper();
+		}
+		else
+		{
+			qDebug() << QString("calculateFileMD5 openFile [%1] Error.").arg(fileName);
+		}
+		file.close();
+		return Md5Str;
+	}
+
+	void copyString2Clipboard(const QString& str)
+	{
+		QClipboard* clipboard = QApplication::clipboard();
+		QMimeData* mimeData = new QMimeData();
+		mimeData->setText(str);
+		clipboard->setMimeData(mimeData);
+	}
+
+	int getSystemMaxPath()
+	{
+#ifdef _WINDOWS
+		return MAX_PATH;
+#else
+		return PATH_MAX;
+#endif
 	}
 }

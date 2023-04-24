@@ -36,6 +36,7 @@
 
 #include <QSettings>
 #include "qtusercore/module/systemutil.h"
+#include "buildinfo.h"
 
 static bool releaseInfoGreater(const ReleaseInfo &lhs, const ReleaseInfo &rhs)
 {
@@ -132,15 +133,23 @@ void UpdateChecker::checkForUpdates()
         setting.setValue("service_type", "0");
     }
     setting.endGroup();
-
-    if (strStartType == "0")
+    QString versionExtra(PROJECT_VERSION_EXTRA);
+    if (versionExtra == "Release")
     {
-        cloudUrl = "https://www.crealitycloud.cn";
+        if (strStartType == "0")
+        {
+            cloudUrl = "https://www.crealitycloud.cn";
+        }
+        else
+        {
+            cloudUrl = "https://www.crealitycloud.com";
+        }
     }
     else
     {
-        cloudUrl = "https://www.crealitycloud.com";
+        cloudUrl = "http://model-dev.crealitygroup.com";
     }
+
     cloudUrl = cloudUrl + "/api/cxy/search/softwareSearch";
 
     QSettings settingLang;

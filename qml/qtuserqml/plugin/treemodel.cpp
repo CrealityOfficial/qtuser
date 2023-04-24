@@ -121,7 +121,9 @@ void TreeModel::addModel(QObject* model, QObject* group)
        addItem(parent,childItem);
 
     }
-    emit rowChanged();
+
+    int row = rowCount();
+    emit rowChanged(row);
     //end
 }
 
@@ -162,7 +164,9 @@ void TreeModel::delModel(QObject* model)
     delModel(index);
     beginResetModel();
     endResetModel();
-    emit rowChanged();
+
+    int row = rowCount();
+    emit rowChanged(row);
 }
 
 void TreeModel::rename(QObject* model)
@@ -189,7 +193,8 @@ void TreeModel::rename(QObject* model)
         modelData->setText(model->objectName());
     }
 
-    emit rowChanged();
+    int row = rowCount();
+    emit rowChanged(row);
 }
 //! [0]
 
