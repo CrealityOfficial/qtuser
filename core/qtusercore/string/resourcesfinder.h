@@ -21,6 +21,9 @@ namespace qtuser_core
 	QTUSER_CORE_API QStringList dynamicLoadFilters(const QString& prefix = "plugin");
 	QTUSER_CORE_API QString getOrCreateAppDataLocation(const QString& folder = "");
 	QTUSER_CORE_API QString getResourcesFolder(const QString& folder);
+	QTUSER_CORE_API bool copyDir(const QString& source, const QString& destination, bool override);
+	QTUSER_CORE_API bool copyFileToPath(const QString& source, const QString& destination, bool deleteFileIfExist = true);
+	QTUSER_CORE_API bool copyFile(const QString& source, const QString& destination, bool cover = true);
 }
 
 #define APP_RESOURCES qtuser_core::ResourcesFinder::instance()

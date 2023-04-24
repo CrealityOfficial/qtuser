@@ -18,8 +18,11 @@ namespace qtuser_core
 		void message(const char* msg) override;
 		void failed(const char* msg) override;
 		void success() override;
+
+		bool error();
 	protected:
 		Progressor* m_progressor;
+		bool m_failed;
 	};
 }
 

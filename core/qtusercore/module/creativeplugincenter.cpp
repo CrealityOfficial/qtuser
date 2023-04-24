@@ -18,11 +18,12 @@ namespace qtuser_core
 	}
 	void CreativePluginCenter::load()
 	{
-		m_searchPathes = QCoreApplication::libraryPaths();
+		QStringList searchPathes = QCoreApplication::libraryPaths();
+		searchPathes.removeDuplicates();
 		QStringList nameFilters = qtuser_core::dynamicLoadFilters();
 		qDebug() << "CreativePluginCenter nameFilters : " << nameFilters;
-		qDebug() << "CreativePluginCenter searchPathes : " << m_searchPathes;
-		for (const QString& path : m_searchPathes)
+		qDebug() << "CreativePluginCenter searchPathes : " << searchPathes;
+		for (const QString& path : searchPathes)
 		{
 			QDir dir(path);
 			QList<QFileInfo> fileInfos = dir.entryInfoList(nameFilters, QDir::Files);
@@ -38,6 +39,7 @@ namespace qtuser_core
 						CreativeInterface* interf = qobject_cast<CreativeInterface*>(object);
 						if (interf)
 						{
+							object->setParent(this);
 	                        m_interfaces.insert(fileInfo.baseName(),interf);
 						}else
 							qDebug() << "Can't Find Interface in Plugin." << fileInfo.filePath();

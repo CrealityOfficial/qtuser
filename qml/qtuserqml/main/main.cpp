@@ -6,11 +6,15 @@
 #include <QtCore/QDebug>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
+#include <QtQuick/QQuickWindow> 
 #include <QtGui/QOpenGLContext>
 #include "qtusercore/module/systemutil.h"
 #include "qtuserqml/interface/qmlapplicationinterface.h"
 #include <QThread>
 #include <QDir>
+
+#include "qtuser3d/module/glcompatibility.h"
+
 namespace qtuser_qml
 {
 	void preSpecifyOpenGL()
@@ -32,6 +36,10 @@ namespace qtuser_qml
         format.setStencilBufferSize(8);
         format.setSamples(4);
         QSurfaceFormat::setDefaultFormat(format);
+#endif
+
+#ifdef Q_OS_WIN32
+		QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
 #endif
     }
 

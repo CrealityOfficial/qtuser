@@ -144,6 +144,7 @@ void UpdateManager::onUpdateNotFound(const ReleaseInfo &currentRelease)
     }
     else {
         m_initAutoCheckFlag = false;
+        return;
     }
     displayCurrentVersionInfo();
 }
