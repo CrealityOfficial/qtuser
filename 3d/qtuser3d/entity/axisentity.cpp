@@ -14,6 +14,7 @@ namespace qtuser_3d
 		
 		m_yAxis = new qtuser_3d::PureColorEntity(this);
 		m_yAxis->setObjectName("AxisEntity.yAxis");
+
 		m_zAxis = new qtuser_3d::PureColorEntity(this);
 		m_zAxis->setObjectName("AxisEntity.zAxis");
 		
@@ -82,6 +83,10 @@ namespace qtuser_3d
 		z_txtmatrix.rotate(90, 1, 0, 0);
 		textEntity3->setPose(z_txtmatrix);
 
+		m_xText = textEntity;
+		m_yText = textEntity2;
+		m_zText = textEntity3;
+
 		//m_xAxis->setPassDepthTest("pure", Qt3DRender::QDepthTest::Always);
 		//m_yAxis->setPassDepthTest("pure", Qt3DRender::QDepthTest::Always);
 		//m_zAxis->setPassDepthTest("pure", Qt3DRender::QDepthTest::Always);
@@ -110,5 +115,23 @@ namespace qtuser_3d
 		QMatrix4x4 zMatrix = m_zAxis->pose();
 		zMatrix = t * zMatrix;
 		m_zAxis->setPose(zMatrix);
+	}
+
+	void AxisEntity::setXAxisColor(const QVector4D& color)
+	{
+		m_xAxis->setColor(color);
+		m_xText->setColor(color);
+	}
+
+	void AxisEntity::setYAxisColor(const QVector4D& color)
+	{
+		m_yAxis->setColor(color);
+		m_yText->setColor(color);
+	}
+	
+	void AxisEntity::setZAxisColor(const QVector4D& color)
+	{
+		m_zAxis->setColor(color);
+		m_zText->setColor(color);
 	}
 }

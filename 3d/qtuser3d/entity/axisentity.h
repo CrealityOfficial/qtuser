@@ -4,7 +4,9 @@
 
 namespace qtuser_3d
 {
+	class TextMeshEntity;
 	class PureColorEntity;
+
 	class QTUSER_3D_API AxisEntity : public BasicEntity
 	{
 		Q_OBJECT
@@ -14,10 +16,18 @@ namespace qtuser_3d
 
 		void translate(QVector3D v);
 
+		void setXAxisColor(const QVector4D& color);
+		void setYAxisColor(const QVector4D& color);
+		void setZAxisColor(const QVector4D& color);
+
 	protected:
 		PureColorEntity* m_xAxis;
 		PureColorEntity* m_yAxis;
 		PureColorEntity* m_zAxis;
+
+		TextMeshEntity* m_xText;
+		TextMeshEntity* m_yText;
+		TextMeshEntity* m_zText;
 	};
 }
 #endif // QTUSER_3D_AXISENTITY_1595053218074_H
