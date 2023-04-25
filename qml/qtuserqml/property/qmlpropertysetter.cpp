@@ -30,6 +30,26 @@ namespace qtuser_qml
             , val0, val1, val2, val3, val4, val5, val6, val7, val8);
     }
 
+    void invokeFunc(QObject* object, const QString& func,
+        QGenericArgument val0,
+        QGenericArgument val1,
+        QGenericArgument val2,
+        QGenericArgument val3,
+        QGenericArgument val4,
+        QGenericArgument val5,
+        QGenericArgument val6,
+        QGenericArgument val7,
+        QGenericArgument val8)
+    {
+        QMetaObject::invokeMethod(object, func.toStdString().c_str(), val0, val1, val2, val3, val4, val5, val6, val7, val8);
+    }
+
+    void invokeQmlObjectFunc(QObject* object, const QString& func, const QVariant& variant1,
+        const QVariant& variant2, const QVariant& variant3)
+    {
+        invokeFunc(object, func, Q_ARG(QVariant, variant1), Q_ARG(QVariant, variant2), Q_ARG(QVariant, variant3));
+    }
+
     void writeObjectNestProperty(QObject* object, const QString& childNest, const QString& name, QObject* value)
     {
         QVariant objectV = QVariant::fromValue<QObject*>(value);
