@@ -6,10 +6,11 @@
 namespace qtuser_core
 {
 	class Progressor;
-	class QTUSER_CORE_API ProgressorTracer : public ccglobal::Tracer
+	class QTUSER_CORE_API ProgressorTracer : public QObject,
+		public ccglobal::Tracer
 	{
 	public:
-		ProgressorTracer(Progressor* progressor);
+		ProgressorTracer(Progressor* progressor, QObject* parent = nullptr);
 		virtual ~ProgressorTracer();
 
 		void progress(float r) override;
