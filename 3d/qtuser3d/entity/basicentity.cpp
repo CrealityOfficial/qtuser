@@ -102,7 +102,10 @@ namespace qtuser_3d
 		Qt3DRender::QEffect* oldEffect = m_material->effect();
 		m_material->setEffect(effect);
 		if (oldEffect && oldEffect->parent() == this)
+		{
 			delete oldEffect;
+			oldEffect = nullptr;
+		}
 	}
 
 	Qt3DRender::QEffect* BasicEntity::selectEffect(Qt3DRender::QEffect* effect)
@@ -130,6 +133,7 @@ namespace qtuser_3d
 		{
 			oldGeometry->setParent((Qt3DCore::QNode*)nullptr);
 			delete oldGeometry;
+			oldGeometry = nullptr;
 		}
 
 		m_geometryRenderer->setGeometry(geometry);
