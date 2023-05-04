@@ -44,4 +44,20 @@ namespace qtuser_3d
 		if(pass)
 			m_technique->addRenderPass(pass);
 	}
+
+	int XEffect::renderPassCount()
+	{
+		return m_technique->renderPasses().count();
+	}
+
+	void XEffect::addRenderState(int index, Qt3DRender::QRenderState* state)
+	{
+		if (index < 0 || index >= renderPassCount())
+		{
+			qDebug() << QString("XEffect::addRenderState invalid index [%1]").arg(index);
+			return;
+		}
+
+		m_technique->renderPasses().at(index)->addRenderState(state);
+	}
 }

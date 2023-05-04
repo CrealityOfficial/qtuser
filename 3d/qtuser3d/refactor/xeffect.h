@@ -4,6 +4,7 @@
 #include "qtuser3d/refactor/xrenderpass.h"
 #include <Qt3DRender/QEffect>
 #include <Qt3DRender/QParameter>
+#include <Qt3DRender/QRenderState>
 
 namespace qtuser_3d
 {
@@ -15,6 +16,9 @@ namespace qtuser_3d
 		virtual ~XEffect();
 
 		Qt3DRender::QParameter* setParameter(const QString& name, const QVariant& value);
+		int renderPassCount();
+		void addRenderState(int index, Qt3DRender::QRenderState* state);
+	protected:
 		void addRenderPass(XRenderPass* pass);
 	protected:
 		Qt3DRender::QTechnique* m_technique;
