@@ -47,7 +47,12 @@ namespace qtuser_qml
     void invokeQmlObjectFunc(QObject* object, const QString& func, const QVariant& variant1,
         const QVariant& variant2, const QVariant& variant3)
     {
-        invokeFunc(object, func, Q_ARG(QVariant, variant1), Q_ARG(QVariant, variant2), Q_ARG(QVariant, variant3));
+        if (!variant2.isValid())
+            invokeFunc(object, func, Q_ARG(QVariant, variant1));
+        else if (!variant3.isValid())
+            invokeFunc(object, func, Q_ARG(QVariant, variant1), Q_ARG(QVariant, variant2));
+        else
+            invokeFunc(object, func, Q_ARG(QVariant, variant1), Q_ARG(QVariant, variant2), Q_ARG(QVariant, variant3));
     }
 
     void writeObjectNestProperty(QObject* object, const QString& childNest, const QString& name, QObject* value)
