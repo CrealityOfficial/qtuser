@@ -8,6 +8,7 @@
 #include <Qt3DRender/QGeometryRenderer>
 #include <Qt3DRender/QGeometry>
 #include <Qt3DRender/QEffect>
+#include <Qt3DRender/QRenderState>
 
 namespace qtuser_3d
 {
@@ -23,6 +24,9 @@ namespace qtuser_3d
 		void setEffect(XEffect* effect);
 		void setPose(const QMatrix4x4& matrix);
 		void setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles);
+
+		void addRenderState(int index, Qt3DRender::QRenderState* state);
+		void addPassFilter(int index, const QString& filter);
 	protected:
 		Qt3DRender::QMaterial* m_material;
 		Qt3DCore::QTransform* m_transform;

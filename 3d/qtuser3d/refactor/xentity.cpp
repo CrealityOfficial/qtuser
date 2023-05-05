@@ -2,6 +2,8 @@
 #include "qtuser3d/refactor/xentity.h"
 #include "qtuser3d/refactor/xeffect.h"
 
+#include <QtCore/QDebug>
+
 namespace qtuser_3d
 {
 	XEntity::XEntity(Qt3DCore::QNode* parent)
@@ -59,5 +61,29 @@ namespace qtuser_3d
 	{
 		m_geometryRenderer->setGeometry(geometry);
 		m_geometryRenderer->setPrimitiveType(type);
+	}
+
+	void XEntity::addRenderState(int index, Qt3DRender::QRenderState* state)
+	{
+		XEffect* effect = qobject_cast<XEffect*>(m_material->effect());
+		if (!effect)
+		{
+			qDebug() << QString("XEffect is null.");
+			return;
+		}
+
+		effect->addRenderState(index, state);
+	}
+
+	void XEntity::addPassFilter(int index, const QString& filter)
+	{
+		XEffect* effect = qobject_cast<XEffect*>(m_material->effect());
+		if (!effect)
+		{
+			qDebug() << QString("XEffect is null.");
+			return;
+		}
+
+		effect->addPassFilter(index, filter);
 	}
 }
