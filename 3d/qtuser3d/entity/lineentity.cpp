@@ -6,14 +6,15 @@
 namespace qtuser_3d
 {
 	LineEntity::LineEntity(Qt3DCore::QNode* parent)
-		:BasicEntity(parent)
+		:XEntity(parent)
 		, m_usePure(true)
 	{
-		m_colorParameter = createParameter("color", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
+		m_colorParameter = setParameter("color", QVector4D(1.0f, 0.0f, 0.0f, 1.0f));
 
 		// EFFECTCREATE 这种写法如果传入非空 parent 的话，会导致模型透明效果异常，原因有待研究
 		//setEffect(EFFECTCREATE("pure", m_material));
-		setEffect(EFFECT("pure"));
+		 
+		setEffect(XEFFECTCREATE("pure", m_material));
 
 		QList<Qt3DRender::QRenderPass*> renderPasses = m_material->findChildren<Qt3DRender::QRenderPass*>(QString(), Qt::FindChildrenRecursively);
 		m_lineWidth = new Qt3DRender::QLineWidth(m_material);
@@ -51,12 +52,12 @@ namespace qtuser_3d
 	{
 		if (m_usePure && colors)
 		{
-			setEffect(EFFECT("color"));
+			setEffect(XEFFECT("color"));
 			m_usePure = false;
 		}
 		else if (!m_usePure && !colors)
 		{
-			setEffect(EFFECT("pure"));
+			setEffect(XEFFECT("pure"));
 			m_usePure = true;
 		}
 
@@ -69,12 +70,12 @@ namespace qtuser_3d
 	{
 		if (m_usePure && color)
 		{
-			setEffect(EFFECT("color"));
+			setEffect(XEFFECT("color"));
 			m_usePure = false;
 		}
 		else if (!m_usePure && !color)
 		{
-			setEffect(EFFECT("pure"));
+			setEffect(XEFFECT("pure"));
 			m_usePure = true;
 		}
 
