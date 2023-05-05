@@ -60,4 +60,18 @@ namespace qtuser_3d
 
 		m_technique->renderPasses().at(index)->addRenderState(state);
 	}
+
+	void XEffect::addPassFilter(int index, const QString& filter)
+	{
+		if (index < 0 || index >= renderPassCount())
+		{
+			qDebug() << QString("XEffect::addPassFilter invalid index [%1]").arg(index);
+			return;
+		}
+
+		Qt3DRender::QFilterKey* filterKey = new Qt3DRender::QFilterKey();
+		filterKey->setName(filter);
+		filterKey->setValue(0);
+		m_technique->renderPasses().at(index)->addFilterKey(filterKey);
+	}
 }

@@ -18,7 +18,7 @@ namespace qtuser_3d
 		Qt3DRender::QParameter* setParameter(const QString& name, const QVariant& value);
 		int renderPassCount();
 		void addRenderState(int index, Qt3DRender::QRenderState* state);
-	protected:
+		void addPassFilter(int index, const QString& filter);
 		void addRenderPass(XRenderPass* pass);
 	protected:
 		Qt3DRender::QTechnique* m_technique;
