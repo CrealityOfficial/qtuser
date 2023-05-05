@@ -5,6 +5,11 @@
 
 namespace qtuser_3d
 {
+	XRenderPass::XRenderPass(Qt3DCore::QNode* parent)
+		: QRenderPass(parent)
+	{
+	}
+
 	XRenderPass::XRenderPass(const QString& shaderName, Qt3DCore::QNode* parent)
 		: QRenderPass(parent)
 	{

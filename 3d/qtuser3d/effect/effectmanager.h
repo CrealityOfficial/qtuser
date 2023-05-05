@@ -7,6 +7,8 @@
 
 namespace qtuser_3d
 {
+	class XEffect;
+
 	class QTUSER_3D_API EffectManager : public QObject
 	{
 		Q_OBJECT
@@ -19,9 +21,13 @@ namespace qtuser_3d
 		void registerEffect(const QString& name, Qt3DRender::QEffect* effect);
 		Qt3DRender::QEffect* effect(const QString& name);
 		static Qt3DRender::QEffect* create(const QString& name, Qt3DCore::QNode* parent = nullptr);
+
+		qtuser_3d::XEffect* xeffect(const QString& name);
+		static qtuser_3d::XEffect* xcreate(const QString& name, Qt3DCore::QNode* parent = nullptr);
 	protected:
 		Qt3DCore::QNode* m_root;
 		QMap<QString, Qt3DRender::QEffect*> m_effects;
+		QMap<QString, qtuser_3d::XEffect*> m_xeffects;
 	};
 	
 	SINGLETON_EXPORT(QTUSER_3D_API, EffectManager)
@@ -33,5 +39,8 @@ namespace qtuser_3d
 
 #define EFFECTCREATE(x, y) qtuser_3d::getEffectManager()->create(x, y)
 #define EFFECTCREATESTATUS(x, y, s) qtuser_3d::getEffectManager()->create(x, y, s)
+
+#define XEFFECT(x) qtuser_3d::getEffectManager()->xeffect(x)
+#define XEFFECTCREATE(x,y) qtuser_3d::getEffectManager()->xcreate(x,y)
 
 #endif // QTUSER_3D_EFFECTMANAGER_1594867313653_H

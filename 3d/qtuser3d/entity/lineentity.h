@@ -1,6 +1,6 @@
 #ifndef QTUSER_3D_LINEENTITY_1594892276547_H
 #define QTUSER_3D_LINEENTITY_1594892276547_H
-#include "qtuser3d/entity/basicentity.h"
+#include "qtuser3d/refactor/xentity.h"
 #include <QtCore/QVector>
 #include <QtGui/QColor>
 #include <QtGui/QVector3D>
@@ -8,7 +8,7 @@
 
 namespace qtuser_3d
 {
-	class QTUSER_3D_API LineEntity : public BasicEntity
+	class QTUSER_3D_API LineEntity : public XEntity
 	{
 		Q_OBJECT
 	public:

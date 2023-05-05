@@ -2,6 +2,8 @@
 #include "qtuser3d/utils/techniquecreator.h"
 #include "qtuser3d/renderpass/renderpassmanager.h"
 #include "qtuser3d/effect/ueffect.h"
+#include "qtuser3d/refactor/xeffect.h"
+#include "qtuser3d/refactor/xrenderpass.h"
 #include <Qt3DRender/QDepthTest>
 namespace qtuser_3d
 {
@@ -42,6 +44,38 @@ namespace qtuser_3d
 		{
 			Qt3DRender::QRenderPass* pass = parent ? RENDERPASSCREATE(str, technique) : RENDERPASS(str);
 			if (pass) technique->addRenderPass(pass);
+		}
+		return effect;
+	}
+
+	qtuser_3d::XEffect* EffectManager::xeffect(const QString& name)
+	{
+		QMap<QString, qtuser_3d::XEffect*>::iterator it = m_xeffects.find(name);
+		if (it != m_xeffects.end()) return (*it);
+
+		qtuser_3d::XEffect* effect = xcreate(name, nullptr);
+		if (effect)
+		{
+			effect->setParent(m_root);
+			it = m_xeffects.insert(name, effect);
+			if (it == m_xeffects.end())
+			{//insert error
+				delete effect;
+				effect = nullptr;
+			}
+		}
+		return effect;
+	}
+
+	qtuser_3d::XEffect* EffectManager::xcreate(const QString& name, Qt3DCore::QNode* parent)
+	{
+		qtuser_3d::XEffect* effect = new XEffect(parent);
+		Qt3DRender::QTechnique* technique = effect->techniques()[0];
+		QStringList renderPasses = name.split("_");
+		for (QString& str : renderPasses)
+		{
+			qtuser_3d::XRenderPass* pass = parent ? XRENDERPASSCREATE(str, technique) : XRENDERPASS(str);
+			if (pass) effect->addRenderPass(pass);
 		}
 		return effect;
 	}

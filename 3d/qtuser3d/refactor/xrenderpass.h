@@ -14,7 +14,9 @@ namespace qtuser_3d
 {
 	class QTUSER_3D_API XRenderPass : public Qt3DRender::QRenderPass
 	{
+		Q_OBJECT
 	public:
+		XRenderPass(Qt3DCore::QNode* parent = nullptr);
 		XRenderPass(const QString& shaderName, Qt3DCore::QNode* parent = nullptr);
 		virtual ~XRenderPass();
 
