@@ -57,6 +57,11 @@ namespace qtuser_3d
 		m_transform->setMatrix(matrix);
 	}
 
+	void XEntity::setModelMatrix(const QMatrix4x4& matrix)
+	{
+		setParameter("modelMatrix", matrix);
+	}
+
 	void XEntity::setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type)
 	{
 		m_geometryRenderer->setGeometry(geometry);
@@ -85,5 +90,15 @@ namespace qtuser_3d
 		}
 
 		effect->addPassFilter(index, filter);
+	}
+
+	Qt3DRender::QGeometry* XEntity::geometry()
+	{
+		return m_geometryRenderer->geometry();
+	}
+
+	QMatrix4x4 XEntity::pose()
+	{
+		return m_transform->matrix();
 	}
 }
