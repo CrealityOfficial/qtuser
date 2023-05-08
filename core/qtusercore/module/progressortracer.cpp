@@ -20,6 +20,10 @@ namespace qtuser_core
 	void ProgressorTracer::progress(float r)
 	{
 		m_realValue = m_start + r * (m_end - m_start);
+
+#if 0
+		qDebug() << QString("ProgressorTracer::progress [%1]").arg(m_realValue);
+#endif
 		if (m_progressor)
 			m_progressor->progress(m_realValue);
 	}

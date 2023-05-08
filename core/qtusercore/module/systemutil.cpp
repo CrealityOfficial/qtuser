@@ -78,8 +78,7 @@ void showDetailSystemInfo()
 	qDebug() << version.name() << version.majorVersion() << version.minorVersion() << version.microVersion();
 	showSysMemory();
 
-	QString appLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);  //Halot
-	// QString appLocation = qtuser_core::getOrCreateAppDataLocation();  // c3d
+	QString appLocation = qtuser_core::getOrCreateAppDataLocation();
 	qDebug() << "WriteAppData: " << appLocation;
 	qDebug() << "--------------------------------showDetailSystemInfo----------------------------";
 }
@@ -151,8 +150,7 @@ void printCallStack()
 
 QString getCanWriteFolder()
 {
-	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);  //HalotBox
-	// return qtuser_core::getOrCreateAppDataLocation(""); // c3d
+	return qtuser_core::getOrCreateAppDataLocation("");
 }
 
 void redirectIo()
@@ -265,19 +263,12 @@ namespace qtuser_core
 	void initializeLog(int argc, char* argv[])
 	{
 #ifdef QT_NO_DEBUG
-		QFileInfo info(argv[0]);
-		QString name = QString("/%1/Log/").arg(info.baseName());
-		QString logDirectory = qtuser_core::getOrCreateAppDataLocation(name);
-		qDebug() << logDirectory;
-		
-		// c3d
-		/*
+
 		qApp->setOrganizationName(ORGANIZATION);
 		qApp->setOrganizationDomain("FDM");
 		qApp->setApplicationName(PROJECT_NAME);//by TCJ "Creative3D"
 
 		QString logDirectory = qtuser_core::getOrCreateAppDataLocation("Log");
-		*/
 
 		auto func = [](const char* name)->std::string {
 			QString  dataTime = QDateTime::currentDateTime().toString("yyyy-MM-dd");

@@ -16,12 +16,10 @@ namespace qtuser_core
 	JobExecutor::~JobExecutor()
 	{
 	}
-
     QString JobExecutor::getDescription()
     {
         return m_jobDescription;
     }
-
 	bool JobExecutor::isRunning()
 	{
 		return m_running;
@@ -105,7 +103,8 @@ namespace qtuser_core
 	{
 		JobPtr job = m_exsitJobs.front();
         m_jobDescription = job->description();
-        qDebug() << "job " << job->name() << "start";
+
+        qDebug() << QString("JobExecutor::startJob : [%1].").arg(job->name());
 		m_exsitJobs.pop_front();
 
 		m_runThread->setJob(job);

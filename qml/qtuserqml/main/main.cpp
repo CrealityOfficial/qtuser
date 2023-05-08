@@ -113,7 +113,10 @@ namespace qtuser_qml
 #ifdef Q_OS_OSX
 		qDebug() << "OS OSX setDynamicLoadPath";
         dynamicPathList << QCoreApplication::applicationDirPath() + "/../Frameworks";
-    	qmlPathList << QCoreApplication::applicationDirPath() + "/../Resources/qml";
+    #ifdef QT_DEBUG
+        dynamicPathList << QCoreApplication::applicationDirPath() + "/../../../";
+    #endif
+        qmlPathList << QCoreApplication::applicationDirPath() + "/../Resources/qml";
 #elif defined Q_OS_WIN32
 		qDebug() << "OS WIN32 setDynamicLoadPath";
 #elif defined Q_OS_LINUX
@@ -135,19 +138,34 @@ namespace qtuser_qml
     int qmlAppMain(int argc, char* argv[], appFunc func)
     {
         qtuser_core::initializeLog(argc, argv);
-
         int ret = 0;
         {
-			preSpecifyOpenGL();
+#ifndef __APPLE__
+            //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
             preSetDynamicLoadPath();
+
+            specifyOpenGL();
+			qtuser_3d::setBeforeApplication();
+
             QApplication app(argc, argv);
             QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
             setDynamicLoadPath(*engine);
-            specifyOpenGL();
+
+#ifdef Q_OS_OSX
+            QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
+#endif
+
+            initSystemUtil();
+            showDetailSystemInfo();
 
             func(*engine);
             ret = app.exec();
+			
+#ifndef __APPLE__
+            delete engine;
+#endif
         }
         qtuser_core::uninitializeLog();
         return ret;

@@ -43,7 +43,6 @@ public:
 protected:
 	virtual bool enableImpl();
 
-
 signals:
 	void enabledChanged();
 	void executed();

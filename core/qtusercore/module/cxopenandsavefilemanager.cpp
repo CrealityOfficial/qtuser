@@ -334,6 +334,7 @@ namespace qtuser_core
 		QString suffix = info.suffix();
 		suffix = suffix.toLower();
 		m_lastOpenFile = info.baseName();
+		m_lastOpenFilePath = info.absoluteFilePath();
 		return openWithNameSuffix(fileName, suffix);
 	}
 
@@ -624,22 +625,19 @@ namespace qtuser_core
 	{
 		QOperatingSystemVersion version = QOperatingSystemVersion::current();
 		QProcess process;
-		qDebug()<<"openFolder version.type() : " <<version.type();
-		if (version.type() == QOperatingSystemVersion::Windows)
+		if(version.type() == QOperatingSystemVersion::Windows)
 		{
-			QString strPath = "explorer.exe /select," + m_lastSaveFile;
-			QString lastFile = m_lastSaveFile;
-			qDebug() << "strFile =" << m_lastSaveFile;
-			lastFile.replace("/", "\\");
-			process.startDetached(QStringLiteral("explorer.exe /select,") + lastFile);
+			QString dir = folder;
+			dir.replace("/", "\\");
+		    process.startDetached(QStringLiteral("explorer ") + dir);
 		}
 		else if(version.type() == QOperatingSystemVersion::MacOS)
 		{
 		    m_lastSaveFile.replace("\\","/");
 		    process.startDetached("/usr/bin/open",QStringList() << folder);
 		}
-		qDebug()<<"m_lastSaveFile replace =" <<m_lastSaveFile;
-		//QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
+
+		qDebug() << QString("CXFileOpenAndSaveManager::openFolder : [%1]").arg(folder);
 	}
 
 	void CXFileOpenAndSaveManager::addCXFileOpenSaveCallback(CXFileOpenSaveCallback* callback)

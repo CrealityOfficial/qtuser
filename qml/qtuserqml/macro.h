@@ -3,7 +3,7 @@
 #include <QtQml/qqml.h>
 
 #define QML_INTERFACE(x, scope, major, minor) qmlRegisterType<x>(scope, major, minor, #x)
-#define QML_INTERFACE_U(x, scope, major, minor, reason)  qmlRegisterUncreatableType<x>(scope, major, minor, #x, reason);
+#define QML_INTERFACE_U(x, scope, major, minor, reason)  qmlRegisterUncreatableType<x>(scope, major, minor, #x, reason)
 
 #define QML_AUTO_TYPE_2(x, y, scope, major, minor) namespace qml_type {\
 						class x##y \

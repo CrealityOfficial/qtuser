@@ -115,6 +115,7 @@ void QCCPlugin@Name@::slotPluginCheck(bool on)
 #include <QtWidgets/QWidget>
 #include "ui_@name@.h"
 
+#include "scc/log/tracer.h"
 class @Name@UI : public QWidget
 {
 	Q_OBJECT
@@ -135,6 +136,8 @@ protected:
 	    <source><![CDATA[
 #include "@name@ui.h"
 #include <QtWidgets/QBoxLayout>
+
+#include "scc/log/log.h"
 
 #include "../..//buildinfo.h"
 

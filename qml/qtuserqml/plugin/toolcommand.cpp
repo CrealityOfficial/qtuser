@@ -18,7 +18,7 @@ bool ToolCommand::enabled()
 
 bool ToolCommand::enableImpl()
 {
-	return false;
+	return m_enabled;
 }
 
 QString ToolCommand::enabledIcon() const
