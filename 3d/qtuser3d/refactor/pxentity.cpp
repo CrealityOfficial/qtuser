@@ -7,6 +7,7 @@ namespace qtuser_3d
 		, m_pickable(nullptr)
 	{
 		m_vertexBaseParameter = setParameter("vertexBase", QPoint(0, 0));
+		m_stateParameter = setParameter("state", 0);
 
 		Pickable* pickable = new Pickable(this);
 		pickable->setNoPrimitive(true);
@@ -43,6 +44,16 @@ namespace qtuser_3d
 			m_pickable->signalStateChanged(m_pickable->state());
 			m_pickable->signalFaceBaseChanged(m_pickable->faceBase());
 		}
+	}
+
+	void PickXEntity::setVisualState(qtuser_3d::ControlState state)
+	{
+		m_stateParameter->setValue((int)state);
+	}
+
+	void PickXEntity::setVisualVertexBase(const QPoint& vertexBase)
+	{
+		m_vertexBaseParameter->setValue(vertexBase);
 	}
 
 	void PickXEntity::slotStateChanged(ControlState state)
