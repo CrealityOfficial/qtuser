@@ -116,23 +116,20 @@ namespace qtuser_3d
 			m_positionBuffer->updateData(baseIndex * vertexSize, *positionBytes);
 			m_positionByteArray.replace(baseIndex * vertexSize, positionBytes->size(), *positionBytes);
 
-			trimesh::vec4* vertex4Data = nullptr;
-			trimesh::vec3* vertex3Data = nullptr;
+			QVector4D* vertex4Data = nullptr;
+			QVector3D* vertex3Data = nullptr;
 			if (qtuser_3d::isGles())
 			{
-				vertex4Data = (trimesh::vec4*)positionBytes->data();
+				vertex4Data = (QVector4D*)positionBytes->data();
 			}
 			else
 			{
-				vertex3Data = (trimesh::vec3*)positionBytes->data();
+				vertex3Data = (QVector3D*)positionBytes->data();
 			}
 
-			//QVector3D* position = (QVector3D*)positionBytes->data();
-			
 			int normalSize = m_chunkBytes * 3;
-			//QByteArray normalBytes(positionBytes->size(), 0);
 			QByteArray normalBytes(normalSize, 0);
-			trimesh::vec3* normal = (trimesh::vec3*)normalBytes.data();
+			QVector3D* normal = (QVector3D*)normalBytes.data();
 
 			int n = normalSize / (3 * 3 * sizeof(float));
 
@@ -142,14 +139,14 @@ namespace qtuser_3d
 				//QVector3D v1 = *(position + vertexSize * i + 1);
 				//QVector3D v2 = *(position + vertexSize * i + 2);
 
-				trimesh::vec3 v0;
-				trimesh::vec3 v1;
-				trimesh::vec3 v2;
+				QVector3D v0;
+				QVector3D v1;
+				QVector3D v2;
 				if (qtuser_3d::isGles())
 				{
-					v0 = *(vertex4Data + vertexSize * i);
-					v1 = *(vertex4Data + vertexSize * i + 1);
-					v2 = *(vertex4Data + vertexSize * i + 2);
+					v0 = (vertex4Data + vertexSize * i)->toVector3D();
+					v1 = (vertex4Data + vertexSize * i + 1)->toVector3D();
+					v2 = (vertex4Data + vertexSize * i + 2)->toVector3D();
 				}
 				else
 				{
@@ -158,13 +155,13 @@ namespace qtuser_3d
 					v2 = *(vertex3Data + vertexSize * i + 2);
 				}
 
-				trimesh::vec3 v01 = v1 - v0;
-				trimesh::vec3 v02 = v2 - v0;
-				trimesh::vec3 n = v01 TRICROSS v02;
-				trimesh::normalize(n);
-				*normal++ = n;
-				*normal++ = n;
-				*normal++ = n;
+				QVector3D v01 = v1 - v0;
+				QVector3D v02 = v2 - v0;
+				QVector3D norn = QVector3D::crossProduct(v01, v02);
+				norn.normalize();
+				*normal++ = norn;
+				*normal++ = norn;
+				*normal++ = norn;
 			}
 			m_normalBuffer->updateData(baseIndex * 3, normalBytes);
 			m_normalByteArray.replace(baseIndex * 3, normalBytes.size(), normalBytes);
@@ -237,7 +234,7 @@ namespace qtuser_3d
 		m_flagBuffer->updateData(0, m_flagByteArray);
 	}
 
-	void PickXChunkEntity::check(int faceID, Ray& ray, trimesh::vec3& position, trimesh::vec3& normal)
+	void PickXChunkEntity::check(int faceID, Ray& ray, QVector3D& position, QVector3D& normal)
 	{
 		int index = faceID - m_faceRange.x();
 
@@ -250,7 +247,7 @@ namespace qtuser_3d
 
 			normal = *normalBuffer;
 			QVector3D v0 = *(positionBuffer);
-			QVector3D vec3Pos = QVector3D(position.x, position.y, position.z);
+			QVector3D vec3Pos = position;
 			lineCollidePlane(v0, *normalBuffer, ray, vec3Pos);
 		}
 	}
