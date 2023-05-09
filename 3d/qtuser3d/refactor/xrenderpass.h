@@ -9,6 +9,9 @@
 #include <Qt3DRender/QDepthTest>
 #include <Qt3DRender/QNoDepthMask>
 #include <Qt3DRender/QParameter>
+#include <Qt3DRender/QStencilMask>
+#include <Qt3DRender/QStencilOperation>
+#include <Qt3DRender/QStencilTest>
 
 namespace qtuser_3d
 {
@@ -22,6 +25,20 @@ namespace qtuser_3d
 
 		void addFilterKeyMask(const QString& key, int mask);
 		Qt3DRender::QParameter* setParameter(const QString& name, const QVariant& value);
+
+		void setPassCullFace(Qt3DRender::QCullFace::CullingMode cullingMode = Qt3DRender::QCullFace::NoCulling);
+		void setPassBlend(Qt3DRender::QBlendEquationArguments::Blending source = Qt3DRender::QBlendEquationArguments::SourceAlpha,
+			Qt3DRender::QBlendEquationArguments::Blending destination = Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);
+
+		void setPassStencilMask(int mask);
+		void setPassStencilOperation(
+			Qt3DRender::QStencilOperationArguments::Operation depthFail,
+			Qt3DRender::QStencilOperationArguments::Operation stencilFail,
+			Qt3DRender::QStencilOperationArguments::Operation allPass);
+		void setPassStencilFunction(Qt3DRender::QStencilTestArguments::StencilFunction func, int reference, int comparisonMask);
+
+		void setPassDepthTest(Qt3DRender::QDepthTest::DepthFunction depthFunc = Qt3DRender::QDepthTest::Less);
+		void setPassNoDepthMask();
 	};
 }
 

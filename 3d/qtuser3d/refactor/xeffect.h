@@ -6,16 +6,6 @@
 #include <Qt3DRender/QParameter>
 #include <Qt3DRender/QRenderState>
 
-#include <Qt3DRender/QCullFace>
-#include <Qt3DRender/QBlendEquationArguments>
-#include <Qt3DRender/QStencilOperationArguments>
-#include <Qt3DRender/QStencilTestArguments>
-#include <Qt3DRender/QDepthTest>
-#include <Qt3DRender/QNoDepthMask>
-#include <Qt3DRender/QStencilMask>
-#include <Qt3DRender/QStencilOperation>
-#include <Qt3DRender/QStencilTest>
-
 namespace qtuser_3d
 {
 	class QTUSER_3D_API XEffect : public Qt3DRender::QEffect

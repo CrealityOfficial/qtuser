@@ -58,4 +58,68 @@ namespace qtuser_3d
 		filterKey->setValue(mask);
 		addFilterKey(filterKey);
 	}
+
+	void XRenderPass::setPassCullFace(Qt3DRender::QCullFace::CullingMode cullingMode)
+	{
+		Qt3DRender::QCullFace* cullFace = new Qt3DRender::QCullFace(this);
+		cullFace->setMode(cullingMode);
+		addRenderState(cullFace);
+	}
+
+	void XRenderPass::setPassBlend(Qt3DRender::QBlendEquationArguments::Blending source,
+		Qt3DRender::QBlendEquationArguments::Blending destination)
+	{
+		Qt3DRender::QBlendEquationArguments* blend = new Qt3DRender::QBlendEquationArguments(this);
+		blend->setSourceRgba(source);
+		blend->setDestinationRgba(destination);
+		addRenderState(blend);
+	}
+
+	void XRenderPass::setPassStencilMask(int mask)
+	{
+		Qt3DRender::QStencilMask* maskItem = new Qt3DRender::QStencilMask(this);
+		maskItem->setFrontOutputMask(mask);
+		addRenderState(maskItem);
+	}
+
+	void XRenderPass::setPassStencilOperation(
+		Qt3DRender::QStencilOperationArguments::Operation depthFail,
+		Qt3DRender::QStencilOperationArguments::Operation stencilFail,
+		Qt3DRender::QStencilOperationArguments::Operation allPass)
+	{
+		Qt3DRender::QStencilOperation* op = new Qt3DRender::QStencilOperation(this);
+		Qt3DRender::QStencilOperationArguments* face = op->front();
+
+		face->setDepthTestFailureOperation(depthFail);
+		face->setStencilTestFailureOperation(stencilFail);
+		face->setAllTestsPassOperation(allPass);
+
+		addRenderState(op);
+	}
+
+
+	void XRenderPass::setPassStencilFunction(Qt3DRender::QStencilTestArguments::StencilFunction func, int reference, int comparisonMask)
+	{
+		Qt3DRender::QStencilTest* state = new Qt3DRender::QStencilTest(this);
+		Qt3DRender::QStencilTestArguments* arg = state->front();
+		arg->setComparisonMask(comparisonMask);
+		arg->setReferenceValue(reference);
+		arg->setStencilFunction(func);
+
+		addRenderState(state);
+	}
+
+	void XRenderPass::setPassDepthTest(Qt3DRender::QDepthTest::DepthFunction depthFunc)
+	{
+		Qt3DRender::QDepthTest* state = new Qt3DRender::QDepthTest(this);
+		state->setDepthFunction(depthFunc);
+
+		addRenderState(state);
+	}
+
+	void XRenderPass::setPassNoDepthMask()
+	{
+		Qt3DRender::QNoDepthMask* state = new Qt3DRender::QNoDepthMask(this);
+		addRenderState(state);
+	}
 }

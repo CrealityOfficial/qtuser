@@ -95,10 +95,7 @@ namespace qtuser_3d
 		XRenderPass* pass = findRenderPass(index);
 		if (pass)
 		{
-			//add render state
-			Qt3DRender::QCullFace* cullFace = new Qt3DRender::QCullFace(pass);
-			cullFace->setMode(cullingMode);
-			pass->addRenderState(cullFace);
+			pass->setPassCullFace(cullingMode);
 		}
 	}
 
@@ -108,10 +105,7 @@ namespace qtuser_3d
 		XRenderPass* pass = findRenderPass(index);
 		if (pass)
 		{
-			Qt3DRender::QBlendEquationArguments* blend = new Qt3DRender::QBlendEquationArguments(pass);
-			blend->setSourceRgba(source);
-			blend->setDestinationRgba(destination);
-			pass->addRenderState(blend);
+			pass->setPassBlend(source, destination);
 		}
 	}
 
@@ -120,9 +114,7 @@ namespace qtuser_3d
 		XRenderPass* pass = findRenderPass(index);
 		if (pass)
 		{
-			Qt3DRender::QStencilMask* maskItem = new Qt3DRender::QStencilMask(pass);
-			maskItem->setFrontOutputMask(mask);
-			pass->addRenderState(maskItem);
+			pass->setPassStencilMask(mask);
 		}
 	}
 
@@ -134,14 +126,7 @@ namespace qtuser_3d
 		XRenderPass* pass = findRenderPass(index);
 		if (pass)
 		{
-			Qt3DRender::QStencilOperation* op = new Qt3DRender::QStencilOperation(pass);
-			Qt3DRender::QStencilOperationArguments* face = op->front();
-
-			face->setDepthTestFailureOperation(depthFail);
-			face->setStencilTestFailureOperation(stencilFail);
-			face->setAllTestsPassOperation(allPass);
-
-			pass->addRenderState(op);
+			pass->setPassStencilOperation(depthFail, stencilFail, allPass);
 		}
 	}
 
@@ -151,13 +136,7 @@ namespace qtuser_3d
 		XRenderPass* pass = findRenderPass(index);
 		if (pass)
 		{
-			Qt3DRender::QStencilTest* state = new Qt3DRender::QStencilTest(pass);
-			Qt3DRender::QStencilTestArguments* arg = state->front();
-			arg->setComparisonMask(comparisonMask);
-			arg->setReferenceValue(reference);
-			arg->setStencilFunction(func);
-
-			pass->addRenderState(state);
+			pass->setPassStencilFunction(func, reference, comparisonMask);
 		}
 	}
 
@@ -166,10 +145,7 @@ namespace qtuser_3d
 		XRenderPass* pass = findRenderPass(index);
 		if (pass)
 		{
-			Qt3DRender::QDepthTest* state = new Qt3DRender::QDepthTest(pass);
-			state->setDepthFunction(depthFunc);
-
-			pass->addRenderState(state);
+			pass->setPassDepthTest(depthFunc);
 		}
 	}
 
@@ -178,8 +154,7 @@ namespace qtuser_3d
 		XRenderPass* pass = findRenderPass(index);
 		if (pass)
 		{
-			Qt3DRender::QNoDepthMask* state = new Qt3DRender::QNoDepthMask(pass);
-			pass->addRenderState(state);
+			pass->setPassNoDepthMask();
 		}
 	}
 }
