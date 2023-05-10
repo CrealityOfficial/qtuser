@@ -4881,33 +4881,15 @@ const char* printergrid_fragment =
                              "	}\n"
                              "	else\n"
                              "	{\n"
-                             "		//if((((int(flag.x/10.0))%4 > 0) || ((int(flag.y/10.0))%4 > 0)) && (visible == 0.0))\n"
-                             "		//	discard;\n"
                              "		if(int(highlight_index_x) == int(flag.x) || int(highlight_index_y) == int(flag.y))\n"
                              "		{\n"
-                             "			fragColor = xyIndexcolor; // vec4(1.0, 1.0, 0.0,1.0);\n"
+                             "			fragColor = xyIndexcolor;\n"
                              "		}\n"
                              "		else\n"
                              "		{\n"
                              "			fragColor = linecolor;\n"
                              "		}\n"
                              "	}\n"
-                             "	\n"
-                             "\n"
-                             "/*\n"
-                             "	if (visible == 0.0)\n"
-                             "	{\n"
-                             "		discard;\n"
-                             "	}\n"
-                             "	else\n"
-                             "	{\n"
-                             "		if(((int(flag.x/10.0))%4 > 0) || ((int(flag.y/10.0))%4 > 0))\n"
-                             "			//fragColor = showcolor;\n"
-                             "			discard;\n"
-                             "		else	\n"
-                             "			fragColor = linecolor;\n"
-                             "	}\n"
-                             "	*/\n"
                              "}\n"
 ;
 const char* printergrid_vert = 
@@ -5611,6 +5593,27 @@ const char* supportshow_vert =
                              "	}\n"
                              "}\n"
 ;
+const char* surfacequad_fragment = 
+                             "#version 150 core \n"
+                             "\n"
+                             "out vec4 fragColor;\n"
+                             "uniform vec4 color = vec4(1.0, 0.0, 0.0, 1.0);\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "	fragColor = color;\n"
+                             "}\n"
+;
+const char* surfacequad_vert = 
+                             "#version 150 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "   gl_Position = vec4(vertexPosition.xy, -0.999, 1.0);\n"
+                             "}\n"
+;
 const char* tex_fragment = 
                              "#version 150 core \n"
                              "\n"
@@ -5774,14 +5777,10 @@ const char* xyzIndicator_vert =
 const char* zproject_fragment = 
                              "#version 150 core \n"
                              "out vec4 fragmentColor;\n"
-                             "\n"
-                             "uniform int cameraDir;\n"
+                             "uniform vec4 pcolor = vec4(0.2275, 0.2275, 0.2353, 0.5);\n"
                              "void main( void )\n"
                              "{\n"
-                             "	if(cameraDir == 0)\n"
-                             "		discard;\n"
-                             "		\n"
-                             "	fragmentColor = vec4(0.1451, 0.1569, 0.1647, 1.0);\n"
+                             "	fragmentColor = pcolor;\n"
                              "}\n"
 ;
 const char* zproject_vert = 
@@ -5792,7 +5791,7 @@ const char* zproject_vert =
                              "uniform mat4 modelMatrix;\n"
                              "uniform mat4 viewMatrix;\n"
                              "uniform mat4 projectionMatrix;\n"
-                             "uniform float projectZ = -0.01;\n"
+                             "uniform float projectZ = - 0.01;\n"
                              "\n"
                              "void main( void )\n"
                              "{\n"
@@ -5802,7 +5801,7 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
-const char* shader_code_array[80] = {
+const char* shader_code_array[82] = {
 	admodel_fragment,
 	admodel_vert,
 	bottomface_fragment,
@@ -5873,6 +5872,8 @@ const char* shader_code_array[80] = {
 	supportpos_vert,
 	supportshow_fragment,
 	supportshow_vert,
+	surfacequad_fragment,
+	surfacequad_vert,
 	tex_fragment,
 	tex_vert,
 	texshape_fragment,
@@ -5894,8 +5895,8 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
-int programs_meta_size = 39;
-ProgramDef programs_meta[39] = {
+int programs_meta_size = 40;
+ProgramDef programs_meta[40] = {
   { "admodel" , 1  ,  -1   ,  -1   ,  -1   , 0  },
    { "bottomface" , 3  ,  -1   ,  -1   ,  -1   , 2  },
    { "boxclippure" , 5  ,  -1   ,  -1   ,  -1   , 4  },
@@ -5930,9 +5931,10 @@ ProgramDef programs_meta[39] = {
    { "support" , 65  ,  -1   ,  -1   ,  -1   , 64  },
    { "supportpos" , 67  ,  -1   ,  -1   ,  -1   , 66  },
    { "supportshow" , 69  ,  -1   ,  -1   ,  -1   , 68  },
-   { "tex" , 71  ,  -1   ,  -1   ,  -1   , 70  },
-   { "texshape" , 73  ,  -1   ,  -1   ,  -1   , 72  },
-   { "text" , 75  ,  -1   ,  -1   ,  -1   , 74  },
-   { "xyzIndicator" , 77  ,  -1   ,  -1   ,  -1   , 76  },
-   { "zproject" , 79  ,  -1   ,  -1   ,  -1   , 78  },
+   { "surfacequad" , 71  ,  -1   ,  -1   ,  -1   , 70  },
+   { "tex" , 73  ,  -1   ,  -1   ,  -1   , 72  },
+   { "texshape" , 75  ,  -1   ,  -1   ,  -1   , 74  },
+   { "text" , 77  ,  -1   ,  -1   ,  -1   , 76  },
+   { "xyzIndicator" , 79  ,  -1   ,  -1   ,  -1   , 78  },
+   { "zproject" , 81  ,  -1   ,  -1   ,  -1   , 80  },
  };
