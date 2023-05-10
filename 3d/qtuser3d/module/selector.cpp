@@ -1,4 +1,5 @@
 #include "selector.h"
+#include <QRect>
 
 namespace qtuser_3d
 {
@@ -346,6 +347,22 @@ namespace qtuser_3d
 		selectPickables(pickables, offLists);
 	}
 
+	void Selector::unselectOne(qtuser_3d::Pickable* pickable)
+	{
+		if (!pickable || !pickable->selected())
+			return;
+
+		QList<qtuser_3d::Pickable*> pickables;
+		pickables << pickable;
+		unselectMore(pickables);
+	}
+
+	void Selector::unselectMore(const QList<qtuser_3d::Pickable*>& pickables)
+	{
+		QList<qtuser_3d::Pickable*> onList;
+		selectPickables(onList, pickables);
+	}
+
 	void Selector::selectPickables(const QList<Pickable*>& onList, const QList<Pickable*>& offList)
 	{
 		if (!m_enabled)
@@ -395,4 +412,46 @@ namespace qtuser_3d
 	{
 
 	}
+
+	void Selector::selectRect(const QRect& rect, bool exclude)
+	{
+		if (rect.size().isNull()) return;
+
+		int width = abs(rect.width()), height = abs(rect.height());
+		if (width <= 1 || height <= 1) return;
+	
+		int x = std::min(rect.left(), rect.right()), y = std::min(rect.top(), rect.bottom());
+
+		QList<qtuser_3d::Pickable*> list;
+
+		for (size_t i = 0; i < height; i++)
+		{
+			for (size_t j = 0; j < width; j++)
+			{
+				QPoint p(x + j, y + i);
+				Pickable* obj = check(p);
+				if (obj && obj->enableSelect() && list.contains(obj) == false)
+				{
+					list << obj;
+				}
+			}
+		}
+
+		if (exclude)
+		{
+			QList<Pickable*> offlist;
+			for (Pickable* pickable : m_pickables)
+			{
+				if (!list.contains(pickable)) 
+				{
+					offlist << pickable;
+				}
+			}
+			selectPickables(list, offlist);
+		}
+		else {
+			appendSelects(list);
+		}
+	}
+
 }

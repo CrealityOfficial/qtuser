@@ -34,6 +34,7 @@ namespace qtuser_3d
 
 		Qt3DRender::QRenderPassFilter* m_renderPassFilter;
 		Qt3DRender::QRenderPassFilter* m_alphaPassFilter;
+		Qt3DRender::QRenderPassFilter* m_alphaPassFilter2;
 	};
 }
 #endif // _QTUSER_3D_SURFACE_1589794908795_H

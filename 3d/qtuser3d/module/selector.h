@@ -33,21 +33,31 @@ namespace qtuser_3d
 		virtual void selectCtrl(const QPoint& p, bool sGroup = false);
 		void selectPickable(qtuser_3d::Pickable* pickable);
 		void appendSelect(qtuser_3d::Pickable* pickable);
+		void appendSelects(const QList<qtuser_3d::Pickable*> pickables);
 		void selectGroup(qtuser_3d::Pickable* pickable);
 		void updateFaceBases();
 
+		void selectOne(qtuser_3d::Pickable* pickable);
 		void selectMore(const QList<qtuser_3d::Pickable*>& pickables);
+
+		void unselectOne(qtuser_3d::Pickable* pickable);
+		void unselectMore(const QList<qtuser_3d::Pickable*>& pickables);
+
 		void selectPickables(const QList<qtuser_3d::Pickable*>& onList, const QList<qtuser_3d::Pickable*>& offList);
 		
+		void selectRect(const QRect& rect, bool exclude = true);
+
+
 		Q_INVOKABLE void selectAll();
 		Q_INVOKABLE void selectNone();
 
 		void changed(qtuser_3d::Pickable* pickable);
-		void notifyTracers(qtuser_3d::SelectorTracer* tracer = nullptr);
-	private:
+	protected:
 		void _add(qtuser_3d::Pickable* pickable);
 		void _remove(qtuser_3d::Pickable* pickable);
+		QList<qtuser_3d::Pickable*> _selectedPickables();
 
+		void notifyTracers(qtuser_3d::SelectorTracer* tracer = nullptr);
 		virtual void onChanged();
 	protected:
 		qtuser_3d::FacePicker* m_pickSource;

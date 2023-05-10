@@ -1,3 +1,5 @@
+
+#include <QDebug>
 #include "glcompatibility.h"
 
 #include "visualinfo.h"
@@ -15,7 +17,21 @@ namespace qtuser_3d
     Qt::ApplicationAttribute gAttribute = Qt::AA_UseDesktopOpenGL;
 	bool isGles()
 	{
-		return gAttribute == Qt::AA_UseOpenGLES;
+        #ifdef __APPLE__
+            return false;
+        #else
+            return gAttribute == Qt::AA_UseOpenGLES;
+        #endif
+		
+	}
+
+	bool isSoftwareGL()
+	{
+        #ifdef __APPLE__
+            return false;
+        #else
+		    return gAttribute == Qt::AA_UseSoftwareOpenGL;
+        #endif
 	}
 
     bool _isNotInstalledVideoDriver() {
