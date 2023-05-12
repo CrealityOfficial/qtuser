@@ -52,12 +52,14 @@ namespace qtuser_3d
 		Q_INVOKABLE void selectNone();
 
 		void changed(qtuser_3d::Pickable* pickable);
+
+		void notifyTracers(qtuser_3d::SelectorTracer* tracer = nullptr);
+	
 	protected:
 		void _add(qtuser_3d::Pickable* pickable);
 		void _remove(qtuser_3d::Pickable* pickable);
 		QList<qtuser_3d::Pickable*> _selectedPickables();
 
-		void notifyTracers(qtuser_3d::SelectorTracer* tracer = nullptr);
 		virtual void onChanged();
 	protected:
 		qtuser_3d::FacePicker* m_pickSource;
