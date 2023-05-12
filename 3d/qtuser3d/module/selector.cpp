@@ -246,8 +246,19 @@ namespace qtuser_3d
 
 		if (selectNotifying)
 			return;
+		int primitiveID = -1;
+		Pickable* pickable = check(p, &primitiveID);
 
-		Pickable* pickable = check(p, nullptr);
+		if (pickable)
+		{
+			pickable->pick(primitiveID);
+		}
+
+		if (pickable && pickable->enableSelect() == false)
+		{
+			return;
+		}
+
 		if (sGroup)
 			selectGroup(pickable);
 		else selectPickable(pickable);
@@ -317,6 +328,24 @@ namespace qtuser_3d
 			m_selectedPickables << pickable;
 			notifyTracers();
 		}
+	}
+
+	void Selector::appendSelects(const QList<qtuser_3d::Pickable*> pickables)
+	{
+		if (!m_enabled)
+			return;
+
+		if (selectNotifying)
+			return;
+
+		for (qtuser_3d::Pickable* pickable : pickables)
+		{
+			if (pickable && !pickable->selected() && pickable->enableSelect())
+			{
+				pickable->setSelected(true);
+			}
+		}
+		notifyTracers();
 	}
 
 	void Selector::selectAll()

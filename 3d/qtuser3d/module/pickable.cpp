@@ -35,6 +35,8 @@ namespace qtuser_3d
 
 	void Pickable::setSelected(bool selected)
 	{
+		if (selected && !m_enableSelect) 
+			return;
 		setState(selected ? ControlState::selected : ControlState::none);
 	}
 
