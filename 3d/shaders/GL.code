@@ -5006,6 +5006,69 @@ const char* pickFaceFlag_vert =
                              "	flag			= vertexFlag;\n"
                              "}\n"
 ;
+const char* pickindicator_frag = 
+                             "#version 330 core\n"
+                             "\n"
+                             "flat in vec4 passColor;\n"
+                             "\n"
+                             "in vec3 passVert;\n"
+                             "in vec3 passNormal;\n"
+                             "\n"
+                             "layout (location = 0) out vec4 fragColor;\n"
+                             "layout (location = 1) out vec3 worldPosion;\n"
+                             "layout (location = 2) out vec3 worldNormal;\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	fragColor = passColor;\n"
+                             "	worldPosion = passVert;\n"
+                             "	worldNormal = passNormal;\n"
+                             "}\n"
+;
+const char* pickindicator_vert = 
+                             "#version 330 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec3 vertexNormal;\n"
+                             "in vec2 vertexTexCoord;\n"
+                             "in float facesIndex;\n"
+                             "\n"
+                             "flat out vec4 passColor;\n"
+                             "\n"
+                             "out vec3 passVert;\n"
+                             "out vec3 passNormal;\n"
+                             "\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "uniform mat4 viewportMatrix;\n"
+                             "uniform ivec2 vertexBase;\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "\n"
+                             "	int _faceId =  int(facesIndex) + int(vertexBase.x / 3);;\n"
+                             "	int i3 = _faceId / 0x1000000;\n"
+                             "	_faceId = _faceId - i3 * 0x1000000;\n"
+                             "	int i2 = _faceId / 0x10000;\n"
+                             "	_faceId = _faceId - i2 * 0x10000;\n"
+                             "	int i1 = _faceId / 0x100;\n"
+                             "	_faceId = _faceId - i1 * 0x100;\n"
+                             "	int i0 = _faceId;\n"
+                             "	\n"
+                             "	vec4 position = vec4(vertexPosition, 1.0);\n"
+                             "	passColor = vec4(\n"
+                             "					float(i0) / 255.0,\n"
+                             "					float(i1) / 255.0,\n"
+                             "					float(i2) / 255.0,\n"
+                             "					float(i3) / 255.0);\n"
+                             "	\n"
+                             "	passVert = (modelMatrix * position).xyz;\n"
+                             "	passNormal = mat3(modelMatrix) * vertexNormal;\n"
+                             "	gl_Position = viewportMatrix * projectionMatrix * viewMatrix * modelMatrix * position;\n"
+                             "\n"
+                             "}\n"
+;
 const char* printerbottom_fragment = 
                              "#version 150 core \n"
                              "\n"
@@ -5158,6 +5221,65 @@ const char* pure_vert =
                              "void main() \n"
                              "{\n"
                              "   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
+                             "}\n"
+;
+const char* sceneindicator_frag = 
+                             "#version 330 core\n"
+                             "\n"
+                             "layout (location = 0) out vec4 fragColor;\n"
+                             "\n"
+                             "in vec2 texCoord;\n"
+                             "in float dirIndex;\n"
+                             "in vec3 normal;\n"
+                             "\n"
+                             "uniform sampler2D colorMap;\n"
+                             "uniform sampler2D selectMap;\n"
+                             "\n"
+                             "uniform float highlightFaces;\n"
+                             "\n"
+                             "void main() \n"
+                             "{	\n"
+                             "	float diffuse = dot(normalize(normal), normalize(vec3(1.0, 1.0, 1.0)));\n"
+                             "	diffuse = clamp(diffuse, 0.0, 1.0);\n"
+                             "	diffuse = mix(0.6, 1.1, diffuse);\n"
+                             "\n"
+                             "	vec4 texColor = texture(colorMap, texCoord);\n"
+                             "\n"
+                             "	if (abs(highlightFaces - dirIndex) < 0.0001) {\n"
+                             "		texColor = texture(selectMap, texCoord);\n"
+                             "	}\n"
+                             "\n"
+                             "	fragColor = vec4(texColor.rgb * diffuse, 1.0);\n"
+                             "}\n"
+;
+const char* sceneindicator_vert = 
+                             "#version 330 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec3 vertexNormal;\n"
+                             "in vec2 vertexTexCoord;\n"
+                             "in float facesIndex;\n"
+                             "\n"
+                             "out vec2 texCoord;\n"
+                             "out float dirIndex;\n"
+                             "out vec3 normal;\n"
+                             "\n"
+                             "uniform mat4 modelViewProjection;\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "uniform mat4 viewportMatrix;\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "   texCoord = vertexTexCoord;\n"
+                             "   dirIndex = facesIndex;\n"
+                             "   \n"
+                             "   gl_Position = viewportMatrix * projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
+                             "\n"
+                             "   normal = mat3(viewMatrix * modelMatrix ) * vertexNormal;\n"
+                             "   // gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
+                             "\n"
                              "}\n"
 ;
 const char* slicepreview_fragment = 
@@ -6030,11 +6152,7 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
-<<<<<<< HEAD
-const char* shader_code_array[82] = {
-=======
-const char* shader_code_array[85] = {
->>>>>>> 1323135
+const char* shader_code_array[89] = {
 	admodel_fragment,
 	admodel_vert,
 	bottomface_fragment,
@@ -6088,12 +6206,16 @@ const char* shader_code_array[85] = {
 	pickFaceChunk_vert,
 	pickFaceFlag_fragment,
 	pickFaceFlag_vert,
+	pickindicator_frag,
+	pickindicator_vert,
 	printerbottom_fragment,
 	printerbottom_vert,
 	printergrid_fragment,
 	printergrid_vert,
 	pure_fragment,
 	pure_vert,
+	sceneindicator_frag,
+	sceneindicator_vert,
 	slicepreview_fragment,
 	slicepreview_vert,
 	slicepreviewAD_fragment,
@@ -6131,13 +6253,8 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
-<<<<<<< HEAD
-int programs_meta_size = 40;
-ProgramDef programs_meta[40] = {
-=======
-int programs_meta_size = 41;
-ProgramDef programs_meta[41] = {
->>>>>>> 1323135
+int programs_meta_size = 43;
+ProgramDef programs_meta[43] = {
   { "admodel" , 1  ,  -1   ,  -1   ,  -1   , 0  },
    { "bottomface" , 3  ,  -1   ,  -1   ,  -1   , 2  },
    { "boxclippure" , 5  ,  -1   ,  -1   ,  -1   , 4  },
@@ -6146,40 +6263,6 @@ ProgramDef programs_meta[41] = {
    { "dlpsupportindicator" , 11  ,  -1   ,  -1   ,  -1   , 10  },
    { "finephong" , 13  ,  -1   ,  -1   ,  -1   , 12  },
    { "finephongtex" , 15  ,  -1   ,  -1   ,  -1   , 14  },
-<<<<<<< HEAD
-   { "glcomp1" , 17  ,  -1   ,  -1   ,  -1   , 16  },
-   { "manipulate" , 19  ,  -1   ,  -1   ,  -1   , 18  },
-   { "model" , 21  ,  -1   ,  -1   ,  -1   , 20  },
-   { "modelSupport" , 34  ,  -1   ,  -1   ,  -1   , 33  },
-   { "modeldlp" , 23  ,  -1   ,  -1   ,  -1   , 22  },
-   { "modelline" , 25  ,  -1   ,  -1   ,  -1   , 24  },
-   { "modelphong" , 28  ,  -1   ,  -1   , 27  , 26  },
-   { "modelselect" , 30  ,  -1   ,  -1   ,  -1   , 29  },
-   { "modelsimple" , 32  ,  -1   ,  -1   ,  -1   , 31  },
-   { "modelwireframe" , 37  ,  -1   ,  -1   , 36  , 35  },
-   { "moon" , 39  ,  -1   ,  -1   ,  -1   , 38  },
-   { "overlay" , 41  ,  -1   ,  -1   ,  -1   , 40  },
-   { "photo" , 43  ,  -1   ,  -1   ,  -1   , 42  },
-   { "pickFace" , 45  ,  -1   ,  -1   ,  -1   , 44  },
-   { "pickFaceChunk" , 47  ,  -1   ,  -1   ,  -1   , 46  },
-   { "pickFaceFlag" , 49  ,  -1   ,  -1   ,  -1   , 48  },
-   { "printerbottom" , 51  ,  -1   ,  -1   ,  -1   , 50  },
-   { "printergrid" , 53  ,  -1   ,  -1   ,  -1   , 52  },
-   { "pure" , 55  ,  -1   ,  -1   ,  -1   , 54  },
-   { "slicepreview" , 57  ,  -1   ,  -1   ,  -1   , 56  },
-   { "slicepreviewAD" , 59  ,  -1   ,  -1   ,  -1   , 58  },
-   { "slicepreviewpath" , 61  ,  -1   ,  -1   ,  -1   , 60  },
-   { "splitplane" , 63  ,  -1   ,  -1   ,  -1   , 62  },
-   { "support" , 65  ,  -1   ,  -1   ,  -1   , 64  },
-   { "supportpos" , 67  ,  -1   ,  -1   ,  -1   , 66  },
-   { "supportshow" , 69  ,  -1   ,  -1   ,  -1   , 68  },
-   { "surfacequad" , 71  ,  -1   ,  -1   ,  -1   , 70  },
-   { "tex" , 73  ,  -1   ,  -1   ,  -1   , 72  },
-   { "texshape" , 75  ,  -1   ,  -1   ,  -1   , 74  },
-   { "text" , 77  ,  -1   ,  -1   ,  -1   , 76  },
-   { "xyzIndicator" , 79  ,  -1   ,  -1   ,  -1   , 78  },
-   { "zproject" , 81  ,  -1   ,  -1   ,  -1   , 80  },
-=======
    { "gcodepreviewG" , 18  ,  -1   ,  -1   , 17  , 16  },
    { "glcomp1" , 20  ,  -1   ,  -1   ,  -1   , 19  },
    { "manipulate" , 22  ,  -1   ,  -1   ,  -1   , 21  },
@@ -6197,21 +6280,22 @@ ProgramDef programs_meta[41] = {
    { "pickFace" , 48  ,  -1   ,  -1   ,  -1   , 47  },
    { "pickFaceChunk" , 50  ,  -1   ,  -1   ,  -1   , 49  },
    { "pickFaceFlag" , 52  ,  -1   ,  -1   ,  -1   , 51  },
-   { "printerbottom" , 54  ,  -1   ,  -1   ,  -1   , 53  },
-   { "printergrid" , 56  ,  -1   ,  -1   ,  -1   , 55  },
-   { "pure" , 58  ,  -1   ,  -1   ,  -1   , 57  },
-   { "slicepreview" , 60  ,  -1   ,  -1   ,  -1   , 59  },
-   { "slicepreviewAD" , 62  ,  -1   ,  -1   ,  -1   , 61  },
-   { "slicepreviewpath" , 64  ,  -1   ,  -1   ,  -1   , 63  },
-   { "splitplane" , 66  ,  -1   ,  -1   ,  -1   , 65  },
-   { "support" , 68  ,  -1   ,  -1   ,  -1   , 67  },
-   { "supportpos" , 70  ,  -1   ,  -1   ,  -1   , 69  },
-   { "supportshow" , 72  ,  -1   ,  -1   ,  -1   , 71  },
-   { "surfacequad" , 74  ,  -1   ,  -1   ,  -1   , 73  },
-   { "tex" , 76  ,  -1   ,  -1   ,  -1   , 75  },
-   { "texshape" , 78  ,  -1   ,  -1   ,  -1   , 77  },
-   { "text" , 80  ,  -1   ,  -1   ,  -1   , 79  },
-   { "xyzIndicator" , 82  ,  -1   ,  -1   ,  -1   , 81  },
-   { "zproject" , 84  ,  -1   ,  -1   ,  -1   , 83  },
->>>>>>> 1323135
+   { "pickindicator" , 54  ,  -1   ,  -1   ,  -1   , 53  },
+   { "printerbottom" , 56  ,  -1   ,  -1   ,  -1   , 55  },
+   { "printergrid" , 58  ,  -1   ,  -1   ,  -1   , 57  },
+   { "pure" , 60  ,  -1   ,  -1   ,  -1   , 59  },
+   { "sceneindicator" , 62  ,  -1   ,  -1   ,  -1   , 61  },
+   { "slicepreview" , 64  ,  -1   ,  -1   ,  -1   , 63  },
+   { "slicepreviewAD" , 66  ,  -1   ,  -1   ,  -1   , 65  },
+   { "slicepreviewpath" , 68  ,  -1   ,  -1   ,  -1   , 67  },
+   { "splitplane" , 70  ,  -1   ,  -1   ,  -1   , 69  },
+   { "support" , 72  ,  -1   ,  -1   ,  -1   , 71  },
+   { "supportpos" , 74  ,  -1   ,  -1   ,  -1   , 73  },
+   { "supportshow" , 76  ,  -1   ,  -1   ,  -1   , 75  },
+   { "surfacequad" , 78  ,  -1   ,  -1   ,  -1   , 77  },
+   { "tex" , 80  ,  -1   ,  -1   ,  -1   , 79  },
+   { "texshape" , 82  ,  -1   ,  -1   ,  -1   , 81  },
+   { "text" , 84  ,  -1   ,  -1   ,  -1   , 83  },
+   { "xyzIndicator" , 86  ,  -1   ,  -1   ,  -1   , 85  },
+   { "zproject" , 88  ,  -1   ,  -1   ,  -1   , 87  },
  };
