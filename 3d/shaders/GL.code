@@ -3277,6 +3277,235 @@ const char* finephongtex_vert =
                              "	texcoord = vertexTexcoord;\n"
                              "}\n"
 ;
+const char* gcodepreviewG_fragment = 
+                             "#version 150 core\n"
+                             "out vec4 fragment_color;\n"
+                             "\n"
+                             "in vec3 normal;\n"
+                             "flat in vec2 step;\n"
+                             "flat in float visualType;\n"
+                             "in vec3 viewDirection;\n"
+                             "\n"
+                             "// uniform vec4 color = vec4(0.8, 0.8, 0.8, 1.0); \n"
+                             "uniform vec4 darkColor = vec4(0.161, 0.161, 0.161, 1.0);\n"
+                             "\n"
+                             "uniform vec3 light_direction = vec3(0.0, 0.0, 1.0);\n"
+                             "uniform vec4 front_ambient = vec4(0.8, 0.8, 0.8, 1.0);\n"
+                             "uniform vec4 front_diffuse = vec4(0.6, 0.6, 0.6, 1.0);\n"
+                             "uniform vec4 back_ambient = vec4(0.3, 0.3, 0.3, 1.0);\n"
+                             "uniform vec4 back_diffuse = vec4(0.3, 0.3, 0.3, 1.0);\n"
+                             "uniform vec4 specular = vec4(0.5, 0.5, 0.5, 1.0);\n"
+                             "\n"
+                             "uniform int showType = 0;\n"
+                             "uniform int animation = 0;\n"
+                             "\n"
+                             "uniform vec4 clipValue;\n"
+                             "uniform vec2 layershow;\n"
+                             "uniform int layerstartflag_show;\n"
+                             "\n"
+                             "uniform float speedcolorSize;\n"
+                             "uniform vec4 typecolors[18];\n"
+                             "uniform vec4 speedcolors[13];\n"
+                             "uniform vec4 nozzlecolors[6];\n"
+                             "uniform int typecolorsshow[18];\n"
+                             "\n"
+                             "uniform float specularPower = 32.0;\n"
+                             "\n"
+                             "vec4 directLight(vec4 core_color)\n"
+                             "{\n"
+                             "	vec4 ambient_color 	  = front_ambient * core_color;	\n"
+                             "	vec4 diffuse_color    = front_diffuse;\n"
+                             "	vec3 light_dir = normalize(light_direction);\n"
+                             "	vec3 fnormal          =	normalize(normal); \n"
+                             "	float NdotL 		  = max(dot(fnormal, light_dir), 0.0);\n"
+                             "	diffuse_color         = diffuse_color * core_color;\n"
+                             "	vec4 total_diffuse    = NdotL * diffuse_color;\n"
+                             "	\n"
+                             "	vec3 freflection      = reflect(-light_dir, fnormal);\n"
+                             "	vec3 fViewDirection   = normalize(viewDirection);\n"
+                             "	float RdotV           = max(0.0, dot(freflection, fViewDirection)); \n"
+                             "	vec4 specularColor    = specular * pow( RdotV, specularPower) * core_color;\n"
+                             "	\n"
+                             "	vec4 resultColor = total_diffuse + specularColor + ambient_color;\n"
+                             "	resultColor.a = 1.0;\n"
+                             "	return resultColor;\n"
+                             "}\n"
+                             "\n"
+                             "vec4 typeColor()\n"
+                             "{\n"
+                             "	return typecolors[int(visualType)];\n"
+                             "}\n"
+                             "\n"
+                             "vec4 nozzleColor()\n"
+                             "{\n"
+                             "	return nozzlecolors[int(visualType)];\n"
+                             "}\n"
+                             "\n"
+                             "vec4 speedColor()\n"
+                             "{\n"
+                             "	float speedFlag = visualType * speedcolorSize;\n"
+                             "	int stype = int(speedFlag);\n"
+                             "	vec4 lastColor = speedcolors[stype];\n"
+                             "	vec4 nextColor = speedcolors[stype + 1];\n"
+                             "	return lastColor + (nextColor - lastColor) * (speedFlag - stype);\n"
+                             "}\n"
+                             "\n"
+                             "// vec4 processAnimation()\n"
+                             "// {\n"
+                             "// 	vec4 colors[2];\n"
+                             "// 	colors[0] = vec4(0.0, 0.0, 0.0, 0.0);\n"
+                             "// 	if(step.x == clipValue.y)\n"
+                             "// 	{\n"
+                             "// 		colors[1] = vec4(0.3, 0.3, 0.3, 0.0);\n"
+                             "// 	}\n"
+                             "// 	else\n"
+                             "// 	{\n"
+                             "// 		colors[1] = vec4(-0.3, -0.3, -0.3, 0.0);\n"
+                             "// 	}\n"
+                             "// 	return colors[animation];\n"
+                             "// }\n"
+                             "\n"
+                             "void main( void )\n"
+                             "{\n"
+                             "	if(step.x > clipValue.y)\n"
+                             "		discard;\n"
+                             "		\n"
+                             "	if((step.x == clipValue.y) && (step.y > clipValue.w))\n"
+                             "		discard;\n"
+                             "		\n"
+                             "	if(step.x < layershow.x || step.x > layershow.y)\n"
+                             "		discard;\n"
+                             "	\n"
+                             "	if(visualType < 0.0)\n"
+                             "		discard;\n"
+                             "		\n"
+                             "	if(showType == 1 && typecolorsshow[int(visualType)] == 0)\n"
+                             "		discard;\n"
+                             "	\n"
+                             "	vec4 colors[3];\n"
+                             "	colors[0] = speedColor();\n"
+                             "	colors[1] = typeColor();\n"
+                             "	colors[2] = nozzleColor();\n"
+                             "	\n"
+                             "	vec4 core_color = colors[showType];\n"
+                             "\n"
+                             "	if (animation == 1 && step.x != clipValue.y) {\n"
+                             "		core_color = darkColor;\n"
+                             "	}\n"
+                             "\n"
+                             "	vec4 resultColor     = directLight(core_color);\n"
+                             "	// resultColor += processAnimation();\n"
+                             "	\n"
+                             "	fragment_color = resultColor;\n"
+                             "}\n"
+;
+const char* gcodepreviewG_geom = 
+                             "#version 150 core\n"
+                             "\n"
+                             "layout (points) in;\n"
+                             "layout (triangle_strip, max_vertices = 10) out;\n"
+                             "\n"
+                             "in vec3 startVertexVS[1];\n"
+                             "in vec3 endVertexVS[1];\n"
+                             "in vec3 vNormalVS[1];\n"
+                             "flat in vec2 stepVS[1];\n"
+                             "flat in float visualTypeVS[1];\n"
+                             "\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "\n"
+                             "out vec3 normal;\n"
+                             "flat out vec2 step;\n"
+                             "flat out float visualType;\n"
+                             "out vec3 viewDirection;\n"
+                             "\n"
+                             "uniform float layerHeight = 0.1;\n"
+                             "uniform float lineWidth = 0.4;\n"
+                             "\n"
+                             "void combindVertex(vec3 pos, vec3 norm)\n"
+                             "{\n"
+                             "	vec4 world_position = viewMatrix * modelMatrix * vec4(pos, 1.0);\n"
+                             "	gl_Position = projectionMatrix *  world_position;\n"
+                             "	normal = mat3(viewMatrix) * norm;\n"
+                             "	viewDirection  = normalize(vec3(world_position));\n"
+                             "	EmitVertex();\n"
+                             "}\n"
+                             "\n"
+                             "void main( void )\n"
+                             "{	\n"
+                             "	step = stepVS[0];\n"
+                             "	visualType = visualTypeVS[0];\n"
+                             "\n"
+                             "	vec3 norms[8];\n"
+                             "	norms[0] = vec3(0.0, 0.0, 1.0);\n"
+                             "	norms[1] = vNormalVS[0];\n"
+                             "	norms[2] = vec3(0.0, 0.0, -1.0);\n"
+                             "	norms[3] = - vNormalVS[0];\n"
+                             "	norms[4] = vec3(0.0, 0.0, 1.0);\n"
+                             "	norms[5] = vNormalVS[0];\n"
+                             "	norms[6] = vec3(0.0, 0.0, -1.0);\n"
+                             "	norms[7] = - vNormalVS[0];\n"
+                             "	\n"
+                             "	vec3 poses[8];\n"
+                             "	// poses[0] = startVertexVS[0] + 0.05 * norms[0];\n"
+                             "	// poses[1] = startVertexVS[0] + 0.2  * norms[1];\n"
+                             "	// poses[2] = startVertexVS[0] + 0.05 * norms[2];\n"
+                             "	// poses[3] = startVertexVS[0] + 0.2  * norms[3];\n"
+                             "	// poses[4] = endVertexVS[0]   + 0.05 * norms[4];\n"
+                             "	// poses[5] = endVertexVS[0]   + 0.2  * norms[5];\n"
+                             "	// poses[6] = endVertexVS[0]   + 0.05 * norms[6];\n"
+                             "	// poses[7] = endVertexVS[0]   + 0.2  * norms[7];\n"
+                             "\n"
+                             "	poses[0] = startVertexVS[0] + layerHeight * 0.5 * norms[0];\n"
+                             "	poses[1] = startVertexVS[0] + lineWidth   * 0.5 * norms[1];\n"
+                             "	poses[2] = startVertexVS[0] + layerHeight * 0.5 * norms[2];\n"
+                             "	poses[3] = startVertexVS[0] + lineWidth   * 0.5 * norms[3];\n"
+                             "	poses[4] = endVertexVS[0]   + layerHeight * 0.5 * norms[4];\n"
+                             "	poses[5] = endVertexVS[0]   + lineWidth   * 0.5 * norms[5];\n"
+                             "	poses[6] = endVertexVS[0]   + layerHeight * 0.5 * norms[6];\n"
+                             "	poses[7] = endVertexVS[0]   + lineWidth   * 0.5 * norms[7];\n"
+                             "	\n"
+                             "	\n"
+                             "	combindVertex(poses[0], norms[0]);\n"
+                             "	combindVertex(poses[4], norms[4]);\n"
+                             "	combindVertex(poses[1], norms[1]);\n"
+                             "	combindVertex(poses[5], norms[5]);\n"
+                             "	combindVertex(poses[2], norms[2]);\n"
+                             "	combindVertex(poses[6], norms[6]);\n"
+                             "	combindVertex(poses[3], norms[3]);\n"
+                             "	combindVertex(poses[7], norms[7]);\n"
+                             "	combindVertex(poses[0], norms[0]);\n"
+                             "	combindVertex(poses[4], norms[4]);\n"
+                             "	\n"
+                             "	EndPrimitive();\n"
+                             "}\n"
+                             "\n"
+;
+const char* gcodepreviewG_vert = 
+                             "#version 150 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec3 endVertexPosition;\n"
+                             "in vec3 vertexNormal;\n"
+                             "in vec2 stepsFlag;\n"
+                             "in float visualTypeFlags;\n"
+                             "\n"
+                             "out vec3 startVertexVS;\n"
+                             "out vec3 endVertexVS;\n"
+                             "out vec3 vNormalVS;\n"
+                             "flat out vec2 stepVS;\n"
+                             "flat out float visualTypeVS;\n"
+                             "\n"
+                             "void main( void )\n"
+                             "{	\n"
+                             "	startVertexVS = vertexPosition;\n"
+                             "	endVertexVS = endVertexPosition;\n"
+                             "	vNormalVS = vertexNormal;\n"
+                             "	stepVS = stepsFlag;\n"
+                             "	visualTypeVS = visualTypeFlags;\n"
+                             "}\n"
+;
 const char* glcomp1_fragment = 
                              "#version 150 core \n"
                              "\n"
@@ -5801,7 +6030,11 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
+<<<<<<< HEAD
 const char* shader_code_array[82] = {
+=======
+const char* shader_code_array[85] = {
+>>>>>>> 1323135
 	admodel_fragment,
 	admodel_vert,
 	bottomface_fragment,
@@ -5818,6 +6051,9 @@ const char* shader_code_array[82] = {
 	finephong_vert,
 	finephongtex_fragment,
 	finephongtex_vert,
+	gcodepreviewG_fragment,
+	gcodepreviewG_geom,
+	gcodepreviewG_vert,
 	glcomp1_fragment,
 	glcomp1_vert,
 	manipulate_fragment,
@@ -5895,8 +6131,13 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
+<<<<<<< HEAD
 int programs_meta_size = 40;
 ProgramDef programs_meta[40] = {
+=======
+int programs_meta_size = 41;
+ProgramDef programs_meta[41] = {
+>>>>>>> 1323135
   { "admodel" , 1  ,  -1   ,  -1   ,  -1   , 0  },
    { "bottomface" , 3  ,  -1   ,  -1   ,  -1   , 2  },
    { "boxclippure" , 5  ,  -1   ,  -1   ,  -1   , 4  },
@@ -5905,6 +6146,7 @@ ProgramDef programs_meta[40] = {
    { "dlpsupportindicator" , 11  ,  -1   ,  -1   ,  -1   , 10  },
    { "finephong" , 13  ,  -1   ,  -1   ,  -1   , 12  },
    { "finephongtex" , 15  ,  -1   ,  -1   ,  -1   , 14  },
+<<<<<<< HEAD
    { "glcomp1" , 17  ,  -1   ,  -1   ,  -1   , 16  },
    { "manipulate" , 19  ,  -1   ,  -1   ,  -1   , 18  },
    { "model" , 21  ,  -1   ,  -1   ,  -1   , 20  },
@@ -5937,4 +6179,39 @@ ProgramDef programs_meta[40] = {
    { "text" , 77  ,  -1   ,  -1   ,  -1   , 76  },
    { "xyzIndicator" , 79  ,  -1   ,  -1   ,  -1   , 78  },
    { "zproject" , 81  ,  -1   ,  -1   ,  -1   , 80  },
+=======
+   { "gcodepreviewG" , 18  ,  -1   ,  -1   , 17  , 16  },
+   { "glcomp1" , 20  ,  -1   ,  -1   ,  -1   , 19  },
+   { "manipulate" , 22  ,  -1   ,  -1   ,  -1   , 21  },
+   { "model" , 24  ,  -1   ,  -1   ,  -1   , 23  },
+   { "modelSupport" , 37  ,  -1   ,  -1   ,  -1   , 36  },
+   { "modeldlp" , 26  ,  -1   ,  -1   ,  -1   , 25  },
+   { "modelline" , 28  ,  -1   ,  -1   ,  -1   , 27  },
+   { "modelphong" , 31  ,  -1   ,  -1   , 30  , 29  },
+   { "modelselect" , 33  ,  -1   ,  -1   ,  -1   , 32  },
+   { "modelsimple" , 35  ,  -1   ,  -1   ,  -1   , 34  },
+   { "modelwireframe" , 40  ,  -1   ,  -1   , 39  , 38  },
+   { "moon" , 42  ,  -1   ,  -1   ,  -1   , 41  },
+   { "overlay" , 44  ,  -1   ,  -1   ,  -1   , 43  },
+   { "photo" , 46  ,  -1   ,  -1   ,  -1   , 45  },
+   { "pickFace" , 48  ,  -1   ,  -1   ,  -1   , 47  },
+   { "pickFaceChunk" , 50  ,  -1   ,  -1   ,  -1   , 49  },
+   { "pickFaceFlag" , 52  ,  -1   ,  -1   ,  -1   , 51  },
+   { "printerbottom" , 54  ,  -1   ,  -1   ,  -1   , 53  },
+   { "printergrid" , 56  ,  -1   ,  -1   ,  -1   , 55  },
+   { "pure" , 58  ,  -1   ,  -1   ,  -1   , 57  },
+   { "slicepreview" , 60  ,  -1   ,  -1   ,  -1   , 59  },
+   { "slicepreviewAD" , 62  ,  -1   ,  -1   ,  -1   , 61  },
+   { "slicepreviewpath" , 64  ,  -1   ,  -1   ,  -1   , 63  },
+   { "splitplane" , 66  ,  -1   ,  -1   ,  -1   , 65  },
+   { "support" , 68  ,  -1   ,  -1   ,  -1   , 67  },
+   { "supportpos" , 70  ,  -1   ,  -1   ,  -1   , 69  },
+   { "supportshow" , 72  ,  -1   ,  -1   ,  -1   , 71  },
+   { "surfacequad" , 74  ,  -1   ,  -1   ,  -1   , 73  },
+   { "tex" , 76  ,  -1   ,  -1   ,  -1   , 75  },
+   { "texshape" , 78  ,  -1   ,  -1   ,  -1   , 77  },
+   { "text" , 80  ,  -1   ,  -1   ,  -1   , 79  },
+   { "xyzIndicator" , 82  ,  -1   ,  -1   ,  -1   , 81  },
+   { "zproject" , 84  ,  -1   ,  -1   ,  -1   , 83  },
+>>>>>>> 1323135
  };
