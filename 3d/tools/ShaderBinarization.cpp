@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <vector>
+
+#if _WIN32
 #include <io.h>
 
 #include <fstream>
@@ -423,7 +425,13 @@ bool Check(FILETIME t1, FILETIME t2)
 	return uli1.QuadPart > uli2.QuadPart;
 }
 
+#endif // _WIN32
+
+#ifdef INVOKE_BINARY
+int invoke_shader_binary(int argc, char* argv[])
+#else
 int main(int argc, char* argv[])
+#endif
 {
 	std::string inputs[2] = {
 		"gl/3.3/",
@@ -455,6 +463,7 @@ int main(int argc, char* argv[])
 	std::string inputDirGL = inputDirRoot + inputs[0];
 	std::string inputDirGLES = inputDirRoot + inputs[1];
 
+#if _WIN32
 	std::vector<file_info> gl_files;
 	get_files(inputDirGL.c_str(), gl_files);
 
@@ -463,6 +472,9 @@ int main(int argc, char* argv[])
 
 	std::string outputFile = outputDirRoot + "GL.code";
 	write_shader_string_gl_gles(outputFile, gles_files, gl_files);
-
 	return EXIT_SUCCESS;
+
+#else
+	return 0;
+#endif
 }

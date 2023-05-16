@@ -6152,7 +6152,11 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
+<<<<<<< HEAD
 const char* shader_code_array[89] = {
+=======
+const char* shader_code_array[82] = {
+>>>>>>> a4bf81e (feature:[tools]shader binary)
 	admodel_fragment,
 	admodel_vert,
 	bottomface_fragment,
@@ -6253,8 +6257,13 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
+<<<<<<< HEAD
 int programs_meta_size = 43;
 ProgramDef programs_meta[43] = {
+=======
+int programs_meta_size = 40;
+ProgramDef programs_meta[40] = {
+>>>>>>> a4bf81e (feature:[tools]shader binary)
   { "admodel" , 1  ,  -1   ,  -1   ,  -1   , 0  },
    { "bottomface" , 3  ,  -1   ,  -1   ,  -1   , 2  },
    { "boxclippure" , 5  ,  -1   ,  -1   ,  -1   , 4  },
@@ -6263,6 +6272,7 @@ ProgramDef programs_meta[43] = {
    { "dlpsupportindicator" , 11  ,  -1   ,  -1   ,  -1   , 10  },
    { "finephong" , 13  ,  -1   ,  -1   ,  -1   , 12  },
    { "finephongtex" , 15  ,  -1   ,  -1   ,  -1   , 14  },
+<<<<<<< HEAD
    { "gcodepreviewG" , 18  ,  -1   ,  -1   , 17  , 16  },
    { "glcomp1" , 20  ,  -1   ,  -1   ,  -1   , 19  },
    { "manipulate" , 22  ,  -1   ,  -1   ,  -1   , 21  },
@@ -6298,4 +6308,38 @@ ProgramDef programs_meta[43] = {
    { "text" , 84  ,  -1   ,  -1   ,  -1   , 83  },
    { "xyzIndicator" , 86  ,  -1   ,  -1   ,  -1   , 85  },
    { "zproject" , 88  ,  -1   ,  -1   ,  -1   , 87  },
+=======
+   { "glcomp1" , 17  ,  -1   ,  -1   ,  -1   , 16  },
+   { "manipulate" , 19  ,  -1   ,  -1   ,  -1   , 18  },
+   { "model" , 21  ,  -1   ,  -1   ,  -1   , 20  },
+   { "modelSupport" , 34  ,  -1   ,  -1   ,  -1   , 33  },
+   { "modeldlp" , 23  ,  -1   ,  -1   ,  -1   , 22  },
+   { "modelline" , 25  ,  -1   ,  -1   ,  -1   , 24  },
+   { "modelphong" , 28  ,  -1   ,  -1   , 27  , 26  },
+   { "modelselect" , 30  ,  -1   ,  -1   ,  -1   , 29  },
+   { "modelsimple" , 32  ,  -1   ,  -1   ,  -1   , 31  },
+   { "modelwireframe" , 37  ,  -1   ,  -1   , 36  , 35  },
+   { "moon" , 39  ,  -1   ,  -1   ,  -1   , 38  },
+   { "overlay" , 41  ,  -1   ,  -1   ,  -1   , 40  },
+   { "photo" , 43  ,  -1   ,  -1   ,  -1   , 42  },
+   { "pickFace" , 45  ,  -1   ,  -1   ,  -1   , 44  },
+   { "pickFaceChunk" , 47  ,  -1   ,  -1   ,  -1   , 46  },
+   { "pickFaceFlag" , 49  ,  -1   ,  -1   ,  -1   , 48  },
+   { "printerbottom" , 51  ,  -1   ,  -1   ,  -1   , 50  },
+   { "printergrid" , 53  ,  -1   ,  -1   ,  -1   , 52  },
+   { "pure" , 55  ,  -1   ,  -1   ,  -1   , 54  },
+   { "slicepreview" , 57  ,  -1   ,  -1   ,  -1   , 56  },
+   { "slicepreviewAD" , 59  ,  -1   ,  -1   ,  -1   , 58  },
+   { "slicepreviewpath" , 61  ,  -1   ,  -1   ,  -1   , 60  },
+   { "splitplane" , 63  ,  -1   ,  -1   ,  -1   , 62  },
+   { "support" , 65  ,  -1   ,  -1   ,  -1   , 64  },
+   { "supportpos" , 67  ,  -1   ,  -1   ,  -1   , 66  },
+   { "supportshow" , 69  ,  -1   ,  -1   ,  -1   , 68  },
+   { "surfacequad" , 71  ,  -1   ,  -1   ,  -1   , 70  },
+   { "tex" , 73  ,  -1   ,  -1   ,  -1   , 72  },
+   { "texshape" , 75  ,  -1   ,  -1   ,  -1   , 74  },
+   { "text" , 77  ,  -1   ,  -1   ,  -1   , 76  },
+   { "xyzIndicator" , 79  ,  -1   ,  -1   ,  -1   , 78  },
+   { "zproject" , 81  ,  -1   ,  -1   ,  -1   , 80  },
+>>>>>>> a4bf81e (feature:[tools]shader binary)
  };
