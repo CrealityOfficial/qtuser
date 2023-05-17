@@ -5006,7 +5006,7 @@ const char* pickFaceFlag_vert =
                              "	flag			= vertexFlag;\n"
                              "}\n"
 ;
-const char* pickindicator_frag = 
+const char* pickindicator_fragment = 
                              "#version 330 core\n"
                              "\n"
                              "flat in vec4 passColor;\n"
@@ -5024,6 +5024,7 @@ const char* pickindicator_frag =
                              "	worldPosion = passVert;\n"
                              "	worldNormal = passNormal;\n"
                              "}\n"
+                             " \n"
 ;
 const char* pickindicator_vert = 
                              "#version 330 core\n"
@@ -5223,7 +5224,7 @@ const char* pure_vert =
                              "   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
                              "}\n"
 ;
-const char* sceneindicator_frag = 
+const char* sceneindicator_fragment = 
                              "#version 330 core\n"
                              "\n"
                              "layout (location = 0) out vec4 fragColor;\n"
@@ -5250,7 +5251,7 @@ const char* sceneindicator_frag =
                              "	}\n"
                              "\n"
                              "	fragColor = vec4(texColor.rgb * diffuse, 1.0);\n"
-                             "}\n"
+                             "} \n"
 ;
 const char* sceneindicator_vert = 
                              "#version 330 core\n"
@@ -6206,7 +6207,7 @@ const char* shader_code_array[89] = {
 	pickFaceChunk_vert,
 	pickFaceFlag_fragment,
 	pickFaceFlag_vert,
-	pickindicator_frag,
+	pickindicator_fragment,
 	pickindicator_vert,
 	printerbottom_fragment,
 	printerbottom_vert,
@@ -6214,7 +6215,7 @@ const char* shader_code_array[89] = {
 	printergrid_vert,
 	pure_fragment,
 	pure_vert,
-	sceneindicator_frag,
+	sceneindicator_fragment,
 	sceneindicator_vert,
 	slicepreview_fragment,
 	slicepreview_vert,
