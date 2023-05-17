@@ -259,7 +259,7 @@ namespace qtuser_core
 		}
 	}
 
-	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver, const QString& title, const QString& defaultName)
+	void CXFileOpenAndSaveManager::save(CXHandleBase* receiver, const QString& defaultName, const QString& title)
 	{
 		m_State = OpenSaveState::oss_save;
 		if (receiver)
