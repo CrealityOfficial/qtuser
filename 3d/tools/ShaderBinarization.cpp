@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <vector>
 
+#include "buildinfo.h"
+
 #if _WIN32
 #include <io.h>
 
@@ -13,8 +15,6 @@
 #include <map>
 
 #include <Windows.h>
-
-#include "buildinfo.h"
 
 std::wstring convert(const char* name)
 {
@@ -220,9 +220,9 @@ bool write_shader_string(const std::string& shader_string_file, std::vector<file
 /// <summary>
 /// 
 /// </summary>
-/// <param name="shader_string_file">Ð´ÈëÔ´</param>
-/// <param name="gles_files">glesÊý¾Ý</param>
-/// <param name="gl_files">glÊý¾Ý</param>
+/// <param name="shader_string_file">Ð´ï¿½ï¿½Ô´</param>
+/// <param name="gles_files">glesï¿½ï¿½ï¿½ï¿½</param>
+/// <param name="gl_files">glï¿½ï¿½ï¿½ï¿½</param>
 /// <returns></returns>
 bool write_shader_string_gl_gles(const std::string& shader_string_file, std::vector<file_info>& gles_files, std::vector<file_info>& gl_files)
 {
