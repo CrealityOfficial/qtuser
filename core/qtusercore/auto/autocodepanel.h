@@ -8,10 +8,10 @@ namespace Ui
 	class AutoCodePanel;
 }
 
-class TemplateLibrary;
 namespace qtuser_core
 {
 	class KeywordItem;
+	class TemplateLibrary;
 	class QTUSER_CORE_API AutoCodePanel : public QWidget
 	{
 		Q_OBJECT

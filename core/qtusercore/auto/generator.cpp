@@ -2,28 +2,31 @@
 #include "keywordcache.h"
 #include "templatelibrary.h"
 
-Generator::Generator(QObject* parent)
-	:QObject(parent)
+namespace qtuser_core
 {
-}
-Generator::~Generator()
-{
-}
-
-void Generator::generate(KeywordCache* cache)
-{
-	if (!cache) return;
-
-	TemplateLibrary library;
-	library.addSearchPath(cache->additionalPathes());
-
-	for (KeywordList* keyword : cache->keywords())
+	Generator::Generator(QObject* parent)
+		:QObject(parent)
 	{
-		QString templateName = keyword->use();
-		Template* t = library.get(templateName);
-		if (t)
+	}
+	Generator::~Generator()
+	{
+	}
+
+	void Generator::generate(KeywordCache* cache)
+	{
+		if (!cache) return;
+
+		TemplateLibrary library;
+		library.addSearchPath(cache->additionalPathes());
+
+		for (KeywordList* keyword : cache->keywords())
 		{
-			t->write(keyword);
+			QString templateName = keyword->use();
+			Template* t = library.get(templateName);
+			if (t)
+			{
+				t->write(keyword);
+			}
 		}
 	}
 }

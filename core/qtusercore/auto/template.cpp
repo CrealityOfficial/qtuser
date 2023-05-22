@@ -5,161 +5,164 @@
 #include "filegenerator.h"
 #include "keywordlist.h"
 
-Template::Template(QObject* parent)
-	:QObject(parent)
+namespace qtuser_core
 {
-}
-Template::~Template()
-{
-}
-
-void Template::write(KeywordList* keywordList)
-{
-	if (!keywordList) return;
-
-	for (FileGenerator* generator : m_fileGenerators)
+	Template::Template(QObject* parent)
+		:QObject(parent)
 	{
-		const QStringList& keys = generator->keywords();
-		QStringList mismatch;
-		for (const QString& key : keys)
+	}
+	Template::~Template()
+	{
+	}
+
+	void Template::write(KeywordList* keywordList)
+	{
+		if (!keywordList) return;
+
+		for (FileGenerator* generator : m_fileGenerators)
 		{
-			if (!keywordList->test(key))
-				mismatch << key;
-		}
-		if (mismatch.size() == 0)
-		{
-			generator->write(keywordList);
-		}
-		else
-		{
-			qDebug() << "Mismatch Keywords " << mismatch;
+			const QStringList& keys = generator->keywords();
+			QStringList mismatch;
+			for (const QString& key : keys)
+			{
+				if (!keywordList->test(key))
+					mismatch << key;
+			}
+			if (mismatch.size() == 0)
+			{
+				generator->write(keywordList);
+			}
+			else
+			{
+				qDebug() << "Mismatch Keywords " << mismatch;
+			}
 		}
 	}
-}
 
-bool Template::parse(const QString& templateFile)
-{
-	clearGenerators();
-
-	QFile file(templateFile);
-	if (file.open(QIODevice::ReadOnly))
+	bool Template::parse(const QString& templateFile)
 	{
-		QXmlStreamReader xmlReader(&file);
+		clearGenerators();
 
-		FileGenerator* fileGenerator = nullptr;
-		unsigned flag = 0;
-		while (!xmlReader.atEnd())
+		QFile file(templateFile);
+		if (file.open(QIODevice::ReadOnly))
 		{
-			if (xmlReader.isStartElement())
-			{
-				QStringRef tagname = xmlReader.name();
-				if (tagname == "file")
-				{
-					fileGenerator = new FileGenerator(this);
-				}
-				if (tagname == "name")
-				{
-					flag = 1;
-				}
-				if (tagname == "source")
-				{
-					flag = 2;
-				}
-			}
+			QXmlStreamReader xmlReader(&file);
 
-			if (xmlReader.isCDATA())
+			FileGenerator* fileGenerator = nullptr;
+			unsigned flag = 0;
+			while (!xmlReader.atEnd())
 			{
-				QString data = xmlReader.text().toString().trimmed();
-				if (flag == 1)
+				if (xmlReader.isStartElement())
 				{
-					fileGenerator->parseName(data);
-				}
-				else if (flag == 2)
-				{
-					fileGenerator->parseSource(data);
-				}
-			}
-
-			if (xmlReader.isEndElement())
-			{
-				QStringRef tagname = xmlReader.name();
-				if (tagname == "file")
-				{
-					if (fileGenerator)
+					QStringRef tagname = xmlReader.name();
+					if (tagname == "file")
 					{
-						m_fileGenerators.push_back(fileGenerator);
-						fileGenerator = nullptr;
+						fileGenerator = new FileGenerator(this);
+					}
+					if (tagname == "name")
+					{
+						flag = 1;
+					}
+					if (tagname == "source")
+					{
+						flag = 2;
 					}
 				}
-				if (tagname == "name")
-				{
 
-				}
-				if (tagname == "source")
+				if (xmlReader.isCDATA())
 				{
-
+					QString data = xmlReader.text().toString().trimmed();
+					if (flag == 1)
+					{
+						fileGenerator->parseName(data);
+					}
+					else if (flag == 2)
+					{
+						fileGenerator->parseSource(data);
+					}
 				}
+
+				if (xmlReader.isEndElement())
+				{
+					QStringRef tagname = xmlReader.name();
+					if (tagname == "file")
+					{
+						if (fileGenerator)
+						{
+							m_fileGenerators.push_back(fileGenerator);
+							fileGenerator = nullptr;
+						}
+					}
+					if (tagname == "name")
+					{
+
+					}
+					if (tagname == "source")
+					{
+
+					}
+				}
+
+				xmlReader.readNext();
 			}
 
-			xmlReader.readNext();
+			if (xmlReader.hasError())
+			{
+				clearGenerators();
+			}
+
+			parseKeys();
+			return valid();
 		}
 
-		if (xmlReader.hasError()) 
-		{
-			clearGenerators();
-		}
-
-		parseKeys();
-		return valid();
+		return false;
 	}
 
-	return false;
-}
-
-void Template::clearGenerators()
-{
-	qDeleteAll(m_fileGenerators);
-	m_fileGenerators.clear();
-
-	m_builtinKeys.clear();
-	m_userKeys.clear();
-}
-
-bool Template::valid()
-{
-	return m_fileGenerators.size() > 0;
-}
-
-QStringList Template::builtinKeys()
-{
-	return m_builtinKeys;
-}
-
-QStringList Template::userKeys()
-{
-	return m_userKeys;
-}
-
-void Template::parseKeys()
-{
-	QSet<QString> unionKeys;
-	for (FileGenerator* generator : m_fileGenerators)
+	void Template::clearGenerators()
 	{
-		QStringList keys = generator->keywords();
-		for (QString key : keys)
+		qDeleteAll(m_fileGenerators);
+		m_fileGenerators.clear();
+
+		m_builtinKeys.clear();
+		m_userKeys.clear();
+	}
+
+	bool Template::valid()
+	{
+		return m_fileGenerators.size() > 0;
+	}
+
+	QStringList Template::builtinKeys()
+	{
+		return m_builtinKeys;
+	}
+
+	QStringList Template::userKeys()
+	{
+		return m_userKeys;
+	}
+
+	void Template::parseKeys()
+	{
+		QSet<QString> unionKeys;
+		for (FileGenerator* generator : m_fileGenerators)
 		{
-			QString lkey = key.toLower();
-			if (!unionKeys.contains(lkey))
+			QStringList keys = generator->keywords();
+			for (QString key : keys)
 			{
-				if (KeywordList::builtin(lkey))
+				QString lkey = key.toLower();
+				if (!unionKeys.contains(lkey))
 				{
-					m_builtinKeys << lkey;
+					if (KeywordList::builtin(lkey))
+					{
+						m_builtinKeys << lkey;
+					}
+					else
+					{
+						m_userKeys << lkey;
+					}
+					unionKeys.insert(lkey);
 				}
-				else
-				{
-					m_userKeys << lkey;
-				}
-				unionKeys.insert(lkey);
 			}
 		}
 	}

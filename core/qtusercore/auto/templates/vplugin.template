@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <file> 
+        <name><![CDATA[
+CMakeLists.txt
+		]]></name>
+	    <source><![CDATA[
+set(SRCS @name@plugin.h
+		 @name@plugin.cpp
+		 @name@flow.h
+		 @name@flow.cpp
+		 )
+		 
+set(QRCS @name@.qrc) 
+add_viskernel_plugin(@name@)
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@plugin.h
+		]]></name>
+	    <source><![CDATA[
+#ifndef _@NAME@PLUGIN_@TIME@_H
+#define _@NAME@PLUGIN_@TIME@_H
+#include "viskernel/kernel/plugin.h"
+#include "@name@flow.h"
+
+class @Name@Plugin : public QObject, public VisPluginInterface
+{
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "viskernel.@Name@Plugin")
+	Q_INTERFACES(VisPluginInterface)
+public:
+	@Name@Plugin(QObject* parent = nullptr);
+	virtual ~@Name@Plugin();
+
+	QString name() override;
+
+	void initialize() override;
+	void setActive() override;
+	void setUnactive() override;
+	void uninitialize() override;
+protected:
+	QObject* m_ui;
+	@Name@Flow* m_flow;
+};
+
+#endif // _@NAME@PLUGIN_@TIME@_H
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@plugin.cpp
+		]]></name>
+	    <source><![CDATA[
+#include "@name@plugin.h"
+#include "cxkernel/interface/uiinterface.h"
+#include "viskernel/interface/renderinterface.h"
+
+@Name@Plugin::@Name@Plugin(QObject* parent)
+	: QObject(parent)
+	, m_ui(nullptr)
+{
+	m_flow = new @Name@Flow();
+	cxkernel::registerContextObject("plugin_@name@_flow", m_flow);
+}
+
+@Name@Plugin::~@Name@Plugin()
+{
+}
+
+QString @Name@Plugin::name()
+{
+	return "@Name@Plugin";
+}
+
+void @Name@Plugin::initialize()
+{
+	viskernel::registerRenderGraph(m_flow);
+}
+
+void @Name@Plugin::setActive()
+{
+	m_ui = cxkernel::createQmlObjectFromQrc(":/@name@/@name@.qml");
+	viskernel::renderRenderGraph(m_flow);
+}
+
+void @Name@Plugin::setUnactive()
+{
+	viskernel::renderDefaultRenderGraph();
+	delete m_ui;
+}
+
+void @Name@Plugin::uninitialize()
+{
+}
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@flow.h
+		]]></name>
+	    <source><![CDATA[
+#ifndef _@NAME@_FLOW_@TIME@_H
+#define _@NAME@_FLOW_@TIME@_H
+#include "qtuser3d/framegraph/xrendergraph.h"
+
+class @Name@Flow : public qtuser_3d::XRenderGraph
+{
+	Q_OBJECT
+public:
+	@Name@Flow();
+	virtual ~@Name@Flow();
+
+protected:
+};
+#endif // _@NAME@_FLOW_@TIME@_H
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@flow.cpp
+		]]></name>
+	    <source><![CDATA[
+#include "@name@flow.h"
+
+@Name@Flow::@Name@Flow()
+	: XRenderGraph()
+{
+}
+
+@Name@Flow::~@Name@Flow()
+{
+
+}
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@.qrc
+		]]></name>
+	    <source><![CDATA[
+<RCC>
+    <qresource prefix="/@name@">
+        <file>@name@.qml</file>
+    </qresource>
+</RCC>
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@.qml
+		]]></name>
+	    <source><![CDATA[
+import QtQuick 2.13
+import QtQuick.Controls 1.4
+
+Rectangle{
+	parent: cxkernel_ui.itemByName("GLItem")
+	width: 300
+	height: parent.height
+	anchors.right: parent.right
+	
+	Button {
+		text: "Button"
+	}
+}
+		]]></source>	
+    </file>
+</template>

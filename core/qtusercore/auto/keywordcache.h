@@ -4,20 +4,23 @@
 #include <QtCore/QObject>
 #include "keywordlist.h"
 
-class QTUSER_CORE_API KeywordCache: public QObject
+namespace qtuser_core
 {
-public:
-	KeywordCache(QObject* parent = nullptr);
-	virtual ~KeywordCache();
+	class QTUSER_CORE_API KeywordCache : public QObject
+	{
+	public:
+		KeywordCache(QObject* parent = nullptr);
+		virtual ~KeywordCache();
 
-	void parse(int argc, char** argv);
+		void parse(int argc, char** argv);
 
-	QStringList additionalPathes();
-	QList<KeywordList*>& keywords();
-private:
-	void clearCache();
-protected:
-	QList<KeywordList*> m_keywordLists;
-	QStringList m_additionalPathes;
-};
+		QStringList additionalPathes();
+		QList<KeywordList*>& keywords();
+	private:
+		void clearCache();
+	protected:
+		QList<KeywordList*> m_keywordLists;
+		QStringList m_additionalPathes;
+	};
+}
 #endif // _NULLSPACE_KEYWORDCACHE_1591949333397_H

@@ -8,9 +8,9 @@ namespace Ui
 	class keyword;
 }
 
-class TemplateLibrary;
 namespace qtuser_core
 {
+	class TemplateLibrary;
 	class KeywordItem : public QWidget
 	{
 		Q_OBJECT

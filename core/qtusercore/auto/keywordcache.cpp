@@ -1,29 +1,33 @@
 #include "keywordcache.h"
-KeywordCache::KeywordCache(QObject* parent)
-	:QObject(parent)
-{
-}
-KeywordCache::~KeywordCache()
-{
-}
 
-void KeywordCache::parse(int argc, char** argv)
+namespace qtuser_core
 {
-	clearCache();
-}
+	KeywordCache::KeywordCache(QObject* parent)
+		:QObject(parent)
+	{
+	}
+	KeywordCache::~KeywordCache()
+	{
+	}
 
-QList<KeywordList*>& KeywordCache::keywords()
-{
-	return m_keywordLists;
-}
+	void KeywordCache::parse(int argc, char** argv)
+	{
+		clearCache();
+	}
 
-QStringList KeywordCache::additionalPathes()
-{
-	return m_additionalPathes;
-}
+	QList<KeywordList*>& KeywordCache::keywords()
+	{
+		return m_keywordLists;
+	}
 
-void KeywordCache::clearCache()
-{
-	qDeleteAll(m_keywordLists);
-	m_keywordLists.clear();
+	QStringList KeywordCache::additionalPathes()
+	{
+		return m_additionalPathes;
+	}
+
+	void KeywordCache::clearCache()
+	{
+		qDeleteAll(m_keywordLists);
+		m_keywordLists.clear();
+	}
 }
