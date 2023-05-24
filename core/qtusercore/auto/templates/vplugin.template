@@ -22,27 +22,18 @@ add_viskernel_plugin(@name@)
 	    <source><![CDATA[
 #ifndef _@NAME@PLUGIN_@TIME@_H
 #define _@NAME@PLUGIN_@TIME@_H
-#include "viskernel/kernel/plugin.h"
-#include "@name@flow.h"
+#include "viskernel/kernel/simulationplugin.h"
 
-class @Name@Plugin : public QObject, public VisPluginInterface
+class @Name@Plugin : public viskernel::SimulationPlugin
 {
 	Q_OBJECT
-	Q_PLUGIN_METADATA(IID "viskernel.@Name@Plugin")
-	Q_INTERFACES(VisPluginInterface)
+	Q_PLUGIN_METADATA(IID "@Name@Plugin")
 public:
 	@Name@Plugin(QObject* parent = nullptr);
 	virtual ~@Name@Plugin();
 
-	QString name() override;
-
-	void initialize() override;
-	void setActive() override;
-	void setUnactive() override;
-	void uninitialize() override;
-protected:
-	QObject* m_ui;
-	@Name@Flow* m_flow;
+	cxkernel::SimulationFlow* createFlow() override;
+	QString uiFile() override;
 };
 
 #endif // _@NAME@PLUGIN_@TIME@_H
@@ -57,42 +48,25 @@ protected:
 #include "cxkernel/interface/uiinterface.h"
 #include "viskernel/interface/renderinterface.h"
 
+#include "@name@flow.h"
+
 @Name@Plugin::@Name@Plugin(QObject* parent)
-	: QObject(parent)
-	, m_ui(nullptr)
+	: SimulationPlugin(parent)
 {
-	m_flow = new @Name@Flow();
-	cxkernel::registerContextObject("plugin_@name@_flow", m_flow);
 }
 
 @Name@Plugin::~@Name@Plugin()
 {
 }
 
-QString @Name@Plugin::name()
+cxkernel::SimulationFlow* @Name@Plugin::createFlow()
 {
-	return "@Name@Plugin";
+	return new @Name@Flow();
 }
 
-void @Name@Plugin::initialize()
+QString @Name@Plugin::uiFile()
 {
-	viskernel::registerRenderGraph(m_flow);
-}
-
-void @Name@Plugin::setActive()
-{
-	m_ui = cxkernel::createQmlObjectFromQrc(":/@name@/@name@.qml");
-	viskernel::renderRenderGraph(m_flow);
-}
-
-void @Name@Plugin::setUnactive()
-{
-	viskernel::renderDefaultRenderGraph();
-	delete m_ui;
-}
-
-void @Name@Plugin::uninitialize()
-{
+	return QString(":/@name@/@name@.qml");
 }
 		]]></source>	
     </file>
@@ -103,9 +77,9 @@ void @Name@Plugin::uninitialize()
 	    <source><![CDATA[
 #ifndef _@NAME@_FLOW_@TIME@_H
 #define _@NAME@_FLOW_@TIME@_H
-#include "qtuser3d/framegraph/xrendergraph.h"
+#include "cxkernel/flow/simulationflow.h"
 
-class @Name@Flow : public qtuser_3d::XRenderGraph
+class @Name@Flow : public cxkernel::SimulationFlow
 {
 	Q_OBJECT
 public:
@@ -125,7 +99,7 @@ protected:
 #include "@name@flow.h"
 
 @Name@Flow::@Name@Flow()
-	: XRenderGraph()
+	: SimulationFlow()
 {
 }
 
