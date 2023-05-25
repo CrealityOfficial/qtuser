@@ -93,6 +93,9 @@ namespace qtuser_3d
 
 	bool ColorPicker::pick(const QPoint& point, int* faceID)
 	{
+		if (m_capturing)
+			return false;
+
 		return pick(point.x(), point.y(), faceID);
 	}
 
