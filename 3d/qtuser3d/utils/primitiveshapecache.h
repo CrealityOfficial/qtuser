@@ -33,5 +33,6 @@ namespace qtuser_3d
 	QTUSER_3D_API Qt3DRender::QGeometry* createLinesPrimitive(const QString& name);
 	QTUSER_3D_API Qt3DRender::QGeometry* createPointsPrimitive(const QString& name);
 	QTUSER_3D_API Qt3DRender::QGeometry* createTrianglesPrimitive(const QString& name);
+	QTUSER_3D_API Qt3DRender::QGeometry* createTrianglesPrimitiveDLP(const QString& name);
 }
 #endif // QTUSER_3D_PRIMITIVESHAPECACHE_1594861761536_H

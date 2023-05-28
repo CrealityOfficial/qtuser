@@ -33,6 +33,34 @@ namespace qtuser_3d
         m_colorOutput->setTexture(m_colorTexture);
         addOutput(m_colorOutput);
 
+        {
+            m_worldPosOutput = new Qt3DRender::QRenderTargetOutput(this);
+            m_worldPosOutput->setAttachmentPoint(Qt3DRender::QRenderTargetOutput::Color1);
+
+            m_worldPosTexture = new Qt3DRender::QTexture2D(m_worldPosOutput);
+            m_worldPosTexture->setSize(size.width(), size.height());
+            m_worldPosTexture->setFormat(Qt3DRender::QAbstractTexture::RGB16F);
+            m_worldPosTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::Linear);
+            m_worldPosTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::Linear);
+
+            m_worldPosOutput->setTexture(m_worldPosTexture);
+            addOutput(m_worldPosOutput);
+        }
+
+        {
+            m_worldNormalOutput = new Qt3DRender::QRenderTargetOutput(this);
+            m_worldNormalOutput->setAttachmentPoint(Qt3DRender::QRenderTargetOutput::Color2);
+
+            m_worldNormalTexture = new Qt3DRender::QTexture2D(m_worldNormalOutput);
+            m_worldNormalTexture->setSize(size.width(), size.height());
+            m_worldNormalTexture->setFormat(Qt3DRender::QAbstractTexture::RGB16F);
+            m_worldNormalTexture->setMinificationFilter(Qt3DRender::QAbstractTexture::Linear);
+            m_worldNormalTexture->setMagnificationFilter(Qt3DRender::QAbstractTexture::Linear);
+
+            m_worldNormalOutput->setTexture(m_worldNormalTexture);
+            addOutput(m_worldNormalOutput);
+        }
+		
         m_depthOutput = new Qt3DRender::QRenderTargetOutput(this);
         m_depthOutput->setAttachmentPoint(Qt3DRender::QRenderTargetOutput::Depth);
         m_depthTexture = new Qt3DRender::QTexture2D(m_depthOutput);
@@ -73,17 +101,33 @@ namespace qtuser_3d
 
     void TextureRenderTarget::resize(const QSize& size)
     {
-        qDebug() << "TextureRenderTarget::resize " << size;
         if (size.width() == 0 || size.height() == 0 || m_size == size)
             return;
 
         m_size = size;
         m_depthTexture->setSize(m_size.width(), m_size.height());
         m_colorTexture->setSize(m_size.width(), m_size.height());
+        m_worldPosTexture->setSize(m_size.width(), m_size.height());
+        m_worldNormalTexture->setSize(m_size.width(), m_size.height());
     }
 
 	Qt3DRender::QTexture2D* TextureRenderTarget::colorTexture()
 	{
 		return m_colorTexture;
 	}
+
+    Qt3DRender::QTexture2D* TextureRenderTarget::depthTexture()
+    {
+        return m_depthTexture;
+    }
+
+    Qt3DRender::QTexture2D* TextureRenderTarget::worldPosTexture()
+    {
+        return m_worldPosTexture;
+    }
+
+    Qt3DRender::QTexture2D* TextureRenderTarget::worldNormalTexture()
+    {
+        return m_worldNormalTexture;
+    }
 }

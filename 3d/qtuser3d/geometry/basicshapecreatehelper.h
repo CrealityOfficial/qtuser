@@ -20,6 +20,10 @@ namespace qtuser_3d
 
 		static Qt3DRender::QGeometry* createBall(QVector3D center, float r, float angleSpan, Qt3DCore::QNode* parent = nullptr);
 
+		static Qt3DRender::QGeometry* createInstructionsDLP(float cylinderR, float cylinderLen, float axisR, float axisLen, Qt3DCore::QNode* parent = nullptr);
+
+		static Qt3DRender::QGeometry* createScaleIndicatorDLP(float cylinderR, float cylinderLen, int seg, float squarelen, Qt3DCore::QNode* parent = nullptr);
+		
 		static Qt3DRender::QGeometry* createInstructions(float cylinderR, float cylinderLen, float axisR, float axisLen, Qt3DCore::QNode* parent = nullptr);
 
 		static Qt3DRender::QGeometry* createScaleIndicator(float cylinderR, float cylinderLen, int seg, float squarelen, Qt3DCore::QNode* parent = nullptr);
@@ -37,9 +41,13 @@ namespace qtuser_3d
 
 		static int createBallData(QVector3D center, float r, float angleSpan, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
 
-		static int createInstructionsData(float cylinderR, float cylinderLen, float axisR, float axisLen, int seg, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
+		static int createInstructionsDataDLP(float cylinderR, float cylinderLen, float axisR, float axisLen, int seg, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
 
-		static int createScaleIndicatorData(float cylinderR, float cylinderLen, int seg, float squarelen, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
+		static int createScaleIndicatorDataDLP(float cylinderR, float cylinderLen, int seg, float squarelen, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);
+		
+		static int createInstructionsData(float cylinderR, float cylinderLen, float axisR, float axisLen, int seg, std::vector<float>& vertexDatas, std::vector<float>& normals);
+
+		static int createScaleIndicatorData(float cylinderR, float cylinderLen, int seg, float squarelen, std::vector<float>& vertexDatas, std::vector<float>& normals);
 
 	private:
 		static int addFaceDataWithQVector3D(const QVector3D& v1, const QVector3D& v2, const QVector3D& v3, const QVector3D& n, std::vector<float>& vertexDatas, std::vector<float>& normalDatas);

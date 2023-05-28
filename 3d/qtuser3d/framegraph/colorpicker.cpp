@@ -6,6 +6,8 @@ namespace qtuser_3d
 {
 	ColorPicker::ColorPicker(Qt3DCore::QNode* parent)
 		:QFrameGraphNode(parent)
+		, m_updateTimer(nullptr)
+		, m_useDelay(true)
 		, m_textureRenderTarget(nullptr)
 		, m_capturing(false)
 	{
@@ -14,16 +16,26 @@ namespace qtuser_3d
 		qDebug() << QString("ColorPicker::ColorPicker %1").arg(m_debugName);
 #endif
 	
-		m_clearBuffer = new Qt3DRender::QClearBuffers(this);
+		m_renderTargetSelector = new Qt3DRender::QRenderTargetSelector(this);
+
+		m_clearBuffer = new Qt3DRender::QClearBuffers(m_renderTargetSelector);
 		m_clearBuffer->setClearColor(QColor(255, 255, 255, 255));
 		m_clearBuffer->setBuffers(Qt3DRender::QClearBuffers::BufferType::ColorDepthBuffer);
-		m_renderTargetSelector = new Qt3DRender::QRenderTargetSelector(m_clearBuffer);
-		m_renderCapture = new Qt3DRender::QRenderCapture(m_renderTargetSelector);
-		m_renderPassFilter = new Qt3DRender::QRenderPassFilter(m_renderCapture);
+		
+		m_renderPassFilter = new Qt3DRender::QRenderPassFilter(m_clearBuffer);
 		m_filterKey = new Qt3DRender::QFilterKey(m_renderPassFilter);
 		m_filterKey->setName("pick");
 		m_filterKey->setValue(0);
 		m_renderPassFilter->addMatch(m_filterKey);
+
+
+		m_renderPassFilter2 = new Qt3DRender::QRenderPassFilter(m_renderTargetSelector);
+		m_filterKey2 = new Qt3DRender::QFilterKey(m_renderPassFilter2);
+		m_filterKey2->setName("pick2nd");
+		m_filterKey2->setValue(0);
+		m_renderPassFilter2->addMatch(m_filterKey2);
+
+		m_renderCapture = new Qt3DRender::QRenderCapture(m_filterKey2);
 
 		m_cameraSelector = new Qt3DRender::QCameraSelector();
 		m_camera = new Qt3DRender::QCamera(m_cameraSelector);
@@ -31,6 +43,11 @@ namespace qtuser_3d
 
 		//m_textureRenderTarget = new TextureRenderTarget();
 		//m_renderTargetSelector->setTarget(m_textureRenderTarget);
+
+		m_updateTimer = new QTimer(this);
+		m_delayTimer = new QTimer(this);
+		connect(m_updateTimer, SIGNAL(timeout()), this, SIGNAL(signalUpdate()));
+		connect(m_delayTimer, SIGNAL(timeout()), this, SLOT(delayCapture()));
 	}
 
 	ColorPicker::~ColorPicker()
@@ -44,7 +61,7 @@ namespace qtuser_3d
 
 	void ColorPicker::resize(const QSize& size)
 	{
-		qDebug() << "ColorPicker::resize " << size;
+		//qDebug() << "ColorPicker::resize " << size;
 		m_colorPickerImage = QImage(size, QImage::Format_RGBA8888);
 		m_colorPickerImage.fill(0xFFFFFFFF);
 	}
@@ -52,9 +69,37 @@ namespace qtuser_3d
 	//noted:  Only one render capture result is produced per requestCapture call even if the frame graph has multiple leaf nodes.
 	void ColorPicker::requestCapture()
 	{
+#ifdef TEST_TEST
+		qDebug() << "ColorPicker::requestCapture " << m_useDelay;
+#endif
+		m_createImageFinished = false;
 		m_capturing = true;
+		if(m_useDelay)
+			m_delayTimer->start(30);
+		else
+		{
+			m_captureReply.reset(m_renderCapture->requestCapture());
+			connect(m_captureReply.data(), &Qt3DRender::QRenderCaptureReply::completed, this, &ColorPicker::captureCompleted);
+
+			m_updateTimer->start(40);
+		}
+	}
+
+	void ColorPicker::setUseDelay(bool delay)
+	{
+		m_useDelay = delay;
+	}
+
+	void ColorPicker::delayCapture()
+	{
+#if 0
+		qDebug() << "ColorPicker::delayCapture";
+#endif
 		m_captureReply.reset(m_renderCapture->requestCapture());
 		connect(m_captureReply.data(), &Qt3DRender::QRenderCaptureReply::completed, this, &ColorPicker::captureCompleted);
+
+		m_updateTimer->start(40);
+		m_delayTimer->stop();
 	}
 
 	void ColorPicker::captureCompleted()
@@ -65,29 +110,39 @@ namespace qtuser_3d
 #endif
 		m_colorPickerImage = m_captureReply->image();
         m_captureReply.reset();
+        m_updateTimer->stop();
 		if (m_requestCallback)
+		{
 			m_requestCallback(m_colorPickerImage);
-
-#ifdef _DEBUG
+		}
+		else
+		{
+            m_createImageFinished = true;
+#if _DEBUG
         m_colorPickerImage.save(m_debugName);
 #endif
+
+            if (m_pickerFunc) m_pickerFunc(this);
+		}
+
 		m_capturing = false;
 	}
 
 	void ColorPicker::setFilterKey(const QString& name, int value)
 	{
-		qDebug() << "ColorPicker::setFilterKey " << name << " = " << value;
+		//qDebug() << "ColorPicker::setFilterKey " << name << " = " << value;
 		m_filterKey->setName(name);
 		m_filterKey->setValue(value);
 	}
 
 	void ColorPicker::sourceMayChanged()
 	{
+		requestCapture();
 	}
 
 	void ColorPicker::setClearColor(const QColor& color)
 	{
-		qDebug() << "ColorPicker::setClearColor " << color;
+		//qDebug() << "ColorPicker::setClearColor " << color;
 		m_clearBuffer->setClearColor(color);
 	}
 
@@ -127,6 +182,17 @@ namespace qtuser_3d
 #endif
 	}
 
+    bool ColorPicker::getImageFinished()
+    {
+		//return &Qt3DRender::QRenderCaptureReply::isComplete;
+		return m_createImageFinished;
+    }
+
+    void ColorPicker::setPickerFunc(selfPickerFunc func)
+	{
+		m_pickerFunc = func;
+	}
+
 	void ColorPicker::setRequestCallback(requestCallFunc func)
 	{
 		m_requestCallback = func;
@@ -134,7 +200,7 @@ namespace qtuser_3d
 
 	void ColorPicker::useSelfCameraSelector(bool use)
 	{
-		qDebug() << "ColorPicker::useSelfCameraSelector " << use;
+		//qDebug() << "ColorPicker::useSelfCameraSelector " << use;
 		if (use)
 		{
 			m_cameraSelector->setParent(m_renderPassFilter);
@@ -159,11 +225,12 @@ namespace qtuser_3d
 
 	void ColorPicker::setTextureRenderTarget(TextureRenderTarget* textureRenderTarget)
 	{
-		qDebug() << "ColorPicker::setTextureRenderTarget " << m_textureRenderTarget;
+		//qDebug() << "ColorPicker::setTextureRenderTarget " << m_textureRenderTarget;
 		m_textureRenderTarget = textureRenderTarget;
-		if(m_textureRenderTarget) m_renderTargetSelector->setTarget(m_textureRenderTarget);
+		if(m_textureRenderTarget)
+			m_renderTargetSelector->setTarget(m_textureRenderTarget);
 	}
-
+	
 	void ColorPicker::use()
 	{
 		//set the filterName same as the  "pick" renderPass of the modelEffect
@@ -177,5 +244,4 @@ namespace qtuser_3d
 		m_filterKey->setName("-ignore-ColorPicker-");
 		m_filterKey->setValue(0);
 	}
-
 }
