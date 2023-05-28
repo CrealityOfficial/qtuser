@@ -58,7 +58,6 @@ namespace qtuser_3d
 	protected:
 		void _add(qtuser_3d::Pickable* pickable);
 		void _remove(qtuser_3d::Pickable* pickable);
-		QList<qtuser_3d::Pickable*> _selectedPickables();
 
 		virtual void onChanged();
 	protected:
