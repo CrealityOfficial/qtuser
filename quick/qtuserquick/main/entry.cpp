@@ -99,6 +99,9 @@ namespace qtuser_quick
 				qtuser_core::setDefaultAfterApp();
 				setDefaultQmlAfterApp(engine);
 
+				initSystemUtil();
+				showDetailSystemInfo();
+
 				if (appModule->loadQmlEngine(app, engine))
 					ret = app.exec();
 

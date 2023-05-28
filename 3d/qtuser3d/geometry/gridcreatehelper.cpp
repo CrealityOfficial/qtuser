@@ -218,7 +218,7 @@ namespace qtuser_3d
 		texcoord.push_back(QVector2D(tmin.x(), tmax.y()));
 
 		Qt3DRender::QAttribute* positionAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute((const char*)(&points.at(0)), qtuser_3d::AttribueSlot::Position, points.size());
-		Qt3DRender::QAttribute* texcoordAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute("vertexTexcoord", (const char*)(&texcoord.at(0)), 2, points.size());
+		Qt3DRender::QAttribute* texcoordAttribute = qtuser_3d::BufferHelper::CreateVertexAttribute("vertexTexCoord", (const char*)(&texcoord.at(0)), 2, points.size());
 
 		return GeometryCreateHelper::create(parent, positionAttribute, texcoordAttribute);;
 	}

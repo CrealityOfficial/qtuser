@@ -7,7 +7,7 @@
 #include <QtCore/QDebug>
 #include <QtGui/QSurfaceFormat>
 #include <QtCore/QProcess>
-#include <QtGui/QOpenglContext>
+#include <QtGui/QOpenGLContext>
 
 #define FORCE_USE_GLES 0
 

@@ -26,6 +26,7 @@ namespace qtuser_3d
 		void setModelMatrix(const QMatrix4x4& matrix);
 
 		void setGeometry(Qt3DRender::QGeometry* geometry, Qt3DRender::QGeometryRenderer::PrimitiveType type = Qt3DRender::QGeometryRenderer::Triangles);
+		void replaceGeometryRenderer(Qt3DRender::QGeometryRenderer* geometryRenderer);
 
 		void addRenderState(int index, Qt3DRender::QRenderState* state);
 		void addPassFilter(int index, const QString& filter);

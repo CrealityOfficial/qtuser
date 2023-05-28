@@ -68,6 +68,20 @@ namespace qtuser_3d
 		m_geometryRenderer->setPrimitiveType(type);
 	}
 
+	void XEntity::replaceGeometryRenderer(Qt3DRender::QGeometryRenderer* geometryRenderer)
+	{
+		removeComponent(m_geometryRenderer);
+		m_geometryRenderer->setParent((Qt3DCore::QNode*)nullptr);
+
+		delete m_geometryRenderer;
+		m_geometryRenderer = geometryRenderer;
+
+		if (m_geometryRenderer)
+		{
+			addComponent(m_geometryRenderer);
+		}
+	}
+
 	void XEntity::addRenderState(int index, Qt3DRender::QRenderState* state)
 	{
 		XEffect* effect = qobject_cast<XEffect*>(m_material->effect());

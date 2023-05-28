@@ -2,8 +2,6 @@
 #include "qtuserqml/macro.h"
 
 #include "qtuser3d/utils/shaderprogrammanager.h"
-#include "qtuser3d/effect/effectmanager.h"
-#include "qtuser3d/renderpass/renderpassmanager.h"
 
 #include <QtCore/QThread>
 
@@ -15,8 +13,6 @@ Q3DNativeRenderItem::Q3DNativeRenderItem(QQuickItem* parent)
 	m_q3dRenderSystem = new qtuser_3d::Q3DRenderSystem(this);
 
 	m_q3dRenderSystem->registerResidentNode(SHADERROOT);
-	m_q3dRenderSystem->registerResidentNode(RENDERPASSROOT);
-	m_q3dRenderSystem->registerResidentNode(EFFECTROOT);
 
 	setQuickNativeEventDispacher(this);
 	setQuickNativeRenderSystem(m_q3dRenderSystem);
@@ -47,8 +43,6 @@ void Q3DNativeRenderItem::uninitialize()
 	setQuickNativeEventDispacher(nullptr);
 
 	m_q3dRenderSystem->unRegisterResidentNode(SHADERROOT);
-	m_q3dRenderSystem->unRegisterResidentNode(RENDERPASSROOT);
-	m_q3dRenderSystem->unRegisterResidentNode(EFFECTROOT);
 
 	m_q3dRenderSystem->unRegisterAll();
 	m_eventSubdivide->closeHandlers();

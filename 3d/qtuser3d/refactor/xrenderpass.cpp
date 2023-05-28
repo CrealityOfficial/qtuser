@@ -20,6 +20,8 @@ namespace qtuser_3d
 
 		if (!program)
 			qDebug() << QString("XRenderPass load shader [%1] error.").arg(shaderName);
+
+		setObjectName(shaderName);
 	}
 
 	XRenderPass::~XRenderPass()
