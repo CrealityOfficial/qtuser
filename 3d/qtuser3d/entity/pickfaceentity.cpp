@@ -20,7 +20,7 @@ namespace qtuser_3d
 		alphaPass->setPassCullFace();
 		alphaPass->setPassNoDepthMask();
 
-		qtuser_3d::XRenderPass* pickPass = new qtuser_3d::XRenderPass("pickFace", this);
+		qtuser_3d::XRenderPass* pickPass = new qtuser_3d::XRenderPass("pickFace_pwd", this);
 		pickPass->addFilterKeyMask("pick", 0);
 		pickPass->setPassBlend(Qt3DRender::QBlendEquationArguments::One, Qt3DRender::QBlendEquationArguments::Zero);
 		pickPass->setPassCullFace();

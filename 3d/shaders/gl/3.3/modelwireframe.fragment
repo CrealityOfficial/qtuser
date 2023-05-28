@@ -1,4 +1,4 @@
-#version 150 core 
+#version 150 core
 out vec4 fragmentColor;
 
 in vec3 viewDirection;
@@ -9,10 +9,10 @@ in vec3 worldWater;
 in vec3 barycentric;
 
 uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);
-uniform vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
+uniform vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);
 uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);
-uniform float specularPower = 12.0;
-uniform vec3 lightDirection = vec3(0.0, 0.0, 1.0);
+uniform float specularPower = 4.5;
+uniform vec3 lightDirection = vec3(1.0, 0.0, 1.0);
 
 uniform int lightingEnable = 1;
 uniform float transparency = 1.0;
@@ -26,11 +26,8 @@ uniform float error;
 uniform float supportCos = 0.5;
 
 uniform int hoverState = 0;
-uniform int waterState = 0;
 uniform int fanzhuan = 0;
 uniform int checkscope = 1;
-
-uniform float zcha = 0.01;
 
 uniform float state;
 uniform float nozzle;
@@ -40,6 +37,13 @@ uniform vec4 customColor;
 uniform vec3 wireframeColor = vec3(0.1);
 uniform vec3 clearColor = vec3(0.27);
 uniform int renderModel = 1;
+
+uniform sampler2D textureDiffuse;
+uniform sampler2D textureAmbient;
+uniform sampler2D textureSpecular;
+uniform sampler2D textureNormal;
+
+in vec2 varyUV;
 
 bool frontFacing()
 {
@@ -70,38 +74,40 @@ void main( void )
 
 	int stateInt = int(state);
 	vec4 color;
-	if (stateInt < 5)
-		color = stateColors[stateInt];
+	
+	if(varyUV.x<0.0||varyUV.y<0.0)
+	{
+		if (stateInt < 5)
+			color = stateColors[stateInt];
+		else
+			color = customColor;
+		
+		if(error == 1.0)
+			color = stateColors[3];	
+	}
 	else
-		color = customColor;
-	
-	if(error == 1.0)
-		color = stateColors[3];	
-	
-	vec3 fnormal 		  =	normalize(normal);
-	vec4 ambient_color 	  = ambient;
-	vec4 diffuse_color    = diffuse;
-	vec4 specular_color   = specular;
-	
-	vec3 lightDir = normalize(lightDirection);
-	vec4 coreColor = directLight(lightDir, fnormal, color, ambient_color, diffuse_color, specular_color);
-	
-	vec3 fgnormal 		  =	normalize(gnormal);
+	{
+		vec4 textColor = texture(textureDiffuse, varyUV);
+		if(textColor.r<0 ||textColor.g<0||textColor.b<0)
+		{
+			textColor=stateColors[0];
+		}
+		color = textColor;
+	}
+
+	vec4 coreColor = color;
+	vec3 fgnormal =	normalize(gnormal);
 	
 	if(checkscope > 0)
 	{
-		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z || worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z)
+		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z 
+		|| worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z
+		|| abs(worldPosition.z - bottom) < 0.05 )
 		{
-			coreColor *= 0.3;
-			coreColor.r += 0.6;
-		}
-		if( abs(worldPosition.z - bottom) < 0.05 )
-		{
-			coreColor *= 0.3;
-			coreColor.r += 0.6;
+			// coreColor = vec4(0.649, 0.516, 0.504, 1.0);
+			coreColor = stateColors[4];
 		}
 	}
-	
 	
 	if(hoverState > 0)
 	{
@@ -110,17 +116,21 @@ void main( void )
 		{
 			coreColor.r += 0.8 * v;
 		}
-		
-		if(waterState == 1)
-		{
-			if(abs(worldPosition.z - worldWater.z) < zcha)
-			{
-				coreColor = vec4(0.1, 0.1, 0.1, 1.0);
-			}
-		}
 	}
 	
 	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
+
+	vec3 fnormal 		  =	normalize(normal);
+	vec4 ambient_color 	  = ambient;
+	vec4 diffuse_color    = diffuse;
+	vec4 specular_color   = specular;
+	
+	vec3 lightDir = normalize(lightDirection);
+	float normalCos = dot(fnormal, lightDir);
+	if (normalCos >= 0)
+		coreColor = directLight(lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
+	else
+		coreColor = directLight(-lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);
 
 	if(!frontFacing())
 	{
@@ -132,25 +142,6 @@ void main( void )
 		vec4 specular_color_t   = specular;
 		coreColor = directLight(lightDir, fbnormal, color, ambient_color_t, diffuse_color_t, specular_color_t);
 	}
-
-    //int fz = fanzhuan % 2;
-    //   
-    //if(fz == 0)
-    //{
-    //    if(! frontFacing())
-    //    {
-    //        //coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-	//		coreColor.a = 1.0;
-    //    }
-    //}
-    //else
-    //{
-    //    if(frontFacing())
-    //    {
-    //        //coreColor = stateColors[5];   // vec3(0.65, 0.75, 0.95) - coreColor.rgb;
-	//		coreColor.a = 1.0;
-    //    }
-    //}
 
 	if (renderModel != 1) {
 		vec3 baryDelta = fwidth(barycentric);

@@ -2,17 +2,16 @@
 
 in vec3 vertexPosition;
 
-uniform mat4 modelMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
-
+out vec4 clip; 
 out vec3 worldPosition;
+
+uniform mat4 modelViewProjection;
+uniform mat4 modelMatrix;
 
 void main() 
 {
-	mat4 modelViewMatrix = viewMatrix * modelMatrix;
-	vec4 tworldPosition = modelViewMatrix * vec4(vertexPosition, 1.0);
-    gl_Position = projectionMatrix *  tworldPosition;
-	
-	worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));
+   worldPosition = (modelMatrix * vec4(vertexPosition, 1.0)).xyz;
+   clip = modelViewProjection * vec4(vertexPosition, 1.0);
+   gl_Position = clip;
+
 }

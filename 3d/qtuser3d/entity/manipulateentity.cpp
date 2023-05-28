@@ -27,7 +27,7 @@ namespace qtuser_3d
 			showPass->setPassBlend();
 		}
 
-		XRenderPass* pickPass = new XRenderPass("pickFace", this);
+		XRenderPass* pickPass = new XRenderPass("pickFace_pwd", this);
 		pickPass->addFilterKeyMask("pick2nd", 0);
 		pickPass->setPassCullFace(Qt3DRender::QCullFace::CullingMode::NoCulling);
 		pickPass->setPassDepthTest(Qt3DRender::QDepthTest::Always);

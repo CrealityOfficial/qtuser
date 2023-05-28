@@ -11,5 +11,4 @@ void main()
 	if(flag == 0.0)
 		discard;
 	fragColor = passColor;
-	//fragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
