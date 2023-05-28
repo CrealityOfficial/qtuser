@@ -14,6 +14,8 @@ namespace qtuser_3d
 		virtual ~ResizeEventHandler() {}
 
 		virtual void onResize(const QSize& size) = 0;
+
+		bool m_resizeStatus = true;
 	};
 
 	class HoverEventHandler
@@ -24,6 +26,10 @@ namespace qtuser_3d
 		virtual void onHoverEnter(QHoverEvent* event) = 0;
 		virtual void onHoverLeave(QHoverEvent* event) = 0;
 		virtual void onHoverMove(QHoverEvent* event) = 0;
+
+		bool m_hoverEnterStatus = true;
+		bool m_hoverLeaveStatus = true;
+		bool m_hoverMoveStatus = true;
 	};
 
 	class WheelEventHandler
@@ -32,6 +38,8 @@ namespace qtuser_3d
 		virtual ~WheelEventHandler() {}
 
 		virtual void onWheelEvent(QWheelEvent* event) = 0;
+
+		bool m_wheelStatus = true;
 	};
 
 	class LeftMouseEventHandler
@@ -43,6 +51,11 @@ namespace qtuser_3d
 		virtual void onLeftMouseButtonRelease(QMouseEvent* event) = 0;
 		virtual void onLeftMouseButtonMove(QMouseEvent* event) = 0;
 		virtual void onLeftMouseButtonClick(QMouseEvent* event) = 0;
+
+		bool m_leftPressStatus = true;
+		bool m_leftReleaseStatus = true;
+		bool m_leftMoveStatus = true;
+		bool m_leftClickStatus = true;
 	};
 
 	class MidMouseEventHandler
@@ -54,6 +67,11 @@ namespace qtuser_3d
 		virtual void onMidMouseButtonRelease(QMouseEvent* event) = 0;
 		virtual void onMidMouseButtonMove(QMouseEvent* event) = 0;
 		virtual void onMidMouseButtonClick(QMouseEvent* event) = 0;
+
+		bool m_midPressStatus = true;
+		bool m_midReleaseStatus = true;
+		bool m_midMoveStatus = true;
+		bool m_midClickStatus = true;
 	};
 
 	class RightMouseEventHandler
@@ -65,6 +83,11 @@ namespace qtuser_3d
 		virtual void onRightMouseButtonRelease(QMouseEvent* event) = 0;
 		virtual void onRightMouseButtonMove(QMouseEvent* event) = 0;
 		virtual void onRightMouseButtonClick(QMouseEvent* event) = 0;
+
+		bool m_rightPressStatus = true;
+		bool m_rightReleaseStatus = true;
+		bool m_rightMoveStatus = true;
+		bool m_rightClickStatus = true;
 	};
 
 	class EventLogic : public HoverEventHandler
@@ -84,8 +107,11 @@ namespace qtuser_3d
 		virtual ~KeyEventHandler() {}
 		virtual void onKeyPress(QKeyEvent* event) = 0;
 		virtual void onKeyRelease(QKeyEvent* event) = 0;
-	};
 
+		bool m_keyPressStatus = true;
+		bool m_keyRelaseStatus = true;
+	};
+	
 	class QTUSER_3D_API EventCheckHandler
 	{
 	public:
