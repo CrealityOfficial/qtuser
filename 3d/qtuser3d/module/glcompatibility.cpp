@@ -96,7 +96,7 @@ namespace qtuser_3d
         {
             QString gVersion = strs.at(0);
             QStringList versions = gVersion.split('.');
-            if (versions.count() == 3)
+            if (versions.count() >= 1)
                 major = versions.at(0).toInt();
         }
 
