@@ -676,10 +676,15 @@ namespace qtuser_core
 			return;
 		QSettings setting;
 		QString lastPath = setting.value("dialogLastPath", "").toString();
+#ifdef Q_OS_LINUX
+		QStringList fileName = QFileDialog::getOpenFileNames(
+			nullptr, title,
+			lastPath, filter,nullptr,QFileDialog::DontUseNativeDialog);
+#else
 		QStringList fileName = QFileDialog::getOpenFileNames(
 			nullptr, title,
 			lastPath, filter);
-
+#endif
 		if (fileName.isEmpty())
 			return;
 		QFileInfo fileinfo = QFileInfo(fileName.first());
@@ -694,10 +699,15 @@ namespace qtuser_core
 			return;
 		QSettings setting;
 		QString lastPath = setting.value("dialogLastPath", "").toString() + "/" + defaultName;
+#ifdef Q_OS_LINUX
+		QString fileName = QFileDialog::getSaveFileName(
+			nullptr, title,
+			lastPath, filter,nullptr,QFileDialog::DontUseNativeDialog);
+#else
 		QString fileName = QFileDialog::getSaveFileName(
 			nullptr, title,
 			lastPath, filter);
-
+#endif
 		if (fileName.isEmpty())
 			return;
 		QFileInfo fileinfo = QFileInfo(fileName);

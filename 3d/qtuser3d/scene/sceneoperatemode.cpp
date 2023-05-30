@@ -1,5 +1,5 @@
 #include "sceneoperatemode.h"
-#include <QtCore/QDebug.h>
+#include <QDebug>
 
 namespace qtuser_3d
 {
