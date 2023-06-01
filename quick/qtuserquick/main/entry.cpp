@@ -7,7 +7,7 @@
 #include <QFont>
 #include "qtusercore/module/systemutil.h"
 #include "qtuser3d/module/glcompatibility.h"
-
+#include <QIcon>
 namespace qtuser_quick
 {
     void setDefaultQmlBeforeApp()
@@ -85,7 +85,7 @@ namespace qtuser_quick
 		setDefaultQmlBeforeApp();
 
 		QApplication app(argc, argv);
-
+		app.setWindowIcon(QIcon(":/scence3d/res/splashLogo.png"));
 		AppModule* appModule = func ? func() : nullptr;
 		int ret = 0;
 		if (appModule)
