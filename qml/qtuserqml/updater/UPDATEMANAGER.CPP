@@ -65,7 +65,7 @@ UpdateManager::UpdateManager(RemoteType remoteType, const QString &owner, const 
     connect(m_impl->checker, SIGNAL(updateFound(const ReleaseInfo&, const QList<ReleaseInfo>&)), this, SLOT(onUpdateFound(const ReleaseInfo&, const QList<ReleaseInfo>&)));
     connect(m_impl->checker, SIGNAL(updateError(const QString&)), this, SLOT(onUpdateError(const QString&)));
 
-    connect(&m_impl->updateTimer, SIGNAL(timeout()), this, SLOT(displayCurrentVersionInfo()));
+    //connect(&m_impl->updateTimer, SIGNAL(timeout()), this, SLOT(displayCurrentVersionInfo()));
 
     m_impl->updateTimer.setInterval(2500);
     m_impl->updateTimer.setSingleShot(true);
@@ -151,7 +151,6 @@ void UpdateManager::onUpdateNotFound(const ReleaseInfo &currentRelease)
 
 void UpdateManager::displayCurrentVersionInfo()
 {
-    m_impl->inProgress = false;
     QString fname = getUpdateLogFileName();
     fname = QCoreApplication::applicationDirPath() + "/doc/" + fname;
     if (!QFile::exists(fname))
@@ -167,15 +166,24 @@ void UpdateManager::displayCurrentVersionInfo()
 void UpdateManager::onUpdateFound(const ReleaseInfo& currentRelease, const QList<ReleaseInfo>& newReleases)
 {
     const Version skippedVersion = Version(m_impl->updaterSettings.value(KEY_SKIPPED_VERSION).toString());
+    m_impl->inProgress = false;
     m_impl->updateTimer.stop();
     if (skippedVersion == newReleases.first().version)
     {
+        if (!m_impl->silent)
+        {
+            return;
+        }
         //onUpdateNotFound(currentRelease);
         displayCurrentVersionInfo();
         return;
     }
     if (currentRelease.version >= newReleases.first().version)
     {
+        if (!m_impl->silent)
+        {
+            return;
+        }
         //onUpdateNotFound(currentRelease);
         displayCurrentVersionInfo();
         return;
