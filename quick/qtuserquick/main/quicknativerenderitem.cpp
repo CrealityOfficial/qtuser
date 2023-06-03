@@ -99,6 +99,7 @@ void QuickNativeRenderItem::handleWindowChanged(QQuickWindow* win)
 		if (m_ratio < 0.01f)
 			m_ratio = 1.0f;
 		
+		qDebug() << QString("QuickNativeRenderItem::handleWindowChanged ratio [%1]").arg(m_ratio);
 		update();
 	}
 }
@@ -136,10 +137,12 @@ void QuickNativeRenderItem::mousePressEvent(QMouseEvent* event)
 {
 	if (m_dispacher)
 	{
-		QMouseEvent newEvent(event->type(), event->pos() * m_ratio, event->button(),
-			event->buttons(), event->modifiers());
-		newEvent.setTimestamp(event->timestamp());
-		m_dispacher->mousePressEvent(&newEvent);
+		QPoint pt = event->pos();
+		pt.rx() *= m_ratio;
+		pt.ry() *= m_ratio;
+		event->setLocalPos(pt);
+
+		m_dispacher->mousePressEvent(event);
 	}
 	setFocus(true);
 }
@@ -148,10 +151,12 @@ void QuickNativeRenderItem::mouseMoveEvent(QMouseEvent* event)
 {
 	if (m_dispacher)
 	{
-		QMouseEvent newEvent(event->type(), event->pos() * m_ratio, event->button(),
-			event->buttons(), event->modifiers());
-		newEvent.setTimestamp(event->timestamp());
-		m_dispacher->mouseMoveEvent(&newEvent);
+		QPoint pt = event->pos();
+		pt.rx() *= m_ratio;
+		pt.ry() *= m_ratio;
+		event->setLocalPos(pt);
+
+		m_dispacher->mouseMoveEvent(event);
 	}
 }
 
@@ -159,10 +164,12 @@ void QuickNativeRenderItem::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (m_dispacher)
 	{
-		QMouseEvent newEvent(event->type(), event->pos() * m_ratio, event->button(),
-			event->buttons(), event->modifiers());
-		newEvent.setTimestamp(event->timestamp());
-		m_dispacher->mouseReleaseEvent(&newEvent);
+		QPoint pt = event->pos();
+		pt.rx() *= m_ratio;
+		pt.ry() *= m_ratio;
+		event->setLocalPos(pt);
+
+		m_dispacher->mouseReleaseEvent(event);
 	}
 }
 
