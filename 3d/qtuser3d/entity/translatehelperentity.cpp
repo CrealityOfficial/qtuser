@@ -27,6 +27,8 @@ namespace qtuser_3d
 		, m_pXYPlanePickable(nullptr)
 		, m_pYZPlanePickable(nullptr)
 		, m_pZXPlanePickable(nullptr)
+		, m_pXYZCubeEntity(nullptr)
+		, m_pXYZCubePickable(nullptr)
 		, m_pCameraController(nullptr)
 	{
 		m_transform = new Qt3DCore::QTransform(this);
@@ -505,11 +507,25 @@ namespace qtuser_3d
 			newMt.rotate(QQuaternion::rotationTo(QVector3D(1.0, 0.0, 1.0), newXDir + newZDir) * m_initZXPlaneQ);
 			m_pZXPlaneEntity->setPose(newMt);
 		}
+
+		if (m_pXYZCubeEntity)
+		{
+			QMatrix4x4 mt;
+			mt.rotate(-90.0f, 0.0f, 0.0f, 1.0f);
+			mt.scale(m_scale, m_scale, m_scale);
+			m_pXYZCubeEntity->setPose(mt);
+		}
 	}
 
 	void TranslateHelperEntity::setScale(float scaleRate)
 	{
 		m_transform->setScale(scaleRate);
+	}
+
+	void TranslateHelperEntity::setEntitiesLocalScale(float scale)
+	{
+		m_scale = scale;
+		slotCameraChanged(m_pCameraController->getViewPosition(), m_pCameraController->getViewupVector());
 	}
 
 	void TranslateHelperEntity::setRotation(QQuaternion rotQ)

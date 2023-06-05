@@ -55,6 +55,7 @@ namespace qtuser_3d
 		void setZVisibility(bool visibility);
 
 		void setScale(float scaleRate);
+		void setEntitiesLocalScale(float scale);
 		void setRotation(QQuaternion rotQ);
 		Qt3DCore::QTransform* getTransform() { return m_transform; }
 
