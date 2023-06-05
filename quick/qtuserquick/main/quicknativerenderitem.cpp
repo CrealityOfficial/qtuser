@@ -130,7 +130,7 @@ void QuickNativeRenderItem::geometryChanged(const QRectF& newGeometry, const QRe
 		m_renderSystem->updateContextSize(size);
 
 	if (m_dispacher)
-		m_dispacher->geometryChanged(size);
+		m_dispacher->_geometryChanged(size);
 }
 
 void QuickNativeRenderItem::mousePressEvent(QMouseEvent* event)
@@ -142,7 +142,7 @@ void QuickNativeRenderItem::mousePressEvent(QMouseEvent* event)
 		pt.ry() *= m_ratio;
 		event->setLocalPos(pt);
 
-		m_dispacher->mousePressEvent(event);
+		m_dispacher->_mousePressEvent(event);
 	}
 	setFocus(true);
 }
@@ -156,7 +156,7 @@ void QuickNativeRenderItem::mouseMoveEvent(QMouseEvent* event)
 		pt.ry() *= m_ratio;
 		event->setLocalPos(pt);
 
-		m_dispacher->mouseMoveEvent(event);
+		m_dispacher->_mouseMoveEvent(event);
 	}
 }
 
@@ -169,7 +169,7 @@ void QuickNativeRenderItem::mouseReleaseEvent(QMouseEvent* event)
 		pt.ry() *= m_ratio;
 		event->setLocalPos(pt);
 
-		m_dispacher->mouseReleaseEvent(event);
+		m_dispacher->_mouseReleaseEvent(event);
 	}
 }
 
@@ -179,7 +179,7 @@ void QuickNativeRenderItem::wheelEvent(QWheelEvent* event)
 	{
 		QWheelEvent newEvent(event->posF() * m_ratio, event->globalPosF() * m_ratio, event->delta() * m_ratio, event->buttons(), event->modifiers(), event->orientation());
 		newEvent.setTimestamp(event->timestamp());
-		m_dispacher->wheelEvent(&newEvent);
+		m_dispacher->_wheelEvent(&newEvent);
 	}
 }
 
@@ -189,7 +189,7 @@ void QuickNativeRenderItem::hoverEnterEvent(QHoverEvent* event)
 	{
 		QHoverEvent newEvent(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
 		newEvent.setTimestamp(event->timestamp());
-		m_dispacher->hoverEnterEvent(&newEvent);
+		m_dispacher->_hoverEnterEvent(&newEvent);
 	}
 }
 
@@ -199,7 +199,7 @@ void QuickNativeRenderItem::hoverMoveEvent(QHoverEvent* event)
 	{
 		QHoverEvent newEvent(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
 		newEvent.setTimestamp(event->timestamp());
-		m_dispacher->hoverMoveEvent(&newEvent);
+		m_dispacher->_hoverMoveEvent(&newEvent);
 	}
 }
 
@@ -209,20 +209,20 @@ void QuickNativeRenderItem::hoverLeaveEvent(QHoverEvent* event)
 	{
 		QHoverEvent newEvent(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
 		newEvent.setTimestamp(event->timestamp());
-		m_dispacher->hoverLeaveEvent(&newEvent);
+		m_dispacher->_hoverLeaveEvent(&newEvent);
 	}
 }
 
 void QuickNativeRenderItem::keyPressEvent(QKeyEvent* event)
 {
 	if(m_dispacher)
-		m_dispacher->keyPressEvent(event);
+		m_dispacher->_keyPressEvent(event);
 }
 
 void QuickNativeRenderItem::keyReleaseEvent(QKeyEvent* event)
 {
 	if(m_dispacher)
-		m_dispacher->keyReleaseEvent(event);
+		m_dispacher->_keyReleaseEvent(event);
 }
 
 void QuickNativeRenderItem::invokeUpdate()

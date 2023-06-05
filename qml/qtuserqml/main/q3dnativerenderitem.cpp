@@ -48,57 +48,57 @@ void Q3DNativeRenderItem::uninitialize()
 	m_eventSubdivide->closeHandlers();
 }
 
-void Q3DNativeRenderItem::geometryChanged(const QSize& size)
+void Q3DNativeRenderItem::_geometryChanged(const QSize& size)
 {
 	m_eventSubdivide->geometryChanged(size);
 	m_q3dRenderSystem->requestUpdate();
 }
 
-void Q3DNativeRenderItem::mousePressEvent(QMouseEvent* event)
+void Q3DNativeRenderItem::_mousePressEvent(QMouseEvent* event)
 {
 	m_eventSubdivide->mousePressEvent(event);
 	m_q3dRenderSystem->requestUpdate();
 }
 
-void Q3DNativeRenderItem::mouseMoveEvent(QMouseEvent* event)
+void Q3DNativeRenderItem::_mouseMoveEvent(QMouseEvent* event)
 {
 	m_eventSubdivide->mouseMoveEvent(event);
 	m_q3dRenderSystem->requestUpdate();
 }
 
-void Q3DNativeRenderItem::mouseReleaseEvent(QMouseEvent* event)
+void Q3DNativeRenderItem::_mouseReleaseEvent(QMouseEvent* event)
 {
 	m_eventSubdivide->mouseReleaseEvent(event);
 	m_q3dRenderSystem->requestUpdate();
 }
 
-void Q3DNativeRenderItem::wheelEvent(QWheelEvent* event)
+void Q3DNativeRenderItem::_wheelEvent(QWheelEvent* event)
 {
 	m_eventSubdivide->wheelEvent(event);
 	m_q3dRenderSystem->requestUpdate();
 }
 
-void Q3DNativeRenderItem::hoverEnterEvent(QHoverEvent* event)
+void Q3DNativeRenderItem::_hoverEnterEvent(QHoverEvent* event)
 {
 	m_eventSubdivide->hoverEnterEvent(event);
 }
 
-void Q3DNativeRenderItem::hoverMoveEvent(QHoverEvent* event)
+void Q3DNativeRenderItem::_hoverMoveEvent(QHoverEvent* event)
 {
 	m_eventSubdivide->hoverMoveEvent(event);
 }
 
-void Q3DNativeRenderItem::hoverLeaveEvent(QHoverEvent* event)
+void Q3DNativeRenderItem::_hoverLeaveEvent(QHoverEvent* event)
 {
 	m_eventSubdivide->hoverLeaveEvent(event);
 }
 
-void Q3DNativeRenderItem::keyPressEvent(QKeyEvent* event)
+void Q3DNativeRenderItem::_keyPressEvent(QKeyEvent* event)
 {
 	m_eventSubdivide->keyPressEvent(event);
 }
 
-void Q3DNativeRenderItem::keyReleaseEvent(QKeyEvent* event)
+void Q3DNativeRenderItem::_keyReleaseEvent(QKeyEvent* event)
 {
 	m_eventSubdivide->keyReleaseEvent(event);
 }

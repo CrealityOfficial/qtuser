@@ -18,16 +18,16 @@ public:
 	qtuser_3d::EventSubdivide* eventSubdivide();
 	qtuser_3d::Q3DRenderSystem* renderSystem();
 protected:
-	void geometryChanged(const QSize& size) override;
-	void mousePressEvent(QMouseEvent* event) override;
-	void mouseMoveEvent(QMouseEvent* event) override;
-	void mouseReleaseEvent(QMouseEvent* event) override;
-	void wheelEvent(QWheelEvent* event) override;
-	void hoverEnterEvent(QHoverEvent* event) override;
-	void hoverMoveEvent(QHoverEvent* event) override;
-	void hoverLeaveEvent(QHoverEvent* event) override;
-	void keyPressEvent(QKeyEvent* event) override;
-	void keyReleaseEvent(QKeyEvent* event) override;
+	void _geometryChanged(const QSize& size) override;
+	void _mousePressEvent(QMouseEvent* event) override;
+	void _mouseMoveEvent(QMouseEvent* event) override;
+	void _mouseReleaseEvent(QMouseEvent* event) override;
+	void _wheelEvent(QWheelEvent* event) override;
+	void _hoverEnterEvent(QHoverEvent* event) override;
+	void _hoverMoveEvent(QHoverEvent* event) override;
+	void _hoverLeaveEvent(QHoverEvent* event) override;
+	void _keyPressEvent(QKeyEvent* event) override;
+	void _keyReleaseEvent(QKeyEvent* event) override;
 protected:
 	qtuser_3d::EventSubdivide* m_eventSubdivide;
 	qtuser_3d::Q3DRenderSystem* m_q3dRenderSystem;
