@@ -106,6 +106,18 @@ namespace qtuser_3d
 		effect->addPassFilter(index, filter);
 	}
 
+	void XEntity::removePassFilter(int passIndex, const QString& filterName, const QVariant& filterValue)
+	{
+		XEffect* effect = qobject_cast<XEffect*>(m_material->effect());
+		if (!effect)
+		{
+			qDebug() << Q_FUNC_INFO << QString("XEffect is null.");
+			return;
+		}
+
+		effect->removePassFilter(passIndex, filterName, filterValue);
+	}
+
 	Qt3DRender::QGeometry* XEntity::geometry()
 	{
 		return m_geometryRenderer->geometry();

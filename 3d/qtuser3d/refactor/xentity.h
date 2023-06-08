@@ -30,6 +30,7 @@ namespace qtuser_3d
 
 		void addRenderState(int index, Qt3DRender::QRenderState* state);
 		void addPassFilter(int index, const QString& filter);
+		void removePassFilter(int passIndex, const QString& filterName, const QVariant& filterValue);
 
 		Qt3DRender::QGeometry* geometry();
 		QMatrix4x4 pose();

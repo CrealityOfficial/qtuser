@@ -90,6 +90,25 @@ namespace qtuser_3d
 		pass->addFilterKey(filterKey);
 	}
 
+	void XEffect::removePassFilter(int passIndex, const QString& filterName, const QVariant& filterValue)
+	{
+		XRenderPass* pass = findRenderPass(passIndex);
+		if (!pass)
+			return;
+
+		const auto keys = pass->filterKeys();
+		for (Qt3DRender::QFilterKey* c : keys)
+		{
+			if (c->name() == filterName && c->value() == filterValue)
+			{
+				pass->removeFilterKey(c);
+				break;
+			}
+			
+		}
+			
+	}
+
 	void XEffect::setPassCullFace(int index, Qt3DRender::QCullFace::CullingMode cullingMode)
 	{
 		XRenderPass* pass = findRenderPass(index);
