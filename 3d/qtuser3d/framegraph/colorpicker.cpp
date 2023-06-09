@@ -75,7 +75,7 @@ namespace qtuser_3d
 		m_createImageFinished = false;
 		m_capturing = true;
 		if(m_useDelay)
-			m_delayTimer->start(30);
+			m_delayTimer->start(100);
 		else
 		{
 			m_captureReply.reset(m_renderCapture->requestCapture());
