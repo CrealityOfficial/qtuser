@@ -11,7 +11,7 @@ namespace qtuser_3d
 
 		m_renderPassFilter = new Qt3DRender::QRenderPassFilter(m_clearBuffer);
 		m_filterKey = new Qt3DRender::QFilterKey(m_renderPassFilter);
-		m_filterKey->setName("xyzAxis");
+		m_filterKey->setName("overlayPass");
 		m_filterKey->setValue(0);
 		m_renderPassFilter->addMatch(m_filterKey);
 
