@@ -59,6 +59,27 @@ namespace qtuser_3d
 		return pickables;
 	}
 
+	Pickable* Rotate3DHelperEntity::xPickable()
+	{
+		if (m_pXRotHelper)
+			return m_pXRotHelper->getPickable();
+		return nullptr;
+	}
+	
+	Pickable* Rotate3DHelperEntity::yPickable()
+	{
+		if (m_pYRotHelper)
+			return m_pYRotHelper->getPickable();
+		return nullptr;
+	}
+
+	Pickable* Rotate3DHelperEntity::zPickable()
+	{
+		if (m_pZRotHelper)
+			return m_pZRotHelper->getPickable();
+		return nullptr;
+	}
+
 	QList<LeftMouseEventHandler*> Rotate3DHelperEntity::getLeftMouseEventHandlers()
 	{
 		QList<LeftMouseEventHandler*> handlers;

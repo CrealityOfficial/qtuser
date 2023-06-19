@@ -42,6 +42,10 @@ namespace qtuser_3d
 		QVector3D getCurrentRotateAxis();
 		double getCurrentRotAngle();
 		
+		Pickable* xPickable();
+		Pickable* yPickable();
+		Pickable* zPickable();
+
 	public slots:
 		void onBoxChanged(Box3D box);
 
