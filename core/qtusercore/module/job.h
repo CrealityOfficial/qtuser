@@ -17,6 +17,7 @@ namespace qtuser_core
 		virtual QString name();
 		virtual QString description();
 		virtual void failed();                        // invoke from main thread
+		virtual void prepare();                       // invoke from main thread
 		virtual void successed(qtuser_core::Progressor* progressor);                     // invoke from main thread
 		virtual void work(Progressor* progressor);    // invoke from worker thread
 	protected:

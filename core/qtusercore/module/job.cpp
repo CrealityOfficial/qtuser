@@ -26,6 +26,11 @@ namespace qtuser_core
 
 	}
 
+	void Job::prepare()
+	{
+
+	}
+
 	void Job::successed(qtuser_core::Progressor* progressor)
 	{
 

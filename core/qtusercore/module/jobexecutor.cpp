@@ -108,6 +108,7 @@ namespace qtuser_core
 		m_exsitJobs.pop_front();
 
 		m_runThread->setJob(job);
+		job->prepare();
 		emit jobStart(m_runThread->details());
 		m_runThread->start();
 	}
