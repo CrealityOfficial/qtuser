@@ -461,6 +461,21 @@ namespace qtuser_3d
 		newYDir.normalize();
 		newZDir.normalize();
 
+		if (newXDir.length() == 0.0)
+		{
+			newXDir.setX(1.0);
+		}
+
+		if (newYDir.length() == 0.0)
+		{
+			newYDir.setY(1.0);
+		}
+
+		if (newZDir.length() == 0.0)
+		{
+			newZDir.setZ(1.0);
+		}
+
 		QVector3D initAxisDir = m_initAxisDir;
 		if (m_pXArrowEntity)
 		{
