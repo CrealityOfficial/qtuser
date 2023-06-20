@@ -153,12 +153,10 @@ namespace qtuser_3d
 		if (shapeType == IndicatorType::ARROW)
 		{
 			geometry = PRIMITIVESHAPE("arrow");
-			geometry->setParent((Qt3DCore::QNode*)nullptr);
 		}
 		else if (shapeType == IndicatorType::CUBE)
 		{
 			geometry = PRIMITIVESHAPE("scaleindicator");
-			geometry->setParent((Qt3DCore::QNode*)nullptr);
 		}
 
 		if (helperType & HELPERTYPE_AXIS_X)
