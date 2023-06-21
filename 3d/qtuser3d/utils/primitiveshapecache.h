@@ -14,6 +14,8 @@ namespace qtuser_3d
 	public:
 		virtual ~PrimitiveShapeCache();
 
+		void uninitialize();
+
 		Qt3DCore::QNode* root();
 
 		Qt3DRender::QGeometry* shape(const QString& name);
@@ -25,6 +27,7 @@ namespace qtuser_3d
 	SINGLETON_EXPORT(QTUSER_3D_API, PrimitiveShapeCache)
 }
 
+#define PRIMITIVE_CACHE_UNINITIALIZE qtuser_3d::getPrimitiveShapeCache()->uninitialize()
 #define PRIMITIVEROOT qtuser_3d::getPrimitiveShapeCache()->root()
 #define PRIMITIVESHAPE(x) qtuser_3d::getPrimitiveShapeCache()->shape(x)
 

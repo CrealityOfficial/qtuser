@@ -34,7 +34,15 @@ namespace qtuser_3d
 	
 	PrimitiveShapeCache::~PrimitiveShapeCache()
 	{
-		delete m_root;
+	}
+
+	void PrimitiveShapeCache::uninitialize()
+	{
+		if (m_root)
+		{
+			delete m_root;
+			m_root = nullptr;
+		}
 	}
 
 	Qt3DCore::QNode* PrimitiveShapeCache::root()
