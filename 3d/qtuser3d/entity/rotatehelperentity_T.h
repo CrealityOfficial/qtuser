@@ -39,6 +39,7 @@ namespace qtuser_3d
 		void setRotateCallback(RotateCallback* callback);
 
 		void setScale(float scale);
+		void setInitScale(float initScale);
 
 		void setVisibility(bool visibility);
 		void setHandlerVisibility(bool visibility);

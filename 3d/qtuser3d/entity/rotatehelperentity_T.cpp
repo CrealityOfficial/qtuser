@@ -56,6 +56,7 @@ namespace qtuser_3d
 		, m_pPickSource(nullptr)
 		, m_pScreenCamera(nullptr)
 		, m_pRotateCallback(nullptr)
+		, m_initScaleRate(1.0)
 	{
 		m_pGlobalTransform = new Qt3DCore::QTransform(this);
 		addComponent(m_pGlobalTransform);
@@ -580,12 +581,17 @@ namespace qtuser_3d
 		m_pNoRotateTransform->setScale(m_initScaleRate * scale);
 	}
 
+	void RotateHelperEntity_T::setInitScale(float initScale)
+	{
+		m_initScaleRate = initScale;
+	}
+
 	void RotateHelperEntity_T::onBoxChanged(Box3D box)
 	{
 		QVector3D center = box.center();
 		m_center = center;
 
-		float len = 1.0f;
+		/*float len = 1.0f;
 		if (m_fixSize)
 		{
 			QVector3D sz = box.size();
@@ -597,7 +603,7 @@ namespace qtuser_3d
 			}
 		}
 
-		m_initScaleRate = len;
+		m_initScaleRate = len;*/
 
 		m_pRotateTransform->setTranslation(m_center);
 		m_pRotateTransform->setScale(m_initScaleRate);

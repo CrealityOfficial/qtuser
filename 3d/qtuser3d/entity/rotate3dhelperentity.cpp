@@ -155,6 +155,18 @@ namespace qtuser_3d
 			m_pZRotHelper->setScale(scaleRate);
 	}
 
+	void Rotate3DHelperEntity::setInitScale(float initScale)
+	{
+		if (m_pXRotHelper)
+			m_pXRotHelper->setInitScale(initScale);
+
+		if (m_pYRotHelper)
+			m_pYRotHelper->setInitScale(initScale);
+
+		if (m_pZRotHelper)
+			m_pZRotHelper->setInitScale(initScale);
+	}
+
 	QVector3D Rotate3DHelperEntity::getCurrentRotateAxis()
 	{
 		if (m_pXRotHelper->isRotating())
@@ -191,6 +203,7 @@ namespace qtuser_3d
 		return 0.0;
 	}
 
+	//ФЃаЭАќЮЇКа
 	void Rotate3DHelperEntity::onBoxChanged(Box3D box)
 	{
 		if (m_pXRotHelper)
