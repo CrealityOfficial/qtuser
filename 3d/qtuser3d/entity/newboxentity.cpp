@@ -1,6 +1,5 @@
 #include "newboxentity.h"
 
-#include "qtuser3d/utils/primitiveshapecache.h"
 #include "qtuser3d/geometry/boxcreatehelper.h"
 namespace qtuser_3d
 {

@@ -18,7 +18,9 @@ namespace qtuser_3d
 
 		Qt3DCore::QNode* root();
 
+		Qt3DRender::QGeometry* create(const QString& name);
 		Qt3DRender::QGeometry* shape(const QString& name);
+
 	protected:
 		Qt3DCore::QNode* m_root;
 		QMap<QString, Qt3DRender::QGeometry*> m_primitiveShapes;
@@ -29,7 +31,7 @@ namespace qtuser_3d
 
 #define PRIMITIVE_CACHE_UNINITIALIZE qtuser_3d::getPrimitiveShapeCache()->uninitialize()
 #define PRIMITIVEROOT qtuser_3d::getPrimitiveShapeCache()->root()
-#define PRIMITIVESHAPE(x) qtuser_3d::getPrimitiveShapeCache()->shape(x)
+#define PRIMITIVESHAPE(x) qtuser_3d::getPrimitiveShapeCache()->create(x)
 
 namespace qtuser_3d
 {
