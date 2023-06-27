@@ -67,23 +67,38 @@ vec4 speedColor()
 	int stype = int(speedFlag);
 	vec4 lastColor = speedcolors[stype];
 	vec4 nextColor = speedcolors[stype + 1];
-	return lastColor + (nextColor - lastColor) * (speedFlag - stype);
+	return lastColor + (nextColor - lastColor) * (speedFlag - float(stype));
 }
 
-// vec4 processAnimation()
-// {
-// 	vec4 colors[2];
-// 	colors[0] = vec4(0.0, 0.0, 0.0, 0.0);
-// 	if(step.x == clipValue.y)
-// 	{
-// 		colors[1] = vec4(0.3, 0.3, 0.3, 0.0);
-// 	}
-// 	else
-// 	{
-// 		colors[1] = vec4(-0.3, -0.3, -0.3, 0.0);
-// 	}
-// 	return colors[animation];
-// }
+vec4 heightColor()
+{
+	return speedColor();
+}
+
+vec4 lineWidthColor()
+{
+	return speedColor();
+}
+
+vec4 flowColor()
+{
+	return vec4(1.0, 0.0, 1.0, 1.0);
+}
+
+vec4 layerTimeColor()
+{
+	return speedColor();
+}
+
+vec4 fanSpeedColor()
+{
+	return speedColor();
+}
+
+vec4 temperatureColor()
+{
+	return speedColor();
+}
 
 void main( void )
 {
@@ -102,11 +117,17 @@ void main( void )
 	if(showType == 1 && typecolorsshow[int(visualType)] == 0)
 		discard;
 	
-	vec4 colors[3];
+	vec4 colors[9];
 	colors[0] = speedColor();
 	colors[1] = typeColor();
 	colors[2] = nozzleColor();
-	
+	colors[3] = heightColor();
+	colors[4] = lineWidthColor();
+	colors[5] = flowColor();
+	colors[6] = layerTimeColor();
+	colors[7] = fanSpeedColor();
+	colors[8] = temperatureColor();
+
 	vec4 core_color = colors[showType];
 
 	if (animation == 1 && step.x != clipValue.y) {
@@ -114,7 +135,6 @@ void main( void )
 	}
 
 	vec4 resultColor     = directLight(core_color);
-	// resultColor += processAnimation();
 	
 	fragment_color = resultColor;
 }
