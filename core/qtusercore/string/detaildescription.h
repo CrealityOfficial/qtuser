@@ -16,6 +16,9 @@ namespace qtuser_core
 		void set(const QString& key, const QString& text);
 		QStringList enumKeys();
 
+		void parse(const QString& str);
+		float value(const QString& key);
+
 		void clear();
 	protected:
 		QHash<QString, QString> m_details;
