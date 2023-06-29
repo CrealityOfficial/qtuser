@@ -82,7 +82,7 @@ vec4 lineWidthColor()
 
 vec4 flowColor()
 {
-	return vec4(1.0, 0.0, 1.0, 1.0);
+	return speedColor();
 }
 
 vec4 layerTimeColor()
