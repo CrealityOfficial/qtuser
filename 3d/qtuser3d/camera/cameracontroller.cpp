@@ -37,6 +37,10 @@ namespace qtuser_3d
 		m_screenCamera = camera;
 		//Qt3DRender::QCamera* pickerCamera = m_screenCamera->camera();
 		m_cameraManipulator->setCamera(m_screenCamera);
+		if (camera)
+		{
+			m_cursorPos = QPoint(camera->size().width() / 2.0, camera->size().height() / 2.0);
+		}
 	}
 
 	qtuser_3d::ScreenCamera* CameraController::screenCamera()
@@ -266,18 +270,17 @@ namespace qtuser_3d
 				QPoint screenCenter = QPoint(half.width(), half.height());
 
 				QPoint b = m_cursorPos - screenCenter;
-				float length = qSqrt(b.x() * b.x() + b.y() * b.y());
+				float refLength = qSqrt(b.x() * b.x() + b.y() * b.y());
 
 				float itrRate = 0.5;
 				float accRate = itrRate;
-				QVector3D tempViewCenter;
 
 				float k = zoomIn ? 1.0 : -1.0;
 
 				for (size_t i = 0; i < 10; i++)
 				{
 					QVector3D offset = (cursorPosition - oldViewCenter) * accRate * k;
-					tempViewCenter = oldViewCenter + offset;
+					QVector3D tempViewCenter = oldViewCenter + offset;
 					QVector3D tempPosition = oldPosition + offset;
 
 					setviewCenter(tempViewCenter);
@@ -288,15 +291,15 @@ namespace qtuser_3d
 					QVector3D p = projectionMatrix1 * viewMatrix1 * cursorPosition;
 					float x = (p.x() + 1.0) / 2.0 * m_screenCamera->size().width();
 					float y = (1.0 - (p.y() + 1.0) / 2.0) * m_screenCamera->size().height();
-					QPoint temCurorPos = QPoint(x, y);
+					QPoint temCursorPos = QPoint(x, y);
 
-					QPoint a = temCurorPos - screenCenter;
-					float aLength = qSqrt(a.x() * a.x() + a.y() * a.y());
+					QPoint a = temCursorPos - screenCenter;
+					float tmpLength = qSqrt(a.x() * a.x() + a.y() * a.y());
 
 					//qDebug() << "rate b=" << (float)b.x() / (float)b.y() << "a=" << (float)a.x() / (float)a.y();
 					//qDebug() << "(x, y) =" << x << y;
 
-					if (abs(aLength - length) < 1.5)
+					if (abs(tmpLength - refLength) < 1.5)
 					{
 						break;
 					}
@@ -304,7 +307,7 @@ namespace qtuser_3d
 					{
 						itrRate *= 0.5;
 
-						if (aLength > length)
+						if (tmpLength > refLength)
 						{
 							accRate += itrRate * k;
 						}
