@@ -6,7 +6,7 @@
 #include <qdebug.h>
 
 #define USE_EULAR_MANIPULATOR
-
+#define ENABLE_ZOOM_AROUND_CURSOR   1
 namespace qtuser_3d
 {
 	CameraController::CameraController(QObject* parent)
@@ -247,10 +247,84 @@ namespace qtuser_3d
 		if (!(m_mask & 2))
 			return;
 
+#if ENABLE_ZOOM_AROUND_CURSOR
+
+		QVector3D oldPosition = getViewPosition();
+		QVector3D oldViewCenter = getviewCenter();
+		QVector3D planeCenter = oldViewCenter;
+		QVector3D planeDir = QVector3D(0.0, 0.0, 1.0);
+		QVector3D cursorPosition;
+
+		bool collide = cameraRayPoint(m_screenCamera, m_cursorPos, planeCenter, planeDir, cursorPosition);
+		if (collide)
+		{
+			bool zoomIn = event->delta() > 0; //ÊÇ·ñ·Å´ó
+
+			if (m_screenCamera && m_screenCamera->zoom(zoomIn ? 1.0f / 1.1f : 1.1f))
+			{
+				QSize half = m_screenCamera->size() / 2.0;
+				QPoint screenCenter = QPoint(half.width(), half.height());
+
+				QPoint b = m_cursorPos - screenCenter;
+				float length = qSqrt(b.x() * b.x() + b.y() * b.y());
+
+				float itrRate = 0.5;
+				float accRate = itrRate;
+				QVector3D tempViewCenter;
+
+				float k = zoomIn ? 1.0 : -1.0;
+
+				for (size_t i = 0; i < 10; i++)
+				{
+					QVector3D offset = (cursorPosition - oldViewCenter) * accRate * k;
+					tempViewCenter = oldViewCenter + offset;
+					QVector3D tempPosition = oldPosition + offset;
+
+					setviewCenter(tempViewCenter);
+					setViewPosition(tempPosition);
+					QMatrix4x4 viewMatrix1 = m_screenCamera->viewMatrix();
+					QMatrix4x4 projectionMatrix1 = m_screenCamera->projectionMatrix();
+
+					QVector3D p = projectionMatrix1 * viewMatrix1 * cursorPosition;
+					float x = (p.x() + 1.0) / 2.0 * m_screenCamera->size().width();
+					float y = (1.0 - (p.y() + 1.0) / 2.0) * m_screenCamera->size().height();
+					QPoint temCurorPos = QPoint(x, y);
+
+					QPoint a = temCurorPos - screenCenter;
+					float aLength = qSqrt(a.x() * a.x() + a.y() * a.y());
+
+					//qDebug() << "rate b=" << (float)b.x() / (float)b.y() << "a=" << (float)a.x() / (float)a.y();
+					//qDebug() << "(x, y) =" << x << y;
+
+					if (abs(aLength - length) < 1.5)
+					{
+						break;
+					}
+					else
+					{
+						itrRate *= 0.5;
+
+						if (aLength > length)
+						{
+							accRate += itrRate * k;
+						}
+						else {
+							accRate -= itrRate * k;
+						}
+
+					}
+				}
+
+				emit signalViewChanged(true);
+			}
+		}
+
+#else
 		if (m_screenCamera && m_screenCamera->zoom(event->delta() > 0 ? 1.0f / 1.1f : 1.1f))
 		{
 			emit signalViewChanged(true);
 		}
+#endif // ENABLE_ZOOM_AROUND_CURSOR
 	}
 
 	void CameraController::viewFromBottom(QVector3D* specificCenter)
@@ -345,5 +419,20 @@ namespace qtuser_3d
 			m_screenCamera->viewFrom(dir, right, specificCenter);
 			emit signalViewChanged(true);
 		}
+	}
+
+	void CameraController::onHoverEnter(QHoverEvent* event)
+	{
+
+	}
+
+	void CameraController::onHoverMove(QHoverEvent* event)
+	{
+		m_cursorPos = event->pos();
+	}
+
+	void CameraController::onHoverLeave(QHoverEvent* event)
+	{
+
 	}
 }

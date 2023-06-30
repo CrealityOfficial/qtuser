@@ -14,6 +14,7 @@ namespace qtuser_3d
 		, public qtuser_3d::RightMouseEventHandler
 		, public qtuser_3d::MidMouseEventHandler
 		, public qtuser_3d::ResizeEventHandler
+		, public qtuser_3d::HoverEventHandler
 	{
 		Q_OBJECT
 	public:
@@ -71,6 +72,12 @@ namespace qtuser_3d
 		void onMidMouseButtonClick(QMouseEvent* event) override;
 
 		void onWheelEvent(QWheelEvent* event) override;
+
+	public:
+		void onHoverEnter(QHoverEvent* event) override;
+		void onHoverLeave(QHoverEvent* event) override;
+		void onHoverMove(QHoverEvent* event) override;
+
 	signals:
 		void signalViewChanged(bool capture);
 		void signalCameraChaged(QVector3D position, const QVector3D upVector);
@@ -78,7 +85,7 @@ namespace qtuser_3d
 		qtuser_3d::CameraMouseManipulator* m_cameraManipulator;
 		qtuser_3d::ScreenCamera* m_screenCamera;
 		QVector3D m_cameraPos;
-
+		QPoint m_cursorPos = QPoint(-1, -1);
 		unsigned m_mask;
 	};
 }
