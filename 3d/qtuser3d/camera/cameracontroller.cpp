@@ -256,11 +256,40 @@ if (m_enableZoomAroundCursor) {
 		QVector3D oldPosition = getViewPosition();
 		QVector3D oldViewCenter = getviewCenter();
 		QVector3D planeCenter = oldViewCenter;
-		QVector3D planeDir = QVector3D(0.0, 0.0, 1.0);
+		
 		QVector3D cursorPosition;
 
-		bool collide = cameraRayPoint(m_screenCamera, m_cursorPos, planeCenter, planeDir, cursorPosition);
+		QVector3D planeXDir = QVector3D(1.0, 0.0, 0.0);
+		QVector3D planeYDir = QVector3D(0.0, 1.0, 0.0);
+		QVector3D planeZDir = QVector3D(0.0, 0.0, 1.0);
+
+		QVector3D testingPos;
+		bool collide = cameraRayPoint(m_screenCamera, m_cursorPos, planeCenter, planeXDir, testingPos);
 		if (collide)
+		{
+			cursorPosition = testingPos;
+		}
+
+		collide = cameraRayPoint(m_screenCamera, m_cursorPos, planeCenter, planeYDir, testingPos);
+		if (collide)
+		{
+			if (planeCenter.distanceToPoint(testingPos) < planeCenter.distanceToPoint(cursorPosition))
+			{
+				cursorPosition = testingPos;
+			}
+		}
+
+		collide = cameraRayPoint(m_screenCamera, m_cursorPos, planeCenter, planeZDir, testingPos);
+		if (collide)
+		{
+			if (planeCenter.distanceToPoint(testingPos) < planeCenter.distanceToPoint(cursorPosition))
+			{
+				cursorPosition = testingPos;
+			}
+		}
+
+		 
+		if (true)
 		{
 			bool zoomIn = event->delta() > 0; //ÊÇ·ñ·Å´ó
 
