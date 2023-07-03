@@ -26,6 +26,8 @@ namespace qtuser_3d
 
 		void setNeed360Rotate(bool is_need);
 
+		void setEnableZoomAroundCursor(bool enable);
+
 		Q_INVOKABLE void viewFromBottom(QVector3D* specificCenter = nullptr);
 		Q_INVOKABLE void viewFromTop(QVector3D* specificCenter = nullptr);
 		Q_INVOKABLE void viewFromLeft(QVector3D* specificCenter = nullptr);
@@ -87,6 +89,7 @@ namespace qtuser_3d
 		QVector3D m_cameraPos;
 		QPoint m_cursorPos = QPoint(-1, -1);
 		unsigned m_mask;
+		bool m_enableZoomAroundCursor = false;
 	};
 }
 #endif // _NULLSPACE_CAMERACONTROLLER_1588862127357_H

@@ -251,8 +251,8 @@ namespace qtuser_3d
 		if (!(m_mask & 2))
 			return;
 
-#if ENABLE_ZOOM_AROUND_CURSOR
-
+//#if ENABLE_ZOOM_AROUND_CURSOR
+if (m_enableZoomAroundCursor) {
 		QVector3D oldPosition = getViewPosition();
 		QVector3D oldViewCenter = getviewCenter();
 		QVector3D planeCenter = oldViewCenter;
@@ -322,12 +322,14 @@ namespace qtuser_3d
 			}
 		}
 
-#else
+//#else
+}else {
 		if (m_screenCamera && m_screenCamera->zoom(event->delta() > 0 ? 1.0f / 1.1f : 1.1f))
 		{
 			emit signalViewChanged(true);
 		}
-#endif // ENABLE_ZOOM_AROUND_CURSOR
+//#endif // ENABLE_ZOOM_AROUND_CURSOR
+}
 	}
 
 	void CameraController::viewFromBottom(QVector3D* specificCenter)
@@ -437,5 +439,10 @@ namespace qtuser_3d
 	void CameraController::onHoverLeave(QHoverEvent* event)
 	{
 
+	}
+
+	void CameraController::setEnableZoomAroundCursor(bool enable)
+	{
+		m_enableZoomAroundCursor = enable;
 	}
 }
