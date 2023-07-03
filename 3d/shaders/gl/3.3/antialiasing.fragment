@@ -1,0 +1,51 @@
+#version 330 core
+
+out vec4 fragColor;
+
+in vec2 texCoord;
+
+uniform vec2 textureSize;
+uniform sampler2D screenTexture;
+
+vec4 AntiAlias_None(vec2 uv, vec2 texsize, sampler2D theTexture) 
+{
+    return texture2D(theTexture, uv / texsize, -99999.0);
+}
+
+//在对UV值下取整之后，加上0.5偏移，之后还会利用进行smoothstep抗锯齿。fwidth的返回值表明UV值在该点和临近像素之间的变化，这个值帮助我们判断模糊的大小范围。最后根据UV的小数部分进行模糊
+vec4 AntiAliasPointSampleTexture_Smoothstep(vec2 uv, vec2 texsize, sampler2D theTexture) 
+{    
+    vec2 w=fwidth(uv);
+    return texture2D(theTexture, (floor(uv)+0.5+smoothstep(0.5-w,0.5+w,fract(uv))) / texsize, -99999.0); 
+}
+
+
+vec4 AntiAliasPointSampleTexture_None(vec2 uv, vec2 texsize, sampler2D theTexture) 
+{  
+    return texture2D(theTexture, (floor(uv+0.5)+0.5) / texsize, -99999.0);
+}
+
+//用fwidth+clamp进行点采样，之所以叫线性方法（Linear）是由于clamp是一个线性插值方法。同样是对UV值下取整之后，加上0.5偏移，然后使用了除法比较来计算模糊区间。clamp方法的是将模糊边界直接与0和1比较得到
+vec4 AntiAliasPointSampleTexture_Linear(vec2 uv, vec2 texsize, sampler2D theTexture) 
+{    
+    vec2 w=fwidth(uv);
+    return texture2D(theTexture, (floor(uv)+0.5+clamp((fract(uv)-0.5+w)/w,0.,1.)) / texsize, -99999.0);  
+}
+
+
+
+vec4 mYAntiAliasPointSampleTexture_Smoothstep(vec2 uv, vec2 texsize, sampler2D theTexture) 
+{   
+	// 当我们写下fwidth(myVar)时，GPU将会返回myVar这个值在当前像素和它的下一个相邻像素之间的差值（与X和Y方向上的下一个像素上该值差的绝对值和）。也就是说，这个值其实就是直线的线性差值
+    vec2 w=fwidth(uv);
+	
+    return texture2D(theTexture, (floor(uv)+0.5+smoothstep(0.5-w,0.5+w,fract(uv))) / texsize, -99999.0); 
+}
+
+
+void main() 
+{
+	fragColor = mYAntiAliasPointSampleTexture_Smoothstep(texCoord, textureSize, screenTexture);
+	//fragColor = AntiAliasPointSampleTexture_Linear(texCoord, textureSize, screenTexture);
+
+}

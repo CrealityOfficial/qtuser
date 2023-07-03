@@ -47,6 +47,9 @@ namespace qtuser_qml
 		void addKeyEventHandler(qtuser_3d::KeyEventHandler* handler);
 		void removeKeyEventHandler(qtuser_3d::KeyEventHandler* handler);
 		void closeKeyEventHandlers();
+
+		GLQuickItem* glQuickItem();
+
 	protected:
 		GLQuickItem* m_item;
 	};

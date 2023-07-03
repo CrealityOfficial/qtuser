@@ -62,6 +62,11 @@ namespace qtuser_qml
 		m_item->requestUpdate();
 	}
 
+	GLQuickItem* RenderItemWrapper::glQuickItem()
+	{
+		return m_item;
+	}
+
 	IMPL_NULL_CHECK(ResizeEventHandler)
 	IMPL_NULL_CHECK(HoverEventHandler)
 	IMPL_NULL_CHECK(WheelEventHandler)
