@@ -6,50 +6,6 @@
 
 namespace qtuser_3d
 {
-	SINGLETON_IMPL(PrimitiveShapeCache)
-	PrimitiveShapeCache::PrimitiveShapeCache()
-		:QObject()
-		, m_root(nullptr)
-	{
-		m_root = new Qt3DCore::QNode();
-
-#define PRIMITIVE_ADD(x, y)  m_primitiveShapes.insert(x, y); \
-							y->setParent(m_root);
-
-		Qt3DRender::QGeometry* boxGeometry = BoxCreateHelper::create();  //盒子
-		PRIMITIVE_ADD("box", boxGeometry)
-		Qt3DRender::QGeometry* box_no_bottom = BoxCreateHelper::createNoBottom();  //没底座的盒子
-		PRIMITIVE_ADD("box_nobottom", box_no_bottom)
-		Qt3DRender::QGeometry* pointGeometry = PointsCreateHelper::create();
-		PRIMITIVE_ADD("point", pointGeometry)
-		Qt3DRender::QGeometry* arrowGeometry = BasicShapeCreateHelper::createInstructions(0.010, 1.0, 0.065, 0.20);//ArrowCreateHelper::create();
-		PRIMITIVE_ADD("arrow", arrowGeometry)	// 箭头
-		Qt3DRender::QGeometry* cylinderGeometry = BasicShapeCreateHelper::createCylinder();	
-		PRIMITIVE_ADD("cylinder", cylinderGeometry)	//圆柱
-		Qt3DRender::QGeometry* penGeometry = BasicShapeCreateHelper::createPen();
-		PRIMITIVE_ADD("pen", penGeometry)
-		Qt3DRender::QGeometry* scaleIndicatorGeometry = BasicShapeCreateHelper::createScaleIndicator(0.010, 1.0, 15, 0.20);
-		PRIMITIVE_ADD("scaleindicator", scaleIndicatorGeometry)
-	}
-	
-	PrimitiveShapeCache::~PrimitiveShapeCache()
-	{
-	}
-
-	void PrimitiveShapeCache::uninitialize()
-	{
-		if (m_root)
-		{
-			delete m_root;
-			m_root = nullptr;
-		}
-	}
-
-	Qt3DCore::QNode* PrimitiveShapeCache::root()
-	{
-		return m_root;
-	}
-
 	Qt3DRender::QGeometry* PrimitiveShapeCache::create(const QString& name)
 	{
 		if (name == "box")
@@ -82,16 +38,6 @@ namespace qtuser_3d
 			return BasicShapeCreateHelper::createScaleIndicator(0.010, 1.0, 15, 0.20);
 		}
 
-		return nullptr;
-	}
-
-	Qt3DRender::QGeometry* PrimitiveShapeCache::shape(const QString& name)
-	{
-		QMap<QString, Qt3DRender::QGeometry*>::iterator it = m_primitiveShapes.find(name);
-		if (it != m_primitiveShapes.end())
-		{
-			return it.value();
-		}
 		return nullptr;
 	}
 
