@@ -35,11 +35,15 @@ namespace qtuser_3d
 		m_filterKey2->setValue(0);
 		m_renderPassFilter2->addMatch(m_filterKey2);
 
-		m_renderCapture = new Qt3DRender::QRenderCapture(m_filterKey2);
-
 		m_cameraSelector = new Qt3DRender::QCameraSelector();
 		m_camera = new Qt3DRender::QCamera(m_cameraSelector);
 		m_cameraSelector->setCamera(m_camera);
+
+		{
+			Qt3DRender::QCameraSelector *cameraSelector = new Qt3DRender::QCameraSelector(m_renderPassFilter2);
+			cameraSelector->setCamera(m_camera);
+			m_renderCapture = new Qt3DRender::QRenderCapture(cameraSelector);
+		}
 
 		//m_textureRenderTarget = new TextureRenderTarget();
 		//m_renderTargetSelector->setTarget(m_textureRenderTarget);
