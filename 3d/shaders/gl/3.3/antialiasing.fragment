@@ -6,6 +6,7 @@ in vec2 texCoord;
 
 uniform vec2 textureSize;
 uniform sampler2D screenTexture;
+uniform int antiflag = 1;
 
 vec4 AntiAlias_None(vec2 uv, vec2 texsize, sampler2D theTexture) 
 {
@@ -45,7 +46,9 @@ vec4 mYAntiAliasPointSampleTexture_Smoothstep(vec2 uv, vec2 texsize, sampler2D t
 
 void main() 
 {
-	fragColor = mYAntiAliasPointSampleTexture_Smoothstep(texCoord, textureSize, screenTexture);
-	//fragColor = AntiAliasPointSampleTexture_Linear(texCoord, textureSize, screenTexture);
+	if( 1 == antiflag )
+		fragColor = mYAntiAliasPointSampleTexture_Smoothstep(texCoord, textureSize, screenTexture);
+	else
+		fragColor = AntiAlias_None(texCoord, textureSize, screenTexture );
 
 }
