@@ -46,7 +46,7 @@ vec4 directLight(vec4 core_color)
 	float RdotV           = max(0.0, dot(freflection, fViewDirection)); 
 	vec4 specularColor    = specular * pow( RdotV, specularPower) * core_color;
 	
-	vec4 resultColor = total_diffuse + specularColor + ambient_color;
+	vec4 resultColor = total_diffuse + ambient_color;
 	resultColor.a = 1.0;
 	return resultColor;
 }

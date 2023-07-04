@@ -8,6 +8,7 @@ in vec3 endVertexVS[1];
 in vec3 vNormalVS[1];
 flat in vec2 stepVS[1];
 flat in float visualTypeVS[1];
+flat in float lineWidthPerStep[1];
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
@@ -19,7 +20,7 @@ flat out float visualType;
 out vec3 viewDirection;
 
 uniform float layerHeight = 0.1;
-uniform float lineWidth = 0.4;
+//uniform float lineWidth = 0.4;
 
 void combindVertex(vec3 pos, vec3 norm)
 {
@@ -55,6 +56,7 @@ void main( void )
 	// poses[6] = endVertexVS[0]   + 0.05 * norms[6];
 	// poses[7] = endVertexVS[0]   + 0.2  * norms[7];
 
+ 	float lineWidth = lineWidthPerStep[0];
 	poses[0] = startVertexVS[0] + layerHeight * 0.5 * norms[0];
 	poses[1] = startVertexVS[0] + lineWidth   * 0.5 * norms[1];
 	poses[2] = startVertexVS[0] + layerHeight * 0.5 * norms[2];
