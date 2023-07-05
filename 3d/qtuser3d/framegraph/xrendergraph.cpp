@@ -29,6 +29,12 @@ namespace qtuser_3d
 		m_cameraController = new CameraController(this);
 		m_screenCamera = new ScreenCamera(this, m_camera);
 		m_cameraController->setScreenCamera(m_screenCamera);
+
+		Qt3DRender::QRenderPassFilter* filter = new Qt3DRender::QRenderPassFilter(m_clearBuffer);
+		Qt3DRender::QFilterKey* filterKey = new Qt3DRender::QFilterKey();
+		filterKey->setName("view");
+		filterKey->setValue(0);
+		filter->addMatch(filterKey);
 	}
 
 	XRenderGraph::~XRenderGraph()

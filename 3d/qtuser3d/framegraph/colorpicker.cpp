@@ -68,6 +68,9 @@ namespace qtuser_3d
 		//qDebug() << "ColorPicker::resize " << size;
 		m_colorPickerImage = QImage(size, QImage::Format_RGBA8888);
 		m_colorPickerImage.fill(0xFFFFFFFF);
+
+		if (m_textureRenderTarget)
+			m_textureRenderTarget->resize(size);
 	}
 
 	//noted:  Only one render capture result is produced per requestCapture call even if the frame graph has multiple leaf nodes.
@@ -233,6 +236,14 @@ namespace qtuser_3d
 		m_textureRenderTarget = textureRenderTarget;
 		if(m_textureRenderTarget)
 			m_renderTargetSelector->setTarget(m_textureRenderTarget);
+	}
+
+	void ColorPicker::useSelfTarget()
+	{
+		if (!m_textureRenderTarget)
+		{
+			setTextureRenderTarget(new qtuser_3d::TextureRenderTarget(m_renderTargetSelector));
+		}
 	}
 	
 	void ColorPicker::use()

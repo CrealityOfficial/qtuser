@@ -54,6 +54,7 @@ namespace qtuser_3d
 
 		Qt3DRender::QTexture2D* colorTexture();
 		void setTextureRenderTarget(TextureRenderTarget* textureRenderTarget);
+		void useSelfTarget();
 
 		void use();
 		void unUse();

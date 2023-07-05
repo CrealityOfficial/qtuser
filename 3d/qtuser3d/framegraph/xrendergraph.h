@@ -10,6 +10,7 @@
 #include <Qt3DRender/QRenderPassFilter>
 #include <Qt3DRender/QSortPolicy>
 #include <Qt3DRender/QRenderSurfaceSelector>
+#include <Qt3DRender/QFilterKey>
 #include <QtGui/QOffscreenSurface>
 
 namespace qtuser_3d
