@@ -1,3 +1,5 @@
+set(CMAKE_CXX_STANDARD 14)
+
 add_subdirectory(core)
 
 set(build_libs qtuser_core)

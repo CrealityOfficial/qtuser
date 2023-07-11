@@ -29,25 +29,24 @@ MirrorEntity::MirrorEntity(QPointer<CameraController> camera_controller, Qt3DCor
     : XEntity(parent)
     , camera_controller_(camera_controller)
     , space_box_(QVector3D{ 0.0f, 0.0f, 0.0f })
+    , transform_(std::make_unique<Qt3DCore::QTransform>(this))
     , geometry_([this]()->decltype(geometry_) {
       auto* raw_ptr = BasicShapeCreateHelper::createInstructions(0.0f, 0.75f, 0.075f, 0.3f, this);
       return decltype(geometry_){ raw_ptr };
     }())
+    , x_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
+    , y_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
+    , z_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
+    , x_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
+    , y_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
+    , z_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
     , x_positive_pickable_(std::make_shared<qtuser_3d::ManipulatePickable>(this))
     , x_negative_pickable_(std::make_shared<qtuser_3d::ManipulatePickable>(this))
     , y_positive_pickable_(std::make_shared<qtuser_3d::ManipulatePickable>(this))
     , y_negative_pickable_(std::make_shared<qtuser_3d::ManipulatePickable>(this))
     , z_positive_pickable_(std::make_shared<qtuser_3d::ManipulatePickable>(this))
     , z_negative_pickable_(std::make_shared<qtuser_3d::ManipulatePickable>(this)) {
-    transform_.reset(new Qt3DCore::QTransform(this));
   addComponent(transform_.get());
-
-  x_positive_entity_.reset(new qtuser_3d::ManipulateEntity(this));
-  y_negative_entity_.reset(new qtuser_3d::ManipulateEntity(this));
-  z_positive_entity_.reset(new qtuser_3d::ManipulateEntity(this));
-  x_negative_entity_.reset(new qtuser_3d::ManipulateEntity(this));
-  y_positive_entity_.reset(new qtuser_3d::ManipulateEntity(this));
-  z_negative_entity_.reset(new qtuser_3d::ManipulateEntity(this));
 
   x_positive_entity_->setPose(CreateRotetedScaledMatrix(QVector3D{  1.0f,  0.0f,  0.0f }));
   x_negative_entity_->setPose(CreateRotetedScaledMatrix(QVector3D{ -1.0f,  0.0f,  0.0f }));
