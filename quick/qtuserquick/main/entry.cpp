@@ -86,9 +86,9 @@ namespace qtuser_quick
 
 		// Will make Qt3D and QOpenGLWidget share a common context
 		QApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
-		
+
 		QApplication app(argc, argv);
-		app.setWindowIcon(QIcon(":/scence3d/res/splashLogo.png"));
+		app.setWindowIcon(QIcon(":/scence3d/res/logo.png"));
 		AppModule* appModule = func ? func() : nullptr;
 		int ret = 0;
 		if (appModule)
