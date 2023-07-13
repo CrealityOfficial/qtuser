@@ -46,7 +46,8 @@ namespace qtuser_3d
 		bool rotate(const QVector3D& axis, float angle);
 		bool rotate(const QQuaternion& q);
 
-		void home(const qtuser_3d::Box3D& box, int type = 0);
+        void home(const qtuser_3d::Box3D& box, int type = 0);
+        qtuser_3d::Box3D box();
 
 		QMatrix4x4 projectionMatrix() const;
 		QMatrix4x4 viewMatrix() const;

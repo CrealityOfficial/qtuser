@@ -380,6 +380,11 @@ namespace qtuser_3d
 		notifyCameraChanged();
 	}
 
+    qtuser_3d::Box3D ScreenCamera::box()
+    {
+        return m_box;
+    }
+
 	QMatrix4x4 ScreenCamera::projectionMatrix() const
 	{
 		return m_camera->projectionMatrix();
