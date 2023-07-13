@@ -57,4 +57,17 @@ namespace qtuser_core
 	{
 		return m_failed;
 	}
+
+	ProgressorMessageTracer::ProgressorMessageTracer(
+		std::function<void(const char*)> message_callback,
+		Progressor* progressor,
+		QObject* parent)
+			: ProgressorTracer(progressor, parent)
+			, message_callback_(message_callback) {}
+
+	void ProgressorMessageTracer::message(const char* message) {
+		if (message_callback_) {
+			message_callback_(message);
+		}
+	}
 }

@@ -1,5 +1,8 @@
 #ifndef QTUSER_CORE_PROGRESSORTRACER_1635210496419_H
 #define QTUSER_CORE_PROGRESSORTRACER_1635210496419_H
+
+#include <functional>
+
 #include "ccglobal/tracer.h"
 #include "qtusercore/qtusercoreexport.h"
 
@@ -24,6 +27,21 @@ namespace qtuser_core
 	protected:
 		Progressor* m_progressor;
 		bool m_failed;
+	};
+
+	class QTUSER_CORE_API ProgressorMessageTracer : public ProgressorTracer {
+		Q_OBJECT;
+	public:
+		explicit ProgressorMessageTracer(std::function<void(const char*)> message_callback,
+																		 Progressor* progressor,
+																		 QObject* parent = nullptr);
+		virtual ~ProgressorMessageTracer() = default;
+
+	public:
+		void message(const char* message) override;
+
+	private:
+		std::function<void(const char*)> message_callback_{ nullptr };
 	};
 }
 
