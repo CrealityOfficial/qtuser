@@ -9,13 +9,13 @@ namespace qtuser_3d
 	{
 		m_colorParameter = setParameter("color", QVector4D(1.0f, 1.0f, 1.0f, 0.2f));
 
-		qtuser_3d::XRenderPass* alphaPass = new qtuser_3d::XRenderPass("pure", this);
+		qtuser_3d::XRenderPass* alphaPass = new qtuser_3d::XRenderPass("pure");
 		alphaPass->addFilterKeyMask("alpha", 0);
 		alphaPass->setPassBlend();
 		alphaPass->setPassCullFace();
 		alphaPass->setPassNoDepthMask();
 
-		qtuser_3d::XRenderPass* pickPass = new qtuser_3d::XRenderPass("pickFace_pwd", this);
+		qtuser_3d::XRenderPass* pickPass = new qtuser_3d::XRenderPass("pickFace_pwd");
 		pickPass->addFilterKeyMask("pick", 0);
 		pickPass->setPassBlend(Qt3DRender::QBlendEquationArguments::One, Qt3DRender::QBlendEquationArguments::Zero);
 		pickPass->setPassCullFace();
