@@ -117,6 +117,76 @@ const char* gles_admodel_vert =
                              "    worldPosition   	  = vec3(modelMatrix * vec4(vertexPosition, 1.0));\n"
                              "}\n"
 ;
+const char* gles_blur_fragment = 
+                             "#version 150 core\n"
+                             "in vec2 texCoord0;\n"
+                             "uniform int ssa; \n"
+                             "uniform int need_thres; \n"
+                             "uniform vec2 img_size; \n"
+                             "uniform vec2 clrThreshold;\n"
+                             "uniform sampler2D samplerTexture0;\n"
+                             "uniform sampler2D samplerTexture1;\n"
+                             "uniform sampler2D samplerTexture2;\n"
+                             "out vec4 fragData0;\n"
+                             "out vec4 fragData1;\n"
+                             "out vec4 fragData2;\n"
+                             "\n"
+                             "vec4 blur(sampler2D postTexture, int lpos, int rpos, float bili)\n"
+                             "{\n"
+                             "	vec4 retOutput = vec4(0.0, 0.0, 0.0, 0.0);\n"
+                             "	vec4 clrtemp = vec4(0.0, 0.0, 0.0, 0.0); \n"
+                             "	for(int i = -lpos; i <= rpos; i++) \n"
+                             "	{ \n"
+                             "		for(int j = -lpos; j <= rpos; j++) \n"
+                             "		{ \n"
+                             "			vec2 offset = vec2(float(i)/img_size.x, float(j)/img_size.y); \n"
+                             "			vec4 temp = texture(postTexture, texCoord0+offset) / bili; \n"
+                             "			clrtemp += temp; \n"
+                             "		} \n"
+                             "	} \n"
+                             "	clrtemp.a = 1.0;  \n"
+                             "	if(need_thres > 0) { \n"
+                             "		vec2 thresholdvalue = vec2(clrThreshold.x, clrThreshold.y);\n"
+                             "		float rangratio = thresholdvalue.y-thresholdvalue.x;\n"
+                             "		if(clrtemp.r >= 0.003 && clrtemp.r <= 0.997)\n"
+                             "			retOutput = vec4(thresholdvalue.x + clrtemp.r * rangratio, 0.0, 0.0, 1.0);\n"
+                             "			//retOutput = texture(postTexture, texCoord0);\n"
+                             "		else \n"
+                             "			retOutput = clrtemp; \n"
+                             "	} \n"
+                             "	else if(need_thres == 0) { \n"
+                             "		retOutput = clrtemp;  \n"
+                             "	} \n"
+                             "	else { \n"
+                             "		clrtemp = texture(postTexture, texCoord0); \n"
+                             "		clrtemp.a = 1.0; \n"
+                             "		retOutput = clrtemp;  \n"
+                             "	} \n"
+                             "	\n"
+                             "	return retOutput;\n"
+                             "}\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	float bbili = float(ssa * ssa); \n"
+                             "	int llpos = ssa/2; \n"
+                             "	int rrpos = (ssa-1)/2; \n"
+                             "	fragData0 = blur(samplerTexture0, llpos, rrpos, bbili);\n"
+                             "	fragData1 = blur(samplerTexture1, llpos, rrpos, bbili);\n"
+                             "	fragData2 = blur(samplerTexture2, llpos, rrpos, bbili);\n"
+                             "}\n"
+;
+const char* gles_blur_vert = 
+                             "#version 150 core\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec2 vertexTexCoord;\n"
+                             "out vec2 texCoord0;\n"
+                             "void main()\n"
+                             "{\n"
+                             "   gl_Position = vec4(vertexPosition, 1.0);\n"
+                             "	texCoord0 = vertexTexCoord;\n"
+                             "}\n"
+;
 const char* gles_bottomface_fragment = 
                              "/* bottomface.fragment */\n"
                              "precision mediump float;\n"
@@ -556,6 +626,129 @@ const char* gles_glcomp1_vert =
                              "    gnormal        = mat3(modelMatrix) * vertexNormal;\n"
                              "		\n"
                              "    worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));\n"
+                             "}\n"
+;
+const char* gles_gpuantialiasing_fragment = 
+                             "#version 330 core\n"
+                             "\n"
+                             "out vec4 fragColor0;\n"
+                             "out vec4 fragColor1;\n"
+                             "out vec4 fragColor2;\n"
+                             "in vec2 texCoord0;\n"
+                             "uniform vec2 textureSize;\n"
+                             "uniform sampler2D mainTexture0;\n"
+                             "uniform sampler2D mainTexture1;\n"
+                             "uniform sampler2D mainTexture2;\n"
+                             "uniform int antiflag;\n"
+                             "\n"
+                             "#ifndef FXAA_REDUCE_MIN  \n"
+                             "#define FXAA_REDUCE_MIN   (1.0/ 128.0)  \n"
+                             "#endif  \n"
+                             "#ifndef FXAA_REDUCE_MUL  \n"
+                             "#define FXAA_REDUCE_MUL   (1.0 / 8.0)  \n"
+                             "#endif  \n"
+                             "#ifndef FXAA_SPAN_MAX  \n"
+                             "#define FXAA_SPAN_MAX     8.0  \n"
+                             "#endif\n"
+                             "  \n"
+                             "vec4 fxaa(sampler2D tex, vec2 fragCoord, vec2 resolution,  \n"
+                             "	vec2 v_rgbNW, vec2 v_rgbNE,  \n"
+                             "	vec2 v_rgbSW, vec2 v_rgbSE,  \n"
+                             "	vec2 v_rgbM) \n"
+                             "{  \n"
+                             "	vec4 color;  \n"
+                             "	mediump vec2 inverseVP = vec2(1.0 / resolution.x, 1.0 / resolution.y);  \n"
+                             "	vec3 rgbNW = texture(tex, v_rgbNW).xyz;  \n"
+                             "	vec3 rgbNE = texture(tex, v_rgbNE).xyz;  \n"
+                             "	vec3 rgbSW = texture(tex, v_rgbSW).xyz;  \n"
+                             "	vec3 rgbSE = texture(tex, v_rgbSE).xyz;  \n"
+                             "	vec4 texColor = texture(tex, v_rgbM);  \n"
+                             "	vec3 rgbM = texColor.xyz;  \n"
+                             "	vec3 luma = vec3(0.299, 0.587, 0.114);  \n"
+                             "	float lumaNW = dot(rgbNW, luma);  \n"
+                             "	float lumaNE = dot(rgbNE, luma);  \n"
+                             "	float lumaSW = dot(rgbSW, luma);  \n"
+                             "	float lumaSE = dot(rgbSE, luma);  \n"
+                             "	float lumaM = dot(rgbM, luma);  \n"
+                             "	float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));  \n"
+                             "	float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));  \n"
+                             "\n"
+                             "	mediump vec2 dir;  \n"
+                             "	dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));  \n"
+                             "	dir.y = ((lumaNW + lumaSW) - (lumaNE + lumaSE));  \n"
+                             "\n"
+                             "	float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);  \n"
+                             "\n"
+                             "	float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);  \n"
+                             "	dir = min(vec2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),  \n"
+                             "		max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),  \n"
+                             "			dir * rcpDirMin)) * inverseVP;  \n"
+                             "\n"
+                             "	vec3 rgbA = 0.5 * (  \n"
+                             "		texture(tex, fragCoord * inverseVP + dir * (1.0 / 3.0 - 0.5)).xyz +  \n"
+                             "		texture(tex, fragCoord * inverseVP + dir * (2.0 / 3.0 - 0.5)).xyz);  \n"
+                             "	vec3 rgbB = rgbA * 0.5 + 0.25 * (  \n"
+                             "		texture(tex, fragCoord * inverseVP + dir * -0.5).xyz +  \n"
+                             "		texture(tex, fragCoord * inverseVP + dir * 0.5).xyz);  \n"
+                             "\n"
+                             "	float lumaB = dot(rgbB, luma);  \n"
+                             "	if ((lumaB < lumaMin) || (lumaB > lumaMax))  \n"
+                             "	color = vec4(rgbA, texColor.a);  \n"
+                             "	else  \n"
+                             "	color = vec4(rgbB, texColor.a);  \n"
+                             "	return color;  \n"
+                             "}  \n"
+                             "\n"
+                             "void texcoords(vec2 fragCoord, vec2 resolution,  \n"
+                             "	out vec2 v_rgbNW, out vec2 v_rgbNE,  \n"
+                             "	out vec2 v_rgbSW, out vec2 v_rgbSE,  \n"
+                             "	out vec2 v_rgbM) \n"
+                             "{  \n"
+                             "	vec2 inverseVP = 1.0 / resolution.xy;  \n"
+                             "	v_rgbNW = (fragCoord + vec2(-1.0, -1.0)) * inverseVP;  \n"
+                             "	v_rgbNE = (fragCoord + vec2(1.0, -1.0)) * inverseVP;  \n"
+                             "	v_rgbSW = (fragCoord + vec2(-1.0, 1.0)) * inverseVP;  \n"
+                             "	v_rgbSE = (fragCoord + vec2(1.0, 1.0)) * inverseVP;  \n"
+                             "	v_rgbM = vec2(fragCoord * inverseVP);  \n"
+                             "}\n"
+                             "\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	if(antiflag == 1)\n"
+                             "	{\n"
+                             "		vec2 fragCoord = gl_FragCoord.xy;\n"
+                             "		\n"
+                             "		vec2 v_rgbNW;\n"
+                             "		vec2 v_rgbNE;\n"
+                             "		vec2 v_rgbSW;\n"
+                             "		vec2 v_rgbSE;\n"
+                             "		vec2 v_rgbM;\n"
+                             "		\n"
+                             "		texcoords(fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n"
+                             "		\n"
+                             "		fragColor0 = fxaa(mainTexture0, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n"
+                             "		fragColor1 = fxaa(mainTexture1, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n"
+                             "		fragColor2 = fxaa(mainTexture2, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n"
+                             "	\n"
+                             "	}\n"
+                             "	else\n"
+                             "	{\n"
+                             "		fragColor0 = texture2D(mainTexture0, texCoord0);\n"
+                             "		fragColor1 = texture2D(mainTexture1, texCoord0);\n"
+                             "		fragColor2 = texture2D(mainTexture2, texCoord0);\n"
+                             "	}\n"
+                             "}\n"
+;
+const char* gles_gpuantialiasing_vert = 
+                             "#version 330 core\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec2 vertexTexCoord;\n"
+                             "out vec2 texCoord0;\n"
+                             "void main()\n"
+                             "{\n"
+                             "   gl_Position = vec4(vertexPosition, 1.0);\n"
+                             "   texCoord0 = vertexTexCoord;\n"
                              "}\n"
 ;
 const char* gles_manipulate_fragment = 
@@ -1900,6 +2093,28 @@ const char* gles_pure_vert =
                              "   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
                              "}\n"
 ;
+const char* gles_rendertoframebuffer_fragment = 
+                             "#version 150 core\n"
+                             "\n"
+                             "out vec4 fragColor;\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	fragColor = vec4(1.0);\n"
+                             "}\n"
+;
+const char* gles_rendertoframebuffer_vert = 
+                             "#version 150 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "uniform vec4 layoutRect;\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	vec2 project = (vertexPosition.xy - layoutRect.xy) / layoutRect.zw * 2.0 - 1.0;\n"
+                             "	gl_Position = vec4(project.x, -project.y, 0.0, 1.0);\n"
+                             "}\n"
+;
 const char* gles_slicepreview_fragment = 
                              "/* slicepreview.fragment */\n"
                              "\n"
@@ -2703,9 +2918,11 @@ const char* gles_zproject_vert =
                              "}\n"
 ;
 //-----------gles code array.
-const char* gles_shader_code_array[77] = {
+const char* gles_shader_code_array[83] = {
 	gles_admodel_fragment,
 	gles_admodel_vert,
+	gles_blur_fragment,
+	gles_blur_vert,
 	gles_bottomface_fragment,
 	gles_bottomface_vert,
 	gles_boxclippure_fragment,
@@ -2722,6 +2939,8 @@ const char* gles_shader_code_array[77] = {
 	gles_finephongtex_vert,
 	gles_glcomp1_fragment,
 	gles_glcomp1_vert,
+	gles_gpuantialiasing_fragment,
+	gles_gpuantialiasing_vert,
 	gles_manipulate_fragment,
 	gles_manipulate_vert,
 	gles_model_fragment,
@@ -2757,6 +2976,8 @@ const char* gles_shader_code_array[77] = {
 	gles_printergrid_vert,
 	gles_pure_fragment,
 	gles_pure_vert,
+	gles_rendertoframebuffer_fragment,
+	gles_rendertoframebuffer_vert,
 	gles_slicepreview_fragment,
 	gles_slicepreview_vert,
 	gles_slicepreviewAD_fragment,
@@ -2900,6 +3121,112 @@ const char* admodel_vert =
                              "\n"
                              "    normal          	  = normalMatrix * vertexNormal;\n"
                              "    worldPosition   	  = vec3(modelMatrix * vec4(vertexPosition, 1.0));\n"
+                             "}\n"
+;
+const char* antialiasing_fragment = 
+                             "#version 330 core\n"
+                             "\n"
+                             "out vec4 fragColor;\n"
+                             "\n"
+                             "in vec2 texCoord;\n"
+                             "\n"
+                             "uniform vec2 textureSize;\n"
+                             "uniform sampler2D screenTexture;\n"
+                             "uniform int antiflag = 1;\n"
+                             "\n"
+                             "vec4 AntiAlias_None(vec2 uv, vec2 texsize, sampler2D theTexture) \n"
+                             "{\n"
+                             "    return texture2D(theTexture, uv / texsize, -99999.0);\n"
+                             "}\n"
+                             "\n"
+;
+const char* antialiasing_vert = 
+                             "#version 330 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec2 vertexTexCoord;\n"
+                             "\n"
+                             "out vec2 texCoord;\n"
+                             "\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "   //gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
+                             "   gl_Position = vec4(vertexPosition, 1.0);\n"
+                             "   texCoord = vertexTexCoord;\n"
+                             "}\n"
+;
+const char* blur_fragment = 
+                             "#version 150 core\n"
+                             "in vec2 texCoord0;\n"
+                             "uniform int ssa; \n"
+                             "uniform int need_thres; \n"
+                             "uniform vec2 img_size; \n"
+                             "uniform vec2 clrThreshold;\n"
+                             "uniform sampler2D samplerTexture0;\n"
+                             "uniform sampler2D samplerTexture1;\n"
+                             "uniform sampler2D samplerTexture2;\n"
+                             "out vec4 fragData0;\n"
+                             "out vec4 fragData1;\n"
+                             "out vec4 fragData2;\n"
+                             "\n"
+                             "vec4 blur(sampler2D postTexture, int lpos, int rpos, float bili)\n"
+                             "{\n"
+                             "	vec4 retOutput = vec4(0.0, 0.0, 0.0, 0.0);\n"
+                             "	vec4 clrtemp = vec4(0.0, 0.0, 0.0, 0.0); \n"
+                             "	for(int i = -lpos; i <= rpos; i++) \n"
+                             "	{ \n"
+                             "		for(int j = -lpos; j <= rpos; j++) \n"
+                             "		{ \n"
+                             "			vec2 offset = vec2(float(i)/img_size.x, float(j)/img_size.y); \n"
+                             "			vec4 temp = texture(postTexture, texCoord0+offset) / bili; \n"
+                             "			clrtemp += temp; \n"
+                             "		} \n"
+                             "	} \n"
+                             "	clrtemp.a = 1.0;  \n"
+                             "	if(need_thres > 0) { \n"
+                             "		vec2 thresholdvalue = vec2(clrThreshold.x, clrThreshold.y);\n"
+                             "		float rangratio = thresholdvalue.y-thresholdvalue.x;\n"
+                             "		if(clrtemp.r >= 0.003 && clrtemp.r <= 0.997)\n"
+                             "			retOutput = vec4(thresholdvalue.x + clrtemp.r * rangratio, 0.0, 0.0, 1.0);\n"
+                             "			//retOutput = texture(postTexture, texCoord0);\n"
+                             "		else \n"
+                             "			retOutput = clrtemp; \n"
+                             "	} \n"
+                             "	else if(need_thres == 0) { \n"
+                             "		retOutput = clrtemp;  \n"
+                             "	} \n"
+                             "	else { \n"
+                             "		clrtemp = texture(postTexture, texCoord0); \n"
+                             "		clrtemp.a = 1.0; \n"
+                             "		retOutput = clrtemp;  \n"
+                             "	} \n"
+                             "	\n"
+                             "	return retOutput;\n"
+                             "}\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	float bbili = float(ssa * ssa); \n"
+                             "	int llpos = ssa/2; \n"
+                             "	int rrpos = (ssa-1)/2; \n"
+                             "	fragData0 = blur(samplerTexture0, llpos, rrpos, bbili);\n"
+                             "	fragData1 = blur(samplerTexture1, llpos, rrpos, bbili);\n"
+                             "	fragData2 = blur(samplerTexture2, llpos, rrpos, bbili);\n"
+                             "}\n"
+;
+const char* blur_vert = 
+                             "#version 150 core\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec2 vertexTexCoord;\n"
+                             "out vec2 texCoord0;\n"
+                             "void main()\n"
+                             "{\n"
+                             "   gl_Position = vec4(vertexPosition, 1.0);\n"
+                             "	texCoord0 = vertexTexCoord;\n"
                              "}\n"
 ;
 const char* bottomface_fragment = 
@@ -3460,7 +3787,7 @@ const char* gcodepreviewG_fragment =
                              "	float RdotV           = max(0.0, dot(freflection, fViewDirection)); \n"
                              "	vec4 specularColor    = specular * pow( RdotV, specularPower) * core_color;\n"
                              "	\n"
-                             "	vec4 resultColor = total_diffuse + specularColor + ambient_color;\n"
+                             "	vec4 resultColor = total_diffuse + ambient_color;\n"
                              "	resultColor.a = 1.0;\n"
                              "	return resultColor;\n"
                              "}\n"
@@ -3481,23 +3808,38 @@ const char* gcodepreviewG_fragment =
                              "	int stype = int(speedFlag);\n"
                              "	vec4 lastColor = speedcolors[stype];\n"
                              "	vec4 nextColor = speedcolors[stype + 1];\n"
-                             "	return lastColor + (nextColor - lastColor) * (speedFlag - stype);\n"
+                             "	return lastColor + (nextColor - lastColor) * (speedFlag - float(stype));\n"
                              "}\n"
                              "\n"
-                             "// vec4 processAnimation()\n"
-                             "// {\n"
-                             "// 	vec4 colors[2];\n"
-                             "// 	colors[0] = vec4(0.0, 0.0, 0.0, 0.0);\n"
-                             "// 	if(step.x == clipValue.y)\n"
-                             "// 	{\n"
-                             "// 		colors[1] = vec4(0.3, 0.3, 0.3, 0.0);\n"
-                             "// 	}\n"
-                             "// 	else\n"
-                             "// 	{\n"
-                             "// 		colors[1] = vec4(-0.3, -0.3, -0.3, 0.0);\n"
-                             "// 	}\n"
-                             "// 	return colors[animation];\n"
-                             "// }\n"
+                             "vec4 heightColor()\n"
+                             "{\n"
+                             "	return speedColor();\n"
+                             "}\n"
+                             "\n"
+                             "vec4 lineWidthColor()\n"
+                             "{\n"
+                             "	return speedColor();\n"
+                             "}\n"
+                             "\n"
+                             "vec4 flowColor()\n"
+                             "{\n"
+                             "	return speedColor();\n"
+                             "}\n"
+                             "\n"
+                             "vec4 layerTimeColor()\n"
+                             "{\n"
+                             "	return speedColor();\n"
+                             "}\n"
+                             "\n"
+                             "vec4 fanSpeedColor()\n"
+                             "{\n"
+                             "	return speedColor();\n"
+                             "}\n"
+                             "\n"
+                             "vec4 temperatureColor()\n"
+                             "{\n"
+                             "	return speedColor();\n"
+                             "}\n"
                              "\n"
                              "void main( void )\n"
                              "{\n"
@@ -3516,11 +3858,17 @@ const char* gcodepreviewG_fragment =
                              "	if(showType == 1 && typecolorsshow[int(visualType)] == 0)\n"
                              "		discard;\n"
                              "	\n"
-                             "	vec4 colors[3];\n"
+                             "	vec4 colors[9];\n"
                              "	colors[0] = speedColor();\n"
                              "	colors[1] = typeColor();\n"
                              "	colors[2] = nozzleColor();\n"
-                             "	\n"
+                             "	colors[3] = heightColor();\n"
+                             "	colors[4] = lineWidthColor();\n"
+                             "	colors[5] = flowColor();\n"
+                             "	colors[6] = layerTimeColor();\n"
+                             "	colors[7] = fanSpeedColor();\n"
+                             "	colors[8] = temperatureColor();\n"
+                             "\n"
                              "	vec4 core_color = colors[showType];\n"
                              "\n"
                              "	if (animation == 1 && step.x != clipValue.y) {\n"
@@ -3528,7 +3876,6 @@ const char* gcodepreviewG_fragment =
                              "	}\n"
                              "\n"
                              "	vec4 resultColor     = directLight(core_color);\n"
-                             "	// resultColor += processAnimation();\n"
                              "	\n"
                              "	fragment_color = resultColor;\n"
                              "}\n"
@@ -3544,6 +3891,7 @@ const char* gcodepreviewG_geom =
                              "in vec3 vNormalVS[1];\n"
                              "flat in vec2 stepVS[1];\n"
                              "flat in float visualTypeVS[1];\n"
+                             "flat in float lineWidthPerStep[1];\n"
                              "\n"
                              "uniform mat4 viewMatrix;\n"
                              "uniform mat4 projectionMatrix;\n"
@@ -3555,7 +3903,7 @@ const char* gcodepreviewG_geom =
                              "out vec3 viewDirection;\n"
                              "\n"
                              "uniform float layerHeight = 0.1;\n"
-                             "uniform float lineWidth = 0.4;\n"
+                             "//uniform float lineWidth = 0.4;\n"
                              "\n"
                              "void combindVertex(vec3 pos, vec3 norm)\n"
                              "{\n"
@@ -3591,6 +3939,7 @@ const char* gcodepreviewG_geom =
                              "	// poses[6] = endVertexVS[0]   + 0.05 * norms[6];\n"
                              "	// poses[7] = endVertexVS[0]   + 0.2  * norms[7];\n"
                              "\n"
+                             " 	float lineWidth = lineWidthPerStep[0];\n"
                              "	poses[0] = startVertexVS[0] + layerHeight * 0.5 * norms[0];\n"
                              "	poses[1] = startVertexVS[0] + lineWidth   * 0.5 * norms[1];\n"
                              "	poses[2] = startVertexVS[0] + layerHeight * 0.5 * norms[2];\n"
@@ -3624,12 +3973,14 @@ const char* gcodepreviewG_vert =
                              "in vec3 vertexNormal;\n"
                              "in vec2 stepsFlag;\n"
                              "in float visualTypeFlags;\n"
+                             "in float lineWidth;\n"
                              "\n"
                              "out vec3 startVertexVS;\n"
                              "out vec3 endVertexVS;\n"
                              "out vec3 vNormalVS;\n"
                              "flat out vec2 stepVS;\n"
                              "flat out float visualTypeVS;\n"
+                             "flat out float lineWidthPerStep;\n"
                              "\n"
                              "void main( void )\n"
                              "{	\n"
@@ -3638,6 +3989,7 @@ const char* gcodepreviewG_vert =
                              "	vNormalVS = vertexNormal;\n"
                              "	stepVS = stepsFlag;\n"
                              "	visualTypeVS = visualTypeFlags;\n"
+                             "	lineWidthPerStep = lineWidth;\n"
                              "}\n"
 ;
 const char* glcomp1_fragment = 
@@ -3717,6 +4069,129 @@ const char* glcomp1_vert =
                              "    gnormal        = mat3(modelMatrix) * vertexNormal;\n"
                              "		\n"
                              "    worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));\n"
+                             "}\n"
+;
+const char* gpuantialiasing_fragment = 
+                             "#version 330 core\n"
+                             "\n"
+                             "out vec4 fragColor0;\n"
+                             "out vec4 fragColor1;\n"
+                             "out vec4 fragColor2;\n"
+                             "in vec2 texCoord0;\n"
+                             "uniform vec2 textureSize;\n"
+                             "uniform sampler2D mainTexture0;\n"
+                             "uniform sampler2D mainTexture1;\n"
+                             "uniform sampler2D mainTexture2;\n"
+                             "uniform int antiflag;\n"
+                             "\n"
+                             "#ifndef FXAA_REDUCE_MIN  \n"
+                             "#define FXAA_REDUCE_MIN   (1.0/ 128.0)  \n"
+                             "#endif  \n"
+                             "#ifndef FXAA_REDUCE_MUL  \n"
+                             "#define FXAA_REDUCE_MUL   (1.0 / 8.0)  \n"
+                             "#endif  \n"
+                             "#ifndef FXAA_SPAN_MAX  \n"
+                             "#define FXAA_SPAN_MAX     8.0  \n"
+                             "#endif\n"
+                             "  \n"
+                             "vec4 fxaa(sampler2D tex, vec2 fragCoord, vec2 resolution,  \n"
+                             "	vec2 v_rgbNW, vec2 v_rgbNE,  \n"
+                             "	vec2 v_rgbSW, vec2 v_rgbSE,  \n"
+                             "	vec2 v_rgbM) \n"
+                             "{  \n"
+                             "	vec4 color;  \n"
+                             "	mediump vec2 inverseVP = vec2(1.0 / resolution.x, 1.0 / resolution.y);  \n"
+                             "	vec3 rgbNW = texture(tex, v_rgbNW).xyz;  \n"
+                             "	vec3 rgbNE = texture(tex, v_rgbNE).xyz;  \n"
+                             "	vec3 rgbSW = texture(tex, v_rgbSW).xyz;  \n"
+                             "	vec3 rgbSE = texture(tex, v_rgbSE).xyz;  \n"
+                             "	vec4 texColor = texture(tex, v_rgbM);  \n"
+                             "	vec3 rgbM = texColor.xyz;  \n"
+                             "	vec3 luma = vec3(0.299, 0.587, 0.114);  \n"
+                             "	float lumaNW = dot(rgbNW, luma);  \n"
+                             "	float lumaNE = dot(rgbNE, luma);  \n"
+                             "	float lumaSW = dot(rgbSW, luma);  \n"
+                             "	float lumaSE = dot(rgbSE, luma);  \n"
+                             "	float lumaM = dot(rgbM, luma);  \n"
+                             "	float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));  \n"
+                             "	float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));  \n"
+                             "\n"
+                             "	mediump vec2 dir;  \n"
+                             "	dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));  \n"
+                             "	dir.y = ((lumaNW + lumaSW) - (lumaNE + lumaSE));  \n"
+                             "\n"
+                             "	float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);  \n"
+                             "\n"
+                             "	float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);  \n"
+                             "	dir = min(vec2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),  \n"
+                             "		max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),  \n"
+                             "			dir * rcpDirMin)) * inverseVP;  \n"
+                             "\n"
+                             "	vec3 rgbA = 0.5 * (  \n"
+                             "		texture(tex, fragCoord * inverseVP + dir * (1.0 / 3.0 - 0.5)).xyz +  \n"
+                             "		texture(tex, fragCoord * inverseVP + dir * (2.0 / 3.0 - 0.5)).xyz);  \n"
+                             "	vec3 rgbB = rgbA * 0.5 + 0.25 * (  \n"
+                             "		texture(tex, fragCoord * inverseVP + dir * -0.5).xyz +  \n"
+                             "		texture(tex, fragCoord * inverseVP + dir * 0.5).xyz);  \n"
+                             "\n"
+                             "	float lumaB = dot(rgbB, luma);  \n"
+                             "	if ((lumaB < lumaMin) || (lumaB > lumaMax))  \n"
+                             "	color = vec4(rgbA, texColor.a);  \n"
+                             "	else  \n"
+                             "	color = vec4(rgbB, texColor.a);  \n"
+                             "	return color;  \n"
+                             "}  \n"
+                             "\n"
+                             "void texcoords(vec2 fragCoord, vec2 resolution,  \n"
+                             "	out vec2 v_rgbNW, out vec2 v_rgbNE,  \n"
+                             "	out vec2 v_rgbSW, out vec2 v_rgbSE,  \n"
+                             "	out vec2 v_rgbM) \n"
+                             "{  \n"
+                             "	vec2 inverseVP = 1.0 / resolution.xy;  \n"
+                             "	v_rgbNW = (fragCoord + vec2(-1.0, -1.0)) * inverseVP;  \n"
+                             "	v_rgbNE = (fragCoord + vec2(1.0, -1.0)) * inverseVP;  \n"
+                             "	v_rgbSW = (fragCoord + vec2(-1.0, 1.0)) * inverseVP;  \n"
+                             "	v_rgbSE = (fragCoord + vec2(1.0, 1.0)) * inverseVP;  \n"
+                             "	v_rgbM = vec2(fragCoord * inverseVP);  \n"
+                             "}\n"
+                             "\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	if(antiflag == 1)\n"
+                             "	{\n"
+                             "		vec2 fragCoord = gl_FragCoord.xy;\n"
+                             "		\n"
+                             "		vec2 v_rgbNW;\n"
+                             "		vec2 v_rgbNE;\n"
+                             "		vec2 v_rgbSW;\n"
+                             "		vec2 v_rgbSE;\n"
+                             "		vec2 v_rgbM;\n"
+                             "		\n"
+                             "		texcoords(fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n"
+                             "		\n"
+                             "		fragColor0 = fxaa(mainTexture0, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n"
+                             "		fragColor1 = fxaa(mainTexture1, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n"
+                             "		fragColor2 = fxaa(mainTexture2, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n"
+                             "	\n"
+                             "	}\n"
+                             "	else\n"
+                             "	{\n"
+                             "		fragColor0 = texture2D(mainTexture0, texCoord0);\n"
+                             "		fragColor1 = texture2D(mainTexture1, texCoord0);\n"
+                             "		fragColor2 = texture2D(mainTexture2, texCoord0);\n"
+                             "	}\n"
+                             "}\n"
+;
+const char* gpuantialiasing_vert = 
+                             "#version 330 core\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec2 vertexTexCoord;\n"
+                             "out vec2 texCoord0;\n"
+                             "void main()\n"
+                             "{\n"
+                             "   gl_Position = vec4(vertexPosition, 1.0);\n"
+                             "   texCoord0 = vertexTexCoord;\n"
                              "}\n"
 ;
 const char* manipulate_fragment = 
@@ -5640,6 +6115,28 @@ const char* pure_vert =
                              "   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
                              "}\n"
 ;
+const char* rendertoframebuffer_fragment = 
+                             "#version 150 core\n"
+                             "\n"
+                             "out vec4 fragColor;\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	fragColor = vec4(1.0);\n"
+                             "}\n"
+;
+const char* rendertoframebuffer_vert = 
+                             "#version 150 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "uniform vec4 layoutRect;\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	vec2 project = (vertexPosition.xy - layoutRect.xy) / layoutRect.zw * 2.0 - 1.0;\n"
+                             "	gl_Position = vec4(project.x, -project.y, 0.0, 1.0);\n"
+                             "}\n"
+;
 const char* sceneindicator_fragment = 
                              "#version 330 core\n"
                              "\n"
@@ -7377,9 +7874,13 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
-const char* shader_code_array[105] = {
+const char* shader_code_array[113] = {
 	admodel_fragment,
 	admodel_vert,
+	antialiasing_fragment,
+	antialiasing_vert,
+	blur_fragment,
+	blur_vert,
 	bottomface_fragment,
 	bottomface_vert,
 	boxclippure_fragment,
@@ -7401,6 +7902,8 @@ const char* shader_code_array[105] = {
 	gcodepreviewG_vert,
 	glcomp1_fragment,
 	glcomp1_vert,
+	gpuantialiasing_fragment,
+	gpuantialiasing_vert,
 	manipulate_fragment,
 	manipulate_vert,
 	model_fragment,
@@ -7449,6 +7952,8 @@ const char* shader_code_array[105] = {
 	printergrid_cx_vert,
 	pure_fragment,
 	pure_vert,
+	rendertoframebuffer_fragment,
+	rendertoframebuffer_vert,
 	sceneindicator_fragment,
 	sceneindicator_vert,
 	slicepreview_fragment,
@@ -7494,56 +7999,60 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
-int programs_meta_size = 50;
-ProgramDef programs_meta[50] = {
+int programs_meta_size = 54;
+ProgramDef programs_meta[54] = {
   { "admodel" , 1  ,  -1   ,  -1   ,  -1   , 0  },
-   { "bottomface" , 3  ,  -1   ,  -1   ,  -1   , 2  },
-   { "boxclippure" , 5  ,  -1   ,  -1   ,  -1   , 4  },
-   { "chunk" , 7  ,  -1   ,  -1   ,  -1   , 6  },
-   { "color" , 9  ,  -1   ,  -1   ,  -1   , 8  },
-   { "dlpsupportindicator" , 11  ,  -1   ,  -1   ,  -1   , 10  },
-   { "finephong" , 13  ,  -1   ,  -1   ,  -1   , 12  },
-   { "finephongtex" , 15  ,  -1   ,  -1   ,  -1   , 14  },
-   { "gcodepreview" , 17  ,  -1   ,  -1   ,  -1   , 16  },
-   { "gcodepreviewG" , 20  ,  -1   ,  -1   , 19  , 18  },
-   { "glcomp1" , 22  ,  -1   ,  -1   ,  -1   , 21  },
-   { "manipulate" , 24  ,  -1   ,  -1   ,  -1   , 23  },
-   { "model" , 26  ,  -1   ,  -1   ,  -1   , 25  },
-   { "modelSupport" , 39  ,  -1   ,  -1   ,  -1   , 38  },
-   { "modeldlp" , 28  ,  -1   ,  -1   ,  -1   , 27  },
-   { "modelline" , 30  ,  -1   ,  -1   ,  -1   , 29  },
-   { "modelphong" , 33  ,  -1   ,  -1   , 32  , 31  },
-   { "modelselect" , 35  ,  -1   ,  -1   ,  -1   , 34  },
-   { "modelsimple" , 37  ,  -1   ,  -1   ,  -1   , 36  },
-   { "modelwireframe" , 42  ,  -1   ,  -1   , 41  , 40  },
-   { "moon" , 44  ,  -1   ,  -1   ,  -1   , 43  },
-   { "overlay" , 46  ,  -1   ,  -1   ,  -1   , 45  },
-   { "photo" , 48  ,  -1   ,  -1   ,  -1   , 47  },
-   { "pickFace" , 50  ,  -1   ,  -1   ,  -1   , 49  },
-   { "pickFaceChunk" , 52  ,  -1   ,  -1   ,  -1   , 51  },
-   { "pickFaceFlag" , 54  ,  -1   ,  -1   ,  -1   , 53  },
-   { "pickFace_pwd" , 56  ,  -1   ,  -1   ,  -1   , 55  },
-   { "pickindicator" , 58  ,  -1   ,  -1   ,  -1   , 57  },
-   { "piefade" , 60  ,  -1   ,  -1   ,  -1   , 59  },
-   { "pointInGcode" , 62  ,  -1   ,  -1   ,  -1   , 61  },
-   { "printerbottom" , 64  ,  -1   ,  -1   ,  -1   , 63  },
-   { "printergrid" , 66  ,  -1   ,  -1   ,  -1   , 65  },
-   { "printergrid_cx" , 68  ,  -1   ,  -1   ,  -1   , 67  },
-   { "pure" , 70  ,  -1   ,  -1   ,  -1   , 69  },
-   { "sceneindicator" , 72  ,  -1   ,  -1   ,  -1   , 71  },
-   { "slicepreview" , 76  , 74  , 75  ,  -1   , 73  },
-   { "slicepreviewAD" , 78  ,  -1   ,  -1   ,  -1   , 77  },
-   { "slicepreviewNoTess" , 80  ,  -1   ,  -1   ,  -1   , 79  },
-   { "slicepreviewpath" , 82  ,  -1   ,  -1   ,  -1   , 81  },
-   { "splitplane" , 84  ,  -1   ,  -1   ,  -1   , 83  },
-   { "support" , 86  ,  -1   ,  -1   ,  -1   , 85  },
-   { "support_dlp" , 92  ,  -1   ,  -1   ,  -1   , 91  },
-   { "supportpos" , 88  ,  -1   ,  -1   ,  -1   , 87  },
-   { "supportshow" , 90  ,  -1   ,  -1   ,  -1   , 89  },
-   { "surfacequad" , 94  ,  -1   ,  -1   ,  -1   , 93  },
-   { "tex" , 96  ,  -1   ,  -1   ,  -1   , 95  },
-   { "texshape" , 98  ,  -1   ,  -1   ,  -1   , 97  },
-   { "text" , 100  ,  -1   ,  -1   ,  -1   , 99  },
-   { "xyzIndicator" , 102  ,  -1   ,  -1   ,  -1   , 101  },
-   { "zproject" , 104  ,  -1   ,  -1   ,  -1   , 103  },
+   { "antialiasing" , 3  ,  -1   ,  -1   ,  -1   , 2  },
+   { "blur" , 5  ,  -1   ,  -1   ,  -1   , 4  },
+   { "bottomface" , 7  ,  -1   ,  -1   ,  -1   , 6  },
+   { "boxclippure" , 9  ,  -1   ,  -1   ,  -1   , 8  },
+   { "chunk" , 11  ,  -1   ,  -1   ,  -1   , 10  },
+   { "color" , 13  ,  -1   ,  -1   ,  -1   , 12  },
+   { "dlpsupportindicator" , 15  ,  -1   ,  -1   ,  -1   , 14  },
+   { "finephong" , 17  ,  -1   ,  -1   ,  -1   , 16  },
+   { "finephongtex" , 19  ,  -1   ,  -1   ,  -1   , 18  },
+   { "gcodepreview" , 21  ,  -1   ,  -1   ,  -1   , 20  },
+   { "gcodepreviewG" , 24  ,  -1   ,  -1   , 23  , 22  },
+   { "glcomp1" , 26  ,  -1   ,  -1   ,  -1   , 25  },
+   { "gpuantialiasing" , 28  ,  -1   ,  -1   ,  -1   , 27  },
+   { "manipulate" , 30  ,  -1   ,  -1   ,  -1   , 29  },
+   { "model" , 32  ,  -1   ,  -1   ,  -1   , 31  },
+   { "modelSupport" , 45  ,  -1   ,  -1   ,  -1   , 44  },
+   { "modeldlp" , 34  ,  -1   ,  -1   ,  -1   , 33  },
+   { "modelline" , 36  ,  -1   ,  -1   ,  -1   , 35  },
+   { "modelphong" , 39  ,  -1   ,  -1   , 38  , 37  },
+   { "modelselect" , 41  ,  -1   ,  -1   ,  -1   , 40  },
+   { "modelsimple" , 43  ,  -1   ,  -1   ,  -1   , 42  },
+   { "modelwireframe" , 48  ,  -1   ,  -1   , 47  , 46  },
+   { "moon" , 50  ,  -1   ,  -1   ,  -1   , 49  },
+   { "overlay" , 52  ,  -1   ,  -1   ,  -1   , 51  },
+   { "photo" , 54  ,  -1   ,  -1   ,  -1   , 53  },
+   { "pickFace" , 56  ,  -1   ,  -1   ,  -1   , 55  },
+   { "pickFaceChunk" , 58  ,  -1   ,  -1   ,  -1   , 57  },
+   { "pickFaceFlag" , 60  ,  -1   ,  -1   ,  -1   , 59  },
+   { "pickFace_pwd" , 62  ,  -1   ,  -1   ,  -1   , 61  },
+   { "pickindicator" , 64  ,  -1   ,  -1   ,  -1   , 63  },
+   { "piefade" , 66  ,  -1   ,  -1   ,  -1   , 65  },
+   { "pointInGcode" , 68  ,  -1   ,  -1   ,  -1   , 67  },
+   { "printerbottom" , 70  ,  -1   ,  -1   ,  -1   , 69  },
+   { "printergrid" , 72  ,  -1   ,  -1   ,  -1   , 71  },
+   { "printergrid_cx" , 74  ,  -1   ,  -1   ,  -1   , 73  },
+   { "pure" , 76  ,  -1   ,  -1   ,  -1   , 75  },
+   { "rendertoframebuffer" , 78  ,  -1   ,  -1   ,  -1   , 77  },
+   { "sceneindicator" , 80  ,  -1   ,  -1   ,  -1   , 79  },
+   { "slicepreview" , 84  , 82  , 83  ,  -1   , 81  },
+   { "slicepreviewAD" , 86  ,  -1   ,  -1   ,  -1   , 85  },
+   { "slicepreviewNoTess" , 88  ,  -1   ,  -1   ,  -1   , 87  },
+   { "slicepreviewpath" , 90  ,  -1   ,  -1   ,  -1   , 89  },
+   { "splitplane" , 92  ,  -1   ,  -1   ,  -1   , 91  },
+   { "support" , 94  ,  -1   ,  -1   ,  -1   , 93  },
+   { "support_dlp" , 100  ,  -1   ,  -1   ,  -1   , 99  },
+   { "supportpos" , 96  ,  -1   ,  -1   ,  -1   , 95  },
+   { "supportshow" , 98  ,  -1   ,  -1   ,  -1   , 97  },
+   { "surfacequad" , 102  ,  -1   ,  -1   ,  -1   , 101  },
+   { "tex" , 104  ,  -1   ,  -1   ,  -1   , 103  },
+   { "texshape" , 106  ,  -1   ,  -1   ,  -1   , 105  },
+   { "text" , 108  ,  -1   ,  -1   ,  -1   , 107  },
+   { "xyzIndicator" , 110  ,  -1   ,  -1   ,  -1   , 109  },
+   { "zproject" , 112  ,  -1   ,  -1   ,  -1   , 111  },
  };
