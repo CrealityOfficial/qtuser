@@ -61,6 +61,11 @@ namespace qtuser_3d
 		}
 	}
 
+	SceneOperateMode* RenderGraph::operateMode()
+	{
+		return m_operateMode;
+	}
+
 	void RenderGraph::reinOperationMode()
 	{
 		if (m_operateMode)
