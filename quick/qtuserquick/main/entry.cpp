@@ -4,6 +4,7 @@
 #include <QtCore/QDebug>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
+#include <QtQuick/QQuickWindow> 
 #include <QFont>
 #include "qtusercore/module/systemutil.h"
 #include "qtuser3d/module/glcompatibility.h"
@@ -89,6 +90,11 @@ namespace qtuser_quick
 
 		QApplication app(argc, argv);
 		app.setWindowIcon(QIcon(":/scence3d/res/logo.png"));
+
+#ifdef Q_OS_OSX
+		QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
+#endif
+
 		AppModule* appModule = func ? func() : nullptr;
 		int ret = 0;
 		if (appModule)
