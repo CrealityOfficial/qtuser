@@ -50,6 +50,7 @@ namespace qtuser_3d
 
 		m_updateTimer = new QTimer(this);
 		m_delayTimer = new QTimer(this);
+		m_delayTimer->setSingleShot(true);
 		connect(m_updateTimer, SIGNAL(timeout()), this, SIGNAL(signalUpdate()));
 		connect(m_delayTimer, SIGNAL(timeout()), this, SLOT(delayCapture()));
 	}
@@ -99,7 +100,7 @@ namespace qtuser_3d
 
 	void ColorPicker::delayCapture()
 	{
-#if 0
+#if 1
 		qDebug() << "ColorPicker::delayCapture";
 #endif
 		m_captureReply.reset(m_renderCapture->requestCapture());
@@ -112,7 +113,7 @@ namespace qtuser_3d
 	void ColorPicker::captureCompleted()
 	{
 		emit frameCaptureComplete();
-#if 0
+#if 1
 		qDebug() << "ColorPicker::captureCompleted";
 #endif
 		m_colorPickerImage = m_captureReply->image();
