@@ -76,13 +76,16 @@ void main( void )
 	else
 		color = customColor;
 	
+	color = vec4(gcolor, 1.0);
+				
 	if(error == 1.0)
 		color = stateColors[3];	
-
 
 	vec4 coreColor = color;
 	vec3 fgnormal =	normalize(gnormal);
 	
+	//coreColor = vec4(gcolor, 1.0);
+		
 	if(checkscope > 0)
 	{
 		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z 
@@ -92,7 +95,7 @@ void main( void )
 			coreColor = stateColors[4];
 		}
 	}
-	
+		
 	if(hoverState > 0)
 	{
 		float v = dot(fgnormal, vec3(0.0, 0.0, -1.0));
@@ -101,8 +104,6 @@ void main( void )
 			coreColor.r += 0.8 * v;
 		}
 	}
-	
-	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;
 
 	vec3 fnormal 		  =	normalize(normal);
 	vec4 ambient_color 	  = ambient;

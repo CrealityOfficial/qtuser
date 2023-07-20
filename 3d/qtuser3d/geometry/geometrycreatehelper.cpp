@@ -108,7 +108,7 @@ namespace qtuser_3d
 		if (data.color.size() > 0)
 		{
 			Qt3DRender::QBuffer* colorBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
-			colorBuffer->setData(data.texcoord);
+			colorBuffer->setData(data.color);
 			colorAttribute = new Qt3DRender::QAttribute(colorBuffer, Qt3DRender::QAttribute::defaultColorAttributeName(), Qt3DRender::QAttribute::Float, 3, data.count);
 		}
 
