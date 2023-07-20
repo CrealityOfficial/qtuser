@@ -75,8 +75,6 @@ void main( void )
 	}
 	else
 		color = customColor;
-	
-	color = vec4(gcolor, 1.0);
 				
 	if(error == 1.0)
 		color = stateColors[3];	
