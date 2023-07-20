@@ -2,6 +2,7 @@
 
 in vec3 vertexPosition;
 in vec3 vertexNormal;
+in vec3 vertexColor;
 		
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
@@ -11,6 +12,7 @@ out vec3 viewDirectionVS;
 out vec3 normalVS;
 out vec3 gnormalVS;
 out vec3 worldPositionVS;
+out vec3 colorVS;
 
 void main( void )
 {
@@ -23,6 +25,7 @@ void main( void )
 
     normalVS          = normalMatrix * vertexNormal;
     gnormalVS        = mat3(modelMatrix) * vertexNormal;
-		
+	colorVS      = vertexColor;	
+	
     worldPositionVS   = vec3(modelMatrix * vec4(vertexPosition, 1.0));
 }

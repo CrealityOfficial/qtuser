@@ -39,6 +39,7 @@ namespace qtuser_3d
 	public:
 		QByteArray position;
 		QByteArray normal;
+		QByteArray color;
 		QByteArray texcoord;
 
 		int fcount;

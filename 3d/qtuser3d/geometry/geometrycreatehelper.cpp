@@ -97,13 +97,21 @@ namespace qtuser_3d
 		Qt3DRender::QAttribute* normalAttribute = new Qt3DRender::QAttribute(normalBuffer, Qt3DRender::QAttribute::defaultNormalAttributeName(), Qt3DRender::QAttribute::Float, 3, data.count);
 
 		Qt3DRender::QAttribute* texcoordAttribute = nullptr;
+		Qt3DRender::QAttribute* colorAttribute = nullptr;
+
 		if (data.texcoord.size() > 0)
 		{
 			Qt3DRender::QBuffer* texcoordBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
 			texcoordBuffer->setData(data.texcoord);
 			texcoordAttribute = new Qt3DRender::QAttribute(texcoordBuffer, Qt3DRender::QAttribute::defaultTextureCoordinateAttributeName(), Qt3DRender::QAttribute::Float, 2, data.count);
 		}
+		if (data.color.size() > 0)
+		{
+			Qt3DRender::QBuffer* colorBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+			colorBuffer->setData(data.texcoord);
+			colorAttribute = new Qt3DRender::QAttribute(colorBuffer, Qt3DRender::QAttribute::defaultColorAttributeName(), Qt3DRender::QAttribute::Float, 3, data.count);
+		}
 
-		return qtuser_3d::GeometryCreateHelper::create(parent, positionAttribute, normalAttribute, texcoordAttribute);
+		return qtuser_3d::GeometryCreateHelper::create(parent, positionAttribute, normalAttribute, colorAttribute, texcoordAttribute);
 	}
 }
