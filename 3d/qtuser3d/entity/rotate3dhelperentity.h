@@ -52,6 +52,7 @@ namespace qtuser_3d
 		void onBoxChanged(Box3D box);
 
 	protected:
+		bool shouldStartRotate();
 		void onStartRotate() override;
 		void onRotate(QQuaternion q) override;
 		void onEndRotate(QQuaternion q) override;

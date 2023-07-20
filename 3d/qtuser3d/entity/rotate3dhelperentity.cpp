@@ -215,7 +215,14 @@ namespace qtuser_3d
 		if (m_pZRotHelper)
 			m_pZRotHelper->onBoxChanged(box);
 	}
-
+	bool Rotate3DHelperEntity::shouldStartRotate()
+	{
+		if (m_pRotateCallback)
+		{
+			return m_pRotateCallback->shouldStartRotate();
+		}
+		return true;
+	}
 	void Rotate3DHelperEntity::onStartRotate()
 	{
 		if (m_pRotateCallback)
