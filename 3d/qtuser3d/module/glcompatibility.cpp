@@ -8,6 +8,7 @@
 #include <QtGui/QSurfaceFormat>
 #include <QtCore/QProcess>
 #include <QtGui/QOpenGLContext>
+#include <QtGui/QOpenGLFunctions>
 
 #define FORCE_USE_GLES 0
 
@@ -150,4 +151,33 @@ namespace qtuser_3d
             break;
         }
 	}
+
+
+    bool checkMRTSupported()
+    {
+        if (!QOpenGLContext::currentContext()->functions()->hasOpenGLFeature(QOpenGLFunctions::MultipleRenderTargets)) {
+            qWarning("Multiple render targets not supported");
+            return false;
+        }
+
+        int maxColorAttachments = 0;
+        QOpenGLContext::currentContext()->functions()->glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxColorAttachments);
+        qInfo() << "GL_MAX_COLOR_ATTACHMENTS = " << maxColorAttachments;
+        if (maxColorAttachments < 8)
+        {
+            qWarning("GL_MAX_COLOR_ATTACHMENTS  < 8, NOT support!!!");
+            return false;
+        }
+
+        GLint maxDrawBuf = 0;
+        QOpenGLContext::currentContext()->functions()->glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuf);
+        qInfo() << "GL_MAX_DRAW_BUFFERS = " << maxDrawBuf;
+        if (maxDrawBuf < 8)
+        {
+            qWarning("GL_MAX_DRAW_BUFFERS  < 8, NOT support!!!");
+            return false;
+        }
+
+        return true;
+    }
 }

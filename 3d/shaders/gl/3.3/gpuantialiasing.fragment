@@ -3,11 +3,24 @@
 out vec4 fragColor0;
 out vec4 fragColor1;
 out vec4 fragColor2;
+out vec4 fragColor3;
+out vec4 fragColor4;
+out vec4 fragColor5;
+out vec4 fragColor6;
+out vec4 fragColor7;
+
 in vec2 texCoord0;
+
 uniform vec2 textureSize;
 uniform sampler2D mainTexture0;
 uniform sampler2D mainTexture1;
 uniform sampler2D mainTexture2;
+uniform sampler2D mainTexture3;
+uniform sampler2D mainTexture4;
+uniform sampler2D mainTexture5;
+uniform sampler2D mainTexture6;
+uniform sampler2D mainTexture7;
+
 uniform int antiflag;
 
 #ifndef FXAA_REDUCE_MIN  
@@ -99,6 +112,11 @@ void main()
 		fragColor0 = fxaa(mainTexture0, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
 		fragColor1 = fxaa(mainTexture1, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
 		fragColor2 = fxaa(mainTexture2, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+		fragColor3 = fxaa(mainTexture3, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+		fragColor4 = fxaa(mainTexture4, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+		fragColor5 = fxaa(mainTexture5, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+		fragColor6 = fxaa(mainTexture6, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+		fragColor7 = fxaa(mainTexture7, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
 	
 	}
 	else
@@ -106,5 +124,11 @@ void main()
 		fragColor0 = texture2D(mainTexture0, texCoord0);
 		fragColor1 = texture2D(mainTexture1, texCoord0);
 		fragColor2 = texture2D(mainTexture2, texCoord0);
+		fragColor3 = texture2D(mainTexture3, texCoord0);
+		fragColor4 = texture2D(mainTexture4, texCoord0);
+		fragColor5 = texture2D(mainTexture5, texCoord0);
+		fragColor6 = texture2D(mainTexture6, texCoord0);
+		fragColor7 = texture2D(mainTexture7, texCoord0);
+
 	}
 }

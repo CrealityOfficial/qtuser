@@ -8,6 +8,7 @@ namespace qtuser_3d
 	QTUSER_3D_API void setBeforeApplication();
 	QTUSER_3D_API bool isGles();
 	QTUSER_3D_API bool isSoftwareGL();
+	QTUSER_3D_API bool checkMRTSupported();
 }
 
 #endif // QTUSER_CORE_GLCOMPATIBILITY_1654748123930_H
