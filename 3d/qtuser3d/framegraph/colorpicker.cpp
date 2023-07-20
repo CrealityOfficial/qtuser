@@ -154,6 +154,16 @@ namespace qtuser_3d
 		m_clearBuffer->setClearColor(color);
 	}
 
+	void ColorPicker::setAllFilterKey(const QString& name, int value)
+	{
+		m_filterKey->setName(name);
+		m_filterKey->setValue(value);
+
+		m_filterKey2->setName(name);
+		m_filterKey2->setValue(0);
+
+	}
+
 	bool ColorPicker::pick(const QPoint& point, int* faceID)
 	{
 		if (m_capturing)

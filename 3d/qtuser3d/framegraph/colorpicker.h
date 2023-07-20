@@ -36,6 +36,8 @@ namespace qtuser_3d
 		void setFilterKey(const QString& name, int value);
 		void setClearColor(const QColor& color);
 
+		void setAllFilterKey(const QString& name, int value);
+
 		bool pick(int x, int y, int* faceID) override;
 		bool pick(const QPoint& point, int* faceID) override;
 		void sourceMayChanged() override;
