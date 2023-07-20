@@ -617,6 +617,10 @@ namespace qtuser_3d
 
 	void RotateHelperEntity_T::onLeftMouseButtonPress(QMouseEvent* event)
 	{
+		if (m_pRotateCallback && !m_pRotateCallback->shouldStartRotate())
+		{
+			return ;
+		}
 		 QList<Pickable*> list = QList<Pickable*>({m_pHandlerPickable});
 		Pickable* pickable = checkPickableFromList(m_pPickSource, event->pos(), list , nullptr);
 

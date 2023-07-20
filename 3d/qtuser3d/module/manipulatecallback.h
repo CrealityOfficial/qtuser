@@ -8,7 +8,7 @@ namespace qtuser_3d
 	{
 	public:
 		virtual ~RotateCallback() {}
-
+		virtual bool shouldStartRotate() = 0;
 		virtual void onStartRotate() = 0;
 		virtual void onRotate(QQuaternion q) = 0;
 		virtual void onEndRotate(QQuaternion q) = 0;
