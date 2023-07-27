@@ -81,7 +81,7 @@ namespace qtuser_3d
 	void Node3D::setLocalScale(const QVector3D& scale, bool update)
 	{
 		m_localScale = scale;
-		checkQVector3D(m_localScale, QVector3D(-100, -100, -100), QVector3D(100, 100, 100));
+		checkQVector3D(m_localScale, QVector3D(-100, -100, -100), QVector3D(1000, 1000, 1000));
 		m_localMatrixDirty = true;
 
 		if (update) updateMatrix();
