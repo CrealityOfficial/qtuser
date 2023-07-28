@@ -50,6 +50,9 @@ namespace qtuser_3d
 		void useSelfCameraSelector(bool use);
 		Qt3DRender::QCamera* camera();
 
+		void useSelfCamera();
+		void useCamera(Qt3DRender::QCamera* cam);
+
 		void setDebugName(const QString& name);
 
 		bool getImageFinished();
@@ -76,6 +79,7 @@ namespace qtuser_3d
 		Qt3DRender::QFilterKey* m_filterKey2;
 
 		Qt3DRender::QCameraSelector* m_cameraSelector;
+		Qt3DRender::QCameraSelector* m_cameraSelector2;
 		Qt3DRender::QCamera* m_camera;
 
 		TextureRenderTarget* m_textureRenderTarget;

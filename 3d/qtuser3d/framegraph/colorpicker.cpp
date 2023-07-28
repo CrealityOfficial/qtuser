@@ -40,9 +40,9 @@ namespace qtuser_3d
 		m_cameraSelector->setCamera(m_camera);
 
 		{
-			Qt3DRender::QCameraSelector *cameraSelector = new Qt3DRender::QCameraSelector(m_renderPassFilter2);
-			cameraSelector->setCamera(m_camera);
-			m_renderCapture = new Qt3DRender::QRenderCapture(cameraSelector);
+			m_cameraSelector2 = new Qt3DRender::QCameraSelector(m_renderPassFilter2);
+			m_cameraSelector2->setCamera(m_camera);
+			m_renderCapture = new Qt3DRender::QRenderCapture(m_cameraSelector2);
 		}
 
 		//m_textureRenderTarget = new TextureRenderTarget();
@@ -160,7 +160,7 @@ namespace qtuser_3d
 		m_filterKey->setValue(value);
 
 		m_filterKey2->setName(name);
-		m_filterKey2->setValue(0);
+		m_filterKey2->setValue(value);
 
 	}
 
@@ -232,6 +232,18 @@ namespace qtuser_3d
 	Qt3DRender::QCamera* ColorPicker::camera()
 	{
 		return m_camera;
+	}
+
+	void ColorPicker::useSelfCamera()
+	{
+		m_cameraSelector->setCamera(m_camera);
+		m_cameraSelector2->setCamera(m_camera);
+	}
+
+	void ColorPicker::useCamera(Qt3DRender::QCamera* cam)
+	{
+		m_cameraSelector->setCamera(cam);
+		m_cameraSelector2->setCamera(cam);
 	}
 
 	Qt3DRender::QTexture2D* ColorPicker::colorTexture()
