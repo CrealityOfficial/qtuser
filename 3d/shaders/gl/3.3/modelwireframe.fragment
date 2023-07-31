@@ -7,6 +7,7 @@ in vec3 gnormal;
 in vec3 worldPosition;
 in vec3 worldWater;
 in vec3 barycentric;
+in vec3 gcolor;
 
 uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);
 uniform vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);
@@ -37,6 +38,7 @@ uniform vec4 customColor;
 uniform vec3 wireframeColor = vec3(0.1);
 uniform vec3 clearColor = vec3(0.27);
 uniform int renderModel = 1;
+uniform int useVertexColor = 0;
 
 uniform sampler2D textureDiffuse;
 uniform sampler2D textureAmbient;
@@ -78,7 +80,13 @@ void main( void )
 	if(varyUV.x<0.0||varyUV.y<0.0)
 	{
 		if (stateInt < 5)
+		{
 			color = stateColors[stateInt];
+			if (useVertexColor == 1 && stateInt == 0) {
+				color = vec4(gcolor, 1.0);
+			}			
+		}
+			
 		else
 			color = customColor;
 		
