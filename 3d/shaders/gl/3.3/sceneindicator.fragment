@@ -9,13 +9,16 @@ in vec3 normal;
 uniform sampler2D colorMap;
 uniform sampler2D selectMap;
 
+uniform float diffuseLowerLimit = 0.6;
+uniform float diffuseUpperLimit = 1.1;
+
 uniform float highlightFaces;
 
 void main() 
 {	
 	float diffuse = dot(normalize(normal), normalize(vec3(1.0, 1.0, 1.0)));
 	diffuse = clamp(diffuse, 0.0, 1.0);
-	diffuse = mix(0.6, 1.1, diffuse);
+	diffuse = mix(diffuseLowerLimit, diffuseUpperLimit, diffuse);
 
 	vec4 texColor = texture(colorMap, texCoord);
 
