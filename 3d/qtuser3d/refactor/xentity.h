@@ -33,6 +33,8 @@ namespace qtuser_3d
 		void removePassFilter(int passIndex, const QString& filterName, const QVariant& filterValue);
 
 		Qt3DRender::QGeometry* geometry();
+		void updateAttribute(int index, const QByteArray& bytes);
+
 		QMatrix4x4 pose();
 	protected:
 		Qt3DRender::QMaterial* m_material;

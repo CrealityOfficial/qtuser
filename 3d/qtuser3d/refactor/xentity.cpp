@@ -3,6 +3,8 @@
 #include "qtuser3d/refactor/xeffect.h"
 
 #include <QtCore/QDebug>
+#include <Qt3DRender/QAttribute>
+#include <Qt3DRender/QBuffer>
 
 namespace qtuser_3d
 {
@@ -121,6 +123,28 @@ namespace qtuser_3d
 	Qt3DRender::QGeometry* XEntity::geometry()
 	{
 		return m_geometryRenderer->geometry();
+	}
+
+
+	void XEntity::updateAttribute(int index, const QByteArray& bytes)
+	{
+		Qt3DRender::QGeometry* geom = geometry();
+		if (geom)
+		{
+			QVector<Qt3DRender::QAttribute*> attris = geom->attributes();
+			if(index >= 0 && index < attris.size())
+			{
+				Qt3DRender::QAttribute* attribute = attris.at(index);
+				attribute->buffer()->setData(bytes);
+			}
+			else
+			{
+				Qt3DRender::QBuffer* colorBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+				colorBuffer->setData(bytes);
+				int count = bytes.size() / 4;
+				geom->addAttribute(new Qt3DRender::QAttribute(colorBuffer, Qt3DRender::QAttribute::defaultColorAttributeName(), Qt3DRender::QAttribute::Float, 3, count));
+			}
+		}
 	}
 
 	QMatrix4x4 XEntity::pose()
