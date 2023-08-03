@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <file> 
+        <name><![CDATA[
+CMakeLists.txt
+		]]></name>
+	    <source><![CDATA[
+set(SRCS @name@plugin.h
+		 @name@plugin.cpp
+		 @name@flow.h
+		 @name@flow.cpp
+		 )
+		 
+add_viskernel_plugin(@name@)
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@plugin.h
+		]]></name>
+	    <source><![CDATA[
+#ifndef _@NAME@PLUGIN_@TIME@_H
+#define _@NAME@PLUGIN_@TIME@_H
+#include "viskernel/kernel/simulationplugin.h"
+
+class @Name@Plugin : public viskernel::SimulationPlugin
+{
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "@Name@Plugin")
+public:
+	@Name@Plugin(QObject* parent = nullptr);
+	virtual ~@Name@Plugin();
+
+	cxkernel::SimulationFlow* createFlow() override;
+	QString uiFile() override;
+};
+
+#endif // _@NAME@PLUGIN_@TIME@_H
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@plugin.cpp
+		]]></name>
+	    <source><![CDATA[
+#include "@name@plugin.h"
+#include "cxkernel/interface/uiinterface.h"
+#include "viskernel/interface/renderinterface.h"
+
+#include "@name@flow.h"
+
+@Name@Plugin::@Name@Plugin(QObject* parent)
+	: SimulationPlugin(parent)
+{
+}
+
+@Name@Plugin::~@Name@Plugin()
+{
+}
+
+cxkernel::SimulationFlow* @Name@Plugin::createFlow()
+{
+	return new @Name@Flow();
+}
+
+QString @Name@Plugin::uiFile()
+{
+	return QString(":/@name@/@name@.qml");
+}
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@flow.h
+		]]></name>
+	    <source><![CDATA[
+#ifndef _@NAME@_FLOW_@TIME@_H
+#define _@NAME@_FLOW_@TIME@_H
+#include "cxkernel/flow/simulationflow.h"
+
+class @Name@Flow : public cxkernel::SimulationFlow
+{
+	Q_OBJECT
+public:
+	@Name@Flow();
+	virtual ~@Name@Flow();
+
+protected:
+};
+#endif // _@NAME@_FLOW_@TIME@_H
+		]]></source>	
+    </file>
+    <file> 
+        <name><![CDATA[
+@name@flow.cpp
+		]]></name>
+	    <source><![CDATA[
+#include "@name@flow.h"
+
+@Name@Flow::@Name@Flow()
+	: SimulationFlow()
+{
+}
+
+@Name@Flow::~@Name@Flow()
+{
+
+}
+		]]></source>	
+    </file>
+</template>
