@@ -17,7 +17,8 @@ namespace qtuser_qml
 		: QObject(parent)
 		, m_item(item)
 	{
-		m_item->setAlways(true);
+		if(m_item)
+			m_item->setAlways(true);
 	}
 
 	RenderItemWrapper::~RenderItemWrapper()
@@ -25,41 +26,63 @@ namespace qtuser_qml
 
 	}
 
+	void RenderItemWrapper::setItem(GLQuickItem* item)
+	{
+		m_item = item;
+	}
+
 	void RenderItemWrapper::uninitialize()
 	{
-		m_item->eventSubdivide()->closeHandlers();
-		m_item->unRegisterAll();
+		if (m_item)
+		{
+			m_item->eventSubdivide()->closeHandlers();
+			m_item->unRegisterAll();
+		}
 	}
 
 	void RenderItemWrapper::registerResidentNode(Qt3DCore::QNode* node)
 	{
-		m_item->registerResidentNode(node);
+		if(m_item)
+			m_item->registerResidentNode(node);
 	}
 
 	void RenderItemWrapper::unRegisterResidentNode(Qt3DCore::QNode* node)
 	{
-		m_item->unRegisterResidentNode(node);
+		if (m_item)
+			m_item->unRegisterResidentNode(node);
 	}
 
 	void RenderItemWrapper::renderRenderGraph(qtuser_3d::RenderGraph* graph)
 	{
-		m_item->renderRenderGraph(graph);
-		m_item->requestUpdate();
+		if (m_item)
+		{
+			m_item->renderRenderGraph(graph);
+			m_item->requestUpdate();
+		}
 	}
 
 	void RenderItemWrapper::registerRenderGraph(qtuser_3d::RenderGraph* graph)
 	{
-		m_item->registerRenderGraph(graph);
+		if (m_item)
+		{
+			m_item->registerRenderGraph(graph);
+		}
 	}
 
 	void RenderItemWrapper::unRegisterRenderGraph(qtuser_3d::RenderGraph* graph)
 	{
-		m_item->unRegisterRenderGraph(graph);
+		if (m_item)
+		{
+			m_item->unRegisterRenderGraph(graph);
+		}
 	}
 
 	void RenderItemWrapper::renderOneFrame()
 	{
-		m_item->requestUpdate();
+		if (m_item)
+		{
+			m_item->requestUpdate();
+		}
 	}
 
 	GLQuickItem* RenderItemWrapper::glQuickItem()

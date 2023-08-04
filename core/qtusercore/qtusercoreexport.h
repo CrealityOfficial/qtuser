@@ -9,4 +9,10 @@
 #else
 #define QTUSER_CORE_API Q_DECL_IMPORT
 #endif
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	#define Q515 1
+#else
+	#define Q515 0
+#endif
 #endif // _NULLSPACE_QTUSERCORE_1588062165692_H

@@ -11,6 +11,7 @@ namespace qtuser_qml
 		RenderItemWrapper(GLQuickItem* item, QObject* parent = nullptr);
 		virtual ~RenderItemWrapper();
 
+		void setItem(GLQuickItem* item);
 		void uninitialize();
 
 		void registerResidentNode(Qt3DCore::QNode* node);
