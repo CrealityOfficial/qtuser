@@ -12,6 +12,7 @@ namespace qtuser_qml
 {
 	class QTUSER_QML_API QuickScene3DWrapper : public QObject
 	{
+		Q_OBJECT
 	public:
 		QuickScene3DWrapper(QObject* parent = nullptr);
 		virtual ~QuickScene3DWrapper();
