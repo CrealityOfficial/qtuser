@@ -47,4 +47,6 @@ list(APPEND SRCS qtusercore/module/commandcenter.cpp
 				 qtusercore/module/cyclejob.cpp
 				 qtusercore/module/fileio.h
 				 qtusercore/module/fileio.cpp
+				 qtusercore/module/quazipfile.h
+				 qtusercore/module/quazipfile.cpp
 				 )
