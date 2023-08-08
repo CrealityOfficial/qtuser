@@ -14,8 +14,8 @@ __add_real_target(qtuser_3d dll SOURCE ${SRCS}
 								INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
 								)
 
-if(INSTALL_QTUSER)
-	INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/qtuser3d DESTINATION include/ FILES_MATCHING PATTERN "*.h")
+if(CC_INSTALL_QTUSER)
+	__install_directory_specif(${CMAKE_CURRENT_SOURCE_DIR}/ qtuser_3d)
 endif()
 
 if(CC_BC_WIN AND BUILD_SHADER_TOOLS)

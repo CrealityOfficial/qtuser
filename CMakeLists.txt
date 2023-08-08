@@ -1,5 +1,9 @@
 set(CMAKE_CXX_STANDARD 14)
 
+if(NOT TARGET Qt5::Core)
+	__enable_qt5()
+endif()
+
 add_subdirectory(core)
 
 set(build_libs qtuser_core)

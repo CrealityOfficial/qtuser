@@ -12,3 +12,6 @@ __add_real_target(qtuser_qml dll SOURCE ${SRCS} ${RCC_SRC}
 								 INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
 								 )
 
+if(CC_INSTALL_QTUSER)
+	__install_directory_specif(${CMAKE_CURRENT_SOURCE_DIR}/ qtuser_qml)
+endif()

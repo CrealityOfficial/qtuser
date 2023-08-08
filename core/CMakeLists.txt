@@ -26,6 +26,6 @@ __add_real_target(qtuser_core dll SOURCE ${SRCS}
 								  SOURCE_FOLDER
 								  )
 
-if(INSTALL_QTUSER)
-	INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/qtusercore DESTINATION include/ FILES_MATCHING PATTERN "*.h")
+if(CC_INSTALL_QTUSER)
+	__install_directory_specif(${CMAKE_CURRENT_SOURCE_DIR}/ qtuser_core)
 endif()

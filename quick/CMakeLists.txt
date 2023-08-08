@@ -15,3 +15,7 @@ __add_real_target(qtuser_quick dll SOURCE ${SRCS}
 								   FOLDER qtuser
 								   SOURCE_FOLDER
 								   )
+								   
+if(CC_INSTALL_QTUSER)
+	__install_directory_specif(${CMAKE_CURRENT_SOURCE_DIR}/ qtuser_quick)
+endif()
