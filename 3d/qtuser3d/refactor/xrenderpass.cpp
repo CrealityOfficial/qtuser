@@ -124,4 +124,12 @@ namespace qtuser_3d
 		Qt3DRender::QNoDepthMask* state = new Qt3DRender::QNoDepthMask(this);
 		addRenderState(state);
 	}
+
+	void XRenderPass::setPointSize(float size)
+	{
+		Qt3DRender::QPointSize* pSize = new Qt3DRender::QPointSize(this);
+		pSize->setSizeMode(Qt3DRender::QPointSize::Fixed);
+		pSize->setValue(size);
+		addRenderState(pSize);
+	}
 }

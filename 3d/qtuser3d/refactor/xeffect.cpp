@@ -176,4 +176,13 @@ namespace qtuser_3d
 			pass->setPassNoDepthMask();
 		}
 	}
+
+	void XEffect::setPointSize(int index, float size)
+	{
+		XRenderPass* pass = findRenderPass(index);
+		if (pass)
+		{
+			pass->setPointSize(size);
+		}
+	}
 }

@@ -22,6 +22,8 @@ namespace qtuser_3d
 
 		Qt3DRender::QParameter* setParameter(const QString& name, const QVariant& value);
 		void setEffect(XEffect* effect);
+		XEffect* xeffect();
+
 		void setPose(const QMatrix4x4& matrix);
 		void setModelMatrix(const QMatrix4x4& matrix);
 

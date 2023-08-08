@@ -29,6 +29,8 @@ namespace qtuser_qml
 	void RenderItemWrapper::setItem(GLQuickItem* item)
 	{
 		m_item = item;
+		if (m_item)
+			m_item->setAlways(true);
 	}
 
 	void RenderItemWrapper::uninitialize()

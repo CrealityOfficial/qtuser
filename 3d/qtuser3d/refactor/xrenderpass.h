@@ -12,6 +12,7 @@
 #include <Qt3DRender/QStencilMask>
 #include <Qt3DRender/QStencilOperation>
 #include <Qt3DRender/QStencilTest>
+#include <Qt3DRender/QPointSize>
 
 namespace qtuser_3d
 {
@@ -39,6 +40,8 @@ namespace qtuser_3d
 
 		void setPassDepthTest(Qt3DRender::QDepthTest::DepthFunction depthFunc = Qt3DRender::QDepthTest::Less);
 		void setPassNoDepthMask();
+
+		void setPointSize(float size);
 	};
 }
 

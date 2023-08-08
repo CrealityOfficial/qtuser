@@ -54,6 +54,11 @@ namespace qtuser_3d
 		m_material->setEffect(effect);
 	}
 
+	XEffect* XEntity::xeffect()
+	{
+		return qobject_cast<XEffect*>(m_material->effect());
+	}
+
 	void XEntity::setPose(const QMatrix4x4& matrix)
 	{
 		m_transform->setMatrix(matrix);

@@ -35,6 +35,8 @@ namespace qtuser_3d
 
 		void setPassDepthTest(int index, Qt3DRender::QDepthTest::DepthFunction depthFunc = Qt3DRender::QDepthTest::Less);
 		void setPassNoDepthMask(int index);
+
+		void setPointSize(int index, float size);
 	protected:
 		XRenderPass* findRenderPass(int index);
 	protected:
