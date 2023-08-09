@@ -1,0 +1,12 @@
+#version 300 es 
+precision mediump float;
+
+flat in vec4 passColor;
+in vec3 passVert;
+
+out vec4 fragColor;
+
+void main()
+{
+	fragColor = passColor;
+}

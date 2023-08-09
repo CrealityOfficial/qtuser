@@ -13,14 +13,25 @@ namespace qtuser_3d
 
 		void setColor(const QVector4D& color);
 		void setChangeColor(const QVector4D& color);
-		void setMethod(int mt);
+		void setChangeColorEnabled(bool enable);
 		void setLightEnable(bool flag);
+
+		void resetColor();
+		void changeColor();
+		
+	protected slots:
+		void slotStateChanged(ControlState newState);
 
 	protected:
 		Qt3DRender::QParameter* m_colorParameter;
-		Qt3DRender::QParameter* m_changeColorParameter;
+		//Qt3DRender::QParameter* m_changeColorParameter;
 		Qt3DRender::QParameter* m_methodParameter;
 		Qt3DRender::QParameter* m_lightEnableParameter;
+
+		QVector4D m_color;
+		QVector4D m_changeColor;
+		bool m_isChangeColorEnabled;
+
 	};
 }
 #endif // _QTUSER_3D_MANIPULATEENTITY_1590036879870_H

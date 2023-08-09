@@ -7,7 +7,7 @@ namespace qtuser_3d
 		, m_pickable(nullptr)
 	{
 		m_vertexBaseParameter = setParameter("vertexBase", QPoint(0, 0));
-		m_stateParameter = setParameter("state", 0);
+		//m_stateParameter = setParameter("state", 0);
 
 		Pickable* pickable = new Pickable(this);
 		pickable->setNoPrimitive(true);
@@ -31,6 +31,7 @@ namespace qtuser_3d
 		if (m_pickable)
 		{
 			disconnect(m_pickable, SIGNAL(signalStateChanged(ControlState)), this, SLOT(slotStateChanged(ControlState)));
+			disconnect(m_pickable, SIGNAL(signalStateChanged(ControlState)), this, SIGNAL(signalStateChanged(ControlState)));
 			disconnect(m_pickable, SIGNAL(signalFaceBaseChanged(int)), this, SLOT(slotFaceBaseChanged(int)));
 			delete m_pickable;
 		}
@@ -39,6 +40,11 @@ namespace qtuser_3d
 		if (m_pickable)
 		{
 			connect(m_pickable, SIGNAL(signalStateChanged(ControlState)), this, SLOT(slotStateChanged(ControlState)));
+			connect(m_pickable, SIGNAL(signalStateChanged(ControlState)), this, SIGNAL(signalStateChanged(ControlState)));
+			connect(m_pickable, SIGNAL(signalStateChanged(ControlState)), this, SIGNAL(signalStateChanged(ControlState)));
+			connect(m_pickable, &Pickable::signalStateChanged, this, [=](ControlState state) {
+				emit signalStateChanged(state);
+				});
 			connect(m_pickable, SIGNAL(signalFaceBaseChanged(int)), this, SLOT(slotFaceBaseChanged(int)));
 
 			m_pickable->signalStateChanged(m_pickable->state());
@@ -48,7 +54,12 @@ namespace qtuser_3d
 
 	void PickXEntity::setVisualState(qtuser_3d::ControlState state)
 	{
-		m_stateParameter->setValue((int)state);
+		if (!m_pickable)
+			return;
+
+		m_pickable->setState(state);
+
+		//m_stateParameter->setValue((int)state);
 	}
 
 	void PickXEntity::setVisualVertexBase(const QPoint& vertexBase)

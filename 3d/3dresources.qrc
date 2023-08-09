@@ -1,20 +1,10 @@
 <RCC>
     <qresource prefix="/renderhelper">
-        <file>shaders/manipulate.frag</file>
-        <file>shaders/manipulate.vert</file>
-        <file>shaders/model.frag</file>
-        <file>shaders/model.vert</file>
 		<file>shaders/modelwireframe.frag</file>
 		<file>shaders/modelwireframe.vert</file>
 		<file>shaders/modelwireframe.geom</file>
-        <file>shaders/modelline.frag</file>
-        <file>shaders/modelline.vert</file>
         <file>shaders/support.frag</file>
         <file>shaders/support.vert</file>
-		<file>shaders/supportshow.frag</file>
-        <file>shaders/supportshow.vert</file>
-        <file>shaders/finephong.frag</file>
-        <file>shaders/finephong.vert</file>
         <file>shaders/pure.frag</file>
         <file>shaders/pure.vert</file>
         <file>shaders/color.frag</file>
@@ -23,63 +13,25 @@
         <file>shaders/pickFace.vert</file>
         <file>shaders/pickFaceFlag.frag</file>
         <file>shaders/pickFaceFlag.vert</file>
-        <file>shaders/pickFaceChunk.frag</file>
-        <file>shaders/pickFaceChunk.vert</file>
-        <file>shaders/slicepreviewNoTess.vert</file>
-        <file>shaders/slicepreviewNoTess.frag</file>
-        <file>shaders/slicepreview.vert</file>
-        <file>shaders/slicepreview.frag</file>
-        <file>shaders/gcodepreview.vert</file>
-        <file>shaders/gcodepreview.frag</file>
         <file>shaders/gcodepreviewG.vert</file>
         <file>shaders/gcodepreviewG.frag</file>
 		<file>shaders/gcodepreviewG.geom</file>
-        <file>shaders/slicepreviewAD.vert</file>
-        <file>shaders/slicepreviewAD.frag</file>
         <file>shaders/printergrid.vert</file>
         <file>shaders/printergrid.frag</file>
-        <file>shaders/text.vert</file>
-        <file>shaders/text.frag</file>
-        <file>shaders/tex.vert</file>
-        <file>shaders/tex.frag</file>
-        <file>shaders/texshape.vert</file>
-        <file>shaders/texshape.frag</file>
-        <file>shaders/modelSupport.frag</file>
-        <file>shaders/modelSupport.vert</file>
         <file>shaders/splitplane.frag</file>
         <file>shaders/splitplane.vert</file>
-        <file>shaders/modelselect.frag</file>
-        <file>shaders/modelselect.vert</file>
-        <file>shaders/modelsimple.frag</file>
-        <file>shaders/modelsimple.vert</file>
+        <file>shaders/phong.fragment</file>
+        <file>shaders/phong.vert</file>
         <file>shaders/supportpos.frag</file>
         <file>shaders/supportpos.vert</file>
         <file>shaders/printerbottom.frag</file>
         <file>shaders/printerbottom.vert</file>
-		<file>shaders/slicepreviewpath.vert</file>
-		<file>shaders/slicepreviewpath.frag</file>
-		<file>shaders/admodel.vert</file>
-		<file>shaders/admodel.frag</file>
-		<file>shaders/bottomface.vert</file>
-		<file>shaders/bottomface.frag</file>
-		<file>shaders/chunk.vert</file>
-		<file>shaders/chunk.frag</file>
-		<file>shaders/finephongtex.vert</file>
-		<file>shaders/finephongtex.frag</file>
-		<file>shaders/moon.vert</file>
-		<file>shaders/moon.frag</file>
-		<file>shaders/photo.vert</file>
-		<file>shaders/photo.frag</file>
 		<file>shaders/dlpsupportindicator.vert</file>
 		<file>shaders/dlpsupportindicator.fragment</file>
-		<file>shaders/boxclippure.vert</file>
-		<file>shaders/boxclippure.fragment</file>
 		<file>shaders/modeldlp.vert</file>
 		<file>shaders/modeldlp.fragment</file>
         <file>shaders/zproject.vert</file>
         <file>shaders/zproject.frag</file>
-		<file>shaders/glcomp1.vert</file>
-		<file>shaders/glcomp1.fragment</file>
 		<file>shaders/piefade.vert</file>
 		<file>shaders/piefade.frag</file>
         <file>shaders/overlay.vert</file>

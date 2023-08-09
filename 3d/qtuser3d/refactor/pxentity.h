@@ -8,6 +8,9 @@ namespace qtuser_3d
 	class QTUSER_3D_API PickXEntity : public XEntity
 	{
 		Q_OBJECT
+	signals:
+		void signalStateChanged(ControlState newState);
+
 	public:
 		PickXEntity(Qt3DCore::QNode* parent = nullptr);
 		virtual ~PickXEntity();
