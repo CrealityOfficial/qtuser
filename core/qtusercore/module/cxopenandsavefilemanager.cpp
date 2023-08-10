@@ -11,7 +11,7 @@
 #include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QSettings>
 #include "ccglobal/platform.h"
-
+#include <QtCore/QStandardPaths>
 namespace qtuser_core
 {
 
@@ -407,6 +407,7 @@ namespace qtuser_core
 	bool CXFileOpenAndSaveManager::saveWithName(const QString& fileName)
 	{
 		m_lastSaveFile = fileName;
+		qDebug() << "saveWithName =" << m_lastSaveFile;
 		if (m_externalHandler)
 		{
 			m_externalHandler->handle(fileName);
@@ -617,6 +618,7 @@ namespace qtuser_core
 
 	void CXFileOpenAndSaveManager::openLastSaveFolder()
 	{
+		qDebug() << "openLastSaveFolder =" <<m_lastSaveFile;
 		QFileInfo fileInfo(m_lastSaveFile);
 		openFolder(fileInfo.absolutePath());
 	}
@@ -699,6 +701,10 @@ namespace qtuser_core
 			return;
 		QSettings setting;
 		QString lastPath = setting.value("dialogLastPath", "").toString() + "/" + defaultName;
+#ifdef Q_OS_OSX	
+		lastPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)+ "/" + defaultName;
+#endif
+		qDebug() <<  "lastPath =" << lastPath;
 #ifdef Q_OS_LINUX
 		QString fileName = QFileDialog::getSaveFileName(
 			nullptr, title,
@@ -708,6 +714,7 @@ namespace qtuser_core
 			nullptr, title,
 			lastPath, filter);
 #endif
+
 		if (fileName.isEmpty())
 			return;
 		QFileInfo fileinfo = QFileInfo(fileName);
