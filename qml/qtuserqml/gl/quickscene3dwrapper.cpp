@@ -1,20 +1,34 @@
 #include "quickscene3dwrapper.h"
+#include <QOpenGLContext>
+#include <QtCore/QThread>
+
 #include "qtuser3d/framegraph/xrendergraph.h"
+//#include <Qt3DInput/QInputSettings>
+#include "qtuserqml/gl/rawogl.h"
 
 namespace qtuser_qml
 {
 	QuickScene3DWrapper::QuickScene3DWrapper(QObject* parent)
 		: QObject(parent)
 		, m_scene3D(nullptr)
+		, m_always(false)
 	{
 		m_root = new Qt3DCore::QEntity();
 		m_renderSettings = new Qt3DRender::QRenderSettings(m_root);
-		m_defaultFG = new Qt3DRender::QFrameGraphNode(m_root);
-
+		m_renderSettings->setRenderPolicy(Qt3DRender::QRenderSettings::OnDemand);
 		m_root->addComponent(m_renderSettings);
+		
+		//m_root->addComponent(new Qt3DInput::QInputSettings(m_root));
+
+		m_defaultFG = new Qt3DRender::QFrameGraphNode(m_root);
 		m_renderSettings->setActiveFrameGraph(m_defaultFG);
 
 		m_eventSubdivide = new qtuser_3d::EventSubdivide(this);
+
+		m_rawOGL = new qtuser_qml::RawOGL(this);
+		qDebug() << "windows GLQuickItem  -->" << QThread::currentThread();
+
+		//setSharedContext(QOpenGLContext::currentContext());
 	}
 
 	QuickScene3DWrapper::~QuickScene3DWrapper()
@@ -139,6 +153,35 @@ namespace qtuser_qml
 			graph->updateRenderSize(size);
 
 		requestUpdate();
+	}
+
+	void QuickScene3DWrapper::setAlways(bool always)
+	{
+		m_always = always;
+		m_renderSettings->setRenderPolicy(always ? Qt3DRender::QRenderSettings::Always : Qt3DRender::QRenderSettings::OnDemand);
+	}
+
+	bool QuickScene3DWrapper::always()
+	{
+		return m_always;
+	}
+
+
+	void QuickScene3DWrapper::setSharedContext(QOpenGLContext* context)
+	{
+		m_sharedContext = context;
+		m_rawOGL->init(m_sharedContext);
+		assert(m_sharedContext);
+	}
+
+	QOpenGLContext* QuickScene3DWrapper::sharedContext()
+	{
+		return m_sharedContext;
+	}
+
+	qtuser_qml::RawOGL* QuickScene3DWrapper::rawOGL()
+	{
+		return m_rawOGL;
 	}
 
 	//void GLQuickItem::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry)

@@ -117,7 +117,11 @@ namespace qtuser_3d
 		qDebug() << "ColorPicker::captureCompleted";
 #endif
 		m_colorPickerImage = m_captureReply->image();
-        m_captureReply.reset();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+		//m_captureReply.reset();
+#else
+		m_captureReply.reset();
+#endif
         m_updateTimer->stop();
 		if (m_requestCallback)
 		{

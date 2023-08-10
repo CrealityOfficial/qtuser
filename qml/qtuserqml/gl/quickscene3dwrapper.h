@@ -8,6 +8,13 @@
 #include <Qt3DRender/QRenderSettings>
 #include <Qt3DRender/QFrameGraphNode>
 
+class QOpenGLContext;
+
+namespace qtuser_qml
+{
+	class RawOGL;
+}
+
 namespace qtuser_qml
 {
 	class QTUSER_QML_API QuickScene3DWrapper : public QObject
@@ -29,12 +36,24 @@ namespace qtuser_qml
 
 		qtuser_3d::EventSubdivide* eventSubdivide();
 
+		QOpenGLContext* sharedContext();
+		qtuser_qml::RawOGL* rawOGL();
+
+		void setAlways(bool always);
+		bool always();
+
 	public slots:
 		void requestUpdate();
 	protected:
 		Q_INVOKABLE void _geometry(int width, int height);
+
+		void setSharedContext(QOpenGLContext* context);
+
 	protected:
 		QObject* m_scene3D;
+
+		QOpenGLContext* m_sharedContext;
+		qtuser_qml::RawOGL* m_rawOGL;
 
 		qtuser_3d::EventSubdivide* m_eventSubdivide;
 
@@ -43,6 +62,7 @@ namespace qtuser_qml
 		Qt3DRender::QFrameGraphNode* m_defaultFG;
 
 		QList<qtuser_3d::RenderGraph*> m_registerRenderGraph;
+		bool m_always;
 	};
 }
 
