@@ -7,7 +7,7 @@ namespace qtuser_3d
 	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, bool alpha, bool pickable, bool depthTest, bool overlay)
 		:PickXEntity(parent)
 	{
-		XRenderPass* showPass = new XRenderPass("phong", this);
+		XRenderPass* showPass = new XRenderPass("manipulate", this);
 		Qt3DRender::QFilterKey* showFilterKey = new Qt3DRender::QFilterKey(showPass);
 		showFilterKey->setValue(0);
 		showFilterKey->setName("view");
@@ -37,16 +37,10 @@ namespace qtuser_3d
 		effect->addRenderPass(pickPass);
 		setEffect(effect);
 
-		m_color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
-		m_changeColor = QVector4D(0.0f, 0.0f, 0.0f, 0.0f);
-		m_colorParameter = setParameter("color", m_color);
-
-		m_isChangeColorEnabled = true;
-
+		m_colorParameter = setParameter("color", QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
+		m_changeColorParameter = setParameter("changecolor", QVector4D(0.0f, 0.0f, 0.0f, 0.0f));
+		m_methodParameter = setParameter("mt", 0);
 		m_lightEnableParameter = setParameter("lightEnable", 0);
-
-		connect(this, &PickXEntity::signalStateChanged, this, &ManipulateEntity::slotStateChanged);
-
 	}
 
 	ManipulateEntity::~ManipulateEntity()
@@ -56,43 +50,21 @@ namespace qtuser_3d
 
 	void ManipulateEntity::setColor(const QVector4D& color)
 	{
-		m_color = color;
-		resetColor();
+		m_colorParameter->setValue(color);
 	}
 
 	void ManipulateEntity::setChangeColor(const QVector4D& color)
 	{
-		m_changeColor = color;
-		changeColor();
+		m_changeColorParameter->setValue(color);
 	}
 
-	void ManipulateEntity::setChangeColorEnabled(bool enable)
+	void ManipulateEntity::setMethod(int mt)
 	{
-		m_isChangeColorEnabled = enable;
-		changeColor();
+		m_methodParameter->setValue(mt);
 	}
 
 	void ManipulateEntity::setLightEnable(bool flag)
 	{
 		m_lightEnableParameter->setValue(flag);
-	}
-
-	void ManipulateEntity::resetColor()
-	{
-		m_colorParameter->setValue(m_color);
-	}
-
-	void ManipulateEntity::changeColor()
-	{
-		if (m_isChangeColorEnabled)
-			m_colorParameter->setValue(m_changeColor);
-	}
-
-	void ManipulateEntity::slotStateChanged(ControlState newState)
-	{
-		if ((bool)newState)
-			resetColor();
-		else
-			changeColor();
 	}
 }

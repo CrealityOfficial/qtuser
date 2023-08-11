@@ -11,7 +11,7 @@ namespace qtuser_3d {
 	{
 		setGeometry(PRIMITIVESHAPE("pen"));
 		
-		XRenderPass* pass = new XRenderPass("phong", this);
+		XRenderPass* pass = new XRenderPass("modelsimple", this);
 		pass->addFilterKeyMask("view", 0);
 		pass->setPassBlend(Qt3DRender::QBlendEquationArguments::One, Qt3DRender::QBlendEquationArguments::Zero);
 		pass->setPassCullFace(Qt3DRender::QCullFace::NoCulling);
@@ -19,13 +19,6 @@ namespace qtuser_3d {
 		XEffect* effect = new XEffect(this);
 		effect->addRenderPass(pass);
 		setEffect(effect);
-
-		pass->setParameter("color", QVariant::fromValue(QVector4D(0.8, 0.5, 0.8, 1.0)));
-		pass->setParameter("ambient", QVariant::fromValue(QVector4D(0.4, 0.4, 0.4, 1.0)));
-		pass->setParameter("diffuse", QVariant::fromValue(QVector4D(0.6, 0.6, 0.6, 1.0)));
-		pass->setParameter("specular", QVariant::fromValue(QVector4D(0.125, 0.125, 0.125, 1.0)));
-		pass->setParameter("specularPower", QVariant::fromValue(12.0));
-
 	}
 	
 	NozzleEntity::~NozzleEntity()

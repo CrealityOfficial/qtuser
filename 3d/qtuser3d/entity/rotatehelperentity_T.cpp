@@ -100,7 +100,7 @@ namespace qtuser_3d
 		QMatrix4x4 m;
 		m.scale(m_scale);
 
-		// ç»†æ¡ç¯çŠ¶æ—‹è½¬è½¨åˆå§‹åŒ–
+		// Ï¸Ìõ»·×´Ğı×ª¹ì³õÊ¼»¯
 		m_pRingEntity = new PieFadeEntity(m_pNoRotateGroup);
 		m_pRingEntity->setObjectName("RotateHelperEntity_T.ringEntity");
 		m_pRingEntity->setPose(m);
@@ -128,17 +128,17 @@ namespace qtuser_3d
 		m.translate(m_handlerOffset * m_initRotateDir);
 		m.rotate(90.0, m_initRotateDir);
 
-		// æ—‹è½¬æ‰‹æŸ„åˆå§‹åŒ–
+		// Ğı×ªÊÖ±ú³õÊ¼»¯
 		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, false, true, true, true);
 
 		m_pHandlerEntity->setObjectName("RotateHelperEntity_T.handleEntity");
 		m_pHandlerEntity->setPose(m);
 		m_pHandlerEntity->setColor(m_handlerColor);
 		m_pHandlerEntity->setChangeColor(m_handlerPickedColor);
-		m_pHandlerEntity->setChangeColorEnabled(1);
+		m_pHandlerEntity->setMethod(1);
 		m_pHandlerEntity->setLightEnable(true);
 
-		// æ„å»ºæ‰‹æŸ„æ¨¡å‹æ•°æ®
+		// ¹¹½¨ÊÖ±úÄ£ĞÍÊı¾İ
 		double bottomRadius = m_ringRadius / 27.0;
 		double coneHeight = m_ringRadius * 2.0 / 24.0;
 		double cylinderHeight = m_ringRadius * 1.8 / 24.0;
@@ -159,7 +159,7 @@ namespace qtuser_3d
 		std::vector<float> positions;
 		std::vector<float> normals;
 
-		// ä¸Šåœ†é”¥
+		// ÉÏÔ²×¶
 		{
 			QVector3D topCenter(0.0f, 0.0f, (float)(coneHeight + gapLength + cylinderHeight / 2.0));
 			QVector3D bottomCenter(0.0f, 0.0f, (float)(gapLength + cylinderHeight / 2.0));
@@ -196,12 +196,12 @@ namespace qtuser_3d
 			}
 		}
 
-		// ä¸­é—´åœ†æŸ±
+		// ÖĞ¼äÔ²Öù
 		{
 			QVector3D topCenter(0.0f, 0.0f, (float)(cylinderHeight / 2.0));
 			QVector3D bottomCenter(0.0f, 0.0f, -(float)(cylinderHeight / 2.0));
 
-			// ä¸Šä¸‹åº•é¢
+			// ÉÏÏÂµ×Ãæ
 			for (int i = 0; i < roundDirs.size(); i++)
 			{
 				int iNext = i < roundDirs.size() - 1 ? i + 1 : 0;
@@ -250,7 +250,7 @@ namespace qtuser_3d
 			}
 		}
 
-		// ä¸‹åœ†é”¥
+		// ÏÂÔ²×¶
 		{
 			QVector3D topCenter(0.0f, 0.0f, -(float)(coneHeight + gapLength + cylinderHeight / 2.0));
 			QVector3D bottomCenter(0.0f, 0.0f, - (float)(gapLength + cylinderHeight / 2.0));
@@ -302,7 +302,7 @@ namespace qtuser_3d
 		QMatrix4x4 m;
 		m.scale(m_scale);
 
-		// åˆ»åº¦ç›˜åˆå§‹åŒ–ï¼ˆåŠé€æ˜ã€æ‰‡å½¢ï¼‰
+		// ¿Ì¶ÈÅÌ³õÊ¼»¯£¨°ëÍ¸Ã÷¡¢ÉÈĞÎ£©
 		m_pDialEntity = new PieFadeEntity(m_pRotateGroup);
 		m_pDialEntity->setObjectName("RotateHelperEntity_T.dialEntity");
 		m_pDialEntity->setPose(m);
@@ -313,7 +313,7 @@ namespace qtuser_3d
 		m_pDialEntity->setRotAxis(m_rotateAxis);
 		m_pDialEntity->setPassBlend();
 
-		// æ„å»ºåˆ»åº¦ç›˜æ¨¡å‹æ•°æ®
+		// ¹¹½¨¿Ì¶ÈÅÌÄ£ĞÍÊı¾İ
 		double radius = m_dialRadius;
 
 		int split = 20;
@@ -331,7 +331,7 @@ namespace qtuser_3d
 		std::vector<float> normalsDial;
 		std::vector<int> indicesDial;
 
-		// åœ†ç›˜
+		// Ô²ÅÌ
 		{
 			int centerIndex = positionsDial.size() / 3;
 			QVector3D roundCenter(0.0, 0.0, 0.0);
@@ -375,16 +375,16 @@ namespace qtuser_3d
 		m_pDialEntity->setGeometry(dialGeo);
 
 
-		// åˆ»åº¦åˆå§‹åŒ–ï¼ˆç™½è‰²ï¼‰
+		// ¿Ì¶È³õÊ¼»¯£¨°×É«£©
 		m_pDegreeEntity = new ManipulateEntity(nullptr, true, false, false);
 		m_pDegreeEntity->setObjectName("RotateHelperEntity_T.degreeEntity");
 		m_pDegreeEntity->setPose(m);
 		m_pDegreeEntity->setColor(m_degreeColor);
 		m_pDegreeEntity->setChangeColor(m_degreeColor);
 		m_pDegreeEntity->setLightEnable(false);
-		m_pDegreeEntity->setChangeColorEnabled(0);
+		m_pDegreeEntity->setMethod(0);
 
-		// æ„å»ºåˆ»åº¦æ¨¡å‹æ•°æ®
+		// ¹¹½¨¿Ì¶ÈÄ£ĞÍÊı¾İ
 		double degreeRadius = m_degreeRadius;
 		double markOffset = m_markOffset;
 
@@ -404,7 +404,7 @@ namespace qtuser_3d
 		std::vector<int> indicesDegree;
 
 		{
-			// å°†åˆ»åº¦å’Œåˆ»åº¦ç›˜è½»å¾®çš„é”™å¼€ï¼Œä»¥é¿å…æ¸²æŸ“ä¸Šçš„ç›¸äº’å½±å“
+			// ½«¿Ì¶ÈºÍ¿Ì¶ÈÅÌÇáÎ¢µÄ´í¿ª£¬ÒÔ±ÜÃâäÖÈ¾ÉÏµÄÏà»¥Ó°Ïì
 			QVector3D roundCenter(0.0, 0.0, 0.001);
 			std::vector<int> roundEdgeVIndices;
 			for (int i = 0; i < roundDirs.size(); i++)
@@ -441,7 +441,7 @@ namespace qtuser_3d
 		m_pDegreeEntity->setGeometry(degreeGeo, Qt3DRender::QGeometryRenderer::Lines);
 
 
-		// æ‹¾å–å™¨åˆå§‹åŒ–
+		// Ê°È¡Æ÷³õÊ¼»¯
 		//m_pDialPickable = new ManipulatePickable(this);
 		//m_pDialPickable->setPickableEntity(m_pHandleEntity);
 		//m_pDialPickable->setShowEntity(m_pHandleEntity);

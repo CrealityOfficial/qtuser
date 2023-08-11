@@ -42,6 +42,8 @@
         <file>shaders/pickindicator.frag</file>
         <file>shaders/pointInGcode.vert</file>
         <file>shaders/pointInGcode.frag</file>
+        <file>shaders/manipulate.vert</file>
+        <file>shaders/manipulate.fragment</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
