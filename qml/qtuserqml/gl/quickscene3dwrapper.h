@@ -24,7 +24,18 @@ namespace qtuser_qml
 		QuickScene3DWrapper(QObject* parent = nullptr);
 		virtual ~QuickScene3DWrapper();
 
+		Q_INVOKABLE void setRatio(float ratio);
+
 		Q_INVOKABLE void bindScene3D(QObject* scene3d);
+		Q_INVOKABLE void sendMousePressEvent(int x, int y, int buttonId);
+		Q_INVOKABLE void sendMouseReleaseEvent(int x, int y, int buttonId);
+		Q_INVOKABLE void sendMouseMoveEvent(int x, int y, int buttonId);
+		Q_INVOKABLE void sendWheelEventEvent(int x, int y, int globalX, int globalY, int delta, int buttons, int modifiers);
+		Q_INVOKABLE void sendHoverEnterEvent(int x, int y, int oldX, int oldY, int modifiers);
+		Q_INVOKABLE void sendHoverMoveEvent(int x, int y, int oldX, int oldY, int modifiers);
+		Q_INVOKABLE void sendHoverLeaveEvent(int x, int y, int oldX, int oldY, int modifiers);
+		Q_INVOKABLE void sendKeyPressEvent(int key, int modifiers);
+		Q_INVOKABLE void sendKeyReleaseEvent(int key, int modifiers);
 
 		void renderRenderGraph(qtuser_3d::RenderGraph* graph);
 		void registerRenderGraph(qtuser_3d::RenderGraph* graph);
@@ -56,6 +67,7 @@ namespace qtuser_qml
 		qtuser_qml::RawOGL* m_rawOGL;
 
 		qtuser_3d::EventSubdivide* m_eventSubdivide;
+		float m_ratio{ 1 };
 
 		Qt3DCore::QEntity* m_root;
 		Qt3DRender::QRenderSettings* m_renderSettings;

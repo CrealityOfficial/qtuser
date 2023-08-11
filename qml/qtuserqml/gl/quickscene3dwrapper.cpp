@@ -5,6 +5,11 @@
 #include "qtuser3d/framegraph/xrendergraph.h"
 //#include <Qt3DInput/QInputSettings>
 #include "qtuserqml/gl/rawogl.h"
+#include <QMouseEvent>
+#include <QWheelEvent>
+#include <QKeyEvent>
+#include <QDebug>
+#include <QPointF>
 
 namespace qtuser_qml
 {
@@ -36,6 +41,11 @@ namespace qtuser_qml
 		m_eventSubdivide->closeHandlers();
 	}
 
+	void QuickScene3DWrapper::setRatio(float ratio)
+	{
+		m_ratio = ratio;
+	}
+
 	void QuickScene3DWrapper::bindScene3D(QObject* scene3d)
 	{
 		m_scene3D = scene3d;
@@ -43,6 +53,77 @@ namespace qtuser_qml
 		{
 			QMetaObject::invokeMethod(m_scene3D, "setEntity", Qt::AutoConnection, Q_ARG(Qt3DCore::QEntity*, m_root));
 		}
+	}
+
+	void QuickScene3DWrapper::sendMousePressEvent(int x, int y, int buttonId)
+	{
+		QMouseEvent event(QEvent::MouseButtonPress, QPoint(x, y), (Qt::MouseButton)buttonId, (Qt::MouseButtons)buttonId, Qt::NoModifier);
+		QPoint pt = event.pos();
+		pt.rx() *= m_ratio;
+		pt.ry() *= m_ratio;
+		event.setLocalPos(pt);
+		m_eventSubdivide->mousePressEvent(&event);
+		qDebug() << "cpp get : " << event.localPos() << event.buttons();
+	}
+
+	void QuickScene3DWrapper::sendMouseReleaseEvent(int x, int y, int buttonId)
+	{
+		QMouseEvent event(QEvent::MouseButtonRelease, QPoint(x, y), (Qt::MouseButton)buttonId, (Qt::MouseButtons)buttonId, Qt::NoModifier);
+		QPoint pt = event.pos();
+		pt.rx() *= m_ratio;
+		pt.ry() *= m_ratio;
+		event.setLocalPos(pt);
+		m_eventSubdivide->mouseReleaseEvent(&event);
+		qDebug() << "cpp get : " << event.localPos() << event.buttons();
+	}
+
+	void QuickScene3DWrapper::sendMouseMoveEvent(int x, int y, int buttonId)
+	{
+		QMouseEvent event(QEvent::MouseMove, QPoint(x, y), (Qt::MouseButton)buttonId, (Qt::MouseButtons)buttonId, Qt::NoModifier);
+		QPoint pt = event.pos();
+		pt.rx() *= m_ratio;
+		pt.ry() *= m_ratio;
+		event.setLocalPos(pt);
+		m_eventSubdivide->mouseMoveEvent(&event);
+		qDebug() << "cpp get : " << event.localPos() << event.buttons();
+	}
+
+	void QuickScene3DWrapper::sendWheelEventEvent(int x, int y, int globalX, int globalY, int delta, int buttons, int modifiers)
+	{
+		QPointF p(x * m_ratio, y * m_ratio);
+		QPointF globalPos(globalX, globalY);
+		QWheelEvent event(p, globalPos, delta * m_ratio, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers, Qt::Vertical);
+		m_eventSubdivide->wheelEvent(&event);
+	}
+
+	void QuickScene3DWrapper::sendHoverEnterEvent(int x, int y, int oldX, int oldY, int modifiers)
+	{
+		QHoverEvent event(QEvent::HoverEnter, QPointF(x, y) * m_ratio, QPointF(oldX, oldY) * m_ratio, (Qt::KeyboardModifiers)modifiers);
+		m_eventSubdivide->hoverEnterEvent(&event);
+	}
+
+	void QuickScene3DWrapper::sendHoverMoveEvent(int x, int y, int oldX, int oldY, int modifiers)
+	{
+		QHoverEvent event(QEvent::HoverMove, QPointF(x, y) * m_ratio, QPointF(oldX, oldY) * m_ratio, (Qt::KeyboardModifiers)modifiers);
+		m_eventSubdivide->hoverEnterEvent(&event);
+	}
+
+	void QuickScene3DWrapper::sendHoverLeaveEvent(int x, int y, int oldX, int oldY, int modifiers)
+	{
+		QHoverEvent event(QEvent::HoverLeave, QPointF(x, y) * m_ratio, QPointF(oldX, oldY) * m_ratio, (Qt::KeyboardModifiers)modifiers);
+		m_eventSubdivide->hoverEnterEvent(&event);
+	}
+
+	void QuickScene3DWrapper::sendKeyPressEvent(int key, int modifiers)
+	{
+		QKeyEvent event(QEvent::KeyPress, key, (Qt::KeyboardModifiers)modifiers);
+		m_eventSubdivide->keyPressEvent(&event);
+	}
+
+	void QuickScene3DWrapper::sendKeyReleaseEvent(int key, int modifiers)
+	{
+		QKeyEvent event(QEvent::KeyPress, key, (Qt::KeyboardModifiers)modifiers);
+		m_eventSubdivide->keyPressEvent(&event);
 	}
 
 	void QuickScene3DWrapper::renderRenderGraph(qtuser_3d::RenderGraph* graph)
