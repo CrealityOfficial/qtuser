@@ -13,8 +13,8 @@
 
 namespace qtuser_qml
 {
-	QuickScene3DWrapper::QuickScene3DWrapper(QObject* parent)
-		: QObject(parent)
+	QuickScene3DWrapper::QuickScene3DWrapper(QQuickItem* parent)
+		: QQuickItem(parent)
 		, m_scene3D(nullptr)
 		, m_always(false)
 	{
@@ -34,17 +34,21 @@ namespace qtuser_qml
 		qDebug() << "windows GLQuickItem  -->" << QThread::currentThread();
 
 		//setSharedContext(QOpenGLContext::currentContext());
+
+		setAcceptHoverEvents(true);
+		setAcceptedMouseButtons(Qt::AllButtons);
+		forceActiveFocus(Qt::MouseFocusReason);
 	}
 
 	QuickScene3DWrapper::~QuickScene3DWrapper()
 	{
 		m_eventSubdivide->closeHandlers();
 	}
-
+	/*
 	void QuickScene3DWrapper::setRatio(float ratio)
 	{
 		m_ratio = ratio;
-	}
+	}*/
 
 	void QuickScene3DWrapper::bindScene3D(QObject* scene3d)
 	{
@@ -55,75 +59,85 @@ namespace qtuser_qml
 		}
 	}
 
-	void QuickScene3DWrapper::sendMousePressEvent(int x, int y, int buttonId)
+	void QuickScene3DWrapper::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry)
 	{
-		QMouseEvent event(QEvent::MouseButtonPress, QPoint(x, y), (Qt::MouseButton)buttonId, (Qt::MouseButtons)buttonId, Qt::NoModifier);
-		QPoint pt = event.pos();
+		QQuickItem::geometryChanged(newGeometry, oldGeometry);
+
+		QSize size = newGeometry.size().toSize();
+		if (m_ratio < 0.01)
+		{
+			m_ratio = 1;
+		}
+		size *= m_ratio;
+		m_eventSubdivide->geometryChanged(size);
+
+		qtuser_3d::RenderGraph* graph = currentRenderGraph();
+		if (graph)
+			graph->updateRenderSize(size);
+
+		requestUpdate();
+	}
+
+	void QuickScene3DWrapper::mousePressEvent(QMouseEvent* event)
+	{
+		QPoint pt = event->pos();
 		pt.rx() *= m_ratio;
 		pt.ry() *= m_ratio;
-		event.setLocalPos(pt);
-		m_eventSubdivide->mousePressEvent(&event);
-		qDebug() << "cpp get : " << event.localPos() << event.buttons();
+		event->setLocalPos(pt);
+		m_eventSubdivide->mousePressEvent(event);
+		setFocus(true);
 	}
 
-	void QuickScene3DWrapper::sendMouseReleaseEvent(int x, int y, int buttonId)
+	void QuickScene3DWrapper::mouseMoveEvent(QMouseEvent* event)
 	{
-		QMouseEvent event(QEvent::MouseButtonRelease, QPoint(x, y), (Qt::MouseButton)buttonId, (Qt::MouseButtons)buttonId, Qt::NoModifier);
-		QPoint pt = event.pos();
+		QPoint pt = event->pos();
 		pt.rx() *= m_ratio;
 		pt.ry() *= m_ratio;
-		event.setLocalPos(pt);
-		m_eventSubdivide->mouseReleaseEvent(&event);
-		qDebug() << "cpp get : " << event.localPos() << event.buttons();
+		event->setLocalPos(pt);
+		m_eventSubdivide->mouseMoveEvent(event);
 	}
 
-	void QuickScene3DWrapper::sendMouseMoveEvent(int x, int y, int buttonId)
+	void QuickScene3DWrapper::mouseReleaseEvent(QMouseEvent* event)
 	{
-		QMouseEvent event(QEvent::MouseMove, QPoint(x, y), (Qt::MouseButton)buttonId, (Qt::MouseButtons)buttonId, Qt::NoModifier);
-		QPoint pt = event.pos();
+		QPoint pt = event->pos();
 		pt.rx() *= m_ratio;
 		pt.ry() *= m_ratio;
-		event.setLocalPos(pt);
-		m_eventSubdivide->mouseMoveEvent(&event);
-		qDebug() << "cpp get : " << event.localPos() << event.buttons();
+		event->setLocalPos(pt);
+		m_eventSubdivide->mouseReleaseEvent(event);
 	}
 
-	void QuickScene3DWrapper::sendWheelEventEvent(int x, int y, int globalX, int globalY, int delta, int buttons, int modifiers)
+	void QuickScene3DWrapper::wheelEvent(QWheelEvent* event)
 	{
-		QPointF p(x * m_ratio, y * m_ratio);
-		QPointF globalPos(globalX, globalY);
-		QWheelEvent event(p, globalPos, delta * m_ratio, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers, Qt::Vertical);
-		m_eventSubdivide->wheelEvent(&event);
+		QWheelEvent new_event(event->posF() * m_ratio, event->globalPosF(), event->delta() * m_ratio, event->buttons(), event->modifiers(), event->orientation());
+		m_eventSubdivide->wheelEvent(&new_event);
 	}
 
-	void QuickScene3DWrapper::sendHoverEnterEvent(int x, int y, int oldX, int oldY, int modifiers)
+	void QuickScene3DWrapper::hoverEnterEvent(QHoverEvent* event)
 	{
-		QHoverEvent event(QEvent::HoverEnter, QPointF(x, y) * m_ratio, QPointF(oldX, oldY) * m_ratio, (Qt::KeyboardModifiers)modifiers);
-		m_eventSubdivide->hoverEnterEvent(&event);
+		QHoverEvent new_event(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
+		m_eventSubdivide->hoverEnterEvent(&new_event);
 	}
 
-	void QuickScene3DWrapper::sendHoverMoveEvent(int x, int y, int oldX, int oldY, int modifiers)
+	void QuickScene3DWrapper::hoverMoveEvent(QHoverEvent* event)
 	{
-		QHoverEvent event(QEvent::HoverMove, QPointF(x, y) * m_ratio, QPointF(oldX, oldY) * m_ratio, (Qt::KeyboardModifiers)modifiers);
-		m_eventSubdivide->hoverEnterEvent(&event);
+		QHoverEvent new_event(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
+		m_eventSubdivide->hoverMoveEvent(&new_event);
 	}
 
-	void QuickScene3DWrapper::sendHoverLeaveEvent(int x, int y, int oldX, int oldY, int modifiers)
+	void QuickScene3DWrapper::hoverLeaveEvent(QHoverEvent* event)
 	{
-		QHoverEvent event(QEvent::HoverLeave, QPointF(x, y) * m_ratio, QPointF(oldX, oldY) * m_ratio, (Qt::KeyboardModifiers)modifiers);
-		m_eventSubdivide->hoverEnterEvent(&event);
+		QHoverEvent new_event(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
+		m_eventSubdivide->hoverLeaveEvent(&new_event);
 	}
 
-	void QuickScene3DWrapper::sendKeyPressEvent(int key, int modifiers)
+	void QuickScene3DWrapper::keyPressEvent(QKeyEvent* event)
 	{
-		QKeyEvent event(QEvent::KeyPress, key, (Qt::KeyboardModifiers)modifiers);
-		m_eventSubdivide->keyPressEvent(&event);
+		m_eventSubdivide->keyPressEvent(event);
 	}
 
-	void QuickScene3DWrapper::sendKeyReleaseEvent(int key, int modifiers)
+	void QuickScene3DWrapper::keyReleaseEvent(QKeyEvent* event)
 	{
-		QKeyEvent event(QEvent::KeyPress, key, (Qt::KeyboardModifiers)modifiers);
-		m_eventSubdivide->keyPressEvent(&event);
+		m_eventSubdivide->keyReleaseEvent(event);
 	}
 
 	void QuickScene3DWrapper::renderRenderGraph(qtuser_3d::RenderGraph* graph)
@@ -264,75 +278,4 @@ namespace qtuser_qml
 	{
 		return m_rawOGL;
 	}
-
-	//void GLQuickItem::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry)
-	//{
-	//	QQuickFramebufferObject::geometryChanged(newGeometry, oldGeometry);
-	//
-	//	QSize size = newGeometry.size().toSize();
-	//	if (m_ratio < 0.01)
-	//	{
-	//		m_ratio = 1;
-	//	}
-	//	size *= m_ratio;
-	//	m_eventSubdivide->geometryChanged(size);
-	//
-	//	RenderGraph* graph = currentRenderGraph();
-	//	if (graph)
-	//		graph->updateRenderSize(size);
-	//
-	//	requestUpdate();
-	//}
-	//
-	//void GLQuickItem::mousePressEvent(QMouseEvent* event)
-	//{
-	//	QPoint pt = event->pos();
-	//	pt.rx() *= m_ratio;
-	//	pt.ry() *= m_ratio;
-	//	event->setLocalPos(pt);
-	//	m_eventSubdivide->mousePressEvent(event);
-	//	setFocus(true);
-	//}
-	//
-	//void GLQuickItem::mouseMoveEvent(QMouseEvent* event)
-	//{
-	//	QPoint pt = event->pos();
-	//	pt.rx() *= m_ratio;
-	//	pt.ry() *= m_ratio;
-	//	event->setLocalPos(pt);
-	//	m_eventSubdivide->mouseMoveEvent(event);
-	//}
-	//
-	//void GLQuickItem::mouseReleaseEvent(QMouseEvent* event)
-	//{
-	//	QPoint pt = event->pos();
-	//	pt.rx() *= m_ratio;
-	//	pt.ry() *= m_ratio;
-	//	event->setLocalPos(pt);
-	//	m_eventSubdivide->mouseReleaseEvent(event);
-	//}
-	//
-	//void GLQuickItem::wheelEvent(QWheelEvent* event)
-	//{
-	//	QWheelEvent new_event(event->posF() * m_ratio, event->globalPosF(), event->delta() * m_ratio, event->buttons(), event->modifiers(), event->orientation());
-	//	m_eventSubdivide->wheelEvent(&new_event);
-	//}
-	//
-	//void GLQuickItem::hoverEnterEvent(QHoverEvent* event)
-	//{
-	//	QHoverEvent new_event(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
-	//	m_eventSubdivide->hoverEnterEvent(&new_event);
-	//}
-	//
-	//void GLQuickItem::hoverMoveEvent(QHoverEvent* event)
-	//{
-	//	QHoverEvent new_event(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
-	//	m_eventSubdivide->hoverMoveEvent(&new_event);
-	//}
-	//
-	//void GLQuickItem::hoverLeaveEvent(QHoverEvent* event)
-	//{
-	//	QHoverEvent new_event(event->type(), event->posF() * m_ratio, event->oldPosF() * m_ratio, event->modifiers());
-	//	m_eventSubdivide->hoverLeaveEvent(&new_event);
-	//}
 }

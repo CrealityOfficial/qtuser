@@ -8,6 +8,8 @@
 #include <Qt3DRender/QRenderSettings>
 #include <Qt3DRender/QFrameGraphNode>
 
+#include <QQuickItem>
+
 class QOpenGLContext;
 
 namespace qtuser_qml
@@ -17,25 +19,14 @@ namespace qtuser_qml
 
 namespace qtuser_qml
 {
-	class QTUSER_QML_API QuickScene3DWrapper : public QObject
+	class QTUSER_QML_API QuickScene3DWrapper : public QQuickItem
 	{
 		Q_OBJECT
 	public:
-		QuickScene3DWrapper(QObject* parent = nullptr);
+		QuickScene3DWrapper(QQuickItem* parent = nullptr);
 		virtual ~QuickScene3DWrapper();
 
-		Q_INVOKABLE void setRatio(float ratio);
-
 		Q_INVOKABLE void bindScene3D(QObject* scene3d);
-		Q_INVOKABLE void sendMousePressEvent(int x, int y, int buttonId);
-		Q_INVOKABLE void sendMouseReleaseEvent(int x, int y, int buttonId);
-		Q_INVOKABLE void sendMouseMoveEvent(int x, int y, int buttonId);
-		Q_INVOKABLE void sendWheelEventEvent(int x, int y, int globalX, int globalY, int delta, int buttons, int modifiers);
-		Q_INVOKABLE void sendHoverEnterEvent(int x, int y, int oldX, int oldY, int modifiers);
-		Q_INVOKABLE void sendHoverMoveEvent(int x, int y, int oldX, int oldY, int modifiers);
-		Q_INVOKABLE void sendHoverLeaveEvent(int x, int y, int oldX, int oldY, int modifiers);
-		Q_INVOKABLE void sendKeyPressEvent(int key, int modifiers);
-		Q_INVOKABLE void sendKeyReleaseEvent(int key, int modifiers);
 
 		void renderRenderGraph(qtuser_3d::RenderGraph* graph);
 		void registerRenderGraph(qtuser_3d::RenderGraph* graph);
@@ -57,6 +48,16 @@ namespace qtuser_qml
 		void requestUpdate();
 	protected:
 		Q_INVOKABLE void _geometry(int width, int height);
+		virtual void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry) Q_DECL_OVERRIDE;
+		virtual void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+		virtual void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+		virtual void mouseReleaseEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+		virtual void wheelEvent(QWheelEvent* event) Q_DECL_OVERRIDE;
+		virtual void hoverEnterEvent(QHoverEvent* event) Q_DECL_OVERRIDE;
+		virtual void hoverMoveEvent(QHoverEvent* event) Q_DECL_OVERRIDE;
+		virtual void hoverLeaveEvent(QHoverEvent* event) Q_DECL_OVERRIDE;
+		virtual void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
+		virtual void keyReleaseEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 
 		void setSharedContext(QOpenGLContext* context);
 
