@@ -4,6 +4,22 @@
 #include <QtCore/QDebug>
 namespace qtuser_3d
 {
+	NamedReply::NamedReply(namedReplyFunc func, QObject* parent)
+		: QObject(parent)
+		, callback(func)
+	{
+	}
+
+	NamedReply::~NamedReply()
+	{
+	}
+
+	void NamedReply::invoke()
+	{
+		if (callback)
+			callback(reply->image());
+	}
+
 	ColorPicker::ColorPicker(Qt3DCore::QNode* parent)
 		:QFrameGraphNode(parent)
 		, m_updateTimer(nullptr)
@@ -93,6 +109,20 @@ namespace qtuser_3d
 		}
 	}
 
+	void ColorPicker::requestNamedCapture(namedReplyFunc callback)
+	{
+		if (!callback)
+			return;
+
+		QTimer::singleShot(100, [this, callback]() {
+			NamedReply* reply = new NamedReply(callback, this);
+			reply->reply.reset(m_renderCapture->requestCapture());
+			connect(reply->reply.data(), &Qt3DRender::QRenderCaptureReply::completed, this, &ColorPicker::namedCaptureCompleted);
+			m_namedReplies.append(reply);
+			m_updateTimer->start(40);
+			});
+	}
+
 	void ColorPicker::setUseDelay(bool delay)
 	{
 		m_useDelay = delay;
@@ -138,6 +168,31 @@ namespace qtuser_3d
 		}
 
 		m_capturing = false;
+	}
+
+	void ColorPicker::namedCaptureCompleted()
+	{
+		QObject* s = sender();
+		NamedReply* reply = nullptr;
+
+		for (NamedReply* r : m_namedReplies)
+		{
+			if (r->reply.data() == s)
+			{
+				reply = r;
+				break;
+			}
+		}
+
+		if (reply)
+			reply->invoke();
+
+		m_namedReplies.removeOne(reply);
+		if (reply)
+			delete reply;
+
+		if(m_namedReplies.size() == 0 && !m_captureReply.data())
+			m_updateTimer->stop();
 	}
 
 	void ColorPicker::setFilterKey(const QString& name, int value)

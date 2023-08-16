@@ -18,6 +18,19 @@ namespace qtuser_3d
 	class ColorPicker;
 	typedef std::function<void(ColorPicker*)> selfPickerFunc;
 	typedef std::function<void(QImage& image)> requestCallFunc;
+	typedef std::function<void(const QImage& image)> namedReplyFunc;
+
+	class QTUSER_3D_API NamedReply : public QObject
+	{
+	public:
+		NamedReply(namedReplyFunc func, QObject* parent = nullptr);
+		virtual ~NamedReply();
+
+		void invoke();
+
+		namedReplyFunc callback;
+		QScopedPointer<Qt3DRender::QRenderCaptureReply> reply;
+	};
 
 	class TextureRenderTarget;
 	class QTUSER_3D_API ColorPicker : public Qt3DRender::QFrameGraphNode
@@ -33,6 +46,8 @@ namespace qtuser_3d
 		void resize(const QSize& size);
 
 		void requestCapture();
+		void requestNamedCapture(namedReplyFunc callback);
+
 		void setFilterKey(const QString& name, int value);
 		void setClearColor(const QColor& color);
 
@@ -66,6 +81,7 @@ namespace qtuser_3d
 
 	public slots:
 		void captureCompleted();
+		void namedCaptureCompleted();
 		void delayCapture();
 	signals:
 		void signalUpdate();
@@ -100,6 +116,8 @@ namespace qtuser_3d
 		QString m_debugName;
 	public:
 #endif
+
+		QList<NamedReply*> m_namedReplies;
 	};
 }
 #endif // _QTUSER_3D_COLORPICKER_1589166630506_H
