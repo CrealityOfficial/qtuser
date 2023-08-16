@@ -392,7 +392,7 @@ namespace qtuser_core
 	{
 		QFile file(fileName);
 		QString Md5Str = "";
-		if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+		if (file.open(QIODevice::ReadOnly))
 		{
 			QByteArray fileArray = file.readAll();
 			QByteArray md5 = QCryptographicHash::hash(fileArray, QCryptographicHash::Md5);
@@ -404,6 +404,32 @@ namespace qtuser_core
 		}
 		file.close();
 		return Md5Str;
+	}
+	QString calculateFileBase64(const QString& fileName)
+	{
+		QFile file(fileName);
+		QString strBase64 = "";
+		if (file.open(QIODevice::ReadOnly))
+		{
+			QByteArray fileArray = file.readAll();
+			QByteArray md5 = QCryptographicHash::hash(fileArray, QCryptographicHash::Md5);
+			strBase64 = md5.toBase64().toLower();
+		}
+		else
+		{
+			qDebug() << QString("calculateFileBase64 openFile [%1] Error.").arg(fileName);
+		}
+		file.close();
+		return strBase64;
+	}
+	//16进制的md5值转化为Base64值
+	QString convertBase64(const QString& md5)
+	{
+		//按照Utf-8编码转换，可以转换中文
+		QByteArray fromHexMd5 = QByteArray::fromHex(md5.toUtf8());
+		QString contentMD5 = "";
+		contentMD5 = fromHexMd5.toBase64();
+		return contentMD5;
 	}
 
 	void copyString2Clipboard(const QString& str)

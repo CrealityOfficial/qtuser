@@ -44,7 +44,10 @@ namespace qtuser_core
 	};
 
 	QTUSER_CORE_API QString calculateFileMD5(const QString& fileName);
-	
+	QTUSER_CORE_API QString calculateFileBase64(const QString& fileName);
+	//16进制的md5值转化为Base64值
+	QTUSER_CORE_API QString convertBase64(const QString& md5);
+
 	QTUSER_CORE_API void copyString2Clipboard(const QString& str);
 
 	QTUSER_CORE_API int getSystemMaxPath();
