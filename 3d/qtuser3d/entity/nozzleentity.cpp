@@ -11,7 +11,7 @@ namespace qtuser_3d {
 	{
 		setGeometry(PRIMITIVESHAPE("pen"));
 		
-		XRenderPass* pass = new XRenderPass("modelsimple", this);
+		XRenderPass* pass = new XRenderPass("phong", this);
 		pass->addFilterKeyMask("view", 0);
 		pass->setPassBlend(Qt3DRender::QBlendEquationArguments::One, Qt3DRender::QBlendEquationArguments::Zero);
 		pass->setPassCullFace(Qt3DRender::QCullFace::NoCulling);
@@ -19,6 +19,8 @@ namespace qtuser_3d {
 		XEffect* effect = new XEffect(this);
 		effect->addRenderPass(pass);
 		setEffect(effect);
+
+		setParameter("color", QVector4D(0.8f, 0.5f, 0.8f, 1.0f));
 	}
 	
 	NozzleEntity::~NozzleEntity()
