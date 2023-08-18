@@ -69,19 +69,19 @@ MirrorEntity::MirrorEntity(QPointer<CameraController> camera_controller, Qt3DCor
   z_positive_entity_->setColor(RGBA_BLUE);
   z_negative_entity_->setColor(RGBA_BLUE);
 
-  x_positive_entity_->setChangeColor(RGBA_GOLD);
-  x_negative_entity_->setChangeColor(RGBA_GOLD);
-  y_positive_entity_->setChangeColor(RGBA_GOLD);
-  y_negative_entity_->setChangeColor(RGBA_GOLD);
-  z_positive_entity_->setChangeColor(RGBA_GOLD);
-  z_negative_entity_->setChangeColor(RGBA_GOLD);
+  x_positive_entity_->setTriggeredColor(RGBA_GOLD);
+  x_negative_entity_->setTriggeredColor(RGBA_GOLD);
+  y_positive_entity_->setTriggeredColor(RGBA_GOLD);
+  y_negative_entity_->setTriggeredColor(RGBA_GOLD);
+  z_positive_entity_->setTriggeredColor(RGBA_GOLD);
+  z_negative_entity_->setTriggeredColor(RGBA_GOLD);
   
-  x_positive_entity_->setMethod(1);
-  x_negative_entity_->setMethod(1);
-  y_positive_entity_->setMethod(1);
-  y_negative_entity_->setMethod(1);
-  z_positive_entity_->setMethod(1);
-  z_negative_entity_->setMethod(1);
+  x_positive_entity_->setTriggerible(true);
+  x_negative_entity_->setTriggerible(true);
+  y_positive_entity_->setTriggerible(true);
+  y_negative_entity_->setTriggerible(true);
+  z_positive_entity_->setTriggerible(true);
+  z_negative_entity_->setTriggerible(true);
   
   x_positive_pickable_->setPickableEntity(x_positive_entity_.get());
   x_negative_pickable_->setPickableEntity(x_negative_entity_.get());

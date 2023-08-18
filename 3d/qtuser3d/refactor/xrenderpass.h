@@ -42,6 +42,8 @@ namespace qtuser_3d
 		void setPassNoDepthMask();
 
 		void setPointSize(float size);
+
+		void setShaderProgramEx(const QString& shaderName);
 	};
 }
 

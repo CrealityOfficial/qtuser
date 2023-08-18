@@ -7,6 +7,8 @@
 
 namespace qtuser_3d
 {
+	class XRenderPass;
+
 	struct ShaderCode
 	{
 		QString name;
@@ -26,6 +28,7 @@ namespace qtuser_3d
 		~ShaderProgramManager();
 
 		static ShaderProgramManager& Instance();
+		static void initRenderPass(XRenderPass *pass, const QString &name);
 
 		void cache(const QString& name);
 		Qt3DRender::QShaderProgram* Get(const QString& name);

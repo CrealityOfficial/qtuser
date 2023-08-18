@@ -4,10 +4,15 @@
 
 namespace qtuser_3d
 {
-	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, bool alpha, bool pickable, bool depthTest, bool overlay)
+	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, bool lightEnable, bool alpha, bool pickable, bool depthTest, bool overlay)
 		:PickXEntity(parent)
 	{
-		XRenderPass* showPass = new XRenderPass("manipulate", this);
+		XRenderPass* showPass;
+		if (lightEnable)
+			showPass = new XRenderPass("phong", this);
+		else
+			showPass = new XRenderPass("pure", this);
+		
 		Qt3DRender::QFilterKey* showFilterKey = new Qt3DRender::QFilterKey(showPass);
 		showFilterKey->setValue(0);
 		showFilterKey->setName("view");
@@ -37,10 +42,11 @@ namespace qtuser_3d
 		effect->addRenderPass(pickPass);
 		setEffect(effect);
 
-		m_colorParameter = setParameter("color", QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
-		m_changeColorParameter = setParameter("changecolor", QVector4D(0.0f, 0.0f, 0.0f, 0.0f));
-		m_methodParameter = setParameter("mt", 0);
-		m_lightEnableParameter = setParameter("lightEnable", 0);
+		m_color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
+		m_triggeredColor = QVector4D(0.0f, 0.0f, 0.0f, 0.0f);
+		m_isTriggerible = false;
+
+		setParameter("color", m_color);
 	}
 
 	ManipulateEntity::~ManipulateEntity()
@@ -50,21 +56,28 @@ namespace qtuser_3d
 
 	void ManipulateEntity::setColor(const QVector4D& color)
 	{
-		m_colorParameter->setValue(color);
+		m_color = color;
+		setParameter("color", m_color);
 	}
 
-	void ManipulateEntity::setChangeColor(const QVector4D& color)
+	void ManipulateEntity::setTriggeredColor(const QVector4D& color)
 	{
-		m_changeColorParameter->setValue(color);
+		m_triggeredColor = color;
 	}
 
-	void ManipulateEntity::setMethod(int mt)
+	void ManipulateEntity::setTriggerible(bool enable)
 	{
-		m_methodParameter->setValue(mt);
+		m_isTriggerible = enable;
 	}
 
-	void ManipulateEntity::setLightEnable(bool flag)
+	void ManipulateEntity::setVisualState(ControlState state)
 	{
-		m_lightEnableParameter->setValue(flag);
+		if (m_isTriggerible)
+		{
+			if ((int)state)
+				setParameter("color", m_color);
+			else
+				setParameter("color", m_triggeredColor);
+		}
 	}
 }

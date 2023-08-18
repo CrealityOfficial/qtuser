@@ -132,4 +132,14 @@ namespace qtuser_3d
 		pSize->setValue(size);
 		addRenderState(pSize);
 	}
+
+	void XRenderPass::setShaderProgramEx(const QString& shaderName)
+	{
+		Qt3DRender::QShaderProgram* program = CREATE_SHADER(shaderName);
+		if (program)
+		{	
+			setShaderProgram(program);
+			ShaderProgramManager::initRenderPass(this, shaderName);
+		}
+	}
 }

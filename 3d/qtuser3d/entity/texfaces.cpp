@@ -22,7 +22,7 @@ namespace qtuser_3d
 	TexFaces::TexFaces(Qt3DCore::QNode* parent)
 		:XEntity(parent)
 	{
-		XRenderPass* pass = new XRenderPass("printerbottom", this);
+		XRenderPass* pass = new XRenderPass("pure", this);
 		pass->addFilterKeyMask("view", 0);
 
 		XEffect* effect = new XEffect(this);

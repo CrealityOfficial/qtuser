@@ -1,7 +1,9 @@
 #version 150 core 
-out vec4 fragmentColor;
+
+out vec4 fragColor;
 uniform vec4 pcolor = vec4(0.2275, 0.2275, 0.2353, 0.5);
+
 void main( void )
 {
-	fragmentColor = pcolor;
+	fragColor = pcolor;
 }

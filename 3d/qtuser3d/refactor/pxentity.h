@@ -15,7 +15,7 @@ namespace qtuser_3d
 		Pickable* pickable();
 		void bindPickable(Pickable* pickable);
 
-		void setVisualState(qtuser_3d::ControlState state);
+		virtual void setVisualState(qtuser_3d::ControlState state);
 		void setVisualVertexBase(const QPoint& vertexBase);
 	protected slots:
 		void slotStateChanged(ControlState state);

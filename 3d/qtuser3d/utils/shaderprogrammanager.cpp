@@ -8,6 +8,9 @@
 #include "../../buildinfo.h"
 
 #include "../../shaders/GL.code"
+#include "qtuser3d/refactor/xrenderpass.h"
+#include <QVector4D>
+#include <QVector3D>
 namespace qtuser_3d
 {
 	ShaderMeta typeOrder[5] =
@@ -18,6 +21,11 @@ namespace qtuser_3d
 		{ Qt3DRender::QShaderProgram::ShaderType::Geometry, {".geom"} },
 		{ Qt3DRender::QShaderProgram::ShaderType::Fragment, {".frag", ".fragment"} },
 	};
+
+	QVector4D defaultAmbient(0.8, 0.8, 0.8, 1.0);
+	QVector4D defaultDiffuse(0.8, 0.8, 0.8, 1.0);
+	QVector4D defaultSpecular(0.8, 0.8, 0.8, 1.0);
+	float defaultSpecularPower = 4.5;
 
 	ShaderProgramManager ShaderProgramManager::m_shaderProgramManager;
 	ShaderProgramManager::ShaderProgramManager(QObject* parent)
@@ -34,6 +42,38 @@ namespace qtuser_3d
 	ShaderProgramManager& ShaderProgramManager::Instance()
 	{
 		return m_shaderProgramManager;
+	}
+	
+	void ShaderProgramManager::initRenderPass(XRenderPass *pass, const QString &name)
+	{
+		if (name == "antialiasing")
+		{
+			pass->setParameter("antiflag", 1);
+		}
+		else if (name == "modeldlp")
+		{
+			pass->setParameter("ambient", defaultAmbient);
+			pass->setParameter("diffuse", defaultDiffuse);
+			pass->setParameter("specular", defaultSpecular);
+			pass->setParameter("specularPower", defaultSpecularPower);  
+			pass->setParameter("lightDirection", QVector3D(0.0, 0.0, 1.0));
+			pass->setParameter("checkScope", 1);
+			pass->setParameter("supportCos", 0.5);
+			pass->setParameter("hoverState", 0);
+			pass->setParameter("waterState", 0);
+		}
+		else if (name == "gcodepreviewG")
+		{
+			pass->setParameter("darkColor", QVector4D(0.161, 0.161, 0.161, 1.0));
+			pass->setParameter("light_direction", QVector3D(0.0, 0.0, 1.0));
+			pass->setParameter("front_ambient", QVector4D(0.8, 0.8, 0.8, 1.0));
+			pass->setParameter("front_diffuse", QVector4D(0.6, 0.6, 0.6, 1.0));
+			pass->setParameter("back_ambient", QVector4D(0.3, 0.3, 0.3, 1.0));
+			pass->setParameter("back_diffuse", QVector4D(0.3, 0.3, 0.3, 1.0));
+			pass->setParameter("specular", QVector4D(0.5, 0.5, 0.5, 1.0));
+			pass->setParameter("specularPower", 32.0);
+			pass->setParameter("layerHeight", 0.1);
+		}
 	}
 
 	Qt3DCore::QNode* ShaderProgramManager::root()
@@ -83,6 +123,7 @@ namespace qtuser_3d
 		if (!program)
 			program = LoadFromShaderSource(name);
 
+		qDebug() << "load shader" << name;
 		return program;
 	}
 

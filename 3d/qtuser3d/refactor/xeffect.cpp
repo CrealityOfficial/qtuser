@@ -102,7 +102,7 @@ namespace qtuser_3d
 			if (c->name() == filterName && c->value() == filterValue)
 			{
 				pass->removeFilterKey(c);
-				break;
+				//break;
 			}
 			
 		}
