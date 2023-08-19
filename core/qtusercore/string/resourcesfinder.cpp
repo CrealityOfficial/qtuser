@@ -168,4 +168,20 @@ namespace qtuser_core
 		}
 		return true;
 	}
+
+	QStringList allFiles(const QString& directory, const QStringList& filters)
+	{
+		QList<QString> fileNames;
+
+		QDir dir(directory);
+		QList<QFileInfo> fileInfos = dir.entryInfoList(filters, QDir::Files);
+
+		for (const QFileInfo& fileInfo : fileInfos)
+		{
+			if (fileInfo.isFile())
+				fileNames << fileInfo.absoluteFilePath();
+		}
+
+		return fileNames;
+	}
 }
