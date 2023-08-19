@@ -4,11 +4,11 @@
 
 namespace qtuser_3d
 {
-	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, bool lightEnable, bool alpha, bool pickable, bool depthTest, bool overlay)
+	ManipulateEntity::ManipulateEntity(Qt3DCore::QNode* parent, ManipulateEntityFlags flags)
 		:PickXEntity(parent)
 	{
 		XRenderPass* showPass;
-		if (lightEnable)
+		if (flags & Light)
 			showPass = new XRenderPass("phong", this);
 		else
 			showPass = new XRenderPass("pure", this);
@@ -16,18 +16,18 @@ namespace qtuser_3d
 		Qt3DRender::QFilterKey* showFilterKey = new Qt3DRender::QFilterKey(showPass);
 		showFilterKey->setValue(0);
 		showFilterKey->setName("view");
-		if (alpha)
+		if (flags & Alpha)
 		{
 			showFilterKey->setName("alpha");
 		}
-		if (overlay)
+		if (flags & Overlay)
 		{
 			showFilterKey->setName("overlay");
 		}
 		showPass->addFilterKey(showFilterKey);
 		showPass->setPassCullFace(Qt3DRender::QCullFace::CullingMode::NoCulling);
-		showPass->setPassDepthTest(depthTest ? Qt3DRender::QDepthTest::Less : Qt3DRender::QDepthTest::Always);
-		if (alpha)
+		showPass->setPassDepthTest(flags & DepthTest ? Qt3DRender::QDepthTest::Less : Qt3DRender::QDepthTest::Always);
+		if (flags & Alpha)
 		{
 			showPass->setPassBlend();
 		}
@@ -36,7 +36,7 @@ namespace qtuser_3d
 		pickPass->addFilterKeyMask("pick2nd", 0);
 		pickPass->setPassCullFace(Qt3DRender::QCullFace::CullingMode::NoCulling);
 		pickPass->setPassDepthTest(Qt3DRender::QDepthTest::Always);
-		pickPass->setEnabled(pickable);
+		pickPass->setEnabled(flags & Pickable);
 		XEffect* effect = new XEffect(this);
 		effect->addRenderPass(showPass);
 		effect->addRenderPass(pickPass);

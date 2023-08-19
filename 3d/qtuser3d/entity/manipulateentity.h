@@ -8,7 +8,16 @@ namespace qtuser_3d
 	class QTUSER_3D_API ManipulateEntity : public PickXEntity
 	{
 	public:
-		ManipulateEntity(Qt3DCore::QNode* parent = nullptr, bool lightEnable = false , bool alpha = true, bool pickable = true, bool depthTest = false, bool overlay = false);
+		enum ManipulateEntityFlag
+		{
+			Light = 0x01,
+			Alpha = 0x02,
+			Pickable = 0x04,
+			DepthTest = 0x08,
+			Overlay = 0x10
+		};
+		typedef int ManipulateEntityFlags;
+		ManipulateEntity(Qt3DCore::QNode* parent = nullptr, ManipulateEntityFlags flags = Alpha & Pickable);
 		virtual ~ManipulateEntity();
 
 		void setColor(const QVector4D& color);

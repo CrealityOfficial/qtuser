@@ -129,8 +129,10 @@ namespace qtuser_3d
 		m.rotate(90.0, m_initRotateDir);
 
 		// 旋转手柄初始化
-		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, false, true, true, true);
-
+		m_pHandlerEntity = new ManipulateEntity(m_pRotateGroup, ManipulateEntity::Light | 
+																ManipulateEntity::Alpha |
+																ManipulateEntity::Pickable |
+																ManipulateEntity::DepthTest);
 		m_pHandlerEntity->setObjectName("RotateHelperEntity_T.handleEntity");
 		m_pHandlerEntity->setPose(m);
 		m_pHandlerEntity->setColor(m_handlerColor);
@@ -375,7 +377,7 @@ namespace qtuser_3d
 
 
 		// 刻度初始化（白色）
-		m_pDegreeEntity = new ManipulateEntity(nullptr, false, true, false, false);
+		m_pDegreeEntity = new ManipulateEntity(m_pRotateGroup, ManipulateEntity::Alpha);
 		m_pDegreeEntity->setObjectName("RotateHelperEntity_T.degreeEntity");
 		m_pDegreeEntity->setPose(m);
 		m_pDegreeEntity->setColor(m_degreeColor);
