@@ -21,7 +21,6 @@ uniform int animation = 0;
 
 uniform vec4 clipValue;
 uniform vec2 layershow;
-uniform int layerstartflag_show;
 
 uniform float speedcolorSize;
 uniform vec4 typecolors[18];
