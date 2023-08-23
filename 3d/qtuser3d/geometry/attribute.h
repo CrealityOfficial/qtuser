@@ -41,9 +41,11 @@ namespace qtuser_3d
 		QByteArray normal;
 		QByteArray color;
 		QByteArray texcoord;
+		QByteArray indices;
 
 		int fcount;
-		int count;
+		int vcount;
+		int indiceCount;
 	};
 }
 

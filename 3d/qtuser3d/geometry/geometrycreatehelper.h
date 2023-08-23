@@ -26,6 +26,7 @@ namespace qtuser_3d
 		static Qt3DRender::QBuffer* createBuffer(AttributeShade* attribute = nullptr);
 
 		static Qt3DRender::QGeometry* create(const GeometryData& data, Qt3DCore::QNode* parent = nullptr);
+		static Qt3DRender::QGeometry* indexCreate(const GeometryData& data, Qt3DCore::QNode* parent = nullptr);
 	};
 }
 #endif // QTUSER_3D_GEOMETRYCREATEHELPER_1594863285229_H

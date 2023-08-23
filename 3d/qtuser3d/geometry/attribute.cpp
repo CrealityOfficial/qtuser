@@ -4,7 +4,8 @@ namespace qtuser_3d
 {
 	GeometryData::GeometryData()
 		: fcount(0)
-		, count(0)
+		, vcount(0)
+		, indiceCount(0)
 	{
 
 	}

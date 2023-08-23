@@ -2,9 +2,9 @@
 out vec4 fragmentColor;
  
 in vec3 viewDirection;
-in vec3 normal;
-in vec3 gnormal;
+in vec3 vertexnormal;
 in vec3 worldPosition;
+in vec3 gnormal;
 
 uniform int state;
 uniform float error;
@@ -69,8 +69,8 @@ void main( void )
 	vec4 color = stateColors[state];
 	color = error * stateColors[3] + (1.0 - error) * color;	
 	
-	vec3 fnormal 		  =	normalize(normal);
-	vec3 fgnormal 		  =	normalize(gnormal);
+	vec3 fnormal 		  =	normalize(vertexnormal);
+	vec3 fgnormal = normalize(gnormal);
 		
 	vec3 lightDir = normalize(lightDirection);
 

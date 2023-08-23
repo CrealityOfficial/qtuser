@@ -1,5 +1,6 @@
 #include "geometrycreatehelper.h"
 #include <Qt3DRender/QBuffer>
+#include <qtuser3d/geometry/bufferhelper.h>
 
 namespace qtuser_3d
 {
@@ -85,16 +86,16 @@ namespace qtuser_3d
 
 	Qt3DRender::QGeometry* GeometryCreateHelper::create(const GeometryData& data, Qt3DCore::QNode* parent)
 	{
-		if (data.position.size() == 0 || data.position.size() == 0)
+		if (data.position.size() == 0)
 			return nullptr;
-		
+
 		Qt3DRender::QBuffer* positionBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
 		Qt3DRender::QBuffer* normalBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
 		positionBuffer->setData(data.position);
 		normalBuffer->setData(data.normal);
 
-		Qt3DRender::QAttribute* positionAttribute = new Qt3DRender::QAttribute(positionBuffer, Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, 3, data.count);
-		Qt3DRender::QAttribute* normalAttribute = new Qt3DRender::QAttribute(normalBuffer, Qt3DRender::QAttribute::defaultNormalAttributeName(), Qt3DRender::QAttribute::Float, 3, data.count);
+		Qt3DRender::QAttribute* positionAttribute = new Qt3DRender::QAttribute(positionBuffer, Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, 3, data.vcount);
+		Qt3DRender::QAttribute* normalAttribute = new Qt3DRender::QAttribute(normalBuffer, Qt3DRender::QAttribute::defaultNormalAttributeName(), Qt3DRender::QAttribute::Float, 3, data.vcount);
 
 		Qt3DRender::QAttribute* texcoordAttribute = nullptr;
 		Qt3DRender::QAttribute* colorAttribute = nullptr;
@@ -103,15 +104,33 @@ namespace qtuser_3d
 		{
 			Qt3DRender::QBuffer* texcoordBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
 			texcoordBuffer->setData(data.texcoord);
-			texcoordAttribute = new Qt3DRender::QAttribute(texcoordBuffer, Qt3DRender::QAttribute::defaultTextureCoordinateAttributeName(), Qt3DRender::QAttribute::Float, 2, data.count);
+			texcoordAttribute = new Qt3DRender::QAttribute(texcoordBuffer, Qt3DRender::QAttribute::defaultTextureCoordinateAttributeName(), Qt3DRender::QAttribute::Float, 2, data.vcount);
 		}
 		if (data.color.size() > 0)
 		{
 			Qt3DRender::QBuffer* colorBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
 			colorBuffer->setData(data.color);
-			colorAttribute = new Qt3DRender::QAttribute(colorBuffer, Qt3DRender::QAttribute::defaultColorAttributeName(), Qt3DRender::QAttribute::Float, 3, data.count);
+			colorAttribute = new Qt3DRender::QAttribute(colorBuffer, Qt3DRender::QAttribute::defaultColorAttributeName(), Qt3DRender::QAttribute::Float, 3, data.vcount);
 		}
 
 		return qtuser_3d::GeometryCreateHelper::create(parent, positionAttribute, normalAttribute, colorAttribute, texcoordAttribute);
+	}
+
+	Qt3DRender::QGeometry* GeometryCreateHelper::indexCreate(const GeometryData& data, Qt3DCore::QNode* parent)
+	{
+		if (data.position.size() == 0)
+			return nullptr;
+
+		Qt3DRender::QBuffer* positionBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
+		positionBuffer->setData(data.position);
+		Qt3DRender::QAttribute* positionAttribute = new Qt3DRender::QAttribute(positionBuffer, Qt3DRender::QAttribute::defaultPositionAttributeName(), Qt3DRender::QAttribute::Float, 3, data.vcount);
+
+		Qt3DRender::QAttribute* indexAttribute = nullptr;
+		if (data.indices.size() > 0)
+		{
+			indexAttribute = qtuser_3d::BufferHelper::CreateIndexAttribute((const char*)data.indices, data.indiceCount);
+		}
+
+		return qtuser_3d::GeometryCreateHelper::create(parent, positionAttribute, indexAttribute);
 	}
 }
