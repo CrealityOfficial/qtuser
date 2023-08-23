@@ -37,7 +37,8 @@ namespace qtuser_3d
 		void setPassNoDepthMask(int index);
 
 		void setPointSize(int index, float size);
-	protected:
+
+	public:
 		XRenderPass* findRenderPass(int index);
 	protected:
 		Qt3DRender::QTechnique* m_technique;
