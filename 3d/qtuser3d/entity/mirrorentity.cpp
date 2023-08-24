@@ -34,12 +34,12 @@ MirrorEntity::MirrorEntity(QPointer<CameraController> camera_controller, Qt3DCor
       auto* raw_ptr = BasicShapeCreateHelper::createInstructions(0.0f, 0.75f, 0.075f, 0.3f, this);
       return decltype(geometry_){ raw_ptr };
     }())
-    , x_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
-    , y_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
-    , z_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
-    , x_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
-    , y_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
-    , z_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this))
+    , x_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this, ManipulateEntity::Pickable | ManipulateEntity::Overlay))
+    , y_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this, ManipulateEntity::Pickable | ManipulateEntity::Overlay))
+    , z_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this, ManipulateEntity::Pickable | ManipulateEntity::Overlay))
+    , x_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this, ManipulateEntity::Pickable | ManipulateEntity::Overlay))
+    , y_positive_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this, ManipulateEntity::Pickable | ManipulateEntity::Overlay))
+    , z_negative_entity_(std::make_unique<qtuser_3d::ManipulateEntity>(this, ManipulateEntity::Pickable | ManipulateEntity::Overlay))
     , x_positive_pickable_(std::make_shared<qtuser_3d::ManipulatePickable>(this))
     , x_negative_pickable_(std::make_shared<qtuser_3d::ManipulatePickable>(this))
     , y_positive_pickable_(std::make_shared<qtuser_3d::ManipulatePickable>(this))

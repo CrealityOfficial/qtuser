@@ -377,7 +377,7 @@ namespace qtuser_3d
 
 
 		// 刻度初始化（白色）
-		m_pDegreeEntity = new ManipulateEntity(m_pRotateGroup, ManipulateEntity::Alpha);
+		m_pDegreeEntity = new ManipulateEntity(nullptr, ManipulateEntity::Alpha); //on init stage, the m_pDegreeEntity can not be seen, so it's parent set to nullptr;
 		m_pDegreeEntity->setObjectName("RotateHelperEntity_T.degreeEntity");
 		m_pDegreeEntity->setPose(m);
 		m_pDegreeEntity->setColor(m_degreeColor);
