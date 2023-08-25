@@ -10,6 +10,7 @@ out vec3 lightDir;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform vec3 u_lightDir = vec3(0.0, 1.0, 0.8);
 
 
 void main() 
@@ -19,7 +20,7 @@ void main()
 
    normalDir = normalize(mat3(viewMatrix * modelMatrix) * vertexNormal);
 
-   vec3 light = mat3(viewMatrix) * vec3(0.0, 1.0, 0.8);
+   vec3 light = mat3(viewMatrix) * u_lightDir;
    lightDir = normalize(light);
 
    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);
