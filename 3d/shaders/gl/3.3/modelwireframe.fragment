@@ -90,8 +90,8 @@ void main( void )
 		else
 			color = customColor;
 		
-		if(error == 1.0)
-			color = stateColors[3];	
+		//if(error == 1.0)
+		//	color = stateColors[3];	
 	}
 	else
 	{

@@ -3562,9 +3562,9 @@ const char* modeldlp_fragment =
                              "out vec4 fragmentColor;\n"
                              " \n"
                              "in vec3 viewDirection;\n"
-                             "in vec3 normal;\n"
-                             "in vec3 gnormal;\n"
+                             "in vec3 vertexnormal;\n"
                              "in vec3 worldPosition;\n"
+                             "in vec3 gnormal;\n"
                              "\n"
                              "uniform int state;\n"
                              "uniform float error;\n"
@@ -3629,8 +3629,8 @@ const char* modeldlp_fragment =
                              "	vec4 color = stateColors[state];\n"
                              "	color = error * stateColors[3] + (1.0 - error) * color;	\n"
                              "	\n"
-                             "	vec3 fnormal 		  =	normalize(normal);\n"
-                             "	vec3 fgnormal 		  =	normalize(gnormal);\n"
+                             "	vec3 fnormal 		  =	normalize(vertexnormal);\n"
+                             "	vec3 fgnormal = normalize(gnormal);\n"
                              "		\n"
                              "	vec3 lightDir = normalize(lightDirection);\n"
                              "\n"
@@ -3671,35 +3671,68 @@ const char* modeldlp_fragment =
                              "	fragmentColor = vec4(coreColor.rgb, 1.0);\n"
                              "}\n"
 ;
-const char* modeldlp_vert = 
-                             "#version 150 core\n"
+const char* modeldlp_geom = 
+                             "#version 330\n"
                              "\n"
-                             "in vec3 vertexPosition;\n"
-                             "in vec3 vertexNormal;\n"
+                             "layout (triangles) in;\n"
+                             "layout (triangle_strip,max_vertices = 3) out;\n"
+                             "\n"
+                             "in VS_OUT {\n"
+                             "vec3 vert;\n"
+                             "} gs_in[];\n"
                              "\n"
                              "uniform mat4 modelMatrix;\n"
                              "uniform mat4 viewMatrix;\n"
                              "uniform mat4 projectionMatrix;\n"
                              "\n"
                              "out vec3 viewDirection;\n"
-                             "out vec3 normal;\n"
-                             "out vec3 gnormal;\n"
+                             "out vec3 vertexnormal;\n"
                              "out vec3 worldPosition;\n"
-                             "out vec3  worldWater;\n"
+                             "out vec3 gnormal;\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "mat4 modelViewMatrix = viewMatrix * modelMatrix;\n"
+                             "\n"
+                             "worldPosition = vec3(modelMatrix * vec4(gs_in[0].vert, 1.0));\n"
+                             "vec4 tworldPosition0 = modelViewMatrix * vec4(gs_in[0].vert, 1.0);\n"
+                             "viewDirection = normalize(vec3(-tworldPosition0));\n"
+                             "vec3 a = gs_in[1].vert - gs_in[0].vert;\n"
+                             "vec3 b = gs_in[2].vert - gs_in[1].vert;\n"
+                             "vec3 tmpCross = cross(a, b);\n"
+                             "vertexnormal = normalize(mat3(viewMatrix) * mat3(modelMatrix) * tmpCross);\n"
+                             "gnormal = normalize(mat3(modelMatrix) * tmpCross);\n"
+                             "\n"
+                             "gl_Position = projectionMatrix * tworldPosition0;\n"
+                             "EmitVertex();\n"
+                             "\n"
+                             "worldPosition = vec3(modelMatrix * vec4(gs_in[1].vert, 1.0));\n"
+                             "vec4 tworldPosition1 = modelViewMatrix * vec4(gs_in[1].vert, 1.0);\n"
+                             "viewDirection = normalize(vec3(-tworldPosition1));\n"
+                             "gl_Position = projectionMatrix * tworldPosition1;\n"
+                             "EmitVertex();\n"
+                             "\n"
+                             "worldPosition = vec3(modelMatrix * vec4(gs_in[2].vert, 1.0));\n"
+                             "vec4 tworldPosition2 = modelViewMatrix * vec4(gs_in[2].vert, 1.0);\n"
+                             "viewDirection = normalize(vec3(-tworldPosition2));\n"
+                             "gl_Position = projectionMatrix * tworldPosition2;\n"
+                             "EmitVertex();\n"
+                             "\n"
+                             "EndPrimitive();\n"
+                             "}\n"
+;
+const char* modeldlp_vert = 
+                             "#version 330 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "\n"
+                             "out VS_OUT {\n"
+                             "vec3 vert;\n"
+                             "} vs_out;\n"
                              "\n"
                              "void main( void )\n"
                              "{\n"
-                             "    mat4 modelViewMatrix = viewMatrix * modelMatrix;\n"
-                             "    vec4 tworldPosition = modelViewMatrix * vec4(vertexPosition, 1.0);\n"
-                             "    gl_Position = projectionMatrix *  tworldPosition;\n"
-                             "\n"
-                             "    viewDirection  = normalize(vec3(-tworldPosition));\n"
-                             "    mat3 normalMatrix = mat3(modelViewMatrix);\n"
-                             "\n"
-                             "    normal          = normalMatrix * vertexNormal;\n"
-                             "    gnormal        = mat3(modelMatrix) * vertexNormal;\n"
-                             "		\n"
-                             "    worldPosition   = vec3(modelMatrix * vec4(vertexPosition, 1.0));\n"
+                             "	vs_out.vert = vertexPosition;\n"
                              "}\n"
 ;
 const char* modelface_fragment = 
@@ -4102,6 +4135,267 @@ const char* modelwire_vert =
                              "    colorVS      = vertexColor;\n"
                              "}\n"
 ;
+const char* modelwireframe_fragment = 
+                             "#version 150 core\n"
+                             "out vec4 fragmentColor;\n"
+                             "\n"
+                             "in vec3 viewDirection;\n"
+                             "in vec3 normal;\n"
+                             "in vec3 gnormal;\n"
+                             "in vec3 worldPosition;\n"
+                             "in vec3 worldWater;\n"
+                             "in vec3 barycentric;\n"
+                             "in vec3 gcolor;\n"
+                             "\n"
+                             "uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);\n"
+                             "uniform vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);\n"
+                             "uniform vec4 specular = vec4(0.8, 0.8, 0.8, 1.0);\n"
+                             "uniform float specularPower = 4.5;\n"
+                             "uniform vec3 lightDirection = vec3(1.0, 0.0, 1.0);\n"
+                             "\n"
+                             "uniform int lightingEnable = 1;\n"
+                             "uniform float transparency = 1.0;\n"
+                             "\n"
+                             "uniform vec3 minSpace;\n"
+                             "uniform vec3 maxSpace;\n"
+                             "uniform float bottom; \n"
+                             "uniform float topVisibleHeight = 100000.0;\n"
+                             "uniform float bottomVisibleHeight = -10000.0;\n"
+                             "uniform float error;\n"
+                             "uniform float supportCos = 0.5;\n"
+                             "\n"
+                             "uniform int hoverState = 0;\n"
+                             "uniform int fanzhuan = 0;\n"
+                             "uniform int checkscope = 1;\n"
+                             "\n"
+                             "uniform float state;\n"
+                             "uniform float nozzle;\n"
+                             "uniform vec4 stateColors[6];\n"
+                             "uniform vec4 customColor;\n"
+                             "\n"
+                             "uniform vec3 wireframeColor = vec3(0.1);\n"
+                             "uniform vec3 clearColor = vec3(0.27);\n"
+                             "uniform int renderModel = 1;\n"
+                             "uniform int useVertexColor = 0;\n"
+                             "\n"
+                             "uniform sampler2D textureDiffuse;\n"
+                             "uniform sampler2D textureAmbient;\n"
+                             "uniform sampler2D textureSpecular;\n"
+                             "uniform sampler2D textureNormal;\n"
+                             "\n"
+                             "in vec2 varyUV;\n"
+                             "\n"
+                             "bool frontFacing()\n"
+                             "{\n"
+                             "        vec3 fdx = dFdx(worldPosition);\n"
+                             "        vec3 fdy = dFdy(worldPosition);\n"
+                             "        return dot(gnormal, cross(fdx, fdy)) > 0.0;\n"
+                             "} \n"
+                             "\n"
+                             "vec4 directLight(vec3 light_dir, vec3 fnormal, vec4 core_color, vec4 ambient_color, vec4 diffuse_color, vec4 specular_color)\n"
+                             "{\n"
+                             "	float NdotL 		  = max(dot(fnormal, light_dir), 0.0);\n"
+                             "	ambient_color 	  	  = ambient_color * core_color;\n"
+                             "\n"
+                             "	vec3 freflection      = reflect(-light_dir, fnormal);\n"
+                             "	vec3 fViewDirection   = normalize(viewDirection);\n"
+                             "	float RdotV           = max(0.0, dot(freflection, fViewDirection)); \n"
+                             "	\n"
+                             "	diffuse_color		  = NdotL * diffuse_color * core_color;\n"
+                             "	specular_color        = specular_color * pow( RdotV, specularPower) * core_color;\n"
+                             "	\n"
+                             "	return lightingEnable * (ambient_color + diffuse_color + specular_color) + (1 - lightingEnable) * core_color;\n"
+                             "}\n"
+                             "\n"
+                             "void main( void )\n"
+                             "{\n"
+                             "	if(checkscope > 0 && (worldPosition.z < bottomVisibleHeight || worldPosition.z > topVisibleHeight))\n"
+                             "		discard;\n"
+                             "\n"
+                             "	int stateInt = int(state);\n"
+                             "	vec4 color;\n"
+                             "	\n"
+                             "	if(varyUV.x<0.0||varyUV.y<0.0)\n"
+                             "	{\n"
+                             "		if (stateInt < 5)\n"
+                             "		{\n"
+                             "			color = stateColors[stateInt];\n"
+                             "			if (useVertexColor == 1 && stateInt == 0) {\n"
+                             "				color = vec4(gcolor, 1.0);\n"
+                             "			}			\n"
+                             "		}\n"
+                             "			\n"
+                             "		else\n"
+                             "			color = customColor;\n"
+                             "		\n"
+                             "		//if(error == 1.0)\n"
+                             "		//	color = stateColors[3];	\n"
+                             "	}\n"
+                             "	else\n"
+                             "	{\n"
+                             "		vec4 textColor = texture(textureDiffuse, varyUV);\n"
+                             "		if(textColor.r<0 ||textColor.g<0||textColor.b<0)\n"
+                             "		{\n"
+                             "			textColor=stateColors[0];\n"
+                             "		}\n"
+                             "		color = textColor;\n"
+                             "	}\n"
+                             "\n"
+                             "	vec4 coreColor = color;\n"
+                             "	vec3 fgnormal =	normalize(gnormal);\n"
+                             "	\n"
+                             "	if(checkscope > 0)\n"
+                             "	{\n"
+                             "		if(worldPosition.x < minSpace.x || worldPosition.y < minSpace.y || worldPosition.z < minSpace.z \n"
+                             "		|| worldPosition.x > maxSpace.x || worldPosition.y > maxSpace.y || worldPosition.z > maxSpace.z\n"
+                             "		|| abs(worldPosition.z - bottom) < 0.05 )\n"
+                             "		{\n"
+                             "			// coreColor = vec4(0.649, 0.516, 0.504, 1.0);\n"
+                             "			coreColor = stateColors[4];\n"
+                             "		}\n"
+                             "	}\n"
+                             "	\n"
+                             "	if(hoverState > 0)\n"
+                             "	{\n"
+                             "		float v = dot(fgnormal, vec3(0.0, 0.0, -1.0));\n"
+                             "		if(v >= supportCos)\n"
+                             "		{\n"
+                             "			coreColor.r += 0.8 * v;\n"
+                             "		}\n"
+                             "	}\n"
+                             "	\n"
+                             "	coreColor.rgb = coreColor.rgb + vec3(0.1, -0.1, 0.0) * nozzle;\n"
+                             "\n"
+                             "	vec3 fnormal 		  =	normalize(normal);\n"
+                             "	vec4 ambient_color 	  = ambient;\n"
+                             "	vec4 diffuse_color    = diffuse;\n"
+                             "	vec4 specular_color   = specular;\n"
+                             "	\n"
+                             "	vec3 lightDir = normalize(lightDirection);\n"
+                             "	float normalCos = dot(fnormal, lightDir);\n"
+                             "	if (normalCos >= 0)\n"
+                             "		coreColor = directLight(lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);\n"
+                             "	else\n"
+                             "		coreColor = directLight(-lightDir, fnormal, coreColor, ambient_color, diffuse_color, specular_color);\n"
+                             "\n"
+                             "	if(!frontFacing())\n"
+                             "	{\n"
+                             "		color = stateColors[5];   \n"
+                             "		vec3 fbnormal = -fnormal;\n"
+                             "		vec4 ambient_color_t 	= ambient + vec4(0.2, 0.2, 0.2, 0.0);\n"
+                             "		vec4 diffuse_color_t    = diffuse + vec4(0.08, 0.08, 0.08, 0.0);\n"
+                             "		vec4 specular_color_t   = specular;\n"
+                             "		coreColor = directLight(lightDir, fbnormal, color, ambient_color_t, diffuse_color_t, specular_color_t);\n"
+                             "	}\n"
+                             "\n"
+                             "	if (renderModel != 1) {\n"
+                             "		vec3 baryDelta = fwidth(barycentric);\n"
+                             "			\n"
+                             "		vec3 edgeFactor = smoothstep(vec3(0.0), baryDelta * 1.0, barycentric);\n"
+                             "		float minEdgeFactor = min(min(edgeFactor.x, edgeFactor.y), edgeFactor.z);\n"
+                             "\n"
+                             "		if (renderModel == 2) {\n"
+                             "			\n"
+                             "			if (minEdgeFactor >= 1.0) {\n"
+                             "                discard;\n"
+                             "            }\n"
+                             "            coreColor.rgb = mix(wireframeColor, clearColor, minEdgeFactor);\n"
+                             "\n"
+                             "		} else if (renderModel == 3) {\n"
+                             "			coreColor.rgb = mix(wireframeColor, coreColor.rgb, minEdgeFactor);\n"
+                             "		}\n"
+                             "	}\n"
+                             "\n"
+                             "	fragmentColor = vec4(coreColor.rgb, transparency);\n"
+                             "}\n"
+;
+const char* modelwireframe_geom = 
+                             "#version 150 core\n"
+                             "\n"
+                             "layout (triangles) in;\n"
+                             "layout (triangle_strip, max_vertices = 3) out;\n"
+                             "\n"
+                             "in vec3 viewDirectionVS[3];\n"
+                             "in vec3 normalVS[3];\n"
+                             "in vec3 gnormalVS[3];\n"
+                             "in vec3 worldPositionVS[3];\n"
+                             "in vec2 varyUVVS[3];\n"
+                             "in vec3 colorVS[3];\n"
+                             "\n"
+                             "out vec3 viewDirection;\n"
+                             "out vec3 normal;\n"
+                             "out vec3 gnormal;\n"
+                             "out vec3 worldPosition;\n"
+                             "out vec3 barycentric;\n"
+                             "out vec2 varyUV;\n"
+                             "out vec3 gcolor;\n"
+                             "\n"
+                             "void combindVertex(int index)\n"
+                             "{\n"
+                             "    gl_Position = gl_in[index].gl_Position;\n"
+                             "\n"
+                             "    viewDirection = viewDirectionVS[index];\n"
+                             "    normal = normalVS[index];\n"
+                             "    gnormal = gnormalVS[index];\n"
+                             "    worldPosition = worldPositionVS[index];\n"
+                             "	\n"
+                             "	varyUV = varyUVVS[index];\n"
+                             "    gcolor =  colorVS[index];\n"
+                             "\n"
+                             "    EmitVertex();\n"
+                             "}\n"
+                             "\n"
+                             "\n"
+                             "void main() {\n"
+                             "    \n"
+                             "    barycentric = vec3(1.0, 0.0, 0.0);\n"
+                             "    combindVertex(0);\n"
+                             "    \n"
+                             "    barycentric = vec3(0.0, 1.0, 0.0);\n"
+                             "    combindVertex(1);\n"
+                             "\n"
+                             "    barycentric = vec3(0.0, 0.0, 1.0);\n"
+                             "    combindVertex(2);\n"
+                             "\n"
+                             "    EndPrimitive();\n"
+                             "}\n"
+;
+const char* modelwireframe_vert = 
+                             "#version 150 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec3 vertexNormal;\n"
+                             "in vec2 vertexTexCoord;\n"
+                             "in vec3 vertexColor;\n"
+                             "\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "\n"
+                             "out vec3 viewDirectionVS;\n"
+                             "out vec3 normalVS;\n"
+                             "out vec3 gnormalVS;\n"
+                             "out vec3 worldPositionVS;\n"
+                             "out vec2 varyUVVS;\n"
+                             "out vec3 colorVS;\n"
+                             "\n"
+                             "void main( void )\n"
+                             "{\n"
+                             "    mat4 modelViewMatrix = viewMatrix * modelMatrix;\n"
+                             "    vec4 tworldPosition = modelViewMatrix * vec4(vertexPosition, 1.0);\n"
+                             "    gl_Position = projectionMatrix *  tworldPosition;\n"
+                             "\n"
+                             "    viewDirectionVS  = normalize(vec3(-tworldPosition));\n"
+                             "    mat3 normalMatrix = mat3(modelViewMatrix);\n"
+                             "\n"
+                             "    normalVS          = normalMatrix * vertexNormal;\n"
+                             "    gnormalVS        = mat3(modelMatrix) * vertexNormal;\n"
+                             "		\n"
+                             "    worldPositionVS   = vec3(modelMatrix * vec4(vertexPosition, 1.0));\n"
+                             "	varyUVVS = vertexTexCoord;\n"
+                             "    colorVS      = vertexColor;\n"
+                             "}\n"
+;
 const char* overlay_fragment = 
                              "#version 150 core\n"
                              " \n"
@@ -4196,6 +4490,52 @@ const char* phong_vert =
                              "   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
                              "}\n"
 ;
+const char* pickFace_fragment = 
+                             "#version 330 core \n"
+                             "\n"
+                             "uniform ivec2 vertexBase;\n"
+                             "\n"
+                             "out vec4 fragColor;\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	int ids[2];\n"
+                             "	ids[0] = int(gl_PrimitiveID) + int(vertexBase.x / 3);\n"
+                             "	ids[1] = int(vertexBase.x / 3);\n"
+                             "	\n"
+                             "	int _faceId = ids[vertexBase.y];\n"
+                             "	int i3 = _faceId / 0x1000000;\n"
+                             "	_faceId = _faceId - i3 * 0x1000000;\n"
+                             "	int i2 = _faceId / 0x10000;\n"
+                             "	_faceId = _faceId - i2 * 0x10000;\n"
+                             "	int i1 = _faceId / 0x100;\n"
+                             "	_faceId = _faceId - i1 * 0x100;\n"
+                             "	int i0 = _faceId;\n"
+                             "	\n"
+                             "	fragColor = vec4(\n"
+                             "					float(i0) / 255.0,\n"
+                             "					float(i1) / 255.0,\n"
+                             "					float(i2) / 255.0,\n"
+                             "					float(i3) / 255.0);\n"
+                             "	\n"
+                             "}\n"
+;
+const char* pickFace_vert = 
+                             "#version 330 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "	vec4 position = vec4(vertexPosition, 1.0);\n"
+                             "\n"
+                             "	gl_Position = projectionMatrix * viewMatrix * modelMatrix * position;\n"
+                             "}\n"
+;
 const char* pickFaceFlag_fragment = 
                              "#version 150 core \n"
                              "\n"
@@ -4257,8 +4597,6 @@ const char* pickFaceFlag_vert =
 const char* pickFace_pwd_fragment = 
                              "#version 330 core\n"
                              "\n"
-                             "flat in vec4 passColor;\n"
-                             "\n"
                              "in vec3 passVert;\n"
                              "in vec3 passNormal;\n"
                              "\n"
@@ -4266,33 +4604,12 @@ const char* pickFace_pwd_fragment =
                              "layout (location = 1) out vec3 worldPosion;\n"
                              "layout (location = 2) out vec3 worldNormal;\n"
                              "\n"
-                             "void main()\n"
-                             "{\n"
-                             "	fragColor = passColor;\n"
-                             "	worldPosion = passVert;\n"
-                             "	worldNormal = passNormal;\n"
-                             "}\n"
-;
-const char* pickFace_pwd_vert = 
-                             "#version 330 core\n"
-                             "\n"
-                             "in vec3 vertexPosition;\n"
-                             "in vec3 vertexNormal;\n"
-                             "\n"
-                             "flat out vec4 passColor;\n"
-                             "\n"
-                             "out vec3 passVert;\n"
-                             "out vec3 passNormal;\n"
-                             "\n"
-                             "uniform mat4 projectionMatrix;\n"
-                             "uniform mat4 viewMatrix;\n"
-                             "uniform mat4 modelMatrix;\n"
                              "uniform ivec2 vertexBase;\n"
                              "\n"
-                             "void main() \n"
+                             "void main()\n"
                              "{\n"
                              "	int ids[2];\n"
-                             "	ids[0] = int(gl_VertexID / 3.0) + int(vertexBase.x / 3);\n"
+                             "	ids[0] = int(gl_PrimitiveID) + int(vertexBase.x / 3);\n"
                              "	ids[1] = int(vertexBase.x / 3);\n"
                              "	\n"
                              "	int _faceId = ids[vertexBase.y];\n"
@@ -4304,12 +4621,32 @@ const char* pickFace_pwd_vert =
                              "	_faceId = _faceId - i1 * 0x100;\n"
                              "	int i0 = _faceId;\n"
                              "	\n"
-                             "	vec4 position = vec4(vertexPosition, 1.0);\n"
-                             "	passColor = vec4(\n"
+                             "	fragColor = vec4(\n"
                              "					float(i0) / 255.0,\n"
                              "					float(i1) / 255.0,\n"
                              "					float(i2) / 255.0,\n"
                              "					float(i3) / 255.0);\n"
+                             "					\n"
+                             "	worldPosion = passVert;\n"
+                             "	worldNormal = passNormal;\n"
+                             "}\n"
+;
+const char* pickFace_pwd_vert = 
+                             "#version 330 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "in vec3 vertexNormal;\n"
+                             "\n"
+                             "out vec3 passVert;\n"
+                             "out vec3 passNormal;\n"
+                             "\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "	vec4 position = vec4(vertexPosition, 1.0);\n"
                              "	\n"
                              "	passVert = (modelMatrix * position).xyz;\n"
                              "	passNormal = mat3(modelMatrix) * vertexNormal;\n"
@@ -5010,11 +5347,11 @@ const char* zproject_fragment =
                              "#version 150 core \n"
                              "\n"
                              "out vec4 fragColor;\n"
-                             "uniform vec4 pcolor = vec4(0.2275, 0.2275, 0.2353, 0.5);\n"
+                             "uniform vec4 color = vec4(0.2275, 0.2275, 0.2353, 0.5);\n"
                              "\n"
                              "void main( void )\n"
                              "{\n"
-                             "	fragColor = pcolor;\n"
+                             "	fragColor = color;\n"
                              "}\n"
 ;
 const char* zproject_vert = 
@@ -5034,7 +5371,7 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
-const char* shader_code_array[50] = {
+const char* shader_code_array[56] = {
 	antialiasing_fragment,
 	antialiasing_vert,
 	blur_fragment,
@@ -5047,16 +5384,22 @@ const char* shader_code_array[50] = {
 	gpuantialiasing_fragment,
 	gpuantialiasing_vert,
 	modeldlp_fragment,
+	modeldlp_geom,
 	modeldlp_vert,
 	modelface_fragment,
 	modelface_vert,
 	modelwire_fragment,
 	modelwire_geom,
 	modelwire_vert,
+	modelwireframe_fragment,
+	modelwireframe_geom,
+	modelwireframe_vert,
 	overlay_fragment,
 	overlay_vert,
 	phong_fragment,
 	phong_vert,
+	pickFace_fragment,
+	pickFace_vert,
 	pickFaceFlag_fragment,
 	pickFaceFlag_vert,
 	pickFace_pwd_fragment,
@@ -5096,30 +5439,32 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
-int programs_meta_size = 24;
-ProgramDef programs_meta[24] = {
+int programs_meta_size = 26;
+ProgramDef programs_meta[26] = {
   { "antialiasing" , 1  ,  -1   ,  -1   ,  -1   , 0  },
    { "blur" , 3  ,  -1   ,  -1   ,  -1   , 2  },
    { "color" , 5  ,  -1   ,  -1   ,  -1   , 4  },
    { "gcodepreviewG" , 8  ,  -1   ,  -1   , 7  , 6  },
    { "gpuantialiasing" , 10  ,  -1   ,  -1   ,  -1   , 9  },
-   { "modeldlp" , 12  ,  -1   ,  -1   ,  -1   , 11  },
-   { "modelface" , 14  ,  -1   ,  -1   ,  -1   , 13  },
-   { "modelwire" , 17  ,  -1   ,  -1   , 16  , 15  },
-   { "overlay" , 19  ,  -1   ,  -1   ,  -1   , 18  },
-   { "phong" , 21  ,  -1   ,  -1   ,  -1   , 20  },
-   { "pickFaceFlag" , 23  ,  -1   ,  -1   ,  -1   , 22  },
-   { "pickFace_pwd" , 25  ,  -1   ,  -1   ,  -1   , 24  },
-   { "pickindicator" , 27  ,  -1   ,  -1   ,  -1   , 26  },
-   { "piefade" , 29  ,  -1   ,  -1   ,  -1   , 28  },
-   { "pointInGcode" , 31  ,  -1   ,  -1   ,  -1   , 30  },
-   { "printergrid_cx" , 33  ,  -1   ,  -1   ,  -1   , 32  },
-   { "pure" , 35  ,  -1   ,  -1   ,  -1   , 34  },
-   { "rendertoframebuffer" , 37  ,  -1   ,  -1   ,  -1   , 36  },
-   { "sceneindicator" , 39  ,  -1   ,  -1   ,  -1   , 38  },
-   { "splitplane" , 41  ,  -1   ,  -1   ,  -1   , 40  },
-   { "support" , 43  ,  -1   ,  -1   ,  -1   , 42  },
-   { "support_dlp" , 45  ,  -1   ,  -1   ,  -1   , 44  },
-   { "surfacequad" , 47  ,  -1   ,  -1   ,  -1   , 46  },
-   { "zproject" , 49  ,  -1   ,  -1   ,  -1   , 48  },
+   { "modeldlp" , 13  ,  -1   ,  -1   , 12  , 11  },
+   { "modelface" , 15  ,  -1   ,  -1   ,  -1   , 14  },
+   { "modelwire" , 18  ,  -1   ,  -1   , 17  , 16  },
+   { "modelwireframe" , 21  ,  -1   ,  -1   , 20  , 19  },
+   { "overlay" , 23  ,  -1   ,  -1   ,  -1   , 22  },
+   { "phong" , 25  ,  -1   ,  -1   ,  -1   , 24  },
+   { "pickFace" , 27  ,  -1   ,  -1   ,  -1   , 26  },
+   { "pickFaceFlag" , 29  ,  -1   ,  -1   ,  -1   , 28  },
+   { "pickFace_pwd" , 31  ,  -1   ,  -1   ,  -1   , 30  },
+   { "pickindicator" , 33  ,  -1   ,  -1   ,  -1   , 32  },
+   { "piefade" , 35  ,  -1   ,  -1   ,  -1   , 34  },
+   { "pointInGcode" , 37  ,  -1   ,  -1   ,  -1   , 36  },
+   { "printergrid_cx" , 39  ,  -1   ,  -1   ,  -1   , 38  },
+   { "pure" , 41  ,  -1   ,  -1   ,  -1   , 40  },
+   { "rendertoframebuffer" , 43  ,  -1   ,  -1   ,  -1   , 42  },
+   { "sceneindicator" , 45  ,  -1   ,  -1   ,  -1   , 44  },
+   { "splitplane" , 47  ,  -1   ,  -1   ,  -1   , 46  },
+   { "support" , 49  ,  -1   ,  -1   ,  -1   , 48  },
+   { "support_dlp" , 51  ,  -1   ,  -1   ,  -1   , 50  },
+   { "surfacequad" , 53  ,  -1   ,  -1   ,  -1   , 52  },
+   { "zproject" , 55  ,  -1   ,  -1   ,  -1   , 54  },
  };

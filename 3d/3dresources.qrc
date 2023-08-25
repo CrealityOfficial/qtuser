@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/renderhelper">
-		<file>shaders/modelwireframe.frag</file>
+		<file>shaders/modelwireframe.fragment</file>
 		<file>shaders/modelwireframe.vert</file>
 		<file>shaders/modelwireframe.geom</file>
         <file>shaders/support.frag</file>
