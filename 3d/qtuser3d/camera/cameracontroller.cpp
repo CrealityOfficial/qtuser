@@ -372,6 +372,9 @@ if (m_enableZoomAroundCursor) {
 		QVector3D center = getviewCenter();
 		QVector3D diff = position - center;
 		emit signalCameraChaged(position - center, getViewupVector());
+
+		if (m_screenCamera)
+			m_screenCamera->notifyCameraChanged();
 	}
 
 	void CameraController::viewFromTop(QVector3D* specificCenter)
@@ -385,6 +388,9 @@ if (m_enableZoomAroundCursor) {
 		QVector3D center = getviewCenter();
 		QVector3D diff = position - center;
 		emit signalCameraChaged(position - center, getViewupVector());
+
+		if (m_screenCamera)
+			m_screenCamera->notifyCameraChanged();
 	}
 
 	void CameraController::viewFromLeft(QVector3D* specificCenter)
@@ -398,6 +404,9 @@ if (m_enableZoomAroundCursor) {
 		QVector3D center = getviewCenter();
 		QVector3D diff = position - center;
 		emit signalCameraChaged(position - center, getViewupVector());
+
+		if (m_screenCamera)
+			m_screenCamera->notifyCameraChanged();
 	}
 
 	void CameraController::viewFromRight(QVector3D* specificCenter)
@@ -411,6 +420,9 @@ if (m_enableZoomAroundCursor) {
 		QVector3D center = getviewCenter();
 		QVector3D diff = position - center;
 		emit signalCameraChaged(position - center, getViewupVector());
+
+		if (m_screenCamera)
+			m_screenCamera->notifyCameraChanged();
 	}
 
 	void CameraController::viewFromFront(QVector3D* specificCenter)
@@ -424,6 +436,9 @@ if (m_enableZoomAroundCursor) {
 		QVector3D center = getviewCenter();
 		QVector3D diff = position - center;
 		emit signalCameraChaged(position - center, getViewupVector());
+
+		if(m_screenCamera)
+			m_screenCamera->notifyCameraChanged();
 	}
 
 	void CameraController::viewFromBack(QVector3D* specificCenter)
@@ -437,6 +452,9 @@ if (m_enableZoomAroundCursor) {
 		QVector3D center = getviewCenter();
 		QVector3D diff = position - center;
 		emit signalCameraChaged(position - center, getViewupVector());
+
+		if (m_screenCamera)
+			m_screenCamera->notifyCameraChanged();
 	}
 
 	void CameraController::viewFromUserSetting(QVector3D posion, QVector3D viewCenter, QVector3D upVector, QVector3D* specificCenter)
