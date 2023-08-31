@@ -25,7 +25,7 @@ namespace qtuser_3d
 		, m_parent2Global()
 		, m_localMatrixDirty(true)
 		, m_parentMatrixDirty(true)
-		, m_globalMatrix()
+		, m_globalMatrix(node.m_globalMatrix)
 		, m_objectMatrix()
 		, m_mirrorMatrix()
 	{
