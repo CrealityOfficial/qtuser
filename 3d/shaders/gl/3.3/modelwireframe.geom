@@ -8,7 +8,7 @@ in vec3 normalVS[3];
 in vec3 gnormalVS[3];
 in vec3 worldPositionVS[3];
 in vec2 varyUVVS[3];
-in vec3 colorVS[3];
+// in vec3 colorVS[3];
 
 out vec3 viewDirection;
 out vec3 normal;
@@ -16,7 +16,7 @@ out vec3 gnormal;
 out vec3 worldPosition;
 out vec3 barycentric;
 out vec2 varyUV;
-out vec3 gcolor;
+// out vec3 gcolor;
 
 void combindVertex(int index)
 {
@@ -28,7 +28,7 @@ void combindVertex(int index)
     worldPosition = worldPositionVS[index];
 	
 	varyUV = varyUVVS[index];
-    gcolor =  colorVS[index];
+    // gcolor =  colorVS[index];
 
     EmitVertex();
 }

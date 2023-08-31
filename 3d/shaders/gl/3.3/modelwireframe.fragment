@@ -7,7 +7,7 @@ in vec3 gnormal;
 in vec3 worldPosition;
 in vec3 worldWater;
 in vec3 barycentric;
-in vec3 gcolor;
+//in vec3 gcolor;
 
 uniform vec4 ambient = vec4(0.8, 0.8, 0.8, 1.0);
 uniform vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);
@@ -82,16 +82,13 @@ void main( void )
 		if (stateInt < 5)
 		{
 			color = stateColors[stateInt];
-			if (useVertexColor == 1 && stateInt == 0) {
-				color = vec4(gcolor, 1.0);
-			}			
+			//if (useVertexColor == 1 && stateInt == 0) {
+			//	color = vec4(gcolor, 1.0);
+			//}			
 		}
 			
 		else
 			color = customColor;
-		
-		//if(error == 1.0)
-		//	color = stateColors[3];	
 	}
 	else
 	{
