@@ -4943,6 +4943,49 @@ const char* pure_vert =
                              "   gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
                              "}\n"
 ;
+const char* purePickFace_fragment = 
+                             "#version 330 core\n"
+                             "\n"
+                             "layout (location = 0) out vec4 fragColor;\n"
+                             "\n"
+                             "uniform ivec2 vertexBase;\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "	int ids[2];\n"
+                             "	ids[0] = int(gl_PrimitiveID) + int(vertexBase.x / 3);\n"
+                             "	ids[1] = int(vertexBase.x / 3);\n"
+                             "	\n"
+                             "	int _faceId = ids[vertexBase.y];\n"
+                             "	int i3 = _faceId / 0x1000000;\n"
+                             "	_faceId = _faceId - i3 * 0x1000000;\n"
+                             "	int i2 = _faceId / 0x10000;\n"
+                             "	_faceId = _faceId - i2 * 0x10000;\n"
+                             "	int i1 = _faceId / 0x100;\n"
+                             "	_faceId = _faceId - i1 * 0x100;\n"
+                             "	int i0 = _faceId;\n"
+                             "	\n"
+                             "	fragColor = vec4(\n"
+                             "					float(i0) / 255.0,\n"
+                             "					float(i1) / 255.0,\n"
+                             "					float(i2) / 255.0,\n"
+                             "					float(i3) / 255.0);\n"
+                             "}\n"
+;
+const char* purePickFace_vert = 
+                             "#version 330 core\n"
+                             "\n"
+                             "in vec3 vertexPosition;\n"
+                             "\n"
+                             "uniform mat4 projectionMatrix;\n"
+                             "uniform mat4 viewMatrix;\n"
+                             "uniform mat4 modelMatrix;\n"
+                             "\n"
+                             "void main() \n"
+                             "{\n"
+                             "	gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n"
+                             "}\n"
+;
 const char* rendertoframebuffer_fragment = 
                              "#version 150 core\n"
                              "\n"
@@ -5369,7 +5412,7 @@ const char* zproject_vert =
                              "}\n"
 ;
 //-----------gl3.0 code array.
-const char* shader_code_array[56] = {
+const char* shader_code_array[58] = {
 	antialiasing_fragment,
 	antialiasing_vert,
 	blur_fragment,
@@ -5412,6 +5455,8 @@ const char* shader_code_array[56] = {
 	printergrid_cx_vert,
 	pure_fragment,
 	pure_vert,
+	purePickFace_fragment,
+	purePickFace_vert,
 	rendertoframebuffer_fragment,
 	rendertoframebuffer_vert,
 	sceneindicator_fragment,
@@ -5437,8 +5482,8 @@ struct ProgramDef
 	int gIndex;
 	int fIndex;
 };
-int programs_meta_size = 26;
-ProgramDef programs_meta[26] = {
+int programs_meta_size = 27;
+ProgramDef programs_meta[27] = {
   { "antialiasing" , 1  ,  -1   ,  -1   ,  -1   , 0  },
    { "blur" , 3  ,  -1   ,  -1   ,  -1   , 2  },
    { "color" , 5  ,  -1   ,  -1   ,  -1   , 4  },
@@ -5458,11 +5503,12 @@ ProgramDef programs_meta[26] = {
    { "pointInGcode" , 37  ,  -1   ,  -1   ,  -1   , 36  },
    { "printergrid_cx" , 39  ,  -1   ,  -1   ,  -1   , 38  },
    { "pure" , 41  ,  -1   ,  -1   ,  -1   , 40  },
-   { "rendertoframebuffer" , 43  ,  -1   ,  -1   ,  -1   , 42  },
-   { "sceneindicator" , 45  ,  -1   ,  -1   ,  -1   , 44  },
-   { "splitplane" , 47  ,  -1   ,  -1   ,  -1   , 46  },
-   { "support" , 49  ,  -1   ,  -1   ,  -1   , 48  },
-   { "support_dlp" , 51  ,  -1   ,  -1   ,  -1   , 50  },
-   { "surfacequad" , 53  ,  -1   ,  -1   ,  -1   , 52  },
-   { "zproject" , 55  ,  -1   ,  -1   ,  -1   , 54  },
+   { "purePickFace" , 43  ,  -1   ,  -1   ,  -1   , 42  },
+   { "rendertoframebuffer" , 45  ,  -1   ,  -1   ,  -1   , 44  },
+   { "sceneindicator" , 47  ,  -1   ,  -1   ,  -1   , 46  },
+   { "splitplane" , 49  ,  -1   ,  -1   ,  -1   , 48  },
+   { "support" , 51  ,  -1   ,  -1   ,  -1   , 50  },
+   { "support_dlp" , 53  ,  -1   ,  -1   ,  -1   , 52  },
+   { "surfacequad" , 55  ,  -1   ,  -1   ,  -1   , 54  },
+   { "zproject" , 57  ,  -1   ,  -1   ,  -1   , 56  },
  };

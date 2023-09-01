@@ -44,6 +44,8 @@
         <file>shaders/pointInGcode.frag</file>
         <file>shaders/manipulate.vert</file>
         <file>shaders/manipulate.fragment</file>
+        <file>shaders/purePickFace.vert</file>
+        <file>shaders/purePickFace.fragment</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
