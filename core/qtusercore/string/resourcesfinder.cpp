@@ -55,7 +55,14 @@ namespace qtuser_core
 			dir.mkdir(directory);
 
 		QString version;
-		version.sprintf("%d.%d", PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR);
+		if (QString(PROJECT_VERSION_EXTRA) == "Release")
+		{
+			version.sprintf("%d.%d", PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR);
+		}
+		else
+		{
+			version.sprintf("%d.%d.%d.%d", PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH, PROJECT_BUILD_ID);
+		}
 		QString folderDirectory = directory + QString("/") + version + "/" + folder;
 		folderDirectory = mkMutiDir(folderDirectory);
 		return folderDirectory;
