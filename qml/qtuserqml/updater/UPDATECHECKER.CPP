@@ -158,11 +158,7 @@ void UpdateChecker::checkForUpdates()
     settingLang.endGroup();
     QString currentLanguage;
     //please refer http://yapi.crealitygroup.com/project/8/wiki
-    if (lang == "en.ts")
-    {
-        currentLanguage = "0";
-    }
-    else if (lang == "zh_CN.ts")
+    if (lang == "zh_CN.ts")
     {
         currentLanguage = "1";
     }
