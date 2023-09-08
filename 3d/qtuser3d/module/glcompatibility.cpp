@@ -126,7 +126,8 @@ namespace qtuser_3d
             qDebug() << "Driver isn't installed.";
             gAttribute = Qt::AA_UseSoftwareOpenGL;
         }
-
+	
+	QSurfaceFormat fmt;
         switch (gAttribute)
         {
         case Qt::AA_UseSoftwareOpenGL:
@@ -136,6 +137,11 @@ namespace qtuser_3d
             qDebug() << "Qt::AA_UseSoftwareOpenGL.";
             break;
         case Qt::AA_UseDesktopOpenGL:
+	    fmt.setDepthBufferSize(24);
+	    fmt.setRenderableType(QSurfaceFormat::OpenGL);
+	    fmt.setVersion(3, 3);
+	    fmt.setProfile(QSurfaceFormat::CoreProfile);
+	    QSurfaceFormat::setDefaultFormat(fmt);
             QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL, true);
             QCoreApplication::setAttribute(Qt::AA_UseOpenGLES, false);
             QCoreApplication::setAttribute(Qt::AA_UseSoftwareOpenGL, false);
