@@ -325,15 +325,15 @@ namespace qtuser_core
 
 	void setDefaultAfterApp()
 	{
-#ifdef Q_OS_OSX
 		QSurfaceFormat format;
-		format.setVersion(3, 2);
+		format.setVersion(3, 3);
 		format.setProfile(QSurfaceFormat::CoreProfile);
+#ifdef Q_OS_OSX
 		format.setDepthBufferSize(24);
 		format.setStencilBufferSize(8);
 		format.setSamples(4);
-		QSurfaceFormat::setDefaultFormat(format);
 #endif
+		QSurfaceFormat::setDefaultFormat(format);
 
 		//dynamic plugin
 		QStringList dynamicPathList = QCoreApplication::libraryPaths();
