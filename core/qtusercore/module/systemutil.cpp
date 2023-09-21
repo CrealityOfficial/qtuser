@@ -266,7 +266,12 @@ namespace qtuser_core
 
 		qApp->setOrganizationName(ORGANIZATION);
 		qApp->setOrganizationDomain("FDM");
-		qApp->setApplicationName(PROJECT_NAME);//by TCJ "Creative3D"
+#ifdef Q_OS_LINUX
+		qApp->setApplicationName(
+			QStringLiteral(BUNDLE_NAME).replace(QStringLiteral("_"), QStringLiteral(" ")));
+#else
+		qApp->setApplicationName(QStringLiteral(PROJECT_NAME));
+#endif
 
 		QString logDirectory = qtuser_core::getOrCreateAppDataLocation("Log");
 
