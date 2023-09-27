@@ -89,6 +89,7 @@ namespace qtuser_quick
 		QApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
 		QApplication app(argc, argv);
+		setlocale(LC_NUMERIC,"C");
 		app.setWindowIcon(QIcon(":/scence3d/res/logo.png"));
 
 #ifdef Q_OS_OSX
