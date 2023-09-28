@@ -9,6 +9,9 @@
 #include "qtusercore/module/systemutil.h"
 #include "qtuser3d/module/glcompatibility.h"
 #include <QIcon>
+
+#include <locale.h>
+
 namespace qtuser_quick
 {
     void setDefaultQmlBeforeApp()
